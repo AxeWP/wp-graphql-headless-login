@@ -1,0 +1,50 @@
+# Hidden files
+.DS_Store
+Thumbs.db
+
+# IDE Files
+.devcontainer/*
+.devcontainer.json
+.vscode
+.idea
+
+# Environment variables for testing
+.env
+.env.*
+!.env.dist
+
+# Ruleset Overrides
+phpcs.xml
+phpunit.xml
+phpstan.neon
+rector.php
+
+# Directory to generate the dist zipfile
+plugin-build
+
+# Composer auth
+auth.json
+
+# Composer deps
+!vendor
+vendor/*
+!vendor/autoload.php
+!vendor/composer
+vendor/composer/*/
+
+# NPM deps
+node_modules
+
+# Generated Schema used in some tooling. Versioned Schema is uploaded as a Release artifact to Github.
+schema.graphql
+
+# WP CLI config overrides
+wp-cli.local.yml
+
+# Tests
+*.sql
+*.tar.gz
+!tests
+tests/*.suite.yml
+coverage/*
+.log/

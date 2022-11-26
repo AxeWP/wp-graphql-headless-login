@@ -1,0 +1,87 @@
+name: Integration Testing
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
+    paths:
+      - '**.php'
+      - '.github/workflows/*.yml'
+      - '!docs/**'
+
+jobs:
+  continuous_integration:
+    runs-on: ubuntu-latest
+    name: WordPress ${{ matrix.wordpress }} on PHP ${{ matrix.php }}
+
+    strategy:
+      matrix:
+        php: [ '8.0', '7.4', ]
+        wordpress: [ '6.1', '6.0', '5.9', '5.8', '5.7', '5.6' ]
+        include:
+          - php: '8.1'
+            wordpress: '6.1'
+            coverage: 1
+          - php: '8.1'
+            wordpress: '6.0'
+          - php: '8.1'
+            wordpress: '5.9'
+      fail-fast: false
+
+    steps:
+      - name: Cancel previous runs of this workflow (pull requests only)
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: styfle/cancel-workflow-action@0.5.0
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: json, mbstring
+          tools: composer:v2
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v2
+
+      - name: Build "testing" Docker Image
+        env:
+          PHP_VERSION: ${{ matrix.php }}
+          WP_VERSION: ${{ matrix.wordpress }}
+        run: composer build-test
+
+      - name: Run Functional Tests w/ Docker
+        env:
+          COVERAGE: ${{ matrix.coverage }}
+          USING_XDEBUG: ${{ matrix.coverage }}
+          DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG || matrix.debug }}
+          SKIP_TESTS_CLEANUP: ${{ matrix.coverage }}
+          SUITES: functional
+          PHP_VERSION: ${{ matrix.php }}
+          WP_VERSION: ${{ matrix.wordpress }}
+        run: composer run-test
+
+      - name: Run WPUnit Tests w/ Docker
+        env:
+          COVERAGE: ${{ matrix.coverage }}
+          USING_XDEBUG: ${{ matrix.coverage }}
+          DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG || matrix.debug }}
+          SKIP_TESTS_CLEANUP: ${{ matrix.coverage }}
+          PHP_VERSION: ${{ matrix.php }}
+          WP_VERSION: ${{ matrix.wordpress }}
+        run: composer run-test
+
+      - name: Push Codecoverage to Coveralls.io
+        if: ${{ matrix.coverage == 1 }}
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: vendor/bin/php-coveralls -v

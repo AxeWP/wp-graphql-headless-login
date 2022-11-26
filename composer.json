@@ -1,0 +1,163 @@
+{
+	"name": "axepress/wp-graphql-headless-login",
+	"description": "A WordPress plugin that provides headless login and authentication for WPGraphQL",
+	"type": "wordpress-plugin",
+	"license": "GPL-3.0-or-later",
+	"authors": [
+		{
+			"name": "AxePress Development",
+			"email": "support@axepress.dev",
+			"homepage": "https://axepress.dev"
+		},
+		{
+			"name": "David Levine",
+			"role": "Developer",
+			"email": "david@axepress.dev"
+		}
+	],
+	"require": {
+		"php": ">=7.4 || ^8.0",
+		"axepress/wp-graphql-plugin-boilerplate":
+		"^0.0.6",
+		"league/oauth2-facebook": "^2.2",
+		"league/oauth2-github": "^3.0",
+		"firebase/php-jwt": "^6.3",
+		"league/oauth2-google": "^4.0"
+	},
+	"require-dev": {
+		"lucatume/wp-browser": "^3.0",
+		"codeception/lib-innerbrowser": "^1.0",
+		"codeception/module-asserts": "^1.0",
+		"codeception/module-cli": "^1.0",
+		"codeception/module-db": "^1.0",
+		"codeception/module-filesystem": "^1.0",
+		"codeception/module-phpbrowser": "^1.0",
+		"codeception/module-rest": "^2.0",
+		"codeception/module-webdriver": "^1.0",
+		"codeception/phpunit-wrapper": "^9.0",
+		"codeception/util-universalframework": "^1.0",
+		"phpunit/phpunit": "^9.0",
+		"wp-graphql/wp-graphql-testcase": "^2.3",
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+		"squizlabs/php_codesniffer": "^3.6",
+		"automattic/vipwpcs": "^2.3",
+		"wp-coding-standards/wpcs": "^2.3",
+		"phpcompatibility/phpcompatibility-wp": "^2.1",
+		"phpstan/phpstan": "^1.2",
+		"phpstan/extension-installer": "^1.1",
+		"szepeviktor/phpstan-wordpress": "^1.1.5",
+		"axepress/wp-graphql-stubs": "^1.12.0",
+		"wp-cli/wp-cli-bundle": "^2.6",
+		"php-coveralls/php-coveralls": "^2.5",
+		"brianhenryie/strauss": "0.11.1",
+		"mockery/mockery": "^1.5"
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"phpstan/extension-installer": true
+		},
+		"platform": {
+			"php": "7.4"
+		},
+		"preferred-install": "dist",
+		"process-timeout": 0,
+		"optimize-autoloader": true
+	},
+	"extra": {
+		"strauss": {
+			"target_directory": "/src/vendor",
+			"namespace_prefix": "WPGraphQL\\Login\\Vendor\\",
+			"classmap_prefix": "GraphQL_Login_Vendor",
+			"constant_prefix": "GRAPHQL_LOGIN_VENDOR_",
+			"packages": [
+				"axepress/wp-graphql-plugin-boilerplate",
+				"firebase/php-jwt",
+				"league/oauth2-client",
+				"league/oauth2-facebook",
+				"league/oauth2-github",
+				"league/oauth2-google"
+			],
+			"delete_vendor_files": false,
+			"include_modified_date": false
+		}
+	},
+	"autoload": {
+		"files": [
+			"access-functions.php"
+		],
+		"psr-4": {
+			"WPGraphQL\\Login\\": "src/"
+		},
+		"classmap": [
+			"src/vendor"
+		]
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Tests\\WPGraphQL\\Login\\": "tests/_support/"
+		}
+	},
+	"scripts": {
+		"init-plugin": "bash vendor/bin/init-wpgraphql-plugin.sh",
+		"install-test-env": "bash bin/install-test-env.sh",
+		"install-stan-env": "bash bin/install-stan-env.sh",
+		"docker-build": "bash bin/run-docker.sh build",
+		"delete-vendor-files": "rm -rf composer.lock vendor src/vendor/*",
+		"docker-run": "bash bin/run-docker.sh run",
+		"docker-destroy": "docker-compose down",
+		"build-and-run": [
+			"@docker-build",
+			"@docker-run"
+		],
+		"build-app": "@docker-build -a",
+		"build-test": "@docker-build -t",
+		"run-app": "@docker-run -a",
+		"run-test": "@docker-run -t",
+		"lint": "vendor/bin/phpcs",
+		"strauss": [
+			"php strauss.phar",
+			"composer dump-autoload --optimize"
+		],
+		"phpcs-i": [
+			"php ./vendor/bin/phpcs -i"
+		],
+		"check-cs": [
+			"php ./vendor/bin/phpcs src"
+		],
+		"fix-cs": [
+			"php ./vendor/bin/phpcbf src"
+		],
+		"phpstan": [
+			"vendor/bin/phpstan analyze --ansi --memory-limit=1G"
+		],
+		"post-install-cmd": [
+			"@strauss"
+		],
+		"post-update-cmd": [
+			"@strauss"
+		]
+	},
+	"archive": {
+		"name": "wp-graphql-headless-login",
+		"exclude": [
+			"/.*",
+			"!.wordpress-org",
+			"bin",
+			"docker",
+			"docs",
+			"phpstan",
+			"plugin-build",
+			"tests",
+			"!vendor",
+			"/codeception.dist.yml",
+			"/codeception.yml",
+			"/composer.json",
+			"/composer.lock",
+			"/docker-compose.yml",
+			"/phpstan.neon.dist",
+			"/phpunit.xml.dist",
+			"/README.md"
+		]
+	}
+}

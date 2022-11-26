@@ -1,0 +1,87 @@
+<?php
+/**
+ * Registers the Login mutation
+ *
+ * @package WPGraphQL\Login\Mutation
+ * @since 0.0.1
+ */
+
+namespace WPGraphQL\Login\Mutation;
+
+use GraphQL\Type\Definition\ResolveInfo;
+use WPGraphQL\AppContext;
+use WPGraphQL\Model\User;
+use WPGraphQL\Login\Auth\Auth;
+use WPGraphQL\Login\Type\Enum\ProviderEnum;
+use WPGraphQL\Login\Type\Input\OAuthProviderResponseInput;
+use \WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationType;
+
+/**
+ * Class - Login
+ */
+class Login extends MutationType {
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function type_name() : string {
+		return 'Login';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function get_input_fields() : array {
+		return [
+			'oauthResponse' => [
+				'type'        => [ 'non_null' => OAuthProviderResponseInput::get_type_name() ],
+				'description' => __( 'The parsed response from the Authentication Provider.', 'wp-graphql-headless-login' ),
+			],
+			'provider'      => [
+				'type'        => [ 'non_null' => ProviderEnum::get_type_name() ],
+				'description' => __( 'The Headless Login provider to use when logging in.', 'wp-graphql-headless-login' ),
+			],
+		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function get_output_fields() : array {
+		return [
+			'authToken'              => [
+				'type'        => 'String',
+				'description' => __( 'JWT Token that can be used in future requests for Authentication.', 'wp-graphql-headless-login' ),
+			],
+			'authTokenExpiration'    => [
+				'type'        => 'String',
+				'description' => __( 'The authentication token expiration timestamp.', 'wp-graphql-headless-login' ),
+			],
+			'refreshToken'           => [
+				'type'        => 'String',
+				'description' => __( 'Refresh Token that can be used to refresh the JWT Token.', 'wp-graphql-headless-login' ),
+			],
+			'refreshTokenExpiration' => [
+				'type'        => 'String',
+				'description' => __( 'The refresh token expiration timestamp.', 'wp-graphql-headless-login' ),
+			],
+			'user'                   => [
+				'type'        => 'User',
+				'description' => __( 'The user that was logged in.', 'wp-graphql-headless-login' ),
+				'resolve'     => static function ( $payload ): ?User {
+					return empty( $payload['user'] ) ? null : new User( $payload['user'] );
+				},
+			],
+		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function mutate_and_get_payload() : callable {
+		return static function ( array $input, AppContext $context, ResolveInfo $info ): array {
+			// Validate the response, login the user, and get an authToken and user in response.
+			return Auth::login( $input );
+		};
+	}
+}

@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<ruleset  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="WPGraphQL_Login" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">	<description>Sniffs for plugins created with WPGraphQL Plugin Boilerplate.</description>
+
+	<!-- What to scan -->
+	<file>./access-functions.php</file>
+	<file>./wp-graphql-headless-login.php</file>
+	<file>./activation.php</file>
+	<file>./deactivation.php</file>
+	<file>./src/</file>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>/node_modules/</exclude-pattern>
+	<exclude-pattern>*/tests/*</exclude-pattern>
+
+	<!-- How to scan -->
+	<!-- Usage instructions: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage -->
+	<!-- Annotated ruleset: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml -->
+	<arg value="sp"/>
+	<!-- Show sniff and progress -->
+	<arg name="basepath" value="./"/>
+	<!-- Strip the file paths down to the relevant bit -->
+	<arg name="colors"/>
+	<arg name="extensions" value="php"/>
+	<!-- Enables parallel processing when available for faster results. -->
+	<arg name="parallel" value="8"/>
+
+	<!-- Tests for PHP version compatibility -->
+	<config name="testVersion" value="7.4-"/>
+	<rule ref="PHPCompatibilityWP">
+		<include-pattern>*\.php$</include-pattern>
+	</rule>
+
+	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties -->
+	<config name="minimum_supported_wp_version" value="5.4.1"/>
+
+	<!-- Plugin-specific expected properties-->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<!-- Value: replace the function, class, and variable prefixes used. Separate multiple prefixes with a comma. -->
+			<property name="prefixes" type="array" value="WPGraphQL\Login, graphql_login, WPGRAPHQL_LOGIN" />
+		</properties>
+	</rule>
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<!-- Value: replace the text domain used. -->
+			<property name="text_domain" type="array" value="wp-graphql-headless-login"/>
+		</properties>
+	</rule>
+
+	<!-- Rules: WordPress Coding Standards -->
+	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards -->
+	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards -->
+	<rule ref="WordPress-Core">
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+		<exclude name="WordPress.PHP.DisallowShortTernary.Found"/>
+		<exclude name="WordPress.CodeAnalysis.AssignmentInCondition.Found"/>
+		<exclude name="WordPress.Files.FileName" />
+		<exclude name="WordPress.NamingConventions.ValidVariableName" />
+		<!-- Maybe Add later: -->
+		<exclude name="Generic.Commenting.DocComment.MissingShort" />
+	</rule>
+	<rule ref="WordPress-Docs" />
+	<rule ref="WordPress-Extra" />
+	<rule ref="WordPress.WhiteSpace.ControlStructureSpacing">
+		<properties>
+			<property name="blank_line_check" value="true"/>
+		</properties>
+	</rule>
+
+	<!-- Enforce short array syntax -->
+	<rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+
+	<!--Disable DocBlock requirements if inherited -->
+	<rule ref="Squiz.Commenting.FunctionComment">
+		<properties>
+				<property name="skipIfInheritdoc" value="true" />
+		</properties>
+	</rule>
+
+</ruleset>

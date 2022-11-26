@@ -1,0 +1,16 @@
+<?php
+/**
+ * @license MIT
+ *
+ * Modified by AxePress Development using Strauss.
+ * @see https://github.com/BrianHenryIE/strauss
+ */
+
+namespace WPGraphQL\Login\Vendor\GuzzleHttp\Promise;
+
+/**
+ * Exception that is set as the reason for a promise that has been cancelled.
+ */
+class CancellationException extends RejectionException
+{
+}

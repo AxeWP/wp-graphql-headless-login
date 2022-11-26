@@ -1,0 +1,42 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"exactOptionalPropertyTypes": true,
+		"outDir": "./build",
+		"rootDir": ".",
+		"sourceMap": true,
+		"strictNullChecks": true,
+
+		"allowJs": true,
+		"allowSyntheticDefaultImports": true,
+		"checkJs": true,
+		"composite": true,
+		"emitDeclarationOnly": true,
+		"jsx": "preserve",
+		"lib": [ "dom", "esnext" ],
+		"module": "esnext",
+		"target": "esnext",
+
+		/* Strict Type-Checking Options */
+		"strict": true,
+
+		/* Additional Checks */
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"importsNotUsedAsValues": "error",
+
+		/* Module Resolution Options */
+		"moduleResolution": "node",
+
+		/* This needs to be false so our types are possible to consume without setting this */
+		"esModuleInterop": false, // true in woo-blocks
+		"resolveJsonModule": true,
+		"typeRoots": [ "./node_modules/@types" ],
+		"types": [],
+	},
+	"exclude": [
+		"node_modules"
+	]
+}

@@ -1,0 +1,25 @@
+parameters:
+		level: 8
+		inferPrivatePropertyTypeFromConstructor: true
+		checkMissingIterableValueType: false
+		bootstrapFiles:
+			- phpstan/constants.php
+			- wp-graphql-headless-login.php
+			- access-functions.php
+			- activation.php
+			- deactivation.php
+		paths:
+			- wp-graphql-headless-login.php
+			- access-functions.php
+			- activation.php
+			- deactivation.php
+			- src/
+		excludePaths:
+			analyse:
+				- src/vendor
+			analyseAndScan:
+				- ../wp-graphql/tests
+		scanFiles:
+		scanDirectories:
+			- src/vendor/
+			- ../wp-graphql
