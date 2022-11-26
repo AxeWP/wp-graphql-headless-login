@@ -8,6 +8,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 - docs: Fix broken Readme.md links.
 - chore: Update doc-block header in `src/Type/WPObject/LoginOptions.php`
-
+- feat: Improve requirement checks for `WPGraphQL` (required:v1.12.0) and `WPGraphQL-JWT-Authentication`(conflicted) plugins.
+- dev: Allow core function overloading in `wp-graphql-headless-login.php`.
 
 ## [0.0.1] - 2022-11-27 - Initial (Public) Release
