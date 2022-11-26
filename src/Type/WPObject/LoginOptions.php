@@ -1,6 +1,6 @@
 <?php
 /**
- * Registers the individual Client Options for each login provider.
+ * Registers the individual Login Options for each provider.
  *
  * @package WPGraphQL\Login\Type\WPObject
  */
