@@ -59,8 +59,8 @@ Priority support and custom development are available to [our Sponsors](https://
 
 ## Supported Features
 
-* Use a traditional WordPress username/password using the `loginWithPassword` mutation.
-* Validate an OAuth 2.0 / OpenID Connect provider response using the `login` mutation.
+* Use a traditional WordPress username/password using [the `loginWithPassword` mutation](./docs/mutations.md#login-with-a-traditional-wordpress-usernamepassword).
+* Validate an OAuth 2.0 / OpenID Connect provider response using [the `login` mutation](./docs/mutations.md#login-with-an-oauth2openid-authorization-response).
 
 	Supported providers (Out of the box):
 	* Facebook
@@ -69,29 +69,29 @@ Priority support and custom development are available to [our Sponsors](https://
 	* OAuth2 - Generic: Any other OAuth 2.0 provider.
 	* SAML authentication and more coming soon!
 
-	Or easily add your own provider by extending the `ProviderConfig` class.
-* JWT Authentication tokens using a HTTP Authorization header.
+	Or easily add your own provider by [extending the `ProviderConfig` class](./docs/provider-config.md).
+* Authenticate with JWT tokens using a [HTTP Authorization header](./docs/example-next-api-routes.md).
 * Generate short-term `authToken`s and long term `refreshToken`s for seamless reauthentication in your headless app.
 * Optionally link a user account to an OAuth 2.0 / OpenID Connect provider, or create a new WordPress user if none exists, with data mapped from the provider identity.
-* Query the enabled `loginClient` authorization urls, to easily use in your frontend's login buttons.
-* Extensive WordPress actions and filters for easy customization of the plugin's behavior.
-* Log out all sessions for a user by revoking or refreshing their tokens, in GraphQL or the WordPress backend Profile Page.
+* Query the [enabled `loginClient` authorization urls](./docs/queries.md#querying-login-clients), to easily use in your frontend's login buttons.
+* Extensive WordPress [actions](./docs/actions.md) and [filters](./docs/filters.md) for easy customization of the plugin's behavior.
+* Log out all sessions for a user by [revoking](./docs/mutations.md#revoke-the-user-secret) or [refreshing](./docs/mutations.md#refresh-the-user-secret) their tokens, in GraphQL or the WordPress backend Profile Page.
 
 - and more!
 
 ## Usage
 
-- [Overview / How To Use](docs/usage.md)
-- [Settings Guide](docs/settings.md)
-- [Example authentication flow - Next.js](docs/example-next-api-routes.md)
-- [Adding custom `ProviderConfig`s](docs/provider-config.md)
+- [Overview / How To Use](./docs/usage.md)
+- [Settings Guide](./docs/settings.md)
+- [Example authentication flow - Next.js](./docs/example-next-api-routes.md)
+- [Adding custom `ProviderConfig`s](./docs/provider-config.md)
 
 ### API Documentation
-* [GraphQL Queries](queries.md)
-* [GraphQL Mutations](mutations.md)
-* [Javascript API](javascript-api.md)
-* [WordPress Actions](actions.md)
-* [WordPress Filters](filters.md)
+* [GraphQL Queries](./docs/queries.md)
+* [GraphQL Mutations](./docs/mutations.md)
+* [Javascript API](./docs/javascript-api.md)
+* [WordPress Actions](./docs/actions.md)
+* [WordPress Filters](./docs/filters.md)
 
 ## Testing
 
