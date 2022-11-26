@@ -18,7 +18,7 @@ A WordPress plugin that provides headless login and authentication for <a href="
 
 Headless Login for WPGraphQL is a flexible and extensible plugin that allows headless WordPress sites to login and authenticate users via <a href="https://wpgraphql.com" target="_blank">WPGraphQL</a>v using a variety of authentication methods, including traditional WordPress username/password,<a href="https://oauth.net/2/" target="_blank">OAuth 2.0</a> / <a href="https://openid.net/connect/" target="_blank">OpenID Connect</a>, and <a href="https://jwt.io/" target="_blank">JSON Web Tokens (JWT)</a>.
 
-This plugin is inspired by and aims to replace <a href="https://github.com/wp-graphql/wp-graphql-jwt-authentication" target="_blank">WPGraphQL JWT Authentication</a> as more powerful and flexible authentication solution for headless WP.
+This plugin is inspired by and aims to replace <a href="https://github.com/wp-graphql/wp-graphql-jwt-authentication" target="_blank">WPGraphQL JWT Authentication</a> as more powerful and flexible authentication solution for Headless WP.
 
 ## System Requirements
 

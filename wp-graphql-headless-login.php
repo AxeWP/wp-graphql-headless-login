@@ -13,6 +13,7 @@
  * Requires at least: 5.6
  * Tested up to: 6.1.1
  * Requires PHP: 7.4
+ * Requires Plugins: wp-graphql
  * WPGraphQL requires at least: 1.12.0
  * License: GPL-3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -87,18 +88,33 @@ function graphql_login_constants() : void {
 /**
  * Checks if all the the required plugins are installed and activated.
  *
- * @todo check specific version.
- *
  * @since 0.0.1
  */
 function graphql_login_dependencies_not_ready() : array {
+	$wpgraphql_version = '1.12.0';
+
 	$deps = [];
 
-	if ( ! class_exists( '\WPGraphQL' ) ) {
-		$deps[] = 'WPGraphQL';
+	if ( ! class_exists( 'WPGraphQL' ) || ( defined( 'WPGRAPHQL_VERSION' ) && version_compare( WPGRAPHQL_VERSION, $wpgraphql_version, '<' ) ) ) {
+		$deps['WPGraphQL'] = $wpgraphql_version;
 	}
 
 	return $deps;
+}
+
+/**
+ * Checks if any known plugin conflicts are present.
+ *
+ * @since @todo
+ */
+function graphql_login_plugin_conflicts() : array {
+	$conflicts = [];
+
+	if ( class_exists( 'WPGraphQL\JWT_Authentication\JWT_Authentication' ) && is_plugin_active( 'wp-graphql-jwt-authentication/wp-graphql-jwt-authentication.php' ) ) {
+		$conflicts[] = 'WPGraphQL JWT Authentication';
+	}
+
+	return $conflicts;
 }
 
 /**
@@ -112,25 +128,51 @@ function graphql_login_init() : void {
 	// Get the dependencies that are not ready.
 	$not_ready = graphql_login_dependencies_not_ready();
 
+	// Get the conflicting plugins.
+	$conflicts = graphql_login_plugin_conflicts();
+
 	// Load our plugin and initialize.
-	if ( empty( $not_ready ) && defined( 'WPGRAPHQL_LOGIN_PLUGIN_DIR' ) ) {
+	if ( empty( $not_ready ) && empty( $conflicts ) && defined( 'WPGRAPHQL_LOGIN_PLUGIN_DIR' ) ) {
 		require_once WPGRAPHQL_LOGIN_PLUGIN_DIR . 'src/Main.php';
 		\WPGraphQL\Login\Main::instance();
 	}
 
-	// Output an error notice.
-	foreach ( $not_ready as $dep ) {
+	// Output an error notice for the dependencies that are not ready.
+	foreach ( $not_ready as $dep => $version ) {
 		add_action(
 			'admin_notices',
-			static function () use ( $dep ): void {
+			static function () use ( $dep, $version ) {
 				?>
 				<div class="error notice">
 					<p>
 						<?php
 						printf(
-								/* translators: dependency not ready error message */
-							esc_html__( '%1$s must be active for Headless Login for WPGraphQL to work.', 'wp-graphql-headless-login' ),
-							esc_html( $dep )
+							/* translators: dependency not ready error message */
+							esc_html__( '%1$s (v%2$s) must be active for Headless Login for WPGraphqL to work.', 'wp-graphql-headless-login' ),
+							esc_attr( $dep ),
+							esc_attr( $version ),
+						);
+						?>
+					</p>
+				</div>
+				<?php
+			}
+		);
+	}
+
+	// Output an error notice for the conflicting plugins.
+	foreach ( $conflicts as $conflict ) {
+		add_action(
+			'admin_notices',
+			static function () use ( $conflict ) {
+				?>
+				<div class="error notice">
+					<p>
+						<?php
+						printf(
+							/* translators: dependency not ready error message */
+							esc_html__( '%1$s is not compatible with Headless Login for WPGraphqL. Please deactivate it.', 'wp-graphql-headless-login' ),
+							esc_attr( $conflict ),
 						);
 						?>
 					</p>
