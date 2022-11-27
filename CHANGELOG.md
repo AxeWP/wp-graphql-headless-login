@@ -6,11 +6,20 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
-- docs: Fix broken Readme.md links.
-- chore: Update doc-block header in `src/Type/WPObject/LoginOptions.php`
-- feat: Improve requirement checks for `WPGraphQL` (required:v1.12.0) and `WPGraphQL-JWT-Authentication`(conflicted) plugins.
+## [0.0.2] - 2022-11-27
+
+### Added
+- feat: Improve requirement checks for `WPGraphQL` (required: v1.12.0) and `WPGraphQL-JWT-Authentication`(conflicted) plugins.
+
+### Changed
 - dev: Allow core function overloading in `wp-graphql-headless-login.php`.
+
+### Fixed
 - fix: Correctly map Github first and last name to user data.
+
+### Housekeeping
+- chore: Update doc-block header in `src/Type/WPObject/LoginOptions.php`
+- docs: Fix broken Readme.md links.
 - tests: add tests for Github and Google provider mutations.
 
-## [0.0.1] - 2022-11-27 - Initial (Public) Release
+## [0.0.1] - 2022-11-26 - Initial (Public) Release
