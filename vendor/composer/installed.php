@@ -1,22 +1,22 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
+        'pretty_version' => 'dev-develop',
+        'version' => 'dev-develop',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => NULL,
+        'reference' => 'a0aedf1bce7c111bdd0d00cca3e36ac52ce62dd9',
         'name' => 'axepress/wp-graphql-headless-login',
         'dev' => false,
     ),
     'versions' => array(
         'axepress/wp-graphql-headless-login' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
+            'pretty_version' => 'dev-develop',
+            'version' => 'dev-develop',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => NULL,
+            'reference' => 'a0aedf1bce7c111bdd0d00cca3e36ac52ce62dd9',
             'dev_requirement' => false,
         ),
         'axepress/wp-graphql-plugin-boilerplate' => array(
