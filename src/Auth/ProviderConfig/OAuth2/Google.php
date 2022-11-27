@@ -114,8 +114,8 @@ class Google extends OAuth2Config {
 		$email    = $owner_details['email'];
 		$username = strstr( $email, '@', true );
 
-		$first_name = $owner_details['first_name'] ?? null;
-		$last_name  = $owner_details['last_name'] ?? null;
+		$first_name = $owner_details['given_name'] ?? null;
+		$last_name  = $owner_details['family_name'] ?? null;
 
 		return [
 			'user_login'       => $username,
