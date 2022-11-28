@@ -68,12 +68,12 @@ Priority support and custom development are available to [our Sponsors](https://
 	* OAuth2 - Generic: Any other OAuth 2.0 provider.
 	* SAML authentication and more coming soon!
 
-	Or easily add your own provider by [extending the `ProviderConfig` class](./docs/provider-config.md).
+	Or add your own provider by [extending the `ProviderConfig` class](./docs/provider-config.md).
 * Authenticate with JWT tokens using a [HTTP Authorization header](./docs/example-next-api-routes.md).
 * Generate short-term `authToken`s and long term `refreshToken`s for seamless reauthentication in your headless app.
 * Optionally link a user account to an OAuth 2.0 / OpenID Connect provider, or create a new WordPress user if none exists, with data mapped from the provider identity.
-* Query the [enabled `loginClient` authorization urls](./docs/queries.md#querying-login-clients), to easily use in your frontend's login buttons.
-* Extensive WordPress [actions](./docs/actions.md) and [filters](./docs/filters.md) for easy customization of the plugin's behavior.
+* Query the [enabled `loginClient` authorization urls](./docs/queries.md#querying-login-clients), to use in your frontend's login buttons.
+* Extensive WordPress [actions](./docs/actions.md) and [filters](./docs/filters.md) for customization of the plugin's behavior.
 * Log out all sessions for a user by [revoking](./docs/mutations.md#revoke-the-user-secret) or [refreshing](./docs/mutations.md#refresh-the-user-secret) their tokens, in GraphQL or the WordPress backend Profile Page.
 
 - and more!
