@@ -11,7 +11,7 @@ License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 == Description ==
-A WordPress plugin that provides headless login and authentication for <a href="https://wpgraphql.com" target="_blank">WPGraphQL</a>.
+A WordPress plugin that provides headless login and authentication for <a href="https://wpgraphql.com" target="_blank">WPGraphQL</a> supporting traditional passwords, OAuth2/OpenID Connect, JWT, and more.
 
 For more info, see <a href="https://github.com/axewp/wp-graphql-headless-login/" target="_blank">the GitHub repo</a>.
 
