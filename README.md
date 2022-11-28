@@ -1,7 +1,7 @@
 ![Headless Login for WPGraphQL Logo](./assets/header.png)
 # Headless Login for WPGraphQL
 
-A WordPress plugin that provides headless login and authentication for <a href="https://wpgraphql.com" target="_blank">WPGraphQL</a>.
+A WordPress plugin that provides Headless login and authentication for <a href="https://wpgraphql.com" target="_blank">WPGraphQL</a>, supporting traditional passwords, OAuth2/OpenID Connect, JWT, and more.
 
 * [Join the WPGraphQL community on Slack.](https://join.slack.com/t/wp-graphql/shared_invite/zt-3vloo60z-PpJV2PFIwEathWDOxCTTLA)
 * [Documentation](#usage)
@@ -16,7 +16,7 @@ A WordPress plugin that provides headless login and authentication for <a href="
 
 ## Description
 
-Headless Login for WPGraphQL is a flexible and extensible plugin that allows headless WordPress sites to login and authenticate users via <a href="https://wpgraphql.com" target="_blank">WPGraphQL</a>v using a variety of authentication methods, including traditional WordPress username/password,<a href="https://oauth.net/2/" target="_blank">OAuth 2.0</a> / <a href="https://openid.net/connect/" target="_blank">OpenID Connect</a>, and <a href="https://jwt.io/" target="_blank">JSON Web Tokens (JWT)</a>.
+Headless Login for WPGraphQL is a flexible and extensible plugin that allows headless WordPress sites to login and authenticate users via <a href="https://wpgraphql.com" target="_blank">WPGraphQL</a> using a variety of authentication methods, including traditional WordPress username/password,<a href="https://oauth.net/2/" target="_blank">OAuth 2.0</a> / <a href="https://openid.net/connect/" target="_blank">OpenID Connect</a>, and <a href="https://jwt.io/" target="_blank">JSON Web Tokens (JWT)</a>.
 
 This plugin is inspired by and aims to replace <a href="https://github.com/wp-graphql/wp-graphql-jwt-authentication" target="_blank">WPGraphQL JWT Authentication</a> as more powerful and flexible authentication solution for Headless WP.
 
@@ -34,7 +34,6 @@ This plugin is inspired by and aims to replace <a href="https://github.com/wp-gr
 
 ### With Composer
 
-@todo
 ```console
 composer require axepress/wp-graphql-headless-login
 ```
@@ -62,7 +61,7 @@ Priority support and custom development are available to [our Sponsors](https://
 * Use a traditional WordPress username/password using [the `loginWithPassword` mutation](./docs/mutations.md#login-with-a-traditional-wordpress-usernamepassword).
 * Validate an OAuth 2.0 / OpenID Connect provider response using [the `login` mutation](./docs/mutations.md#login-with-an-oauth2openid-authorization-response).
 
-	Supported providers (Out of the box):
+	Supported providers (out of the box):
 	* Facebook
 	* GitHub
 	* Google
