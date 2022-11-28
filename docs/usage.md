@@ -1,4 +1,4 @@
-# Usagee
+# Usage
 _Headless authentication can be confusing. Before you continue, please review some [common terminology](terminology.md)._
 
 ## How it works
