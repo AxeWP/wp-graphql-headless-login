@@ -35,7 +35,7 @@ jobs:
           tools: composer:v2, wp-cli
 
       - name: Setup Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16.x
 
