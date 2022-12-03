@@ -135,7 +135,7 @@ export function ClientSettings({ clientSlug }) {
 					<h2 className="components-panel__body-title">
 						{sprintf(
 							// translators: %s: Client slug.
-							__('%s Settings.', 'wp-graphql-headless-login'),
+							__('%s Settings', 'wp-graphql-headless-login'),
 							wpGraphQLLogin?.settings?.[clientSlug]?.title ||
 								'Client'
 						)}
@@ -143,11 +143,11 @@ export function ClientSettings({ clientSlug }) {
 				</PanelRow>
 				<ToggleControl
 					checked={client?.isEnabled}
-					label={__('Enable Provider.', 'wp-graphql-headless-login')}
+					label={__('Enable Provider', 'wp-graphql-headless-login')}
 					onChange={(selected) => updateClient('isEnabled', selected)}
 				/>
 				<TextControl
-					label={__('Client Label.', 'wp-graphql-headless-login')}
+					label={__('Client Label', 'wp-graphql-headless-login')}
 					onChange={(selected) => updateClient('name', selected)}
 					value={client?.name}
 					required
@@ -162,7 +162,7 @@ export function ClientSettings({ clientSlug }) {
 			<PanelBody>
 				<PanelRow>
 					<h2 className="components-panel__body-title">
-						{__('Login Settings.', 'wp-graphql-headless-login')}
+						{__('Login Settings', 'wp-graphql-headless-login')}
 						<Icon
 							icon="admin-users"
 							className="components-panel__icon"
@@ -187,7 +187,7 @@ export function ClientSettings({ clientSlug }) {
 					saveRecord();
 				}}
 			>
-				{__('Save.', 'wp-graphql-headless-login')}
+				{__('Save', 'wp-graphql-headless-login')}
 			</Button>
 		</>
 	);

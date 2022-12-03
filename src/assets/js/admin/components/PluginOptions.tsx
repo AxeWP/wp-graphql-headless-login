@@ -36,7 +36,7 @@ export function PluginOptions() {
 		<PanelBody>
 			<PanelRow>
 				<h2 className="components-panel__body-title">
-					{__('Plugin Settings.', 'wp-graphql-headless-login')}
+					{__('Plugin Settings', 'wp-graphql-headless-login')}
 					<Icon
 						icon="admin-tools"
 						className="components-panel__icon"

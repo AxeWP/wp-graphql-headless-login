@@ -81,7 +81,7 @@ export function ClientSecretControl() {
 			}
 		>
 			<Button
-				text={__('Regenerate JWT secret.', 'wp-graphql-headless-login')}
+				text={__('Regenerate JWT secret', 'wp-graphql-headless-login')}
 				icon="admin-network"
 				disabled={!!secret.isConstant}
 				isDestructive

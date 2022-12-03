@@ -113,7 +113,7 @@ abstract class ProviderConfig {
 		return [
 			'linkExistingUsers' => [
 				'type'        => 'boolean',
-				'description' => __( 'Login existing users.', 'wp-graphql-headless-login' ),
+				'description' => __( 'Login existing users', 'wp-graphql-headless-login' ),
 				'help'        => __( 'If a WordPress account already exists with the same identity as a newly-authenticated user, login as that user instead of generating an error.', 'wp-graphql-headless-login' ),
 				'order'       => 0,
 			],

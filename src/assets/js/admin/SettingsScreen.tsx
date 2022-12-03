@@ -96,7 +96,7 @@ function SettingsScreen() {
 						target="_blank"
 						rel="noreferrer"
 					>
-						{__('Documentation (WIP).', 'wp-graphql-headless-login')}
+						{__('Documentation (WIP)', 'wp-graphql-headless-login')}
 						<Icon
 							icon="external"
 							className="wp-graphql-headless-login__documentation-link-icon"

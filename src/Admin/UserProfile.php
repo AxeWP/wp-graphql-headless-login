@@ -70,11 +70,11 @@ class UserProfile {
 				outline: none
 			}
 		</style>
-		<h2 style="padding-top:1rem"><?php echo esc_attr__( 'Headless Login - JWT Secret.', 'wp-graphql-headless-login' ); ?></h2>
+		<h2 style="padding-top:1rem"><?php echo esc_attr__( 'Headless Login - JWT Secret', 'wp-graphql-headless-login' ); ?></h2>
 
 		<?php self::revoke_user_secret_key_field( $user->ID ); ?>
 
-		<h2><?php echo esc_attr__( 'Linked User Identities.', 'wp-graphql-headless-login' ); ?></h2>
+		<h2><?php echo esc_attr__( 'Linked User Identities', 'wp-graphql-headless-login' ); ?></h2>
 
 		<table class="form-table">
 			<tbody>
@@ -112,7 +112,7 @@ class UserProfile {
 					class="regular-text"
 					id="<?php echo esc_attr( $meta_key ); ?>"
 					name="<?php echo esc_attr( $meta_key ); ?>"
-					value="<?php echo ! empty( $identity ) ? esc_attr( $identity ) : esc_attr__( 'Not linked.', 'wp-graphql-headless-login' ); ?>"
+					value="<?php echo ! empty( $identity ) ? esc_attr( $identity ) : esc_attr__( 'Not linked', 'wp-graphql-headless-login' ); ?>"
 					disabled
 				/>
 			</td>
@@ -142,7 +142,7 @@ class UserProfile {
 				data-user-id="<?php echo absint( $user_id ); ?>"
 				data-provider="<?php echo esc_attr( $provider ); ?>"
 			>
-				<?php esc_html_e( 'Unlink.', 'wp-graphql-headless-login' ); ?>
+				<?php esc_html_e( 'Unlink', 'wp-graphql-headless-login' ); ?>
 			</button>
 		</td>
 		<script type="text/javascript">
@@ -165,7 +165,7 @@ class UserProfile {
 
 					function displayFailureNotice() {
 						// If the response is not okay, show a notice at the the first row of the table.
-						button.innerHTML = '<?php esc_html_e( 'Unlink.', 'wp-graphql-headless-login' ); ?>';
+						button.innerHTML = '<?php esc_html_e( 'Unlink', 'wp-graphql-headless-login' ); ?>';
 						const notice = document.createElement( 'tr' );
 						notice.classList.add( 'notice', 'notice-error', 'is-dismissible' );
 						notice.innerHTML = '<td colspan="3"><?php esc_html_e( 'There was an error unlinking the identity.', 'wp-graphql-headless-login' ); ?></td>';
@@ -217,7 +217,7 @@ class UserProfile {
 			<tr>
 				<th>
 					<label for="<?php echo esc_attr( 'revoke-user-secret-key' ); ?>">
-						<?php echo esc_attr__( 'Revoke User Secret.', 'wp-graphql-headless-login' ); ?>
+						<?php echo esc_attr__( 'Revoke User Secret', 'wp-graphql-headless-login' ); ?>
 					</label>
 				</th>
 				<td>
@@ -227,7 +227,7 @@ class UserProfile {
 						id="revoke-user-secret-key"
 						data-user-id="<?php echo absint( $user_id ); ?>"
 					>
-						<?php esc_html_e( 'Revoke.', 'wp-graphql-headless-login' ); ?>
+						<?php esc_html_e( 'Revoke', 'wp-graphql-headless-login' ); ?>
 					</button>
 					<p class="description">
 						<?php esc_html_e( 'Revokes the user secret key. This will invalidate all existing tokens,and log the user out of the frontend on all devices.', 'wp-graphql-headless-login' ); ?>
@@ -253,7 +253,7 @@ class UserProfile {
 
 					function displayFailureNotice() {
 						// If the response is not okay, replace the description below the button with a failure notice.
-						button.innerHTML = '<?php esc_html_e( 'Revoke.', 'wp-graphql-headless-login' ); ?>';
+						button.innerHTML = '<?php esc_html_e( 'Revoke', 'wp-graphql-headless-login' ); ?>';
 						// Get the description element.
 						const description = buttonRow.querySelector( 'p.description' );
 						// Replace the description with a failure notice.
@@ -271,7 +271,7 @@ class UserProfile {
 					}).then( function( response ) {
 						// If the response is okay, replace the description below the buttion with a success notice.
 						if ( response.ok ) {
-							button.innerHTML = '<?php esc_html_e( 'Revoke.', 'wp-graphql-headless-login' ); ?>';
+							button.innerHTML = '<?php esc_html_e( 'Revoke', 'wp-graphql-headless-login' ); ?>';
 							// Get the description element.
 							const description = buttonRow.querySelector( 'p.description' );
 							// Replace the description with a success notice.

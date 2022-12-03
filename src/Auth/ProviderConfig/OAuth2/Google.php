@@ -57,13 +57,13 @@ class Google extends OAuth2Config {
 		return [
 			'hostedDomain' => [
 				'type'        => 'string',
-				'description' => __( 'Hosted Domain.', 'wp-graphql-headless-login' ),
+				'description' => __( 'Hosted Domain', 'wp-graphql-headless-login' ),
 				'help'        => __( 'Streamline the login process for accounts owned by a Google Cloud organization. To optimize for Google Cloud organization accounts generally instead of just one organization domain, set a value of an asterisk `*`.', 'wp-graphql-headless-login' ),
 				'order'       => 10,
 			],
 			'promptType'   => [
 				'type'        => 'string',
-				'description' => __( 'Prompt Type.', 'wp-graphql-headless-login' ),
+				'description' => __( 'Prompt Type', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The type of prompt displayed to the user when authenticating.', 'wp-graphql-headless-login' ),
 				'enum'        => [
 					'none',
@@ -74,8 +74,8 @@ class Google extends OAuth2Config {
 			],
 			'scope'        => [
 				'type'        => 'array',
-				'description' => __( 'Scope.', 'wp-graphql-headless-login' ),
-				'help'        => __( 'The scope to request from the Google OAuth2 API. See https://developers.google.com/identity/protocols/oauth2/scope for a list of available scioes.', 'wp-graphql-headless-login' ),
+				'description' => __( 'Scope', 'wp-graphql-headless-login' ),
+				'help'        => __( 'The scope to request from the Google OAuth2 API. See https://developers.google.com/identity/protocols/oauth2/scope for a list of available scopes.', 'wp-graphql-headless-login' ),
 				'order'       => 12,
 				'advanced'    => true,
 				'items'       => [
@@ -100,7 +100,7 @@ class Google extends OAuth2Config {
 			],
 			'scope'        => [
 				'type'        => [ 'list_of' => 'String' ],
-				'description' => __( 'The fields to request from the Google Graph API. See https://developers.facebook.com/docs/graph-api/reference/user for a list of available fields.', 'wp-graphql-headless-login' ),
+				'description' => __( 'The scope to request from the Google Graph API. See https://developers.facebook.com/docs/graph-api/reference/user for a list of available scopes.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}
