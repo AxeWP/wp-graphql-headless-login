@@ -8,6 +8,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ### Added
 - feat: Add Instagram provider support.
+- feat: Add LinkedIn provider support.
 
 ### Changed
 - dev!: Move `loginOptions.linkExistingUsers` to `{Provider}LoginOptions`.

@@ -14,6 +14,7 @@ use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Generic;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\GitHub;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Google;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Instagram;
+use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\LinkedIn;
 
 /**
  * Class - ProviderRegistry
@@ -137,6 +138,7 @@ class ProviderRegistry {
 					'github'    => GitHub::class,
 					'google'    => Google::class,
 					'instagram' => Instagram::class,
+					'linkedin'  => LinkedIn::class,
 				]
 			);
 
