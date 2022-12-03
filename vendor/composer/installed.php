@@ -5,7 +5,7 @@
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'f87ca5df16a5b2120d78ba2667c5142b253ac0a3',
+        'reference' => '993ca9e117b77e859f96831b5ba54970a440d821',
         'name' => 'axepress/wp-graphql-headless-login',
         'dev' => false,
     ),
@@ -16,7 +16,7 @@
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'f87ca5df16a5b2120d78ba2667c5142b253ac0a3',
+            'reference' => '993ca9e117b77e859f96831b5ba54970a440d821',
             'dev_requirement' => false,
         ),
         'axepress/wp-graphql-plugin-boilerplate' => array(
