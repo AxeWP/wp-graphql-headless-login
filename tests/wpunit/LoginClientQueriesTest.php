@@ -69,7 +69,9 @@ class LoginClientQueriesTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase
 						redirectUri
 					}
 					loginOptions {
-						linkExistingUsers
+						... on FacebookLoginOptions {
+							linkExistingUsers
+						}
 						createUserIfNoneExists
 					}
 				}
@@ -176,7 +178,9 @@ class LoginClientQueriesTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase
 						redirectUri
 					}
 					loginOptions {
-						linkExistingUsers
+						... on FacebookLoginOptions {
+							linkExistingUsers
+						}
 						createUserIfNoneExists
 					}
 				}

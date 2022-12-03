@@ -91,7 +91,7 @@ class User {
 	public static function maybe_create_user( Client $client, array $user_data ) {
 		$config = $client->get_config();
 
-		if ( $config['loginOptions']['linkExistingUsers'] ) {
+		if ( ! empty( $config['loginOptions']['linkExistingUsers'] ) ) {
 			$user_id = email_exists( $user_data['user_email'] );
 
 			if ( ! empty( $user_id ) ) {

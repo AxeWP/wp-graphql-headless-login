@@ -6,6 +6,12 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
+### Added
+- feat: Add Instagram provider support.
+
+### Changed
+- dev!: Move `loginOptions.linkExistingUsers` to `{Provider}LoginOptions`.
+
 ### Housekeeping
 - dev: Update Strauss and Composer deps.
 - docs: Fix various typos and styling issues. Thanks @jasonbahl !
