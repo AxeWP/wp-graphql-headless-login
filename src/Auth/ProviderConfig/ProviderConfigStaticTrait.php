@@ -130,10 +130,6 @@ trait ProviderConfigStaticTrait {
 	 */
 	public static function default_login_options_fields() : array {
 		$fields = [
-			'linkExistingUsers'      => [
-				'type'        => 'Boolean',
-				'description' => __( 'Whether to link existing users.', 'wp-graphql-headless-login' ),
-			],
 			'createUserIfNoneExists' => [
 				'type'        => 'Boolean',
 				'description' => __( 'Whether to create users if none exist.', 'wp-graphql-headless-login' ),
@@ -179,25 +175,14 @@ trait ProviderConfigStaticTrait {
 	 */
 	protected static function default_login_options_schema() : array {
 		$settings = [
-			'linkExistingUsers'      => [
-				'type'        => 'boolean',
-				'description' => __( 'Login existing users.', 'wp-graphql-headless-login' ),
-				'required'    => true,
-				'help'        => __( 'If a WordPress account already exists with the same identity as a newly-authenticated user, login as that user instead of generating an error.', 'wp-graphql-headless-login' ),
-				'order'       => 0,
-			],
 			'createUserIfNoneExists' => [
 				'type'        => 'boolean',
 				'description' => __( 'Create new users.', 'wp-graphql-headless-login' ),
 				'help'        => __( 'If the user identity is not linked to an existing WordPress user, it is created. If this setting is not enabled, and if the user authenticates with an account which is not linked to an existing WordPress user, then the authentication will fail.', 'wp-graphql-headless-login' ),
-				'required'    => true,
 				'order'       => 1,
 			],
 		];
 
 		return $settings;
 	}
-
-
-
 }

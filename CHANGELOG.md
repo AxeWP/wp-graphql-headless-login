@@ -6,6 +6,9 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
+### Changed
+- dev: Make `loginOptions.linkExistingUsers` more modular.
+
 ### Housekeeping
 - dev: Update Strauss and Composer deps.
 - docs: Fix various typos and styling issues. Thanks @jasonbahl !

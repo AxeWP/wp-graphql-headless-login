@@ -29,7 +29,6 @@ const clientDefaults: ClientType = {
 		redirectUri: '',
 	},
 	loginOptions: {
-		linkExistingUsers: true,
 		createUserIfNoneExists: true,
 	},
 };

@@ -92,7 +92,12 @@ abstract class ProviderConfig {
 	 * Should probably be overwritten by the child ProviderConfig.
 	 */
 	protected static function login_options_fields() : array {
-		return [];
+		return [
+			'linkExistingUsers' => [
+				'type'        => 'Boolean',
+				'description' => __( 'Whether to link existing users.', 'wp-graphql-headless-login' ),
+			],
+		];
 	}
 
 	/**
@@ -105,6 +110,13 @@ abstract class ProviderConfig {
 	 * @see https://developer.wordpress.org/rest-api/extending-the-rest-api/schema
 	 */
 	protected static function login_options_schema() : array {
-		return [];
+		return [
+			'linkExistingUsers' => [
+				'type'        => 'boolean',
+				'description' => __( 'Login existing users.', 'wp-graphql-headless-login' ),
+				'help'        => __( 'If a WordPress account already exists with the same identity as a newly-authenticated user, login as that user instead of generating an error.', 'wp-graphql-headless-login' ),
+				'order'       => 0,
+			],
+		];
 	}
 }
