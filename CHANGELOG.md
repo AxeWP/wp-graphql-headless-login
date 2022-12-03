@@ -6,6 +6,11 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
+### Housekeeping
+- dev: Update Strauss and Composer deps.
+- docs: Fix various typos and styling issues. Thanks @jasonbahl !
+- ci: Upgrade workflow actions to latest versions.
+
 ## [0.0.2] - 2022-11-27
 
 ### Added
