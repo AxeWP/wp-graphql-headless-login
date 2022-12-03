@@ -3,7 +3,7 @@
  * The Instagram Provider class.
  *
  * @package WPGraphQL\Login\Auth\ProviderConfig\OAuth2
- * @since @todo
+ * @since 0.0.3
  */
 
 namespace WPGraphQL\Login\Auth\ProviderConfig\OAuth2;
