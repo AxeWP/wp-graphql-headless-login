@@ -22,7 +22,8 @@
 		"league/oauth2-facebook": "^2.2",
 		"league/oauth2-github": "^3.0",
 		"firebase/php-jwt": "^6.3",
-		"league/oauth2-google": "^4.0"
+		"league/oauth2-google": "^4.0",
+		"league/oauth2-instagram": "^3.1"
 	},
 	"require-dev": {
 		"lucatume/wp-browser": "^3.0",
@@ -76,7 +77,8 @@
 				"league/oauth2-client",
 				"league/oauth2-facebook",
 				"league/oauth2-github",
-				"league/oauth2-google"
+				"league/oauth2-google",
+				"league/oauth2-instagram"
 			],
 			"delete_vendor_files": false,
 			"include_modified_date": false

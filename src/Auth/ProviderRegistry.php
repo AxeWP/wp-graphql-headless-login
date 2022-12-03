@@ -13,6 +13,7 @@ use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Facebook;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Generic;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\GitHub;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Google;
+use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Instagram;
 
 /**
  * Class - ProviderRegistry
@@ -131,10 +132,11 @@ class ProviderRegistry {
 			$registered_providers = apply_filters(
 				'graphql_login_registered_provider_configs',
 				[
-					'facebook' => Facebook::class,
-					'generic'  => Generic::class,
-					'github'   => GitHub::class,
-					'google'   => Google::class,
+					'facebook'  => Facebook::class,
+					'generic'   => Generic::class,
+					'github'    => GitHub::class,
+					'google'    => Google::class,
+					'instagram' => Instagram::class,
 				]
 			);
 

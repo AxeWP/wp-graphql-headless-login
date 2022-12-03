@@ -6,6 +6,9 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
+### Added
+- feat: Add Instagram provider support.
+
 ### Changed
 - dev: Make `loginOptions.linkExistingUsers` more modular.
 
