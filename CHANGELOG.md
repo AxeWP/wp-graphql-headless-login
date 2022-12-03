@@ -6,6 +6,13 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
+## [0.0.3] - 2022-12-03
+
+This release adds support for Instagram and LinkedIn OAuth 2.0 providers, and fixes various typos and styling issues.
+
+### Breaking Changes
+- Schema: `linkExistingUsers` field was moved from the `LoginOptions` interface, to the individual `{Provider}LoginOptions` objects that implement that setting.
+
 ### Added
 - feat: Add Instagram provider support.
 - feat: Add LinkedIn provider support.
