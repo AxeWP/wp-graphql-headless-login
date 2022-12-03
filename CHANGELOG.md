@@ -10,7 +10,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - feat: Add Instagram provider support.
 
 ### Changed
-- dev: Make `loginOptions.linkExistingUsers` more modular.
+- dev!: Move `loginOptions.linkExistingUsers` to `{Provider}LoginOptions`.
 
 ### Housekeeping
 - dev: Update Strauss and Composer deps.
