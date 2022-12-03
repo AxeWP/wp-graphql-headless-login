@@ -55,20 +55,20 @@ class Facebook extends OAuth2Config {
 		return [
 			'graphAPIVersion' => [
 				'type'        => 'string',
-				'description' => __( 'Graph API Version.', 'wp-graphql-headless-login' ),
+				'description' => __( 'Graph API Version', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The version of the Facebook Graph API to use. E.g. `v15.0`.', 'wp-graphql-headless-login' ),
 				'pattern'     => 'v(\d+\.){1,}\d+',
 				'order'       => 10,
 			],
 			'enableBetaTier'  => [
 				'type'        => 'boolean',
-				'description' => __( 'Enable Beta Tier.', 'wp-graphql-headless-login' ),
+				'description' => __( 'Enable Beta Tier', 'wp-graphql-headless-login' ),
 				'advanced'    => true,
 				'order'       => 11,
 			],
 			'scope'           => [
 				'type'        => 'array',
-				'description' => __( 'User Fields.', 'wp-graphql-headless-login' ),
+				'description' => __( 'User Fields', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The fields to request from the Facebook Graph API. See https://developers.facebook.com/docs/graph-api/reference/user for a list of available fields.', 'wp-graphql-headless-login' ),
 				'order'       => 12,
 				'advanced'    => true,

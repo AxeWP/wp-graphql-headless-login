@@ -16,8 +16,8 @@ export function StatusBadge({ provider }) {
 	const isEnabled = providerConfig?.isEnabled ?? false;
 
 	const title = isEnabled
-		? __('Enabled.', 'wp-graphql-headless-login')
-		: __('Disabled.', 'wp-graphql-headless-login');
+		? __('Enabled', 'wp-graphql-headless-login')
+		: __('Disabled', 'wp-graphql-headless-login');
 
 	return (
 		<div className="wp-graphql-headless-login__menu__status-badge">
@@ -38,7 +38,7 @@ export default function ({ activeClient, setActiveClient }) {
 	return (
 		<Navigation activeItem={activeClient}>
 			<NavigationMenu
-				title={__('Providers.', 'wp-graphql-headless-login')}
+				title={__('Providers', 'wp-graphql-headless-login')}
 			>
 				{providers.length > 0 &&
 					providers.map((provider) => (

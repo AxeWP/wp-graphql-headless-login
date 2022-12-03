@@ -57,25 +57,25 @@ class Generic extends OAuth2Config {
 		return [
 			'urlAuthorize'            => [
 				'type'        => 'string',
-				'description' => __( 'Authorization URL.', 'wp-graphql-headless-login' ),
+				'description' => __( 'Authorization URL', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The URL to redirect the user to in order to authorize the client.', 'wp-graphql-headless-login' ),
 				'order'       => 10,
 			],
 			'urlAccessToken'          => [
 				'type'        => 'string',
-				'description' => __( 'Access token URL.', 'wp-graphql-headless-login' ),
+				'description' => __( 'Access token URL', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The URL to request an access token.', 'wp-graphql-headless-login' ),
 				'order'       => 11,
 			],
 			'urlResourceOwnerDetails' => [
 				'type'        => 'string',
-				'description' => __( 'Resource Owner URL.', 'wp-graphql-headless-login' ),
+				'description' => __( 'Resource Owner URL', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The URL to request the resource owner details.', 'wp-graphql-headless-login' ),
 				'order'       => 12,
 			],
 			'scope'                   => [
 				'type'        => 'array',
-				'description' => __( 'Scope.', 'wp-graphql-headless-login' ),
+				'description' => __( 'Scope', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The scope to request from the Generic OAuth2 API.', 'wp-graphql-headless-login' ),
 				'order'       => 12,
 				'advanced'    => true,

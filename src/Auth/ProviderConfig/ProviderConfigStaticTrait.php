@@ -148,17 +148,17 @@ trait ProviderConfigStaticTrait {
 		$settings = [
 			'clientId'     => [
 				'type'        => 'string',
-				'description' => __( 'Client ID.', 'wp-graphql-headless-login' ),
+				'description' => __( 'Client ID', 'wp-graphql-headless-login' ),
 				'order'       => 0,
 			],
 			'clientSecret' => [
 				'type'        => 'string',
-				'description' => __( 'Client Secret.', 'wp-graphql-headless-login' ),
+				'description' => __( 'Client Secret', 'wp-graphql-headless-login' ),
 				'order'       => 1,
 			],
 			'redirectUri'  => [
 				'type'        => 'string',
-				'description' => __( 'Redirect URI.', 'wp-graphql-headless-login' ),
+				'description' => __( 'Redirect URI', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The frontend URL to redirect the user to after authorization.', 'wp-graphql-headless-login' ),
 				'order'       => 2,
 			],
@@ -177,7 +177,7 @@ trait ProviderConfigStaticTrait {
 		$settings = [
 			'createUserIfNoneExists' => [
 				'type'        => 'boolean',
-				'description' => __( 'Create new users.', 'wp-graphql-headless-login' ),
+				'description' => __( 'Create new users', 'wp-graphql-headless-login' ),
 				'help'        => __( 'If the user identity is not linked to an existing WordPress user, it is created. If this setting is not enabled, and if the user authenticates with an account which is not linked to an existing WordPress user, then the authentication will fail.', 'wp-graphql-headless-login' ),
 				'order'       => 1,
 			],

@@ -12,6 +12,9 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 ### Changed
 - dev!: Move `loginOptions.linkExistingUsers` to `{Provider}LoginOptions`.
 
+### Fixed
+- fix: Remove trailing `.` from title and action strings.
+
 ### Housekeeping
 - dev: Update Strauss and Composer deps.
 - docs: Fix various typos and styling issues. Thanks @jasonbahl !
