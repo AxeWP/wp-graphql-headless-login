@@ -5,7 +5,7 @@
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'b68af481d80892f895b153f6146bb4514dbb7edb',
+        'reference' => 'f87ca5df16a5b2120d78ba2667c5142b253ac0a3',
         'name' => 'axepress/wp-graphql-headless-login',
         'dev' => false,
     ),
@@ -16,7 +16,7 @@
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'b68af481d80892f895b153f6146bb4514dbb7edb',
+            'reference' => 'f87ca5df16a5b2120d78ba2667c5142b253ac0a3',
             'dev_requirement' => false,
         ),
         'axepress/wp-graphql-plugin-boilerplate' => array(
@@ -116,6 +116,15 @@
             'install_path' => __DIR__ . '/../league/oauth2-instagram',
             'aliases' => array(),
             'reference' => '8de83b72498862979c3f296a17b9fc7fdf728622',
+            'dev_requirement' => false,
+        ),
+        'league/oauth2-linkedin' => array(
+            'pretty_version' => '5.1.2',
+            'version' => '5.1.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../league/oauth2-linkedin',
+            'aliases' => array(),
+            'reference' => 'f9ab661ca37884067ca286412b6c17304d3c2fac',
             'dev_requirement' => false,
         ),
         'paragonie/random_compat' => array(
