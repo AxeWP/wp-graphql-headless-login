@@ -16,7 +16,7 @@
 		}
 	],
 	"require": {
-		"php": ">=7.4 || ^8.0",
+		"php": ">=7.4 || ^8.0 || ^8.1",
 		"axepress/wp-graphql-plugin-boilerplate":
 		"^0.0.6",
 		"league/oauth2-facebook": "^2.2",
