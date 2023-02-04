@@ -8,6 +8,7 @@
 
 namespace WPGraphQL\Login\Type\Enum;
 
+use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Generic;
 use WPGraphQL\Login\Auth\ProviderRegistry;
 use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\EnumType;
 use WPGraphQL\Type\WPEnumType;
@@ -38,7 +39,9 @@ class ProviderEnum extends EnumType {
 
 		$values = [];
 		foreach ( $providers as $provider ) {
-			$values[ WPEnumType::get_safe_name( $provider::get_name() ) ] = [
+			$name = WPEnumType::get_safe_name( $provider::get_slug() );
+
+			$values[ $name ] = [
 				'value'       => $provider::get_slug(),
 				'description' => sprintf(
 					// translators: Headless Login provider name.
