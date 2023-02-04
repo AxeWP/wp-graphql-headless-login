@@ -30,6 +30,7 @@ const clientDefaults: ClientType = {
 	},
 	loginOptions: {
 		createUserIfNoneExists: true,
+		useAuthenticationCookie: false,
 	},
 };
 

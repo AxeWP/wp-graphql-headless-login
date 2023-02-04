@@ -93,6 +93,20 @@ class Settings {
 					'show_in_rest'    => true,
 					'show_in_graphql' => false,
 				],
+				self::$settings_prefix . 'enable_password_mutation' => [
+					'default'         => true,
+					'single'          => true,
+					'type'            => 'boolean',
+					'show_in_rest'    => true,
+					'show_in_graphql' => false,
+				],
+				self::$settings_prefix . 'password_use_auth_cookie' => [
+					'default'         => false,
+					'single'          => true,
+					'type'            => 'boolean',
+					'show_in_rest'    => true,
+					'show_in_graphql' => false,
+				],
 				// The JWT Secret.
 				self::$settings_prefix . 'jwt_secret_key' => [
 					'default'         => false,

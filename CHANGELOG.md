@@ -5,8 +5,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
 ## Unreleased
+
+### Breaking Changes
 - fix!: Use the provider slug to generate `LoginProviderEnum` names. This is a breaking change, as the name for Generic - OAuth2 is now `GENERIC_OAUTH2`.
+
+### Added
+- feat: Add setting to disable the `loginWithPassword` mutation.
+- feat: Add settings to set a WP authentication cookie on successful login.
+
+### Changed
 - dev: Trigger `wp_login` action on successful login.
+
+### Housekeeping
 - chore: Update Composer dependencies.
 - chore: Update NPM dependencies.
 - ci: Update workflow actions to latest versions.
