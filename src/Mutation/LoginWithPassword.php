@@ -22,6 +22,18 @@ class LoginWithPassword extends MutationType {
 	/**
 	 * {@inheritDoc}
 	 */
+	public static function register(): void {
+		// If the mutation is disabled, don't register it.
+		if ( empty( graphql_login_get_setting( 'enable_password_mutation', true ) ) ) {
+			return;
+		}
+
+		parent::register();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public static function type_name() : string {
 		return 'LoginWithPassword';
 	}
@@ -76,6 +88,11 @@ class LoginWithPassword extends MutationType {
 			}
 
 			wp_set_current_user( $user->ID );
+
+			// Set the auth cookie if enabled in the settings.
+			if ( true === graphql_login_get_setting( 'password_use_auth_cookie', false ) ) {
+				wp_set_auth_cookie( $user->ID );
+			}
 
 			// Trigger the login action.
 			do_action( 'wp_login', $user->user_login, $user ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound

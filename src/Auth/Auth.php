@@ -81,6 +81,12 @@ class Auth {
 		// Login and generate the tokens.
 		wp_set_current_user( $user->ID );
 
+		// Set the auth cookie if the provider is configured to use it.
+		$config = $client->get_config();
+		if ( ! empty( $config['loginOptions']['useAuthenticationCookie'] ) ) {
+			wp_set_auth_cookie( $user->ID, false );
+		}
+
 		// Trigger the login action.
 		do_action( 'wp_login', $user->user_login, $user ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 

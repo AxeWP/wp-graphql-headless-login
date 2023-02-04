@@ -175,11 +175,17 @@ trait ProviderConfigStaticTrait {
 	 */
 	protected static function default_login_options_schema() : array {
 		$settings = [
-			'createUserIfNoneExists' => [
+			'createUserIfNoneExists'  => [
 				'type'        => 'boolean',
 				'description' => __( 'Create new users', 'wp-graphql-headless-login' ),
 				'help'        => __( 'If the user identity is not linked to an existing WordPress user, it is created. If this setting is not enabled, and if the user authenticates with an account which is not linked to an existing WordPress user, then the authentication will fail.', 'wp-graphql-headless-login' ),
 				'order'       => 1,
+			],
+			'useAuthenticationCookie' => [
+				'type'        => 'boolean',
+				'description' => __( 'Set authentication cookie', 'wp-graphql-headless-login' ),
+				'help'        => __( 'If enabled, a WordPress authentication cookie will be set after a successful login. This is useful for granting access to the WordPress dashboard or other protected areas of the WordPress backend without having to re-authenticate.', 'wp-graphql-headless-login' ),
+				'order'       => 2,
 			],
 		];
 

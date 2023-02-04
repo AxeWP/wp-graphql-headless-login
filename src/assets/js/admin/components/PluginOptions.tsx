@@ -23,6 +23,18 @@ export function PluginOptions() {
 		'wpgraphql_login_settings_delete_data_on_deactivate'
 	);
 
+	const [enablePasswordMutation, setEnablePasswordMutation] = useEntityProp(
+		'root',
+		'site',
+		'wpgraphql_login_settings_enable_password_mutation'
+	);
+
+	const [usePasswordAuthCookie, setUsePasswordAuthCookie] = useEntityProp(
+		'root',
+		'site',
+		'wpgraphql_login_settings_password_use_auth_cookie'
+	);
+
 	const { saveEditedEntityRecord } = useDispatch(coreStore);
 
 	const CustomOptions = () => {
@@ -31,6 +43,14 @@ export function PluginOptions() {
 			<></>
 		);
 	};
+
+	// Set default value for enablePasswordMutation.
+	if (null === enablePasswordMutation) {
+		setEnablePasswordMutation(true);
+		saveEditedEntityRecord('root', 'site', undefined, {
+			wpgraphql_login_settings_enable_password_mutation: true,
+		});
+	}
 
 	return (
 		<PanelBody>
@@ -46,6 +66,51 @@ export function PluginOptions() {
 			</PanelRow>
 
 			<ClientSecretControl />
+
+			{enablePasswordMutation !== undefined && (
+				<ToggleControl
+					className="wp-graphql-headless-login__enable-password-mutation-toggle"
+					label={__(
+						'Enable password mutation',
+						'wp-graphql-headless-login'
+					)}
+					checked={enablePasswordMutation}
+					onChange={(value) => {
+						setEnablePasswordMutation(value);
+						saveEditedEntityRecord('root', 'site', undefined, {
+							wpgraphql_login_settings_enable_password_mutation:
+								value,
+						});
+					}}
+					help={__(
+						'When selected, the `loginWithPassword` mutation will be enabled. This allows users to login with their existing WordPress site credentials.',
+						'wp-graphql-headless-login'
+					)}
+				/>
+			)}
+
+			{!!enablePasswordMutation &&
+				usePasswordAuthCookie !== undefined && (
+					<ToggleControl
+						className="wp-graphql-headless-login__use-password-auth-cookie-toggle"
+						label={__(
+							'Set authentication cookie on password login',
+							'wp-graphql-headless-login'
+						)}
+						checked={usePasswordAuthCookie}
+						onChange={(value) => {
+							setUsePasswordAuthCookie(value);
+							saveEditedEntityRecord('root', 'site', undefined, {
+								wpgraphql_login_settings_password_use_auth_cookie:
+									value,
+							});
+						}}
+						help={__(
+							'When selected, the `loginWithPassword` mutation will set the authentication cookie on successful login. This is useful for granting access to the WordPress dashboard or other protected areas of the WordPress backend without having to re-authenticate.',
+							'wp-graphql-headless-login'
+						)}
+					/>
+				)}
 
 			{deleteDataOnDeactivate !== undefined && (
 				<ToggleControl

@@ -130,4 +130,31 @@ class LoginWithPasswordMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 			]
 		);
 	}
+
+	public function testDisabledMutation() : void {
+		// Disable the mutation.
+		update_option( 'wpgraphql_login_settings_enable_password_mutation', false );
+		$this->tester->reset_utils_properties();
+		$this->clearSchema();
+
+
+		$query = $this->query();
+
+		// Test with correct credentials.
+		wp_set_current_user( 0 );
+
+		$variables = [
+			'username' => 'test_user',
+			'password' => 'test_password',
+		];
+
+
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertEquals( 'Cannot query field "loginWithPassword" on type "RootMutation".', $actual['errors'][0]['message'] );
+
+		// Cleanup.
+		delete_option( 'wpgraphql_login_settings_enable_password_mutation' );
+		$this->tester->reset_utils_properties();
+	}
 }
