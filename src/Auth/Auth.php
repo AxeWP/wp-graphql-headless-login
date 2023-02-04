@@ -81,6 +81,9 @@ class Auth {
 		// Login and generate the tokens.
 		wp_set_current_user( $user->ID );
 
+		// Trigger the login action.
+		do_action( 'wp_login', $user->user_login, $user ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+
 		$payload = [
 			'authToken'              => TokenManager::get_auth_token( $user ),
 			'authTokenExpiration'    => User::get_auth_token_expiration( $user->ID ),
