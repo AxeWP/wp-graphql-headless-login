@@ -52,7 +52,8 @@
 		"wp-cli/wp-cli-bundle": "^2.6",
 		"php-coveralls/php-coveralls": "^2.5",
 		"brianhenryie/strauss": "~0.12.0",
-		"mockery/mockery": "^1.5"
+		"mockery/mockery": "^1.5",
+		"php-stubs/woocommerce-stubs": "^7.3"
 	},
 	"config": {
 		"allow-plugins": {

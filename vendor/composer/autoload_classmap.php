@@ -377,4 +377,5 @@ return array(
     'WPGraphQL\\Login\\Vendor\\League\\OAuth2\\Client\\Tool\\QueryBuilderTrait' => $baseDir . '/src/vendor/league/oauth2-client/src/Tool/QueryBuilderTrait.php',
     'WPGraphQL\\Login\\Vendor\\League\\OAuth2\\Client\\Tool\\RequestFactory' => $baseDir . '/src/vendor/league/oauth2-client/src/Tool/RequestFactory.php',
     'WPGraphQL\\Login\\Vendor\\League\\OAuth2\\Client\\Tool\\RequiredParameterTrait' => $baseDir . '/src/vendor/league/oauth2-client/src/Tool/RequiredParameterTrait.php',
+    'WPGraphQL\\Login\\WoocommerceSchemaFilters' => $baseDir . '/src/WoocommerceSchemaFilters.php',
 );

@@ -67,6 +67,7 @@ export async function authenticate(provider, code, state) {
         authTokenExpiration
         refreshToken
         refreshTokenExpiration
+        wooSessionToken # If WPGraphQL for Woocommerce is installed.
         user {
           id
           name
@@ -278,6 +279,13 @@ function fetchAPI( query, { variables } = {}, currentUser = {} ) {
     headers[
       'Authorization'
     ] = `Bearer ${currentUser.authToken}`
+  }
+
+  // If you're using WPGraphQL for Woocommerce, you'll need to add the `woocommerce-session` to the header.
+  if( currentUser?.wooSessionToken ) {
+    headers[
+      'woocommerce-session'
+    ] = `Session ${currentUser.wooSessionToken}`
   }
 
   const res = await fetch( process.env.MY_GRAPHQL_URL, {

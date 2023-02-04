@@ -3,6 +3,7 @@ parameters:
 		inferPrivatePropertyTypeFromConstructor: true
 		checkMissingIterableValueType: false
 		bootstrapFiles:
+			- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
 			- phpstan/constants.php
 			- wp-graphql-headless-login.php
 			- access-functions.php
@@ -23,3 +24,4 @@ parameters:
 		scanDirectories:
 			- src/vendor/
 			- ../wp-graphql
+			- ../wp-graphql-woocommerce/includes

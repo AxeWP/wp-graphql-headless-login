@@ -11,16 +11,16 @@ download() {
 }
 
 install_wordpress() {
-	
+
 	if [ -d $WP_CORE_DIR ]; then
-		return;
+		return
 	fi
 
 	mkdir -p $WP_CORE_DIR
 
 	if [[ $WP_VERSION == 'nightly' || $WP_VERSION == 'trunk' ]]; then
 		mkdir -p $TMPDIR/wordpress-nightly
-		download https://wordpress.org/nightly-builds/wordpress-latest.zip	$TMPDIR/wordpress-nightly/wordpress-nightly.zip
+		download https://wordpress.org/nightly-builds/wordpress-latest.zip $TMPDIR/wordpress-nightly/wordpress-nightly.zip
 		unzip -q $TMPDIR/wordpress-nightly/wordpress-nightly.zip -d $TMPDIR/wordpress-nightly/
 		mv $TMPDIR/wordpress-nightly/wordpress/* $WP_CORE_DIR
 	else
@@ -34,7 +34,7 @@ install_wordpress() {
 				LATEST_VERSION=${WP_VERSION%??}
 			else
 				# otherwise, scan the releases and get the most up to date minor version of the major release
-				local VERSION_ESCAPED=`echo $WP_VERSION | sed 's/\./\\\\./g'`
+				local VERSION_ESCAPED=$(echo $WP_VERSION | sed 's/\./\\\\./g')
 				LATEST_VERSION=$(grep -o '"version":"'$VERSION_ESCAPED'[^"]*' $TMPDIR/wp-latest.json | sed 's/"version":"//' | head -1)
 			fi
 			if [[ -z "$LATEST_VERSION" ]]; then
@@ -45,7 +45,7 @@ install_wordpress() {
 		else
 			local ARCHIVE_NAME="wordpress-$WP_VERSION"
 		fi
-		download https://wordpress.org/${ARCHIVE_NAME}.tar.gz	$TMPDIR/wordpress.tar.gz
+		download https://wordpress.org/${ARCHIVE_NAME}.tar.gz $TMPDIR/wordpress.tar.gz
 		tar --strip-components=1 -zxmf $TMPDIR/wordpress.tar.gz -C $WP_CORE_DIR
 	fi
 
@@ -93,11 +93,31 @@ configure_wordpress() {
 	wp core install --url=$WP_DOMAIN --title=LoginTests --admin_user=$ADMIN_USERNAME --admin_password=$ADMIN_PASSWORD --admin_email=$ADMIN_EMAIL
 }
 
+install_woocommerce() {
+	cd $WP_CORE_DIR
+
+	echo "Installing WooCommerce..."
+	if ! $(wp plugin is-installed woocommerce); then
+		wp plugin install woocommerce --activate
+	fi
+
+	if ! $(wp plugin is-installed wp-graphql-woocommerce); then
+		wp plugin install https://github.com/wp-graphql/wp-graphql-woocommerce/archive/refs/heads/master.zip
+		# Install composer deps
+		cd $WP_CORE_DIR/wp-content/plugins/wp-graphql-woocommerce
+		composer install --no-dev --no-interaction --no-progress --no-suggest --optimize-autoloader
+
+		wp plugin activate wp-graphql-woocommerce
+	fi
+}
 
 install_plugins() {
 	cd $WP_CORE_DIR
 
 	wp plugin list --allow-root
+
+	# Install WooCommerce & WooGraphQL
+	install_woocommerce
 
 	# Install WPGraphQL and Activate
 	wp plugin install wp-graphql --allow-root
@@ -124,7 +144,7 @@ setup_plugin() {
 
 post_setup() {
 	cd $WP_CORE_DIR
-	
+
 	# activate the plugin
 	wp plugin activate wp-graphql-headless-login --allow-root
 
