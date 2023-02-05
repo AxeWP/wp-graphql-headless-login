@@ -23,6 +23,11 @@ mutation loginWithOAuth(
     user { # The authenticated WordPress user.
       ...MyUserFrag
     }
+    # The following fields are available if WPGraphQL for WooCommerce is installed.
+    wooSessionToken
+    customer {
+      ...MyCustomerFrag
+    }
   }
 }
 ```
@@ -46,6 +51,11 @@ mutation loginWithPassword(
     user { # The authenticated WordPress user.
       ...MyUserFrag
     }
+    # The following fields are available if WPGraphQL for WooCommerce is installed.
+    wooSessionToken
+    customer {
+      ...MyCustomerFrag
+    }
   }
 }
 ```
@@ -65,7 +75,6 @@ mutation refreshToken(
 
 
 ## Manually link the WordPress user to a Provider's Resource Owner
-```graphql
 
 ```graphql
 mutation linkUserIdentity(

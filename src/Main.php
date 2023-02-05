@@ -73,6 +73,7 @@ if ( ! class_exists( \WPGraphQL\Login\Main::class ) ) :
 		private function setup() : void {
 			// Setup plugin.
 			CoreSchemaFilters::init();
+			WoocommerceSchemaFilters::init();
 			Settings::init();
 			UserProfile::init();
 			ProviderRegistry::get_instance();

@@ -462,6 +462,7 @@ class ComposerStaticInitb32d0065f549923dc4554b26b4a57eba
         'WPGraphQL\\Login\\Vendor\\League\\OAuth2\\Client\\Tool\\QueryBuilderTrait' => __DIR__ . '/../..' . '/src/vendor/league/oauth2-client/src/Tool/QueryBuilderTrait.php',
         'WPGraphQL\\Login\\Vendor\\League\\OAuth2\\Client\\Tool\\RequestFactory' => __DIR__ . '/../..' . '/src/vendor/league/oauth2-client/src/Tool/RequestFactory.php',
         'WPGraphQL\\Login\\Vendor\\League\\OAuth2\\Client\\Tool\\RequiredParameterTrait' => __DIR__ . '/../..' . '/src/vendor/league/oauth2-client/src/Tool/RequiredParameterTrait.php',
+        'WPGraphQL\\Login\\WoocommerceSchemaFilters' => __DIR__ . '/../..' . '/src/WoocommerceSchemaFilters.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
