@@ -130,9 +130,13 @@ trait ProviderConfigStaticTrait {
 	 */
 	public static function default_login_options_fields() : array {
 		$fields = [
-			'createUserIfNoneExists' => [
+			'createUserIfNoneExists'  => [
 				'type'        => 'Boolean',
 				'description' => __( 'Whether to create users if none exist.', 'wp-graphql-headless-login' ),
+			],
+			'useAuthenticationCookie' => [
+				'type'        => 'Boolean',
+				'description' => __( 'Whether to set a WordPress authentication cookie on successful login.', 'wp-graphql-headless-login' ),
 			],
 		];
 
