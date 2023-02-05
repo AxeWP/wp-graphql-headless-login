@@ -8,6 +8,7 @@
 namespace WPGraphQL\Login;
 
 use GraphQL\Error\UserError;
+use WPGraphQL;
 use WPGraphQL\Login\Auth\TokenManager;
 use WPGraphQL\Login\Model\User;
 use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\Registrable;
@@ -77,8 +78,8 @@ class CoreSchemaFilters implements Registrable {
 	 * @param array $headers the headers to send.
 	 */
 	public static function add_tokens_to_graphql_response_headers( $headers ) : array {
-		// Bail early if not ssl or if debugging is enabled.
-		if ( ! is_ssl() && ( ! defined( 'GRAPHQL_DEBUG' ) || true !== GRAPHQL_DEBUG ) ) {
+		// Bail early if not ssl or if debugging is disabled.
+		if ( ! is_ssl() && false === WPGraphQL::debug() ) {
 			return $headers;
 		}
 
