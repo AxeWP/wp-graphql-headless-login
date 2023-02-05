@@ -30,6 +30,14 @@ class Helper extends \Codeception\Module {
 		$property->setValue( null );
 	}
 
+	public function reset_type_registry() {
+		$reflection = new ReflectionClass( 'WPGraphQL\Login\TypeRegistry' );
+		// Reset Registry.
+		$property = $reflection->getProperty( 'registry' );
+		$property->setAccessible( true );
+		$property->setValue( [] );
+	}
+
 	public function set_client_config( string $slug, array $config ) {
 		update_option( Settings::$provider_settings_prefix . $slug, $config );
 		$this->reset_utils_properties();
