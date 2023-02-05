@@ -8,6 +8,7 @@ modules:
     enabled:
       - \Helper\Functional
       - \Helper\Helper
+      - \Helper\GraphQL
       - Asserts
       - REST
       - WPDb
