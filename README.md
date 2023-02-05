@@ -77,7 +77,7 @@ Priority support and custom development are available to [our Sponsors](https://
 * Query the [enabled `loginClient` authorization urls](./docs/queries.md#querying-login-clients), to use in your frontend's login buttons.
 * Extensive WordPress [actions](./docs/actions.md) and [filters](./docs/filters.md) for customization of the plugin's behavior.
 * Log out all sessions for a user by [revoking](./docs/mutations.md#revoke-the-user-secret) or [refreshing](./docs/mutations.md#refresh-the-user-secret) their tokens, in GraphQL or the WordPress backend Profile Page.
-
+* Manage WooCommerce Sessions with [WPGraphQL for WooCommerce](https://github.com/wp-graphql/wp-graphql-woocommerce).
 - and more!
 
 ## Usage
