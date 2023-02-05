@@ -16,6 +16,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ### Fixed
 - fix: Return `401` for user ID of `0` when validating authentication tokens.
+- fix: use `WPGraphQL::debug()` instead of constant when adding headers.
 
 
 ### Changed
