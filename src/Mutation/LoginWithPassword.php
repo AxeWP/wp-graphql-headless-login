@@ -90,7 +90,8 @@ class LoginWithPassword extends MutationType {
 			wp_set_current_user( $user->ID );
 
 			// Set the auth cookie if enabled in the settings.
-			if ( true === graphql_login_get_setting( 'password_use_auth_cookie', false ) ) {
+			if ( ! empty( graphql_login_get_setting( 'password_use_auth_cookie', false ) ) ) {
+				wp_clear_auth_cookie();
 				wp_set_auth_cookie( $user->ID );
 			}
 

@@ -31,6 +31,10 @@ class Utils {
 	/**
 	 * Gets a single plugin setting.
 	 *
+	 * Uses get_option() which means scalars are converted into strings.
+	 *
+	 * @see https://developer.wordpress.org/reference/functions/get_option/#return
+	 *
 	 * @param string      $option_name The name of the setting.
 	 * @param mixed|false $default The default value. Optional. Default false.
 	 *
