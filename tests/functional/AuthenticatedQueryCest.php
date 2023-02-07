@@ -37,23 +37,21 @@ class AuthenticatedQueryCest {
 		$I->seeHttpHeader( 'X-WPGraphQL-Login-Token' );
 		$I->seeHttpHeader( 'X-WPGraphQL-Login-Refresh-Token' );
 
-		$response       = $I->grabResponse();
-		$response_array = json_decode( $response, true );
 
 		// The query is valid and has no errors.
-		$I->assertArrayNotHasKey( 'errors', $response_array );
-		$I->assertEmpty( $response_array['extensions']['debug'] );
+		$I->assertArrayNotHasKey( 'errors', $response );
+		$I->assertEmpty( $response['extensions']['debug'] );
 
 		// The response is properly returning data as expected.
-		$I->assertArrayHasKey( 'data', $response_array );
-		$I->assertEquals( $user_id, $response_array['data']['viewer']['databaseId'] );
-		$I->assertEquals( 'testuser', $response_array['data']['viewer']['username'] );
-		$I->assertNotEmpty( $response_array['data']['viewer']['auth']['authToken'] );
-		$I->assertNotEmpty( $response_array['data']['viewer']['auth']['authTokenExpiration'] );
-		$I->assertNotEmpty( $response_array['data']['viewer']['auth']['refreshToken'] );
-		$I->assertNotEmpty( $response_array['data']['viewer']['auth']['refreshTokenExpiration'] );
-		$I->assertFalse( $response_array['data']['viewer']['auth']['isUserSecretRevoked'] );
-		$I->assertNotEmpty( $response_array['data']['viewer']['auth']['userSecret'] );
+		$I->assertArrayHasKey( 'data', $response );
+		$I->assertEquals( $user_id, $response['data']['viewer']['databaseId'] );
+		$I->assertEquals( 'testuser', $response['data']['viewer']['username'] );
+		$I->assertNotEmpty( $response['data']['viewer']['auth']['authToken'] );
+		$I->assertNotEmpty( $response['data']['viewer']['auth']['authTokenExpiration'] );
+		$I->assertNotEmpty( $response['data']['viewer']['auth']['refreshToken'] );
+		$I->assertNotEmpty( $response['data']['viewer']['auth']['refreshTokenExpiration'] );
+		$I->assertFalse( $response['data']['viewer']['auth']['isUserSecretRevoked'] );
+		$I->assertNotEmpty( $response['data']['viewer']['auth']['userSecret'] );
 	}
 
 	public function testQueryWithInvalidHeaders( FunctionalTester $I ) {
@@ -121,24 +119,24 @@ class AuthenticatedQueryCest {
 		$I->seeResponseIsJson();
 
 		$response       = $I->grabResponse();
-		$response_array = json_decode( $response, true );
+		$response = json_decode( $response, true );
 
 		// The response has authentication errors.
-		$I->assertEquals( 'invalid-secret-key | Wrong number of segments', $response_array['extensions']['debug'][0]['message'] );
+		$I->assertEquals( 'invalid-secret-key | Wrong number of segments', $response['extensions']['debug'][0]['message'] );
 
 		// The response also has valid data.
-		$I->assertArrayHasKey( 'data', $response_array );
+		$I->assertArrayHasKey( 'data', $response );
 
 		// The viewer is not authenticated.
-		$I->assertArrayHasKey( 'viewer', $response_array['data'] );
-		$I->assertNull( $response_array['data']['viewer'] );
+		$I->assertArrayHasKey( 'viewer', $response['data'] );
+		$I->assertNull( $response['data']['viewer'] );
 
 		// The posts are still returned.
-		$I->assertArrayHasKey( 'posts', $response_array['data'] );
-		$I->assertNotEmpty( $response_array['data']['posts']['edges'][0]['node']['id'] );
-		$I->assertNotEmpty( $response_array['data']['posts']['edges'][0]['node']['title'] );
-		$I->assertNotEmpty( $response_array['data']['posts']['edges'][0]['node']['link'] );
-		$I->assertNotEmpty( $response_array['data']['posts']['edges'][0]['node']['date'] );
+		$I->assertArrayHasKey( 'posts', $response['data'] );
+		$I->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['id'] );
+		$I->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['title'] );
+		$I->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['link'] );
+		$I->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['date'] );
 
 	}
 

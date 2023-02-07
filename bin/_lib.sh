@@ -116,8 +116,10 @@ install_plugins() {
 
 	wp plugin list --allow-root
 
-	# Install WooCommerce & WooGraphQL
-	install_woocommerce
+	if [ "${INCLUDE_EXTENSIONS}" = "true" ]; then
+		# Install WooCommerce & WooGraphQL
+		install_woocommerce
+	fi
 
 	# Install WPGraphQL and Activate
 	wp plugin install wp-graphql --allow-root
