@@ -73,41 +73,21 @@ jobs:
           INCLUDE_EXTENSIONS: ${{ matrix.extensions }}
         run: composer build-test
 
-      - name: Run Acceptance Tests w/ Docker
+      - name: Run Tests w/ Docker
         env:
           COVERAGE: ${{ matrix.coverage }}
           USING_XDEBUG: ${{ matrix.coverage }}
           DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG || matrix.debug }}
           SKIP_TESTS_CLEANUP: ${{ matrix.coverage }}
-          SUITES: acceptance
+          SUITES: acceptance,functional,wpunit
           PHP_VERSION: ${{ matrix.php }}
           WP_VERSION: ${{ matrix.wordpress }}
           INCLUDE_EXTENSIONS: ${{ matrix.extensions }}
         run: |
-          if [ "${{ matrix.extensions }}" = "true" ]; then
-            composer run-test
+          if [ ! "${{ matrix.extensions }}" = "true" ]; then
+            SUITES=${SUITES//acceptance,}
           fi
-
-      - name: Run Functional Tests w/ Docker
-        env:
-          COVERAGE: ${{ matrix.coverage }}
-          USING_XDEBUG: ${{ matrix.coverage }}
-          DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG || matrix.debug }}
-          SKIP_TESTS_CLEANUP: ${{ matrix.coverage }}
-          SUITES: functional
-          PHP_VERSION: ${{ matrix.php }}
-          WP_VERSION: ${{ matrix.wordpress }}
-        run: composer run-test
-
-      - name: Run WPUnit Tests w/ Docker
-        env:
-          COVERAGE: ${{ matrix.coverage }}
-          USING_XDEBUG: ${{ matrix.coverage }}
-          DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG || matrix.debug }}
-          SKIP_TESTS_CLEANUP: ${{ matrix.coverage }}
-          PHP_VERSION: ${{ matrix.php }}
-          WP_VERSION: ${{ matrix.wordpress }}
-        run: composer run-test
+          composer run-test
 
       - name: Push Codecoverage to Coveralls.io
         if: ${{ matrix.coverage == 1 }}

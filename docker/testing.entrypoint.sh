@@ -129,7 +129,6 @@ if [ -f "${TESTS_OUTPUT}/coverage.xml" ] && [[ -n "$COVERAGE" ]]; then
         COMPOSER_MEMORY_LIMIT=-1 composer remove --dev pcov/clobber
         rm /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
     fi
-
 fi
 
 if [[ -z "$SKIP_TESTS_CLEANUP" ]]; then
