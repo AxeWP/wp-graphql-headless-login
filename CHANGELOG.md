@@ -30,6 +30,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - chore: Update NPM dependencies.
 - ci: Update workflow actions to latest versions.
 - ci: Fix XDebug install in Docker for PHP 7.x.
+- tests: Refactor helper methods.
 
 ## [0.0.3] - 2022-12-03
 
