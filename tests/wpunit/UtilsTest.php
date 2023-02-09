@@ -174,6 +174,10 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 		$actual = Utils::is_current_user( $user->ID );
 
 		$this->assertTrue( $actual, 'Should be true when logged in' );
+
+		// With no user
+		$actual = Utils::is_current_user( 0 );
+		$this->assertFalse( $actual, 'Should be false when logged in with no user' );
 	}
 
 	public function setting_filter_callback( $value, string $setting ) {

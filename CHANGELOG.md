@@ -33,6 +33,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - tests: Refactor helper methods.
 - tests: refactor functional `Cept` tests to `Cest` format.
 - tests: Add test for `NONE` provider enum.
+- tests: Add test for `Utils::is_current_user()` with empty user supplied.
 
 ## [0.0.3] - 2022-12-03
 
