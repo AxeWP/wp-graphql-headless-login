@@ -25,6 +25,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - dev: Trigger `wp_login` action on successful login.
 
 ### Housekeeping
+- chore: (PHPCS) Fix `minimum_supported_wp_version`.
 - chore: Update Composer dependencies.
 - chore: Update NPM dependencies.
 - ci: Update workflow actions to latest versions.

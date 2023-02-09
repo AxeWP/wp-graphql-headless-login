@@ -1293,16 +1293,16 @@
         },
         {
             "name": "axepress/wp-graphql-stubs",
-            "version": "v1.13.7",
+            "version": "v1.13.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AxeWP/wp-graphql-stubs.git",
-                "reference": "1abee97112826c2538c1c071bec83688fac426bb"
+                "reference": "9c4989d0aa9ff911a43c79490aaaaa7de31d3486"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AxeWP/wp-graphql-stubs/zipball/1abee97112826c2538c1c071bec83688fac426bb",
-                "reference": "1abee97112826c2538c1c071bec83688fac426bb",
+                "url": "https://api.github.com/repos/AxeWP/wp-graphql-stubs/zipball/9c4989d0aa9ff911a43c79490aaaaa7de31d3486",
+                "reference": "9c4989d0aa9ff911a43c79490aaaaa7de31d3486",
                 "shasum": ""
             },
             "require": {
@@ -1333,7 +1333,7 @@
             ],
             "support": {
                 "issues": "https://github.com/AxeWP/wp-graphql-stubs/issues",
-                "source": "https://github.com/AxeWP/wp-graphql-stubs/tree/v1.13.7"
+                "source": "https://github.com/AxeWP/wp-graphql-stubs/tree/v1.13.8"
             },
             "funding": [
                 {
@@ -1341,7 +1341,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-12-10T01:26:08+00:00"
+            "time": "2023-02-07T12:36:03+00:00"
         },
         {
             "name": "behat/gherkin",
@@ -3545,16 +3545,16 @@
         },
         {
             "name": "json-mapper/json-mapper",
-            "version": "2.14.4",
+            "version": "2.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JsonMapper/JsonMapper.git",
-                "reference": "f3062f47df31c50af9909f41ca20148856893f58"
+                "reference": "a93c98d4b8f50b60552fe83e70f92a4752a730ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JsonMapper/JsonMapper/zipball/f3062f47df31c50af9909f41ca20148856893f58",
-                "reference": "f3062f47df31c50af9909f41ca20148856893f58",
+                "url": "https://api.github.com/repos/JsonMapper/JsonMapper/zipball/a93c98d4b8f50b60552fe83e70f92a4752a730ea",
+                "reference": "a93c98d4b8f50b60552fe83e70f92a4752a730ea",
                 "shasum": ""
             },
             "require": {
@@ -3603,7 +3603,7 @@
                 "issues": "https://github.com/JsonMapper/JsonMapper/issues",
                 "source": "https://github.com/JsonMapper/JsonMapper"
             },
-            "time": "2023-01-19T20:06:40+00:00"
+            "time": "2023-02-07T20:11:19+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -4782,18 +4782,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/wordpress-stubs.git",
-                "reference": "f47dd299d9a5d588087ec20e50786fad8709a88d"
+                "reference": "601c429ba8d91ef50a2a1bec05a7cd38b88064ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/f47dd299d9a5d588087ec20e50786fad8709a88d",
-                "reference": "f47dd299d9a5d588087ec20e50786fad8709a88d",
+                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/601c429ba8d91ef50a2a1bec05a7cd38b88064ff",
+                "reference": "601c429ba8d91ef50a2a1bec05a7cd38b88064ff",
                 "shasum": ""
             },
             "require-dev": {
                 "nikic/php-parser": "< 4.12.0",
                 "php": "~7.3 || ~8.0",
-                "php-stubs/generator": "^0.8.1",
+                "php-stubs/generator": "^0.8.3",
                 "phpdocumentor/reflection-docblock": "^5.3",
                 "phpstan/phpstan": "^1.2"
             },
@@ -4818,7 +4818,7 @@
                 "issues": "https://github.com/php-stubs/wordpress-stubs/issues",
                 "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.1.1"
             },
-            "time": "2023-02-04T19:31:19+00:00"
+            "time": "2023-02-09T11:10:35+00:00"
         },
         {
             "name": "php-webdriver/webdriver",
@@ -5105,16 +5105,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.9.14",
+            "version": "1.9.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "e5fcc96289cf737304286a9b505fbed091f02e58"
+                "reference": "204e459e7822f2c586463029f5ecec31bb45a1f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e5fcc96289cf737304286a9b505fbed091f02e58",
-                "reference": "e5fcc96289cf737304286a9b505fbed091f02e58",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/204e459e7822f2c586463029f5ecec31bb45a1f2",
+                "reference": "204e459e7822f2c586463029f5ecec31bb45a1f2",
                 "shasum": ""
             },
             "require": {
@@ -5144,7 +5144,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.9.14"
+                "source": "https://github.com/phpstan/phpstan/tree/1.9.17"
             },
             "funding": [
                 {
@@ -5160,7 +5160,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-19T10:47:09+00:00"
+            "time": "2023-02-08T12:25:00+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
