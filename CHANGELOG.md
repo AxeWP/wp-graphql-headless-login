@@ -14,6 +14,10 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - feat: Add settings to set a WP authentication cookie on successful login.
 - feat: Add support for WPGraphQL for WooCommerce.
 
+### Fixed
+- fix: Return `401` for user ID of `0` when validating authentication tokens.
+
+
 ### Changed
 - dev: Trigger `wp_login` action on successful login.
 

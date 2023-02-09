@@ -466,7 +466,7 @@ class TokenManager {
 		}
 
 		// Validate the user Id.
-		if ( ! isset( $token->data->user->id ) ) {
+		if ( empty( $token->data->user->id ) ) {
 			self::set_status( 401 );
 			return new WP_Error( 'invalid-jwt', __( 'User ID not found in the token.', 'wp-graphql-headless-login' ) );
 		}
