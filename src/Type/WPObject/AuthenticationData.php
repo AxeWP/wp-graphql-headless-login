@@ -8,6 +8,7 @@
 namespace WPGraphQL\Login\Type\WPObject;
 
 use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\ObjectType;
+use WPGraphQL\Model\User;
 
 /**
  * Class - AuthenticationData
@@ -34,8 +35,15 @@ class AuthenticationData extends ObjectType {
 				[
 					'type'        => self::get_type_name(),
 					'description' => __( 'Headless Login authentication data.', 'wp-graphql-headless-login' ),
-					'resolve'     => static function ( $user ) {
-						return $user;
+					'resolve'     => static function ( $source ) {
+						if ( ! $source instanceof User && isset( $source->ID ) ) {
+							$user = get_user_by( 'ID', $source->ID );
+
+							if ( $user instanceof \WP_User ) {
+								return new User( $user );
+							}
+						}
+						return $source;
 					},
 				]
 			);
