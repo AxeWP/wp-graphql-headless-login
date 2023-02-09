@@ -27,9 +27,18 @@ class TypeRegistryTest extends \Codeception\TestCase\WPTestCase {
 	 * @covers \WPGraphQL\Login\TypeRegistry
 	 */
 	public function testGetRegisteredTypes() {
-		$registry = TypeRegistry::get_registered_types();
+		// Test it returns an array.
+		$expected = TypeRegistry::get_registered_types();
 
-		$this->assertNotEmpty( $registry );
+		$this->assertNotEmpty( $expected );
+
+		// Clear the registry.
+		$this->tester->reset_type_registry();
+
+		// Test it regenerates.
+		$actual = TypeRegistry::get_registered_types();
+
+		$this->assertNotEmpty( $actual );
 	}
 
 	/**
