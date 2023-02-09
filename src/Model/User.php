@@ -1,6 +1,6 @@
 <?php
 /**
- * Extends the User Model with Authentic
+ * Extends the User Model with authentication data.
  *
  * @package WPGraphQL\Login\Model
  */

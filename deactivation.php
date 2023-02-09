@@ -34,7 +34,7 @@ function graphql_login_delete_data() : void {
 	$delete_data = graphql_login_get_setting( 'delete_data_on_deactivate' );
 
 	// Bail if not set to delete.
-	if ( true !== $delete_data ) {
+	if ( empty( $delete_data ) ) {
 		return;
 	}
 
