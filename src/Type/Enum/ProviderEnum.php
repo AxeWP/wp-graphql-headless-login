@@ -8,7 +8,6 @@
 
 namespace WPGraphQL\Login\Type\Enum;
 
-use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Generic;
 use WPGraphQL\Login\Auth\ProviderRegistry;
 use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\EnumType;
 use WPGraphQL\Type\WPEnumType;

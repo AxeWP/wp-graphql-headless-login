@@ -12,6 +12,8 @@ BASEDIR=$(dirname "$0");
 source ${BASEDIR}/_env.sh
 source ${BASEDIR}/_lib.sh
 
+INCLUDE_EXTENSIONS="true"
+
 install_wordpress
 install_db
 configure_wordpress

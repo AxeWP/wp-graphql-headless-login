@@ -89,6 +89,7 @@ case "$subcommand" in
 				-e DEBUG=${DEBUG-} \
 				-e WP_VERSION=${WP_VERSION} \
 				-e PHP_VERSION=${PHP_VERSION} \
+				-e INCLUDE_EXTENSIONS=${INCLUDE_EXTENSIONS-false} \
 				testing --scale app=0
 			;;
 		\?) print_usage_instructions ;;
