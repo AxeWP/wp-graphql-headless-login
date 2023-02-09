@@ -6,6 +6,10 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
+## [0.0.4] - 2022-02-09
+
+This release adds support for setting a WP Authentication Cookie on successful login, as well as compatibility with WPGraphQL for WooCommerce. It also fixes a handful of bugs, and backfills/refactors CI tests.
+
 ### Breaking Changes
 - fix!: Use the provider slug to generate `LoginProviderEnum` names. This is a breaking change, as the name for Generic - OAuth2 is now `GENERIC_OAUTH2`.
 
