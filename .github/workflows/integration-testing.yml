@@ -114,3 +114,12 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: vendor/bin/php-coveralls -v
+      
+      - name: Push CodeCoverage to CodeClimate
+        if: ${{ matrix.coverage == 1 }}
+        uses: paambaati/codeclimate-action@v3.2.0
+        env:
+          CC_TEST_REPORTER_ID: f775c7e015158d3505156743f180c5b6a4fecb372c63f682cfcd2c7d32ae23cc
+        with:
+          coverageLocations: |
+            ${{github.workspace}}/tests/_output/*.xml:clover
