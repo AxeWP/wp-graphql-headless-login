@@ -30,6 +30,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - chore: Update NPM dependencies.
 - ci: Update workflow actions to latest versions.
 - ci: Fix XDebug install in Docker for PHP 7.x.
+- ci: Add `INCLUDE_EXTENSIONS` env variable for running 3rd-party plugin tests.
 - tests: Refactor helper methods.
 - tests: refactor functional `Cept` tests to `Cest` format.
 - tests: Add test for `NONE` provider enum.
