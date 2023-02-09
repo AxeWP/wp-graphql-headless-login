@@ -36,6 +36,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - tests: Add test for `NONE` provider enum.
 - tests: Add test for `Utils::is_current_user()` with empty user supplied.
 - tests: Backfill case for `TypeRegistry::get_registered_types()`.
+- tests: Add acceptance test for login with WC enabled.
 
 ## [0.0.3] - 2022-12-03
 
