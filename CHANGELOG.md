@@ -15,6 +15,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - feat: Add support for WPGraphQL for WooCommerce.
 
 ### Fixed
+- fix: Don't overwrite existing `Access-Control-Expose-Headers` when adding `X-WPGraphQL-Login-Refresh-Token`.
 - fix: Check for truthy values when using `graphql_get_login_setting()`.
 - fix: Return `401` for user ID of `0` when validating authentication tokens.
 - fix: use `WPGraphQL::debug()` instead of constant when adding headers.

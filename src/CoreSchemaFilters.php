@@ -29,7 +29,7 @@ class CoreSchemaFilters implements Registrable {
 		add_filter( 'graphql_login_signed_token', [ __CLASS__, 'check_if_secret_is_revoked' ], 10, 2 );
 		// Filter the GraphQL response headers.
 		add_filter( 'graphql_response_headers_to_send', [ __CLASS__, 'add_tokens_to_graphql_response_headers' ] );
-		add_filter( 'graphql_response_headers_to_send', [ __CLASS__, 'add_auth_headers_to_response' ] );
+		add_filter( 'graphql_response_headers_to_send', [ __CLASS__, 'add_refresh_token_to_headers' ] );
 		/**
 		 * Add Auth Headers to REST REQUEST responses
 		 *
@@ -121,8 +121,12 @@ class CoreSchemaFilters implements Registrable {
 	 *
 	 * @param array $headers The existing response headers.
 	 */
-	public static function add_auth_headers_to_response( array $headers ) : array {
-		$headers['Access-Control-Expose-Headers'] = 'X-WPGraphQL-Login-Refresh-Token';
+	public static function add_refresh_token_to_headers( array $headers ) : array {
+		if ( empty( $headers['Access-Control-Expose-Headers'] ) ) {
+			$headers['Access-Control-Expose-Headers'] = 'X-WPGraphQL-Login-Refresh-Token';
+		} else {
+			$headers['Access-Control-Expose-Headers'] .= ', X-WPGraphQL-Login-Refresh-Token';
+		}
 
 		return $headers;
 	}
