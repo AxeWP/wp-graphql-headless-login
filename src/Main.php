@@ -10,6 +10,7 @@ namespace WPGraphQL\Login;
 use WPGraphQL\Login\Admin\Settings;
 use WPGraphQL\Login\Admin\UserProfile;
 use WPGraphQL\Login\Auth\ProviderRegistry;
+use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Helper\Helper;
 
 if ( ! class_exists( \WPGraphQL\Login\Main::class ) ) :
 
@@ -71,6 +72,8 @@ if ( ! class_exists( \WPGraphQL\Login\Main::class ) ) :
 		 * @codeCoverageIgnore
 		 */
 		private function setup() : void {
+			// Setup boilerplate hook prefix.
+			Helper::set_hook_prefix( 'graphql_login' );
 			// Setup plugin.
 			CoreSchemaFilters::init();
 			WoocommerceSchemaFilters::init();
