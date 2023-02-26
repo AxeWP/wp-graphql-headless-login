@@ -10,18 +10,18 @@ declare(strict_types=1);
 
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Psr7;
 
-use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestFactoryInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseFactoryInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\ServerRequestFactoryInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\ServerRequestInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\StreamFactoryInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\StreamInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\UploadedFileFactoryInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\UploadedFileInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\UriFactoryInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\UriInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestFactoryInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UploadedFileFactoryInterface;
+use Psr\Http\Message\UploadedFileInterface;
+use Psr\Http\Message\UriFactoryInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * Implements all of the PSR-17 interfaces.

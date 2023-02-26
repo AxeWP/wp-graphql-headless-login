@@ -16,10 +16,10 @@ use WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Psr7;
 use WPGraphQL\Login\Vendor\GuzzleHttp\TransferStats;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Utils;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\StreamInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\UriInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * HTTP handler that uses PHP's HTTP stream wrapper.

@@ -12,7 +12,7 @@ use WPGraphQL\Login\Vendor\GuzzleHttp\Promise as P;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Promise\EachPromise;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromisorInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Sends an iterator of requests concurrently using a capped pool size.

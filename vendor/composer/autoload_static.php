@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit4a50739de526a7ba06ee52e9565b3ecd
+class ComposerStaticInita93c4afb99f9a719d2c5054478acbe58
 {
     public static $files = array (
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
@@ -249,23 +249,23 @@ class ComposerStaticInit4a50739de526a7ba06ee52e9565b3ecd
         'League\\OAuth2\\Client\\Tool\\QueryBuilderTrait' => __DIR__ . '/..' . '/league/oauth2-client/src/Tool/QueryBuilderTrait.php',
         'League\\OAuth2\\Client\\Tool\\RequestFactory' => __DIR__ . '/..' . '/league/oauth2-client/src/Tool/RequestFactory.php',
         'League\\OAuth2\\Client\\Tool\\RequiredParameterTrait' => __DIR__ . '/..' . '/league/oauth2-client/src/Tool/RequiredParameterTrait.php',
-        'Psr\\Http\\Client\\ClientExceptionInterface' => __DIR__ . '/..' . '/psr/http-client/src/ClientExceptionInterface.php',
-        'Psr\\Http\\Client\\ClientInterface' => __DIR__ . '/..' . '/psr/http-client/src/ClientInterface.php',
-        'Psr\\Http\\Client\\NetworkExceptionInterface' => __DIR__ . '/..' . '/psr/http-client/src/NetworkExceptionInterface.php',
-        'Psr\\Http\\Client\\RequestExceptionInterface' => __DIR__ . '/..' . '/psr/http-client/src/RequestExceptionInterface.php',
-        'Psr\\Http\\Message\\MessageInterface' => __DIR__ . '/..' . '/psr/http-message/src/MessageInterface.php',
-        'Psr\\Http\\Message\\RequestFactoryInterface' => __DIR__ . '/..' . '/psr/http-factory/src/RequestFactoryInterface.php',
-        'Psr\\Http\\Message\\RequestInterface' => __DIR__ . '/..' . '/psr/http-message/src/RequestInterface.php',
-        'Psr\\Http\\Message\\ResponseFactoryInterface' => __DIR__ . '/..' . '/psr/http-factory/src/ResponseFactoryInterface.php',
-        'Psr\\Http\\Message\\ResponseInterface' => __DIR__ . '/..' . '/psr/http-message/src/ResponseInterface.php',
-        'Psr\\Http\\Message\\ServerRequestFactoryInterface' => __DIR__ . '/..' . '/psr/http-factory/src/ServerRequestFactoryInterface.php',
-        'Psr\\Http\\Message\\ServerRequestInterface' => __DIR__ . '/..' . '/psr/http-message/src/ServerRequestInterface.php',
-        'Psr\\Http\\Message\\StreamFactoryInterface' => __DIR__ . '/..' . '/psr/http-factory/src/StreamFactoryInterface.php',
-        'Psr\\Http\\Message\\StreamInterface' => __DIR__ . '/..' . '/psr/http-message/src/StreamInterface.php',
-        'Psr\\Http\\Message\\UploadedFileFactoryInterface' => __DIR__ . '/..' . '/psr/http-factory/src/UploadedFileFactoryInterface.php',
-        'Psr\\Http\\Message\\UploadedFileInterface' => __DIR__ . '/..' . '/psr/http-message/src/UploadedFileInterface.php',
-        'Psr\\Http\\Message\\UriFactoryInterface' => __DIR__ . '/..' . '/psr/http-factory/src/UriFactoryInterface.php',
-        'Psr\\Http\\Message\\UriInterface' => __DIR__ . '/..' . '/psr/http-message/src/UriInterface.php',
+        'Psr\\Http\\Client\\ClientExceptionInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-client/src/ClientExceptionInterface.php',
+        'Psr\\Http\\Client\\ClientInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-client/src/ClientInterface.php',
+        'Psr\\Http\\Client\\NetworkExceptionInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-client/src/NetworkExceptionInterface.php',
+        'Psr\\Http\\Client\\RequestExceptionInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-client/src/RequestExceptionInterface.php',
+        'Psr\\Http\\Message\\MessageInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-message/src/MessageInterface.php',
+        'Psr\\Http\\Message\\RequestFactoryInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-factory/src/RequestFactoryInterface.php',
+        'Psr\\Http\\Message\\RequestInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-message/src/RequestInterface.php',
+        'Psr\\Http\\Message\\ResponseFactoryInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-factory/src/ResponseFactoryInterface.php',
+        'Psr\\Http\\Message\\ResponseInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-message/src/ResponseInterface.php',
+        'Psr\\Http\\Message\\ServerRequestFactoryInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-factory/src/ServerRequestFactoryInterface.php',
+        'Psr\\Http\\Message\\ServerRequestInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-message/src/ServerRequestInterface.php',
+        'Psr\\Http\\Message\\StreamFactoryInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-factory/src/StreamFactoryInterface.php',
+        'Psr\\Http\\Message\\StreamInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-message/src/StreamInterface.php',
+        'Psr\\Http\\Message\\UploadedFileFactoryInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-factory/src/UploadedFileFactoryInterface.php',
+        'Psr\\Http\\Message\\UploadedFileInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-message/src/UploadedFileInterface.php',
+        'Psr\\Http\\Message\\UriFactoryInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-factory/src/UriFactoryInterface.php',
+        'Psr\\Http\\Message\\UriInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-message/src/UriInterface.php',
         'WPGraphQL\\Login\\Admin\\Settings' => __DIR__ . '/../..' . '/src/Admin/Settings.php',
         'WPGraphQL\\Login\\Admin\\UserProfile' => __DIR__ . '/../..' . '/src/Admin/UserProfile.php',
         'WPGraphQL\\Login\\Auth\\Auth' => __DIR__ . '/../..' . '/src/Auth/Auth.php',
@@ -462,32 +462,15 @@ class ComposerStaticInit4a50739de526a7ba06ee52e9565b3ecd
         'WPGraphQL\\Login\\Vendor\\League\\OAuth2\\Client\\Tool\\QueryBuilderTrait' => __DIR__ . '/../..' . '/vendor-prefixed/league/oauth2-client/src/Tool/QueryBuilderTrait.php',
         'WPGraphQL\\Login\\Vendor\\League\\OAuth2\\Client\\Tool\\RequestFactory' => __DIR__ . '/../..' . '/vendor-prefixed/league/oauth2-client/src/Tool/RequestFactory.php',
         'WPGraphQL\\Login\\Vendor\\League\\OAuth2\\Client\\Tool\\RequiredParameterTrait' => __DIR__ . '/../..' . '/vendor-prefixed/league/oauth2-client/src/Tool/RequiredParameterTrait.php',
-        'WPGraphQL\\Login\\Vendor\\Psr\\Http\\Client\\ClientExceptionInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-client/src/ClientExceptionInterface.php',
-        'WPGraphQL\\Login\\Vendor\\Psr\\Http\\Client\\ClientInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-client/src/ClientInterface.php',
-        'WPGraphQL\\Login\\Vendor\\Psr\\Http\\Client\\NetworkExceptionInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-client/src/NetworkExceptionInterface.php',
-        'WPGraphQL\\Login\\Vendor\\Psr\\Http\\Client\\RequestExceptionInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-client/src/RequestExceptionInterface.php',
-        'WPGraphQL\\Login\\Vendor\\Psr\\Http\\Message\\MessageInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-message/src/MessageInterface.php',
-        'WPGraphQL\\Login\\Vendor\\Psr\\Http\\Message\\RequestFactoryInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-factory/src/RequestFactoryInterface.php',
-        'WPGraphQL\\Login\\Vendor\\Psr\\Http\\Message\\RequestInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-message/src/RequestInterface.php',
-        'WPGraphQL\\Login\\Vendor\\Psr\\Http\\Message\\ResponseFactoryInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-factory/src/ResponseFactoryInterface.php',
-        'WPGraphQL\\Login\\Vendor\\Psr\\Http\\Message\\ResponseInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-message/src/ResponseInterface.php',
-        'WPGraphQL\\Login\\Vendor\\Psr\\Http\\Message\\ServerRequestFactoryInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-factory/src/ServerRequestFactoryInterface.php',
-        'WPGraphQL\\Login\\Vendor\\Psr\\Http\\Message\\ServerRequestInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-message/src/ServerRequestInterface.php',
-        'WPGraphQL\\Login\\Vendor\\Psr\\Http\\Message\\StreamFactoryInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-factory/src/StreamFactoryInterface.php',
-        'WPGraphQL\\Login\\Vendor\\Psr\\Http\\Message\\StreamInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-message/src/StreamInterface.php',
-        'WPGraphQL\\Login\\Vendor\\Psr\\Http\\Message\\UploadedFileFactoryInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-factory/src/UploadedFileFactoryInterface.php',
-        'WPGraphQL\\Login\\Vendor\\Psr\\Http\\Message\\UploadedFileInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-message/src/UploadedFileInterface.php',
-        'WPGraphQL\\Login\\Vendor\\Psr\\Http\\Message\\UriFactoryInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-factory/src/UriFactoryInterface.php',
-        'WPGraphQL\\Login\\Vendor\\Psr\\Http\\Message\\UriInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-message/src/UriInterface.php',
         'WPGraphQL\\Login\\WoocommerceSchemaFilters' => __DIR__ . '/../..' . '/src/WoocommerceSchemaFilters.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit4a50739de526a7ba06ee52e9565b3ecd::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit4a50739de526a7ba06ee52e9565b3ecd::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit4a50739de526a7ba06ee52e9565b3ecd::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInita93c4afb99f9a719d2c5054478acbe58::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInita93c4afb99f9a719d2c5054478acbe58::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInita93c4afb99f9a719d2c5054478acbe58::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -31,8 +31,8 @@ use WPGraphQL\Login\Vendor\League\OAuth2\Client\Tool\ArrayAccessorTrait;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Tool\GuardedPropertyTrait;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Tool\QueryBuilderTrait;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Tool\RequestFactory;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use UnexpectedValueException;
 
 /**

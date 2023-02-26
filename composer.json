@@ -85,6 +85,9 @@
 				"league/oauth2-linkedin"
 			],
 			"exclude_from_prefix": {
+				"namespaces": [
+					"Psr"
+				],
 				"file_patterns": []
 			}
 		}
