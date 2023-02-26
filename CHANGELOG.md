@@ -6,9 +6,13 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
+## [0.0.5] - 2022-02-26
+
 - dev: relocate Strauss dependencies to `vendor-prefixed`.
 - dev: wrap activation and deactivation global functions in `function_exists()` checks.
 - chore: update Strauss and Composer deps.
+- chore: update NPM dependencies.
+
 ## [0.0.4] - 2022-02-09
 
 This release adds support for setting a WP Authentication Cookie on successful login, as well as compatibility with WPGraphQL for WooCommerce. It also fixes a handful of bugs, and backfills/refactors CI tests.
