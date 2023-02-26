@@ -11,6 +11,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - dev: relocate Strauss dependencies to `vendor-prefixed`.
 - dev: wrap activation and deactivation global functions in `function_exists()` checks.
 - chore: update Strauss and Composer deps.
+- chore: update NPM dependencies.
 
 ## [0.0.4] - 2022-02-09
 
