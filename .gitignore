@@ -13,6 +13,9 @@ Thumbs.db
 .env.*
 !.env.dist
 
+# Strauss
+bin/strauss.phar
+
 # Ruleset Overrides
 phpcs.xml
 phpunit.xml

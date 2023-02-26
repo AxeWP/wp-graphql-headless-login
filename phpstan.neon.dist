@@ -3,12 +3,7 @@ parameters:
 		inferPrivatePropertyTypeFromConstructor: true
 		checkMissingIterableValueType: false
 		bootstrapFiles:
-			- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
 			- phpstan/constants.php
-			- wp-graphql-headless-login.php
-			- access-functions.php
-			- activation.php
-			- deactivation.php
 		paths:
 			- wp-graphql-headless-login.php
 			- access-functions.php
@@ -17,11 +12,11 @@ parameters:
 			- src/
 		excludePaths:
 			analyse:
-				- src/vendor
+				- vendor-prefixed
 			analyseAndScan:
 				- ../wp-graphql/tests
 		scanFiles:
+			- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
 		scanDirectories:
-			- src/vendor/
 			- ../wp-graphql
 			- ../wp-graphql-woocommerce/includes

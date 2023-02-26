@@ -18,7 +18,7 @@
 	"require": {
 		"php": ">=7.4 || ^8.0 || ^8.1",
 		"axepress/wp-graphql-plugin-boilerplate":
-		"^0.0.6",
+		"^0.0.8",
 		"league/oauth2-facebook": "^2.2",
 		"league/oauth2-github": "^3.0",
 		"firebase/php-jwt": "^6.3",
@@ -51,7 +51,6 @@
 		"axepress/wp-graphql-stubs": "^1.12.0",
 		"wp-cli/wp-cli-bundle": "^2.6",
 		"php-coveralls/php-coveralls": "^2.5",
-		"brianhenryie/strauss": "~0.12.0",
 		"mockery/mockery": "^1.5",
 		"php-stubs/woocommerce-stubs": "^7.3"
 	},
@@ -69,10 +68,12 @@
 	},
 	"extra": {
 		"strauss": {
-			"target_directory": "/src/vendor",
+			"target_directory": "vendor-prefixed",
 			"namespace_prefix": "WPGraphQL\\Login\\Vendor\\",
-			"classmap_prefix": "GraphQL_Login_Vendor",
-			"constant_prefix": "GRAPHQL_LOGIN_VENDOR_",
+			"classmap_prefix": "GraphQL_Login_",
+			"constant_prefix": "GRAPHQL_LOGIN_",
+			"delete_vendor_files": false,
+			"include_modified_date": false,
 			"packages": [
 				"axepress/wp-graphql-plugin-boilerplate",
 				"firebase/php-jwt",
@@ -83,8 +84,12 @@
 				"league/oauth2-instagram",
 				"league/oauth2-linkedin"
 			],
-			"delete_vendor_files": false,
-			"include_modified_date": false
+			"exclude_from_prefix": {
+				"namespaces": [
+					"Psr"
+				],
+				"file_patterns": []
+			}
 		}
 	},
 	"autoload": {
@@ -95,7 +100,7 @@
 			"WPGraphQL\\Login\\": "src/"
 		},
 		"classmap": [
-			"src/vendor"
+			"vendor-prefixed/"
 		]
 	},
 	"autoload-dev": {
@@ -104,7 +109,6 @@
 		}
 	},
 	"scripts": {
-		"init-plugin": "bash vendor/bin/init-wpgraphql-plugin.sh",
 		"install-test-env": "bash bin/install-test-env.sh",
 		"install-stan-env": "bash bin/install-stan-env.sh",
 		"docker-build": "bash bin/run-docker.sh build",
@@ -120,10 +124,6 @@
 		"run-app": "@docker-run -a",
 		"run-test": "@docker-run -t",
 		"lint": "vendor/bin/phpcs",
-		"strauss": [
-			"php strauss.phar",
-			"composer dump-autoload --optimize"
-		],
 		"phpcs-i": [
 			"php ./vendor/bin/phpcs -i"
 		],
@@ -135,6 +135,11 @@
 		],
 		"phpstan": [
 			"vendor/bin/phpstan analyze --ansi --memory-limit=1G"
+		],
+		"strauss": [
+			"test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.13.0/strauss.phar",
+			"@php bin/strauss.phar",
+			"composer dump-autoload --optimize"
 		],
 		"post-install-cmd": [
 			"@strauss"
