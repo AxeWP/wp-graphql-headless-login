@@ -2,14 +2,7 @@
  * External Dependencies
  */
 import { useEffect } from '@wordpress/element';
-import {
-	Button,
-	Icon,
-	PanelBody,
-	PanelRow,
-	TextControl,
-	ToggleControl,
-} from '@wordpress/components';
+import { Button, Icon, PanelBody, PanelRow } from '@wordpress/components';
 import { sprintf, __ } from '@wordpress/i18n';
 import { store as coreStore, useEntityProp } from '@wordpress/core-data';
 import { useDispatch, dispatch, useSelect } from '@wordpress/data';
@@ -17,7 +10,9 @@ import { useDispatch, dispatch, useSelect } from '@wordpress/data';
 /**
  * Internal Dependencies.
  */
-import { OptionSettings } from './OptionSettings';
+import type { wpGraphQLLogin } from '../..';
+import { ClientOptionList } from './ClientOptionList';
+import { OptionList } from '../../components';
 
 const clientDefaults: ClientType = {
 	name: 'New client',
@@ -34,16 +29,16 @@ const clientDefaults: ClientType = {
 	},
 };
 
-export interface ClientType {
+export type ClientType = {
 	id: string;
 	name: string;
 	order: int;
 	isEnabled: boolean;
 	clientOptions: object;
 	loginOptions: LoginOptionSetttingsType;
-}
+};
 
-export function ClientSettings({ clientSlug }) {
+export function ClientSettings({ clientSlug, showAdvancedSettings }) {
 	const { saveEditedEntityRecord } = useDispatch(coreStore);
 
 	const [client, setClient] = useEntityProp('root', 'site', clientSlug);
@@ -137,27 +132,35 @@ export function ClientSettings({ clientSlug }) {
 						{sprintf(
 							// translators: %s: Client slug.
 							__('%s Settings', 'wp-graphql-headless-login'),
-							wpGraphQLLogin?.settings?.[clientSlug]?.title ||
-								'Client'
+							wpGraphQLLogin?.settings?.providers?.[clientSlug]
+								?.name?.default || 'Provider'
 						)}
 					</h2>
 				</PanelRow>
-				<ToggleControl
-					checked={client?.isEnabled}
-					label={__('Enable Provider', 'wp-graphql-headless-login')}
-					onChange={(selected) => updateClient('isEnabled', selected)}
+				<OptionList
+					excludedProperties={[
+						'loginOptions',
+						'clientOptions',
+						'order',
+					]}
+					options={client}
+					optionsSchema={
+						wpGraphQLLogin?.settings?.providers?.[clientSlug]
+					}
+					setOption={(value) => {
+						setClient({
+							...client,
+							...value,
+						});
+					}}
+					showAdvancedSettings={showAdvancedSettings}
 				/>
-				<TextControl
-					label={__('Client Label', 'wp-graphql-headless-login')}
-					onChange={(selected) => updateClient('name', selected)}
-					value={client?.name}
-					required
-				/>
-				<OptionSettings
+				<ClientOptionList
 					clientSlug={clientSlug}
 					optionsKey="clientOptions"
 					options={client?.clientOptions}
 					setOption={setClientOption}
+					showAdvancedSettings={showAdvancedSettings}
 				/>
 			</PanelBody>
 			<PanelBody>
@@ -172,11 +175,12 @@ export function ClientSettings({ clientSlug }) {
 					</h2>
 				</PanelRow>
 
-				<OptionSettings
+				<ClientOptionList
 					clientSlug={clientSlug}
 					optionsKey="loginOptions"
 					options={client?.loginOptions}
 					setOption={setLoginOption}
+					showAdvancedSettings={showAdvancedSettings}
 				/>
 			</PanelBody>
 
@@ -188,7 +192,7 @@ export function ClientSettings({ clientSlug }) {
 					saveRecord();
 				}}
 			>
-				{__('Save', 'wp-graphql-headless-login')}
+				{__('Save Provider', 'wp-graphql-headless-login')}
 			</Button>
 		</>
 	);

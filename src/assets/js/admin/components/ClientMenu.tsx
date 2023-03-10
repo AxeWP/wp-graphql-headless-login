@@ -9,6 +9,7 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useEntityProp } from '@wordpress/core-data';
+import type { wpGraphQLLogin } from '..';
 
 export function StatusBadge({ provider }) {
 	const [providerConfig] = useEntityProp('root', 'site', provider);
@@ -32,8 +33,8 @@ export function StatusBadge({ provider }) {
 	);
 }
 
-export default function ({ activeClient, setActiveClient }) {
-	const providers = Object.keys(wpGraphQLLogin?.settings || {});
+function ClientMenu({ activeClient, setActiveClient }) {
+	const providers = Object.keys(wpGraphQLLogin?.settings?.providers || {});
 
 	return (
 		<Navigation activeItem={activeClient}>
@@ -46,7 +47,10 @@ export default function ({ activeClient, setActiveClient }) {
 							className="wp-graphql-headless-login__menu__item"
 							key={provider}
 							item={provider}
-							title={wpGraphQLLogin?.settings[provider]?.title}
+							title={
+								wpGraphQLLogin?.settings?.providers?.[provider]
+									?.name?.default
+							}
 							icon={<StatusBadge provider={provider} />}
 							onClick={() => setActiveClient(provider)}
 						/>
@@ -55,3 +59,5 @@ export default function ({ activeClient, setActiveClient }) {
 		</Navigation>
 	);
 }
+
+export default ClientMenu;

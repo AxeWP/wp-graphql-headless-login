@@ -7,7 +7,8 @@
 
 namespace WPGraphQL\Login\Utils;
 
-use WPGraphQL\Login\Admin\Settings;
+use WPGraphQL\Login\Admin\Settings\PluginSettings;
+use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 use WPGraphQL\Login\Auth\ProviderRegistry;
 
 /**
@@ -42,7 +43,7 @@ class Utils {
 	 */
 	public static function get_setting( string $option_name, $default = false ) {
 		if ( ! isset( self::$settings[ $option_name ] ) ) {
-			$value = get_option( Settings::$settings_prefix . $option_name, $default );
+			$value = get_option( PluginSettings::$settings_prefix . $option_name, $default );
 			/**
 			 * Filter the value before returning it
 			 *
@@ -57,6 +58,25 @@ class Utils {
 	}
 
 	/**
+	 * Updates a single plugin setting.
+	 * This is a wrapper for update_option() and updates the internal cache.
+	 *
+	 * @param string $option_name The name of the setting.
+	 * @param mixed  $value The value of the setting.
+	 */
+	public static function update_plugin_setting( string $option_name, $value ) : bool {
+		$option_name = PluginSettings::$settings_prefix . $option_name;
+
+		$success = update_option( $option_name, $value );
+
+		if ( $success ) {
+			self::$settings[ $option_name ] = $value;
+		}
+
+		return $success;
+	}
+
+	/**
 	 * Gets the provider settings.
 	 *
 	 * @param string $slug The provider slug.
@@ -65,7 +85,7 @@ class Utils {
 	 */
 	public static function get_provider_settings( string $slug ) {
 		if ( ! isset( self::$providers[ $slug ] ) ) {
-			$settings = get_option( Settings::$provider_settings_prefix . $slug, [] );
+			$settings = get_option( ProviderSettings::$settings_prefix . $slug, [] );
 			/**
 			 * Filter the provider settings before returning it
 			 *

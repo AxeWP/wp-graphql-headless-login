@@ -1,0 +1,131 @@
+<?php
+/**
+ * Registers the Plugin Settings
+ *
+ * @package WPGraphQL\Login\Admin\Settings
+ * @since @todo
+ */
+
+namespace WPGraphQL\Login\Admin\Settings;
+
+/**
+ * Class PluginSettings
+ */
+class PluginSettings {
+	/**
+	 * The settings key used to store the Clients config.
+	 *
+	 * @var string
+	 */
+	public static string $settings_prefix = 'wpgraphql_login_settings_';
+
+	/**
+	 * The setting configuration.
+	 *
+	 * @var array
+	 */
+	private static array $config = [];
+
+	/**
+	 * The args used to register the settings.
+	 *
+	 * @var array
+	 */
+	private static array $args = [];
+
+	/**
+	 * Gets the setting configuration.
+	 */
+	public static function get_config() : array {
+		if ( empty( self::$config ) ) {
+			self::$config = [
+				// Admin Display Settings.
+				self::$settings_prefix . 'show_advanced_settings' => [
+					'default'           => false,
+					'description'       => __( 'Show advanced settings in the admin.', 'wp-graphql-headless-login' ),
+					'hidden'            => true,
+					'label'             => __( 'Show Advanced Settings', 'wp-graphql-headless-login' ),
+					'sanitize_callback' => 'rest_sanitize_boolean',
+					'show_in_graphql'   => false,
+					'show_in_rest'      => true,
+					'type'              => 'boolean',
+				],
+				// Delete Data on Deactivate.
+				self::$settings_prefix . 'delete_data_on_deactivate' => [
+					'advanced'          => false,
+					'default'           => false,
+					'description'       => __( 'Delete all data on plugin deactivation.', 'wp-graphql-headless-login' ),
+					'help'              => __( 'When selected, all plugin data will be deleted when the plugin is deactivated, including client configurations. Mote: No user meta will be deleted.', 'wp-graphql-headless-login' ),
+					'label'             => __( 'Delete plugin data on deactivate.', 'wp-graphql-headless-login' ),
+					'order'             => 1,
+					'required'          => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+					'show_in_graphql'   => false,
+					'show_in_rest'      => true,
+					'type'              => 'boolean',
+				],
+				self::$settings_prefix . 'enable_password_mutation' => [
+					'advanced'          => false,
+					'default'           => true,
+					'description'       => __( 'Enable the password mutation.', 'wp-graphql-headless-login' ),
+					'help'              => __( 'When selected, the `loginWithPassword` mutation will be enabled. This allows users to login with their existing WordPress site credentials.', 'wp-graphql-headless-login' ),
+					'label'             => __( 'Enable password mutation', 'wp-graphql-headless-login' ),
+					'order'             => 0,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+					'show_in_graphql'   => false,
+					'show_in_rest'      => true,
+					'type'              => 'boolean',
+				],
+				self::$settings_prefix . 'password_use_auth_cookie' => [
+					'advanced'          => false,
+					'default'           => false,
+					'description'       => __( 'Set an authentication cookie on password login.', 'wp-graphql-headless-login' ),
+					'help'              => __( 'When selected, the `loginWithPassword` mutation will set the authentication cookie on successful login. This is useful for granting access to the WordPress dashboard or other protected areas of the WordPress backend without having to re-authenticate.', 'wp-graphql-headless-login' ),
+					'label'             => __( 'Set authentication cookie on password login', 'wp-graphql-headless-login' ),
+					'order'             => 1,
+					'required'          => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'show_in_graphql'   => false,
+				],
+				// The JWT Secret.
+				self::$settings_prefix . 'jwt_secret_key' => [
+					'default'         => false,
+					'hidden'          => true,
+					'type'            => 'string',
+					'show_in_rest'    => true,
+					'show_in_graphql' => false,
+				],
+			];
+		}
+
+		return self::$config;
+	}
+
+	/**
+	 * Returns the args used to register the settings.
+	 */
+	public static function get_settings_args() : array {
+		if ( empty( self::$args ) ) {
+			$config = self::get_config();
+
+			$excluded_keys = [
+				'advanced',
+				'help',
+				'label',
+				'order',
+				'hidden',
+			];
+
+			foreach ( $config as $settings_key => $args ) {
+				// Remove excluded keys from args.
+				$config[ $settings_key ] = array_diff_key( $args, array_flip( $excluded_keys ) );
+			}
+
+			self::$args = $config;
+		}
+
+		return self::$args;
+	}
+}

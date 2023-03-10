@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
 ## Unreleased
+- dev: Refactor settings registration for better extendability.
+- dev!: Refactor settings page frontend components and app logic.
+- chore: update NPM dependencies.
+- chore: update Composer dependencies.
 
 ## [0.0.5] - 2022-02-26
 

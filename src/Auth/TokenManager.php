@@ -55,7 +55,7 @@ class TokenManager {
 			// Create a new secret if one doesn't exist.
 			if ( empty( $secret ) ) {
 				$secret = wp_generate_password( 64, false, false );
-				update_option( Settings::$settings_prefix . 'jwt_secret_key', $secret );
+				Utils::update_plugin_setting( 'jwt_secret_key', $secret );
 			}
 		}
 

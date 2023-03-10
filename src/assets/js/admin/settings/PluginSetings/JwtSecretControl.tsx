@@ -8,7 +8,7 @@ import { store as coreStore, useEntityProp } from '@wordpress/core-data';
 import { useDispatch, dispatch, useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
-export function ClientSecretControl() {
+export function JwtSecretControl() {
 	const [jwtSecret, setJwtSecret] = useEntityProp(
 		'root',
 		'site',
@@ -62,38 +62,44 @@ export function ClientSecretControl() {
 
 	const secret = wpGraphQLLogin?.secret || {};
 
-	const statusMessage = secret.isConstant
-		? __(
-				'Note: This value is set in wp-config.php and cannot be changed on the backend.',
-				'wp-graphql-headless-login'
-		  )
-		: '';
-
 	return (
-		<BaseControl
-			className="wp-graphql-headless-login__secret"
-			id="wp-graphql-headless-login__secret--control"
-			help={
-				__(
-					'The JWT Secret is used to sign the JWT tokens that are used to authenticate requests to the GraphQL API. Changing this secret will invalidate all previously-authenticated requests. ',
+		<>
+			<BaseControl
+				className="wp-graphql-headless-login__secret"
+				id="wp-graphql-headless-login__secret--control"
+				help={__(
+					'The JWT Secret is used to sign the JWT tokens that are used to authenticate requests to the GraphQL API. Changing this secret will invalidate all previously-authenticated requests.',
 					'wp-graphql-headless-login'
-				) + statusMessage
-			}
-		>
-			<Button
-				text={__('Regenerate JWT secret', 'wp-graphql-headless-login')}
-				icon="admin-network"
-				disabled={!!secret.isConstant}
-				isDestructive
-				isBusy={isSaving}
-				iconSize={16}
-				variant="tertiary"
-				onClick={() => {
-					// By setting the secret to empty, the server will generate a new one.
-					setJwtSecret('');
-					regenerateJwtSecret();
-				}}
-			/>
-		</BaseControl>
+				)}
+			>
+				<Button
+					text={__(
+						'Regenerate JWT secret',
+						'wp-graphql-headless-login'
+					)}
+					icon="admin-network"
+					disabled={!!secret?.isConstant}
+					isDestructive
+					isBusy={isSaving}
+					iconSize={16}
+					variant="tertiary"
+					onClick={() => {
+						// By setting the secret to empty, the server will generate a new one.
+						setJwtSecret('');
+						regenerateJwtSecret();
+					}}
+				/>
+				{!!secret?.isConstant && (
+					<p>
+						<strong>
+							{__(
+								'The JWT secret is set in wp-config.php and cannot be changed on the backend.',
+								'wp-graphql-headless-login'
+							)}
+						</strong>
+					</p>
+				)}
+			</BaseControl>
+		</>
 	);
 }

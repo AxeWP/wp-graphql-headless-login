@@ -1,6 +1,7 @@
 <?php
 
-use WPGraphQL\Login\Admin\Settings;
+use WPGraphQL\Login\Admin\Settings\PluginSettings;
+use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 use WPGraphQL\Login\Utils\Utils;
 
 /**
@@ -37,7 +38,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 
 		// Test db value.
 		$expected = true;
-		update_option( Settings::$settings_prefix . 'delete_data_on_deactivate', $expected );
+		update_option( PluginSettings::$settings_prefix . 'delete_data_on_deactivate', $expected );
 		$this->tester->reset_utils_properties();
 
 		$actual = Utils::get_setting( 'delete_data_on_deactivate' );
@@ -55,7 +56,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 		remove_filter( 'graphql_login_setting', [ $this, 'setting_filter_callback' ], 10 );
 
 		// cleanup db
-		delete_option( Settings::$settings_prefix . 'delete_data_on_deactivate' );
+		delete_option( PluginSettings::$settings_prefix . 'delete_data_on_deactivate' );
 	}
 
 	/**
@@ -92,7 +93,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 		remove_filter( 'graphql_login_provider_settings', [ $this, 'provider_settings_filter_callback' ], 10 );
 
 		// cleanup db
-		delete_option( Settings::$provider_settings_prefix . 'facebook' );
+		delete_option( ProviderSettings::$settings_prefix . 'facebook' );
 	}
 
 	/**
@@ -118,8 +119,8 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 			],
 		];
 
-		update_option( Settings::$provider_settings_prefix . 'facebook', $expected['facebook'] );
-		update_option( Settings::$provider_settings_prefix . 'google', $expected['google'] );
+		update_option( ProviderSettings::$settings_prefix . 'facebook', $expected['facebook'] );
+		update_option( ProviderSettings::$settings_prefix . 'google', $expected['google'] );
 		$this->tester->reset_utils_properties();
 
 		$actual = Utils::get_all_provider_settings();
@@ -138,8 +139,8 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 		remove_filter( 'graphql_login_provider_settings', [ $this, 'provider_settings_filter_callback' ], 10 );
 
 		// cleanup db
-		delete_option( Settings::$provider_settings_prefix . 'facebook' );
-		delete_option( Settings::$provider_settings_prefix . 'google' );
+		delete_option( ProviderSettings::$settings_prefix . 'facebook' );
+		delete_option( ProviderSettings::$settings_prefix . 'google' );
 	}
 
 	public function testIsCurrentUser() : void {

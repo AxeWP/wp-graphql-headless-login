@@ -1,6 +1,6 @@
 <?php
 
-use WPGraphQL\Login\Admin\Settings;
+use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Auth\TokenManager;
 
 class AuthenticatedQueryCest {
@@ -189,7 +189,7 @@ class AuthenticatedQueryCest {
 	protected function generate_tokens( $user_id, FunctionalTester $I ) : array {
 		wp_set_current_user( $user_id );
 		$site_secret = wp_generate_password( 64, false, false );
-		update_option( Settings::$settings_prefix . 'jwt_secret_key', $site_secret );
+		update_option( PluginSettings::$settings_prefix . 'jwt_secret_key', $site_secret );
 		TokenManager::issue_new_user_secret( $user_id, false );
 		$I->reset_utils_properties();
 		$auth_token = TokenManager::get_auth_token( wp_get_current_user(), false );
