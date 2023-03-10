@@ -182,6 +182,8 @@ return array(
     'Psr\\Http\\Message\\UriFactoryInterface' => $baseDir . '/vendor-prefixed/psr/http-factory/src/UriFactoryInterface.php',
     'Psr\\Http\\Message\\UriInterface' => $baseDir . '/vendor-prefixed/psr/http-message/src/UriInterface.php',
     'WPGraphQL\\Login\\Admin\\Settings' => $baseDir . '/src/Admin/Settings.php',
+    'WPGraphQL\\Login\\Admin\\Settings\\PluginSettings' => $baseDir . '/src/Admin/Settings/PluginSettings.php',
+    'WPGraphQL\\Login\\Admin\\Settings\\ProviderSettings' => $baseDir . '/src/Admin/Settings/ProviderSettings.php',
     'WPGraphQL\\Login\\Admin\\UserProfile' => $baseDir . '/src/Admin/UserProfile.php',
     'WPGraphQL\\Login\\Auth\\Auth' => $baseDir . '/src/Auth/Auth.php',
     'WPGraphQL\\Login\\Auth\\Client' => $baseDir . '/src/Auth/Client.php',

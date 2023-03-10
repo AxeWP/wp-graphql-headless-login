@@ -267,6 +267,8 @@ class ComposerStaticInita93c4afb99f9a719d2c5054478acbe58
         'Psr\\Http\\Message\\UriFactoryInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-factory/src/UriFactoryInterface.php',
         'Psr\\Http\\Message\\UriInterface' => __DIR__ . '/../..' . '/vendor-prefixed/psr/http-message/src/UriInterface.php',
         'WPGraphQL\\Login\\Admin\\Settings' => __DIR__ . '/../..' . '/src/Admin/Settings.php',
+        'WPGraphQL\\Login\\Admin\\Settings\\PluginSettings' => __DIR__ . '/../..' . '/src/Admin/Settings/PluginSettings.php',
+        'WPGraphQL\\Login\\Admin\\Settings\\ProviderSettings' => __DIR__ . '/../..' . '/src/Admin/Settings/ProviderSettings.php',
         'WPGraphQL\\Login\\Admin\\UserProfile' => __DIR__ . '/../..' . '/src/Admin/UserProfile.php',
         'WPGraphQL\\Login\\Auth\\Auth' => __DIR__ . '/../..' . '/src/Auth/Auth.php',
         'WPGraphQL\\Login\\Auth\\Client' => __DIR__ . '/../..' . '/src/Auth/Client.php',
