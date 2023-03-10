@@ -54,25 +54,30 @@
 }
 
 .wp-graphql-headless-login__main,
-.wp-graphql-headless-login__plugin-settings {
+.wp-graphql-headless-login__plugin-settings,
+.wp-graphql-headless-login__ac-settings {
 	margin-left: auto;
 	margin-right: auto;
 	max-width: 960px;
 	margin-top: 2rem;
 
-	.components-panel {
+	&.components-panel, .components-panel {
 		background: none;
 		border: none;
-	}
 
-	.components-panel__body {
-		background: #fff;
-		border: 1px solid #e2e4e7;
-		margin: 1rem 0;
-	}
+		+ .components-panel {
+			margin-top: 2rem;
+		}
 
-	.components-panel__body-title .components-button {
-		font-size: 1.25rem;
+		&__body {
+			background: #fff;
+			border: 1px solid #e2e4e7;
+			margin: 1rem 0;
+		}
+
+		&__body-title .components-button {
+			font-size: 1.25rem;
+		}
 	}
 }
 

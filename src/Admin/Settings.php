@@ -9,7 +9,8 @@
 namespace WPGraphQL\Login\Admin;
 
 use Error;
-use WPGraphQL\Login\Auth\ProviderRegistry;
+use WPGraphQL\Login\Admin\Settings\PluginSettings;
+use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 use WPGraphQL\Login\Auth\TokenManager;
 
 /**
@@ -23,34 +24,6 @@ class Settings {
 	 * @var string
 	 */
 	public static string $option_group = 'wpgraphql_login_settings';
-
-	/**
-	 * The section named used in the settings API.
-	 *
-	 * @var string
-	 */
-	public static string $settings_prefix = 'wpgraphql_login_settings_';
-
-	/**
-	 * The settings key used to store the Clients config.
-	 *
-	 * @var string
-	 */
-	public static string $provider_settings_prefix = 'wpgraphql_login_provider_';
-
-	/**
-	 * The registered settings.
-	 *
-	 * @var array
-	 */
-	private static array $registered_settings = [];
-
-	/**
-	 * The registered provider settings.
-	 *
-	 * @var array
-	 */
-	private static array $registered_provider_settings = [];
 
 	/**
 	 * The admin.css file
@@ -72,135 +45,27 @@ class Settings {
 	/**
 	 * Store and get the registered settings.
 	 */
-	public static function get_settings_config() : array {
-		if ( empty( self::$registered_settings ) ) {
-
-			// General Plugin Settings.
-			self::$registered_settings = [
-				// Admin Display Settings.
-				self::$settings_prefix . 'show_advanced_settings' => [
-					'default'         => false,
-					'single'          => true,
-					'type'            => 'boolean',
-					'show_in_rest'    => true,
-					'show_in_graphql' => false,
-				],
-				// Delete Data on Deactivate.
-				self::$settings_prefix . 'delete_data_on_deactivate' => [
-					'default'         => false,
-					'single'          => true,
-					'type'            => 'boolean',
-					'show_in_rest'    => true,
-					'show_in_graphql' => false,
-				],
-				self::$settings_prefix . 'enable_password_mutation' => [
-					'default'         => true,
-					'single'          => true,
-					'type'            => 'boolean',
-					'show_in_rest'    => true,
-					'show_in_graphql' => false,
-				],
-				self::$settings_prefix . 'password_use_auth_cookie' => [
-					'default'         => false,
-					'single'          => true,
-					'type'            => 'boolean',
-					'show_in_rest'    => true,
-					'show_in_graphql' => false,
-				],
-				// The JWT Secret.
-				self::$settings_prefix . 'jwt_secret_key' => [
-					'default'         => false,
-					'single'          => true,
-					'type'            => 'string',
-					'show_in_rest'    => true,
-					'show_in_graphql' => false,
-				],
-			];
-
-			// Provider settings.
-			$providers = self::get_provider_settings_config();
-
-			self::$registered_settings = self::$registered_settings + $providers;
-		}
-
-		return self::$registered_settings;
-	}
-
-	/**
-	 * Stores and gets the registered provider settings.
-	 *
-	 * @return array
-	 */
-	public static function get_provider_settings_config() : array {
-		if ( ! empty( self::$registered_provider_settings ) ) {
-			return self::$registered_provider_settings;
-		}
-
-		$providers = ProviderRegistry::get_instance()->get_registered_providers();
-
-		foreach ( $providers as $slug => $provider ) {
-			self::$registered_provider_settings[ self::$provider_settings_prefix . $slug ] = [
-				'single'          => false,
-				'type'            => 'object',
-				'show_in_rest'    => [
-					'schema' => [
-						'title'      => $provider::get_name(),
-						'type'       => 'object',
-						'properties' => [
-							'name'          => [
-								'type'        => 'string',
-								'description' => __( 'The provider name.', 'wp-graphql-headless-login' ),
-								'required'    => true,
-							],
-							'order'         => [
-								'type'        => 'integer',
-								'description' => __( 'The order in which the provider should disappear.', 'wp-graphql-headless-login' ),
-								'required'    => true,
-								'hidden'      => true,
-							],
-							'slug'          => [
-								'type'        => 'string',
-								'enum'        => array_keys( $providers ),
-								'description' => __( 'The provider slug.', 'wp-graphql-headless-login' ),
-								'required'    => true,
-								'hidden'      => true,
-							],
-							'isEnabled'     => [
-								'type'        => 'boolean',
-								'description' => __( 'Whether the provider is enabled or not.', 'wp-graphql-headless-login' ),
-								'required'    => true,
-								'hidden'      => true,
-							],
-							'clientOptions' => [
-								'type'       => 'object',
-								'properties' => $provider::get_client_options_schema(),
-							],
-							'loginOptions'  => [
-								'type'       => 'object',
-								'properties' => $provider::get_login_options_schema(),
-							],
-						],
-					],
-				],
-				'show_in_graphql' => false,
-			];
-		}
-
-		return self::$registered_provider_settings;
+	public static function get_all_settings() : array {
+		return [
+			'plugin'         => PluginSettings::get_settings_args(),
+			'providers'      => ProviderSettings::get_settings_args(),
+		];
 	}
 
 	/**
 	 * Register the settings to WordPress.
 	 */
 	public static function register_settings() : void {
-		$registered_settings = self::get_settings_config();
+		$all_settings = self::get_all_settings();
 
-		foreach ( $registered_settings as $setting_name => $config ) {
-			register_setting(
-				self::$option_group,
-				$setting_name,
-				$config
-			);
+		foreach ( $all_settings as $settings ) {
+			foreach ( $settings as $setting_name => $args ) {
+				register_setting(
+					self::$option_group,
+					$setting_name,
+					$args
+				);
+			}
 		}
 	}
 
@@ -268,28 +133,29 @@ class Settings {
 		);
 		wp_set_script_translations( $handle, 'wp-graphql-headless-login' );
 
-		// Add settings schema to script.
-		$settings = self::get_provider_settings_config();
+		$config = self::get_settings_data();
 
-		$settings = array_map(
-			static function ( $config ) {
-				return $config['show_in_rest']['schema'];
-			},
-			$settings
-		);
+		wp_add_inline_script( $handle, 'const wpGraphQLLogin = ' . wp_json_encode( $config ), 'before' );
+	}
 
+	/**
+	 * Gets the plugin setting data to pass to the JS.
+	 */
+	private static function get_settings_data() : array {
 		// Add meta about the secret without exposing it.
 		$secret = [
 			'hasKey'     => (bool) TokenManager::get_secret_key(),
 			'isConstant' => defined( 'WPGRAPHQL_LOGIN_JWT_SECRET_KEY' ) && ! empty( WPGRAPHQL_LOGIN_JWT_SECRET_KEY ),
 		];
 
-		$config = [
+		return [
 			'secret'   => $secret,
-			'settings' => $settings,
+			'settings' => [
+				'plugin'        => PluginSettings::get_config(),
+				'providers'     => ProviderSettings::get_config(),
+			],
+			'nonce'    => wp_create_nonce( 'wp_graphql_settings' ),
 		];
-
-		wp_add_inline_script( $handle, 'const wpGraphQLLogin = ' . wp_json_encode( $config ), 'before' );
 	}
 
 	/**
@@ -301,7 +167,7 @@ class Settings {
 	 * @return mixed
 	 */
 	public static function hide_sensitive_data_from_rest( $result, $name ) {
-		if ( self::$settings_prefix . 'jwt_secret_key' === $name ) {
+		if ( PluginSettings::$settings_prefix . 'jwt_secret_key' === $name ) {
 			return '********';
 		}
 

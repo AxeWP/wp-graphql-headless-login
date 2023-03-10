@@ -45,7 +45,20 @@ if ( ! function_exists( 'graphql_login_delete_data' ) ) {
 		delete_option( 'wp_graphql_login_version' );
 
 		// Initialize the settings API.
-		$settings = WPGraphQL\Login\Admin\Settings::get_settings_config();
+		$settings = WPGraphQL\Login\Admin\Settings::get_all_settings();
+
+		if ( empty( $settings ) ) {
+			return;
+		}
+
+		// Get all the setting keys across various groups.
+		$settings = array_reduce(
+			$settings,
+			static function ( $carry, $item ) {
+				return array_merge( $carry, array_keys( $item ) );
+			},
+			[]
+		);
 
 		// Loop over the registered settings fields and delete the options.
 		if ( ! empty( $settings ) && is_array( $settings ) ) {

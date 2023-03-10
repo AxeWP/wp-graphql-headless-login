@@ -2,31 +2,44 @@
  * External Dependencies
  */
 import { Fragment } from '@wordpress/element';
+
 import {
 	FormTokenField,
 	TextControl,
 	ToggleControl,
 	SelectControl,
+	BaseControl,
 } from '@wordpress/components';
+
+const FormTokenControl = (props) => {
+	return (
+		<BaseControl help={props?.help || null}>
+			<FormTokenField {...props} />
+		</BaseControl>
+	);
+};
 
 const controls = {
 	string: TextControl,
 	select: SelectControl,
 	boolean: ToggleControl,
-	array: FormTokenField,
+	array: FormTokenControl,
 };
 
-export function OptionControl({
-	type,
-	description,
-	value,
-	required,
-	onChange,
-	help,
-	...rest
-}) {
+export function OptionControl(props) {
+	const {
+		type,
+		description,
+		value,
+		required,
+		label,
+		onChange,
+		help,
+		...rest
+	} = props;
+
 	const componentProps = {
-		label: description,
+		label: label || description,
 		required: required ?? false,
 		help: help || null,
 	};
