@@ -1,6 +1,7 @@
 <?php
 
-use WPGraphQL\Login\Admin\Settings;
+use WPGraphQL\Login\Admin\Settings\PluginSettings;
+use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 
 /**
  * Tests access functons
@@ -30,14 +31,14 @@ class AccessFunctionsTest extends \Codeception\TestCase\WPTestCase {
 	public function testGetSetting() : void {
 		$expected = true;
 
-		update_option( Settings::$settings_prefix . 'delete_data_on_deactivate', $expected );
+		update_option( PluginSettings::$settings_prefix . 'delete_data_on_deactivate', $expected );
 
 		$actual = graphql_login_get_setting( 'delete_data_on_deactivate' );
 
 		$this->assertEquals( $expected, $actual );
 
 		// cleanup db
-		delete_option( Settings::$settings_prefix . 'delete_data_on_deactivate' );
+		delete_option( PluginSettings::$settings_prefix . 'delete_data_on_deactivate' );
 	}
 
 	/**
@@ -51,7 +52,7 @@ class AccessFunctionsTest extends \Codeception\TestCase\WPTestCase {
 			'isEnabled' => false,
 		];
 
-		update_option( Settings::$provider_settings_prefix . 'facebook', $expected );
+		update_option( ProviderSettings::$settings_prefix . 'facebook', $expected );
 
 		// reset Utils::providers
 		$this->tester->reset_utils_properties();
@@ -61,7 +62,7 @@ class AccessFunctionsTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertEquals( $expected, $actual );
 
 		// cleanup db
-		delete_option( Settings::$provider_settings_prefix . 'facebook' );
+		delete_option( ProviderSettings::$settings_prefix . 'facebook' );
 	}
 
 }

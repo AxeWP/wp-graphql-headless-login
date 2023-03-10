@@ -1,6 +1,6 @@
 <?php
 
-use WPGraphQL\Login\Admin\Settings;
+use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Auth\TokenManager;
 
 $I = new AcceptanceTester( $scenario );
@@ -12,10 +12,10 @@ $user_id = $I->haveUserInDatabase( 'testuser', 'administrator', [ 'user_pass' =>
 $I->haveGraphQLDebug();
 
 // Enable the the password mutation and cookies.
-update_option( Settings::$settings_prefix . 'jwt_secret_key', wp_generate_password( 64, false, false ) );
+update_option( PluginSettings::$settings_prefix . 'jwt_secret_key', wp_generate_password( 64, false, false ) );
 TokenManager::issue_new_user_secret( $user_id, false );
-update_option( Settings::$settings_prefix . 'enable_password_mutation', true );
-update_option( Settings::$settings_prefix . 'password_use_auth_cookie', true );
+update_option( PluginSettings::$settings_prefix . 'enable_password_mutation', true );
+update_option( PluginSettings::$settings_prefix . 'password_use_auth_cookie', true );
 $I->reset_utils_properties();
 
 $query = '
@@ -133,4 +133,4 @@ $I->assertNotEmpty( $response['data']['viewer']['auth']['wooSessionToken'] );
 
 // Cleanup
 wp_delete_user( $user_id );
-delete_option( Settings::$settings_prefix . 'jwt_secret_key' );
+delete_option( PluginSettings::$settings_prefix . 'jwt_secret_key' );
