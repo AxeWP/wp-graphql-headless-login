@@ -198,6 +198,7 @@ return array(
     'WPGraphQL\\Login\\Auth\\ProviderConfig\\ProviderConfig' => $baseDir . '/src/Auth/ProviderConfig/ProviderConfig.php',
     'WPGraphQL\\Login\\Auth\\ProviderConfig\\ProviderConfigStaticTrait' => $baseDir . '/src/Auth/ProviderConfig/ProviderConfigStaticTrait.php',
     'WPGraphQL\\Login\\Auth\\ProviderRegistry' => $baseDir . '/src/Auth/ProviderRegistry.php',
+    'WPGraphQL\\Login\\Auth\\Request' => $baseDir . '/src/Auth/Request.php',
     'WPGraphQL\\Login\\Auth\\TokenManager' => $baseDir . '/src/Auth/TokenManager.php',
     'WPGraphQL\\Login\\Auth\\User' => $baseDir . '/src/Auth/User.php',
     'WPGraphQL\\Login\\CoreSchemaFilters' => $baseDir . '/src/CoreSchemaFilters.php',

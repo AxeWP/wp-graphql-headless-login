@@ -283,6 +283,7 @@ class ComposerStaticInita93c4afb99f9a719d2c5054478acbe58
         'WPGraphQL\\Login\\Auth\\ProviderConfig\\ProviderConfig' => __DIR__ . '/../..' . '/src/Auth/ProviderConfig/ProviderConfig.php',
         'WPGraphQL\\Login\\Auth\\ProviderConfig\\ProviderConfigStaticTrait' => __DIR__ . '/../..' . '/src/Auth/ProviderConfig/ProviderConfigStaticTrait.php',
         'WPGraphQL\\Login\\Auth\\ProviderRegistry' => __DIR__ . '/../..' . '/src/Auth/ProviderRegistry.php',
+        'WPGraphQL\\Login\\Auth\\Request' => __DIR__ . '/../..' . '/src/Auth/Request.php',
         'WPGraphQL\\Login\\Auth\\TokenManager' => __DIR__ . '/../..' . '/src/Auth/TokenManager.php',
         'WPGraphQL\\Login\\Auth\\User' => __DIR__ . '/../..' . '/src/Auth/User.php',
         'WPGraphQL\\Login\\CoreSchemaFilters' => __DIR__ . '/../..' . '/src/CoreSchemaFilters.php',

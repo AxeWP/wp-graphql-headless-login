@@ -7,6 +7,7 @@
 
 namespace WPGraphQL\Login\Utils;
 
+use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 use WPGraphQL\Login\Auth\ProviderRegistry;
@@ -28,6 +29,13 @@ class Utils {
 	 * @var array
 	 */
 	protected static array $providers = [];
+
+	/**
+	 * The Access Control Settings
+	 *
+	 * @var array
+	 */
+	protected static array $access_control = [];
 
 	/**
 	 * Gets a single plugin setting.
@@ -74,6 +82,36 @@ class Utils {
 		}
 
 		return $success;
+	}
+
+
+	/**
+	 * Gets a single access control setting.
+	 *
+	 * Uses get_option() which means scalars are converted into strings.
+	 *
+	 * @see https://developer.wordpress.org/reference/functions/get_option/#return
+	 *
+	 * @param string      $option_name The name of the setting.
+	 * @param mixed|false $default The default value. Optional. Default false.
+	 *
+	 * @return mixed
+	 */
+	public static function get_access_control_setting( string $option_name, $default = false ) {
+		if ( ! isset( self::$access_control ) ) {
+			$access_control = get_option( AccessControlSettings::$settings_prefix . 'access_control' );
+
+			/**
+			 * Filter the value before returning it
+			 *
+			 * @param mixed  $value          The value of the field
+			 * @param string $option_name    The name of the option
+			 * @param mixed  $default        The default value if there is no value set
+			 */
+			self::$access_control = apply_filters( 'graphql_login_setting', $access_control, $option_name, $default );
+		}
+
+		return isset( self::$access_control[ $option_name ] ) ? self::$access_control[ $option_name ] : $default;
 	}
 
 	/**
