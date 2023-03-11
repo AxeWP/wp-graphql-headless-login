@@ -46,6 +46,12 @@ class Request {
 
 			// If we didn't match, bail.
 			if ( empty( $origin ) ) {
+				// Set WP GraphQL status to 403.
+				add_filter(
+					'graphql_response_status_code',
+					static fn() => 403
+				);
+
 				throw new UserError( __( 'Unauthorized request origin.', 'wp-graphql-headless-login' ) );
 			}
 		}
@@ -143,7 +149,7 @@ class Request {
 		}
 
 		$additional_origins = Utils::get_access_control_setting( 'additionalAuthorizedDomains' );
-		if ( ! empty( $additional_origins ) && [ '*' ] !== $additional_origins ) {
+		if ( ! empty( $additional_origins ) ) {
 			$origins = array_merge( $origins, array_map( 'trim', $additional_origins ) );
 		}
 

@@ -51,7 +51,7 @@ class AccessControlSettings {
 				],
 				'additionalAuthorizedDomains'    => [
 					'advanced'    => true,
-					'default'     => [ '*' ],
+					'default'     => [],
 					'description' => __( 'An array additional authorized domains to include in the Access-Control-Allow-Origin header.', 'wp-graphql-headless-login' ),
 					'help'        => __( 'Domains added here will also be included in the `Access-Control-Allow-Origin` header. Make sure to include the protocol (http:// or https://).', 'wp-graphql-headless-login' ),
 					'label'       => __( 'Additional authorized domains', 'wp-graphql-headless-login' ),
@@ -67,7 +67,7 @@ class AccessControlSettings {
 					'advanced'    => false,
 					'default'     => false,
 					'description' => __( 'Whether to block requests from unauthorized domains', 'wp-graphql-headless-login' ),
-					'help'        => __( 'If enabled, requests from unauthorized domains will be blocked with a 403 Forbidden response.', 'wp-graphql-headless-login' ),
+					'help'        => __( 'If enabled, requests from unauthorized domains will throw an error.', 'wp-graphql-headless-login' ),
 					'label'       => __( 'Block unauthorized domains', 'wp-graphql-headless-login' ),
 					'order'       => 3,
 					'required'    => true,
