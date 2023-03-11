@@ -4,6 +4,8 @@ use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Auth\TokenManager;
 
+use function Codeception\Extension\codecept_log;
+
 class AuthenticatedQueryCest {
 
 
@@ -14,7 +16,7 @@ class AuthenticatedQueryCest {
 
 		$I->haveGraphQLDebug();
 
-		$expected_tokens = $this->generate_tokens( $user_id, $I );
+		$expected_tokens = $I->generate_user_tokens( $user_id );
 
 		$query = 'query {
 			viewer { 
@@ -159,17 +161,17 @@ class AuthenticatedQueryCest {
 		$I->haveGraphQLDebug();
 
 		$query = '
-			query { 
-				posts { 
-					edges { 
-						node { 
+			query {
+				posts {
+					edges {
+						node {
 							id
 							title
 							link
-							date 
-						} 
-					} 
-				} 
+							date
+						}
+					}
+				}
 			}
 		';
 
@@ -190,22 +192,88 @@ class AuthenticatedQueryCest {
 		$I->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['date'] );
 	}
 
-	protected function generate_tokens( $user_id, FunctionalTester $I ) : array {
-		wp_set_current_user( $user_id );
-		$site_secret = wp_generate_password( 64, false, false );
-		update_option( PluginSettings::$settings_prefix . 'jwt_secret_key', $site_secret );
-		TokenManager::issue_new_user_secret( $user_id, false );
-		$I->reset_utils_properties();
-		$auth_token = TokenManager::get_auth_token( wp_get_current_user(), false );
-		$I->reset_utils_properties();
-		$refresh_token = TokenManager::get_refresh_token( wp_get_current_user(), false );
-		wp_set_current_user( 0 );
+
+	public function testQueryWithAccessControl( FunctionalTester $I ) {
+		$I->wantTo( 'Query with Access Control headers configured' );
+
+		$I->haveGraphQLDebug();
+
+		$user_id = $I->haveUserInDatabase( 'testuser', 'administrator', [ 'user_pass' => 'testpass' ] );
+
+		update_option(
+			AccessControlSettings::$settings_prefix . 'access_control',
+			[
+				'shouldBlockUnauthorizedDomains' => true,
+				'hasSiteAddressInOrigin'         => true,
+				'additionalAuthorizedDomains'    => [
+					'example.com',
+				],
+				'customHeaders'                  => [
+					'X-Custom-Header',
+				],
+			]
+		);
 		$I->reset_utils_properties();
 
-		return [
-			'site_secret'   => $site_secret,
-			'auth_token'    => $auth_token,
-			'refresh_token' => $refresh_token,
-		];
+		$expected_tokens = $I->generate_user_tokens( $user_id );
+
+		$query = 'query {
+			viewer { 
+				databaseId
+				username
+				auth {
+					authToken
+					authTokenExpiration
+					refreshToken
+					refreshTokenExpiration
+					isUserSecretRevoked
+					userSecret
+				}
+			}
+		}';
+
+		// Send Request.
+
+		$I->haveHttpHeader( 'Content-Type', 'application/json' );
+		$I->haveHttpHeader( 'Authorization', 'Bearer ' . $expected_tokens['auth_token'] );
+
+		$I->sendPost(
+			'/graphql',
+			json_encode(
+				[
+					'query' => $query,
+				]
+			)
+		);
+
+		$I->seeResponseCodeIs( 403 );
+
+		// Set HTTP_ORIGIN to a domain that is allowed.
+		$_SERVER['HTTP_ORIGIN'] = 'https://example.com';
+
+		$response = $I->sendGraphQLRequest(
+			$query,
+			null,
+			[
+				'Authorization' => 'Bearer ' . $expected_tokens['auth_token'],
+			]
+		);
+
+		$I->seeHttpHeader( 'X-WPGraphQL-Login-Token' );
+		$I->seeHttpHeader( 'X-WPGraphQL-Login-Refresh-Token' );
+
+		// The query is valid and has no errors.
+		$I->assertArrayNotHasKey( 'errors', $response );
+		$I->assertEmpty( $response['extensions']['debug'] );
+
+		$I->assertArrayHasKey( 'data', $response );
+		$I->assertEquals( $user_id, $response['data']['viewer']['databaseId'] );
+		$I->assertEquals( 'testuser', $response['data']['viewer']['username'] );
+		$I->assertNotEmpty( $response['data']['viewer']['auth']['authToken'] );
+		$I->assertNotEmpty( $response['data']['viewer']['auth']['authTokenExpiration'] );
+		$I->assertNotEmpty( $response['data']['viewer']['auth']['refreshToken'] );
+		$I->assertNotEmpty( $response['data']['viewer']['auth']['refreshTokenExpiration'] );
+		$I->assertFalse( $response['data']['viewer']['auth']['isUserSecretRevoked'] );
+		$I->assertNotEmpty( $response['data']['viewer']['auth']['userSecret'] );
 	}
 }
