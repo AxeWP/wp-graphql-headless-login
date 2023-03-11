@@ -20,7 +20,7 @@ import { useEntityProp } from '@wordpress/core-data';
 import type { wpGraphQLLogin } from '.';
 import { ReactComponent as Logo } from '../../../../assets/logo.svg';
 import { Header, Notices, ClientMenu } from './components';
-import { PluginSettings } from './settings';
+import { AccessControlSettings, PluginSettings } from './settings';
 import { ClientSettings } from './settings/ClientSettings/ClientSettings';
 import './admin.scss';
 
@@ -77,6 +77,11 @@ function App() {
 
 			<Panel className="wp-graphql-headless-login__plugin-settings">
 				<PluginSettings showAdvancedSettings={showAdvancedSettings} />
+			</Panel>
+			<Panel className="wp-graphql-headless-login__ac-settings">
+				<AccessControlSettings
+					showAdvancedSettings={showAdvancedSettings}
+				/>
 			</Panel>
 
 			<div className="wp-graphql-headless-login__notices">

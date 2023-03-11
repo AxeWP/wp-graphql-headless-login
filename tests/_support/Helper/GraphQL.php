@@ -1,15 +1,14 @@
 <?php
 namespace Helper;
 
-
 // here you can define custom actions
 // all public methods declared in helper class will be available in $I
 
 class GraphQL extends \Codeception\Module {
-	
+
 	/**
 	 * Sends GraphQL and returns a response
-	 * 
+	 *
 	 * @see https://github.com/wp-graphql/wp-graphql-woocommerce/blob/e4f7da8fdb631dc622e522347d586394f5f596f8/tests/_support/Helper/GraphQLE2E.php
 	 *
 	 * @param string      $mutation
@@ -56,8 +55,8 @@ class GraphQL extends \Codeception\Module {
 	 */
 	public function haveGraphQLDebug() {
 		// Enable graphql debug
-		$graphql_settings = get_option( 'graphql_general_settings', [] );
-		$graphql_settings[ 'debug_mode_enabled' ] = 'on';
+		$graphql_settings                       = get_option( 'graphql_general_settings', [] );
+		$graphql_settings['debug_mode_enabled'] = 'on';
 		update_option( 'graphql_general_settings', $graphql_settings );
 	}
 }

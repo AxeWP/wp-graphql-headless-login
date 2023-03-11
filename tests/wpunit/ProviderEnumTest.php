@@ -31,11 +31,14 @@ class ProviderEnumTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
 	 * @covers \WPGraphQL\Login\Type\Enum\ProviderEnum::get_values()
 	 */
 	public function testNoProviderEnum() : void {
-		add_filter( 'graphql_login_registered_provider_configs', function() {
-			return [];
-		});
+		add_filter(
+			'graphql_login_registered_provider_configs',
+			function() {
+				return [];
+			}
+		);
 		$this->tester->reset_provider_registry();
-		/// Introspect LoginProviderEnum type and possible values.
+		// Introspect LoginProviderEnum type and possible values.
 		$query = '
 			query {
 				__type(name: "LoginProviderEnum") {

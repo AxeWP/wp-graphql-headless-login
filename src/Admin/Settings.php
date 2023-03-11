@@ -9,6 +9,7 @@
 namespace WPGraphQL\Login\Admin;
 
 use Error;
+use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 use WPGraphQL\Login\Auth\TokenManager;
@@ -47,8 +48,9 @@ class Settings {
 	 */
 	public static function get_all_settings() : array {
 		return [
-			'plugin'    => PluginSettings::get_settings_args(),
-			'providers' => ProviderSettings::get_settings_args(),
+			'plugin'         => PluginSettings::get_settings_args(),
+			'providers'      => ProviderSettings::get_settings_args(),
+			'access_control' => AccessControlSettings::get_settings_args(),
 		];
 	}
 
@@ -151,8 +153,9 @@ class Settings {
 		return [
 			'secret'   => $secret,
 			'settings' => [
-				'plugin'    => PluginSettings::get_config(),
-				'providers' => ProviderSettings::get_config(),
+				'plugin'        => PluginSettings::get_config(),
+				'providers'     => ProviderSettings::get_config(),
+				'accessControl' => AccessControlSettings::get_config(),
 			],
 			'nonce'    => wp_create_nonce( 'wp_graphql_settings' ),
 		];
