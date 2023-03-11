@@ -1,5 +1,6 @@
 <?php
 
+use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Auth\TokenManager;
 
@@ -30,13 +31,16 @@ class AuthenticatedQueryCest {
 			}
 		}';
 
-		$response = $I->sendGraphQLRequest( $query, null, [
-			'Authorization' => 'Bearer ' . $expected_tokens['auth_token'],
-		] );
+		$response = $I->sendGraphQLRequest(
+			$query,
+			null,
+			[
+				'Authorization' => 'Bearer ' . $expected_tokens['auth_token'],
+			]
+		);
 
 		$I->seeHttpHeader( 'X-WPGraphQL-Login-Token' );
 		$I->seeHttpHeader( 'X-WPGraphQL-Login-Refresh-Token' );
-
 
 		// The query is valid and has no errors.
 		$I->assertArrayNotHasKey( 'errors', $response );
@@ -63,12 +67,14 @@ class AuthenticatedQueryCest {
 
 		$auth_token = 'invalid-auth-token';
 
-		$post_id = $I->havePostInDatabase( [
-			'post_title'   => 'Test Post',
-			'post_type'    => 'post',
-			'post_status'  => 'publish',
-			'post_content' => 'Post Content',
-		] );
+		$post_id = $I->havePostInDatabase(
+			[
+				'post_title'   => 'Test Post',
+				'post_type'    => 'post',
+				'post_status'  => 'publish',
+				'post_content' => 'Post Content',
+			]
+		);
 
 		$query =
 			'query {
@@ -101,13 +107,12 @@ class AuthenticatedQueryCest {
 		$I->haveHttpHeader( 'Content-Type', 'application/json' );
 		$I->setHeader( 'Authorization', 'Bearer ' . $auth_token );
 
-
 		$I->sendPOST(
 			// Use site url.
 			get_site_url( null, '/graphql' ),
 			json_encode(
 				[
-					'query' => $query
+					'query' => $query,
 				],
 			)
 		);
@@ -118,7 +123,7 @@ class AuthenticatedQueryCest {
 		$I->dontSeeHttpHeader( 'X-WPGraphQL-Login-Refresh-Token' );
 		$I->seeResponseIsJson();
 
-		$response       = $I->grabResponse();
+		$response = $I->grabResponse();
 		$response = json_decode( $response, true );
 
 		// The response has authentication errors.
@@ -137,7 +142,6 @@ class AuthenticatedQueryCest {
 		$I->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['title'] );
 		$I->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['link'] );
 		$I->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['date'] );
-
 	}
 
 	public function testQueryWithNoHeaders( FunctionalTester $I ) {
@@ -199,8 +203,8 @@ class AuthenticatedQueryCest {
 		$I->reset_utils_properties();
 
 		return [
-			'site_secret' => $site_secret,
-			'auth_token' => $auth_token,
+			'site_secret'   => $site_secret,
+			'auth_token'    => $auth_token,
 			'refresh_token' => $refresh_token,
 		];
 	}

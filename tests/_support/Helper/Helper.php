@@ -2,7 +2,9 @@
 namespace Helper;
 
 use ReflectionClass;
+use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
+use WPGraphQL\Login\Auth\TokenManager;
 
 // here you can define custom actions
 // all public methods declared in helper class will be available in $I
@@ -20,6 +22,11 @@ class Helper extends \Codeception\Module {
 		$property = $reflection->getProperty( 'settings' );
 		$property->setAccessible( true );
 		$property->setValue( [] );
+
+		// Reset access_ontrol
+		$property = $reflection->getProperty( 'access_control' );
+		$property->setAccessible( true );
+		$property->setValue( null );
 	}
 
 	public function reset_provider_registry() {
@@ -48,5 +55,31 @@ class Helper extends \Codeception\Module {
 		update_option( ProviderSettings::$settings_prefix . $slug, [] );
 		$this->reset_utils_properties();
 		$this->reset_provider_registry();
+	}
+
+	public function generate_user_tokens( string $user_id ) : array {
+		$original_user = get_current_user_id();
+
+		wp_set_current_user( $user_id );
+
+		$site_secret = wp_generate_password( 64, false, false );
+
+		update_option( PluginSettings::$settings_prefix . 'jwt_secret_key', $site_secret );
+		TokenManager::issue_new_user_secret( $user_id, false );
+		$this->reset_utils_properties();
+
+		$auth_token = TokenManager::get_auth_token( wp_get_current_user(), false );
+		$this->reset_utils_properties();
+
+		$refresh_token = TokenManager::get_refresh_token( wp_get_current_user(), false );
+		$this->reset_utils_properties();
+
+		wp_set_current_user( $original_user );
+
+		return [
+			'site_secret'   => $site_secret,
+			'auth_token'    => $auth_token,
+			'refresh_token' => $refresh_token,
+		];
 	}
 }

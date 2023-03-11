@@ -92,7 +92,6 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 			}
 		);
 		$this->clearSchema();
-
 	}
 
 	/**

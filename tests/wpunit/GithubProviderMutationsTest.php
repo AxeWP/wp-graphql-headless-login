@@ -21,13 +21,13 @@ class FooGithubProviderConfig extends OAuth2Github {
 		OAuth2Config::__construct( FooGithubProvider::class );
 
 		// Mock and set the http client on the provider.
-		$response = m::mock('Psr\Http\Message\ResponseInterface');
-		$response->shouldReceive('getBody')
-			->andReturn('{"access_token":"mock_access_token", "scope":"repo,gist", "token_type":"bearer"}');
-		$response->shouldReceive('getHeader')
-			->andReturn(['content-type' => 'json']);
-		$response->shouldReceive('getStatusCode')
-			->andReturn(200);
+		$response = m::mock( 'Psr\Http\Message\ResponseInterface' );
+		$response->shouldReceive( 'getBody' )
+			->andReturn( '{"access_token":"mock_access_token", "scope":"repo,gist", "token_type":"bearer"}' );
+		$response->shouldReceive( 'getHeader' )
+			->andReturn( [ 'content-type' => 'json' ] );
+		$response->shouldReceive( 'getStatusCode' )
+			->andReturn( 200 );
 
 		$http_client = m::mock( 'WPGraphQL\Login\Vendor\GuzzleHttp\ClientInterface' );
 		$http_client->shouldReceive( 'send' )->times( 1 )->andReturn( $response );
@@ -60,10 +60,10 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 			'order'         => 0,
 			'isEnabled'     => true,
 			'clientOptions' => [
-				'clientId'        => 'mock_client_id',
-				'clientSecret'    => 'mock_client_secret',
-				'redirectUri'     => 'mock_redirect_uri',
-				'scope'           => [
+				'clientId'     => 'mock_client_id',
+				'clientSecret' => 'mock_client_secret',
+				'redirectUri'  => 'mock_redirect_uri',
+				'scope'        => [
 					'repo',
 					'gist',
 				],
@@ -85,7 +85,6 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 			}
 		);
 		$this->clearSchema();
-
 	}
 
 	/**

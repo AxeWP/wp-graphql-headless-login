@@ -22,7 +22,22 @@ class Request {
 	 *
 	 * @throws UserError If the request is from an unauthorized origin.
 	 */
-	public static function authenticate_request() : void {
+	public static function authenticate_token_on_request() : void {
+		// If a token is present, validate it.
+		$token = TokenManager::validate_token();
+
+		if ( is_wp_error( $token ) ) {
+			// We only log this in debug mode, and allow the request to continue as unauthenticated.
+			graphql_debug( $token->get_error_code() . ' | ' . $token->get_error_message() );
+		}
+	}
+
+	/**
+	 * Authenticates the request origin when GraphQL is executed.
+	 *
+	 * @throws UserError If the request is from an unauthorized origin.
+	 */
+	public static function authenticate_origin_on_request() : void {
 		// If we block unauthorized origins, check the origin.
 		if ( Utils::get_access_control_setting( 'shouldBlockUnauthorizedDomains' ) ) {
 			$allowed_origins = self::get_allowed_origins();
@@ -33,14 +48,6 @@ class Request {
 			if ( empty( $origin ) ) {
 				throw new UserError( __( 'Unauthorized request origin.', 'wp-graphql-headless-login' ) );
 			}
-		}
-
-		// If a token is present, validate it.
-		$token = TokenManager::validate_token();
-
-		if ( is_wp_error( $token ) ) {
-			// We only log this in debug mode, and allow the request to continue as unauthenticated.
-			graphql_debug( $token->get_error_code() . ' | ' . $token->get_error_message() );
 		}
 	}
 
@@ -152,11 +159,12 @@ class Request {
 	 * @param string[] $origins The allowed origins.
 	 */
 	protected static function get_origin_for_request( array $origins ) : ?string {
-		$current_origin = $_SERVER['HTTP_ORIGIN'] ?? ( $_SERVER['HTTP_REFERER'] ?? null );
+		$current_origin = get_http_origin() ?: ( $_SERVER['HTTP_REFERER'] ?? null );
+
 		// Unslash the origin.
-		$current_origin = ! empty( $current_origin ) ? wp_unslash( $current_origin ) : null;
+		$current_host = ! empty( $current_origin ) ? wp_unslash( $current_origin ) : null;
 		// Get the host name.
-		$current_host = ! empty( $current_origin ) ? wp_parse_url( $current_origin, PHP_URL_HOST ) : null;
+		$current_host = ! empty( $current_host ) ? wp_parse_url( $current_host, PHP_URL_HOST ) : null;
 
 		// If the request origin is not set, return null.
 		if ( empty( $current_host ) || ! is_string( $current_host ) ) {
@@ -167,13 +175,13 @@ class Request {
 			$allowed_host = wp_parse_url( $origin, PHP_URL_HOST );
 
 			// Skip if the allowed origin isn't valid.
-			if ( empty( $allowed ) || ! is_string( $allowed ) ) {
+			if ( empty( $allowed_host ) || ! is_string( $allowed_host ) ) {
 				continue;
 			}
 
 			// If the current host matches the allowed host, return the origin.
 			if ( $current_host === $allowed_host ) {
-				return $current_origin;
+				return $origin;
 			}
 		}
 
@@ -194,7 +202,7 @@ class Request {
 
 		// If headers are already set, merge them.
 		if ( ! empty( $header['Access-Control-Allow-Headers'] ) ) {
-			$headers = array_merge( $headers, explode( ',', $header['Access-Control-Allow-Headers'] ) );
+			$headers = array_merge( $headers, explode( ', ', $header['Access-Control-Allow-Headers'] ) );
 		}
 
 		// Add custom headers.
@@ -222,7 +230,7 @@ class Request {
 
 		// If headers are already set, merge them.
 		if ( ! empty( $header['Access-Control-Expose-Headers'] ) ) {
-			$exposed_headers = array_merge( $exposed_headers, explode( ',', $header['Access-Control-Expose-Headers'] ) );
+			$exposed_headers = array_merge( $exposed_headers, explode( ', ', $header['Access-Control-Expose-Headers'] ) );
 		}
 
 		// Remove empty and duplicates.

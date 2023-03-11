@@ -121,7 +121,7 @@ class AccessControlSettings {
 				self::$settings_prefix . 'access_control' => [
 					'single'            => true,
 					'type'              => 'object',
-					'defaults'          => $defaults,
+					'default'           => $defaults,
 					'show_in_rest'      => [
 						'schema' => [
 							'title'      => __( 'Access Control Settings', 'wp-graphql-headless-login' ),
@@ -153,7 +153,12 @@ class AccessControlSettings {
 		}
 
 		if ( isset( $value['additionalAuthorizedDomains'] ) ) {
-			$value['additionalAuthorizedDomains'] = array_map(
+			// Convert string to array.
+			if ( is_string( $value['additionalAuthorizedDomains'] ) ) {
+				$value['additionalAuthorizedDomains'] = explode( ',', $value['additionalAuthorizedDomains'] );
+			}
+
+			$value['additionalAuthorizedDomains'] = is_array( $value['additionalAuthorizedDomains'] ) ? array_map(
 				function( $domain ) {
 					if ( '*' === $domain ) {
 						return $domain;
@@ -162,7 +167,7 @@ class AccessControlSettings {
 					return esc_url_raw( $domain );
 				},
 				$value['additionalAuthorizedDomains']
-			);
+			) : [];
 		}
 
 		if ( isset( $value['customHeaders'] ) ) {
@@ -173,7 +178,6 @@ class AccessControlSettings {
 				$value['customHeaders']
 			);
 		}
-
 		return $value;
 	}
 }

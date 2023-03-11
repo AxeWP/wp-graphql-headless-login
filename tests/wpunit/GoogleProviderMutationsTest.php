@@ -60,11 +60,11 @@ class GoogleProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 			'order'         => 0,
 			'isEnabled'     => true,
 			'clientOptions' => [
-				'clientId'        => 'mock_client_id',
-				'clientSecret'    => 'mock_client_secret',
-				'redirectUri'     => 'mock_redirect_uri',
-				'hostedDomain'    => 'mockdomain.com',
-				'scope'           => [
+				'clientId'     => 'mock_client_id',
+				'clientSecret' => 'mock_client_secret',
+				'redirectUri'  => 'mock_redirect_uri',
+				'hostedDomain' => 'mockdomain.com',
+				'scope'        => [
 					'email',
 					'public_profile',
 				],
@@ -86,7 +86,6 @@ class GoogleProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 			}
 		);
 		$this->clearSchema();
-
 	}
 
 	/**

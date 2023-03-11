@@ -77,7 +77,6 @@ class LinkedIn extends OAuth2Config {
 	 * {@inheritDoc}
 	 */
 	public function get_user_data( array $owner_details ) : array {
-		codecept_debug( $owner_details );
 		$email    = $owner_details['email'];
 		$username = strstr( $email, '@', true );
 

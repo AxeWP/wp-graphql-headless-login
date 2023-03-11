@@ -76,15 +76,15 @@ $I->assertEquals( $I->grabHttpHeader( 'woocommerce-session' ), $response['data']
 $I->assertEquals( $user_id, $response['data']['loginWithPassword']['customer']['databaseId'] );
 $I->assertEquals( $response['data']['loginWithPassword']['user']['auth']['userSecret'], $response['data']['loginWithPassword']['customer']['auth']['userSecret'] );
 
-$cookies = $I->grabCookiesWithPattern( '/^wordpress_logged_in_/');
+$cookies = $I->grabCookiesWithPattern( '/^wordpress_logged_in_/' );
 
 /** @var \Symfony\Component\BrowserKit\Cookie */
-foreach( $cookies as $cookie ) {
+foreach ( $cookies as $cookie ) {
 	$parsed_cookie = wp_parse_auth_cookie( $cookie->getValue(), 'logged_in' );
 	$I->assertNotEmpty( $parsed_cookie );
 }
 
-wp_set_current_user(0);
+wp_set_current_user( 0 );
 
 // Query with the auth token.
 $auth_token = $response['data']['loginWithPassword']['authToken'];
@@ -123,7 +123,7 @@ $I->assertEmpty( $response['extensions']['debug'] );
 $I->assertArrayHasKey( 'data', $response );
 $I->assertEquals( $user_id, $response['data']['viewer']['databaseId'] );
 $I->assertEquals( 'testuser', $response['data']['viewer']['username'] );
-$I->assertNotEmpty($response['data']['viewer']['auth']['authToken'] );
+$I->assertNotEmpty( $response['data']['viewer']['auth']['authToken'] );
 $I->assertNotEmpty( $response['data']['viewer']['auth']['authTokenExpiration'] );
 $I->assertNotEmpty( $response['data']['viewer']['auth']['refreshToken'] );
 $I->assertNotEmpty( $response['data']['viewer']['auth']['refreshTokenExpiration'] );

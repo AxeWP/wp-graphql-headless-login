@@ -3,6 +3,7 @@
 
 /**
  * Inherited Methods
+ *
  * @method void wantToTest($text)
  * @method void wantTo($text)
  * @method void execute($callable)
@@ -15,24 +16,12 @@
  * @method void pause()
  *
  * @SuppressWarnings(PHPMD)
-*/
-class FunctionalTester extends \Codeception\Actor
-{
-    use _generated\FunctionalTesterActions;
+ */
+class FunctionalTester extends \Codeception\Actor {
 
-    /**
-     * Define custom actions here
-     */
-		public function reset_utils_properties() {
-		$reflection = new ReflectionClass( 'WPGraphQL\Login\Utils\Utils' );
-		// Reset Providers
-		$property = $reflection->getProperty( 'providers' );
-		$property->setAccessible( true );
-		$property->setValue( [] );
+	use _generated\FunctionalTesterActions;
 
-		// Reset Settings
-		$property = $reflection->getProperty( 'settings' );
-		$property->setAccessible( true );
-		$property->setValue( [] );
-	}
+	/**
+	 * Define custom actions here
+	 */
 }

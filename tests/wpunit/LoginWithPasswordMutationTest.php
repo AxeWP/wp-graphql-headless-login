@@ -137,7 +137,6 @@ class LoginWithPasswordMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		$this->tester->reset_utils_properties();
 		$this->clearSchema();
 
-
 		$query = $this->query();
 
 		// Test with correct credentials.
@@ -147,7 +146,6 @@ class LoginWithPasswordMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 			'username' => 'test_user',
 			'password' => 'test_password',
 		];
-
 
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 		$this->assertArrayHasKey( 'errors', $actual );

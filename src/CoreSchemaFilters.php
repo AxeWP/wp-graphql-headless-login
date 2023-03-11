@@ -39,7 +39,9 @@ class CoreSchemaFilters implements Registrable {
 		add_filter( 'rest_request_after_callbacks', [ Request::class, 'add_headers_to_rest_response' ], 10 );
 
 		// When the GraphQL Request is initiated, validate the token.
-		add_action( 'init_graphql_request', [ Request::class, 'authenticate_request' ] );
+		add_action( 'init_graphql_request', [ Request::class, 'authenticate_token_on_request' ] );
+		// When the GraphQL Request is executed, validate the origin.
+		add_action( 'do_graphql_request', [ Request::class, 'authenticate_origin_on_request' ] );
 	}
 
 	/**
