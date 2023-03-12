@@ -64,17 +64,27 @@ class Request {
 	 * @param array $headers The headers to send.
 	 */
 	public static function response_headers_to_send( array $headers ) : array {
+		$allowed_origins = self::get_allowed_origins( $headers );
+		$origin          = self::get_origin_for_request( $allowed_origins );
+
 		// Get Access-Control-Allow-Origin header.
-		$headers['Access-Control-Allow-Origin'] = self::get_acao_header( $headers );
+		$headers['Access-Control-Allow-Origin'] = self::get_acao_header( $headers, $allowed_origins, $origin );
 
 		// Get Access-Control-Allow-Headers header.
 		$headers['Access-Control-Allow-Headers'] = self::get_acah_header( $headers );
 
-		// Get Access-Control-Expose-Headers header.
-		$headers['Access-Control-Expose-Headers'] = self::get_aceh_header( $headers );
+		// Get Vary header.
+		$headers['Vary'] = self::get_vary_header( $headers, $allowed_origins );
 
 		// Add login and refresh tokens.
-		$headers = self::add_tokens_to_headers( $headers );
+		$headers = self::add_tokens_to_headers( $headers, $origin );
+
+		/**
+		 * Get Access-Control-Expose-Headers header.
+		 *
+		 * This is called after the tokens are set, so we know whether to expose them.
+		 */
+		$headers['Access-Control-Expose-Headers'] = self::get_aceh_header( $headers );
 
 		return $headers;
 	}
@@ -108,20 +118,13 @@ class Request {
 	}
 
 	/**
-	 * Gets the Access-Control-Allow-Origin header.
+	 * Returns the headers with the Access-Control-Allow-Orgin set.
 	 *
-	 * @param array $headers The headers to send.
+	 * @param array   $headers         The headers to send.
+	 * @param array   $allowed_origins The allowed origins.
+	 * @param ?string $origin          The origin to use.
 	 */
-	protected static function get_acao_header( array $headers ) : string {
-		$allowed_origins = self::get_allowed_origins();
-
-		// If headers are already set, merge them.
-		if ( ! empty( $headers['Access-Control-Allow-Origin'] ) ) {
-			$allowed_origins[] = $headers['Access-Control-Allow-Origin'];
-		}
-
-		$origin = self::get_origin_for_request( $allowed_origins );
-
+	protected static function get_acao_header( array $headers, array $allowed_origins, ?string $origin ) : string {
 		// If we matched, return the origin.
 		if ( ! empty( $origin ) ) {
 			return $origin;
@@ -138,14 +141,21 @@ class Request {
 
 	/**
 	 * Gets the allowed origin domains.
+	 *
+	 * @param array $headers The headers to send. Optional.
 	 */
-	protected static function get_allowed_origins(): array {
+	protected static function get_allowed_origins( $headers = [] ): array {
 		$origins = [
 			get_option( 'siteurl' ), // The WordPress Address is used for local POST requests.
 		];
 
 		if ( Utils::get_access_control_setting( 'hasSiteAddressInOrigin' ) ) {
 			$origins[] = get_option( 'home' ); // The Site Address is used for remote POST requests. E.g. when using a different URL for the frontend.
+		}
+
+		// Get the origin from the existing header filters.
+		if ( ! empty( $headers['Access-Control-Allow-Origin'] ) && '*' !== $headers['Access-Control-Allow-Origin'] ) {
+			$origins[] = $headers['Access-Control-Allow-Origin'];
 		}
 
 		$additional_origins = Utils::get_access_control_setting( 'additionalAuthorizedDomains' );
@@ -195,6 +205,31 @@ class Request {
 	}
 
 	/**
+	 * Gets the Vary header.
+	 *
+	 * @param array $headers The headers to send.
+	 * @param array $allowed_origins The allowed origins.
+	 */
+	protected static function get_vary_header( array $headers, array $allowed_origins ) : string {
+		// Bail early if we only have one possible origin.
+		if ( count( $allowed_origins ) === 1 && $headers['Access-Control-Allow-Origin'] === $allowed_origins[0] ) {
+			return $headers['Vary'] ?? '';
+		}
+
+		$vary = [ 'Origin' ];
+
+		// If headers are already set, merge them.
+		if ( ! empty( $headers['Vary'] ) ) {
+			$vary = array_merge( $vary, explode( ', ', $headers['Vary'] ) );
+		}
+
+		// Remove empty values.
+		$vary = array_filter( array_unique( $vary ) );
+
+		return implode( ', ', $vary );
+	}
+
+	/**
 	 * Gets the Access-Control-Allow-Headers header.
 	 *
 	 * @param array $header The headers to send.
@@ -203,6 +238,7 @@ class Request {
 		$headers = [
 			'Authorization',
 			'Content-Type',
+			'X-WPGraphQL-Login-Token',
 			'X-WPGraphQL-Login-Refresh-Token',
 		];
 
@@ -229,10 +265,9 @@ class Request {
 	 * @param array $header The headers to send.
 	 */
 	protected static function get_aceh_header( array $header ) : string {
-		$exposed_headers = [
-			'X-WPGraphQL-Login-Token',
+		$exposed_headers = ! empty( $header['X-WPGraphQL-Login-Refresh-Token'] ) ? [
 			'X-WPGraphQL-Login-Refresh-Token',
-		];
+		] : [];
 
 		// If headers are already set, merge them.
 		if ( ! empty( $header['Access-Control-Expose-Headers'] ) ) {
@@ -248,11 +283,17 @@ class Request {
 	/**
 	 * Adds the auth tokens to the GraphQL response headers.
 	 *
-	 * @param array $headers the headers to send.
+	 * @param array   $headers The headers to send.
+	 * @param ?string $origin  The origin for the current request.
 	 */
-	protected static function add_tokens_to_headers( array $headers ) : array {
+	protected static function add_tokens_to_headers( array $headers, ?string $origin ) : array {
 		// Bail early if not ssl or if debugging is disabled.
 		if ( ! is_ssl() && false === WPGraphQL::debug() ) {
+			return $headers;
+		}
+
+		// Bail early if the origin is not allowed.
+		if ( Utils::get_access_control_setting( 'shouldBlockUnauthorizedDomains' ) && empty( $origin ) ) {
 			return $headers;
 		}
 
