@@ -78,11 +78,6 @@ if ( ! function_exists( 'graphql_login_constants' ) ) {
 		if ( ! defined( 'WPGRAPHQL_LOGIN_AUTOLOAD' ) ) {
 			define( 'WPGRAPHQL_LOGIN_AUTOLOAD', true );
 		}
-
-		// The Plugin Boilerplate hook prefix.
-		if ( ! defined( 'AXEWP_PB_HOOK_PREFIX' ) ) {
-			define( 'AXEWP_PB_HOOK_PREFIX', 'graphql_login' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
-		}
 	}
 }
 
