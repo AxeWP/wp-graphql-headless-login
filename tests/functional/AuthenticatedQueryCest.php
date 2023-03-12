@@ -1,13 +1,8 @@
 <?php
 
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
-use WPGraphQL\Login\Admin\Settings\PluginSettings;
-use WPGraphQL\Login\Auth\TokenManager;
-
-use function Codeception\Extension\codecept_log;
 
 class AuthenticatedQueryCest {
-
 
 	public function testQueryWithValidHeaders( FunctionalTester $I ) {
 		$I->wantTo( 'Query with valid authentication headers' );

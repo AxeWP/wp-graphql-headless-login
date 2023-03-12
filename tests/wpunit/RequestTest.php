@@ -220,6 +220,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 			'X-Robots-Tag'                  => 'noindex',
 			'X-Content-Type-Options'        => 'nosniff',
 			'X-GraphQL-URL'                 => graphql_get_endpoint_url(),
+			'Vary'                          => 'X-Custom-Header',
 		];
 
 		$actual = Request::response_headers_to_send( $default_headers );
@@ -233,8 +234,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		// Check Access-Control-Expose-Headers.
 		$this->assertArrayHasKey( 'Access-Control-Expose-Headers', $actual );
 		$this->assertStringContainsString( 'X-Custom-Header', $actual['Access-Control-Expose-Headers'] );
-		$this->assertStringContainsString( 'X-WPGraphQL-Login-Token', $actual['Access-Control-Expose-Headers'] );
-		$this->assertStringContainsString( 'X-WPGraphQL-Login-Refresh-Token', $actual['Access-Control-Expose-Headers'] );
+		$this->assertStringNotContainsString( 'X-WPGraphQL-Login-Refresh-Token', $actual['Access-Control-Expose-Headers'] );
 
 		// Check Access-Control-Allow-Headers.
 		$this->assertArrayHasKey( 'Access-Control-Allow-Headers', $actual );
@@ -243,7 +243,13 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertStringContainsString( 'X-Custom-Header', $actual['Access-Control-Allow-Headers'] );
 		$this->assertStringContainsString( 'X-WPGraphQL-Login-Refresh-Token', $actual['Access-Control-Allow-Headers'] );
 
-		// Test with custom headers.
+		// Check Vary.
+		$this->assertArrayHasKey( 'Vary', $actual );
+		$this->assertStringContainsString( 'X-Custom-Header', $actual['Vary'] );
+		$this->assertStringContainsString( 'Origin', $actual['Vary'] );
+
+		// Test with custom headers and explicit origin.
+		$_SERVER['HTTP_ORIGIN'] = site_url();
 		update_option(
 			AccessControlSettings::$settings_prefix . 'access_control',
 			array_merge(
@@ -268,7 +274,13 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertStringContainsString( 'Content-Type', $actual['Access-Control-Allow-Headers'] );
 		$this->assertStringContainsString( 'X-Custom-Header', $actual['Access-Control-Allow-Headers'] );
 		$this->assertStringContainsString( 'X-Custom-Header-2', $actual['Access-Control-Allow-Headers'] );
+		$this->assertStringContainsString( 'X-WPGraphQL-Login-Token', $actual['Access-Control-Allow-Headers'] );
 		$this->assertStringContainsString( 'X-WPGraphQL-Login-Refresh-Token', $actual['Access-Control-Allow-Headers'] );
+
+		// Check Vary.
+		$this->assertArrayHasKey( 'Vary', $actual );
+		$this->assertStringContainsString( 'X-Custom-Header', $actual['Vary'] );
+		$this->assertStringNotContainsString( 'Origin', $actual['Vary'] );
 
 		// Test with authenticated user.
 		$user_id = $this->factory()->user->create(
@@ -285,8 +297,14 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 		codecept_debug( $actual );
 
+		// Check exposed headers.
+		$this->assertArrayHasKey( 'Access-Control-Expose-Headers', $actual );
+		$this->assertStringContainsString( 'X-Custom-Header', $actual['Access-Control-Expose-Headers'] );
+		$this->assertStringContainsString( 'X-WPGraphQL-Login-Refresh-Token', $actual['Access-Control-Expose-Headers'] );
+
 		// Check Token headers.
 		$this->assertArrayHasKey( 'X-WPGraphQL-Login-Token', $actual );
+
 		$token = TokenManager::validate_token( $actual['X-WPGraphQL-Login-Token'], false );
 		$this->assertEquals( $user_id, $token->data->user->id );
 
