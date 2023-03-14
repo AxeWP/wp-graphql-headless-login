@@ -10,7 +10,9 @@
 
 namespace WPGraphQL\Login\Auth\ProviderConfig\OAuth2;
 
+use GraphQL\Error\UserError;
 use WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig;
+use WPGraphQL\Login\Auth\User;
 use WPGraphQL\Login\Utils\Utils;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\AbstractProvider;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Token\AccessToken;
@@ -126,8 +128,20 @@ abstract class OAuth2Config extends ProviderConfig {
 	 * {@inheritdoc}
 	 *
 	 * @return array{code: mixed, state?: mixed}
+	 *
+	 * @throws UserError
 	 */
 	protected function prepare_mutation_input( array $input ) : array {
+		if ( ! isset( $input['oauthResponse'] ) ) {
+			throw new UserError(
+				sprintf(
+					// translators: the provider name.
+					__( 'The %s provider requires the use of the `credentials` input arg.', 'wp-graphql-headless-login' ),
+					$input['provider'] ?: 'OAuth2'
+				)
+			);
+		}
+
 		$args = [
 			'code' => sanitize_text_field( $input['oauthResponse']['code'] ),
 		];
@@ -137,6 +151,95 @@ abstract class OAuth2Config extends ProviderConfig {
 		}
 
 		return $args;
+	}
+
+	/**
+	 * R{@inheritDoc}
+	 */
+	protected static function login_options_schema() : array {
+		return [
+			'createUserIfNoneExists' => [
+				'type'        => 'boolean',
+				'description' => __( 'Create new users', 'wp-graphql-headless-login' ),
+				'help'        => __( 'If the user identity is not linked to an existing WordPress user, it is created. If this setting is not enabled, and if the user authenticates with an account which is not linked to an existing WordPress user, then the authentication will fail.', 'wp-graphql-headless-login' ),
+				'order'       => 1,
+			],
+			'linkExistingUsers'      => [
+				'type'        => 'boolean',
+				'description' => __( 'Login existing users', 'wp-graphql-headless-login' ),
+				'help'        => __( 'If a WordPress account already exists with the same identity as a newly-authenticated user, login as that user instead of generating an error.', 'wp-graphql-headless-login' ),
+				'order'       => 0,
+			],
+		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function default_login_options_fields() : array {
+		return array_merge(
+			parent::default_login_options_fields(),
+			[
+				'createUserIfNoneExists' => [
+					'type'        => 'Boolean',
+					'description' => __( 'Whether to create users if none exist.', 'wp-graphql-headless-login' ),
+				],
+				'linkExistingUsers'      => [
+					'type'        => 'Boolean',
+					'description' => __( 'Whether to link existing users.', 'wp-graphql-headless-login' ),
+				],
+			]
+		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected static function default_client_options_schema() : array {
+		return array_merge(
+			parent::default_client_options_schema(),
+			[
+				'redirectUri'  => [
+					'type'        => 'string',
+					'description' => __( 'Redirect URI', 'wp-graphql-headless-login' ),
+					'help'        => __( 'The frontend URL to redirect the user to after authorization.', 'wp-graphql-headless-login' ),
+					'order'       => 2,
+				],
+				'clientId'     => [
+					'type'        => 'string',
+					'description' => __( 'Client ID', 'wp-graphql-headless-login' ),
+					'order'       => 0,
+				],
+				'clientSecret' => [
+					'type'        => 'string',
+					'description' => __( 'Client Secret', 'wp-graphql-headless-login' ),
+					'order'       => 1,
+				],
+			]
+		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function default_client_options_fields() : array {
+		return array_merge(
+			parent::default_client_options_fields(),
+			[
+				'redirectUri'  => [
+					'type'        => 'String',
+					'description' => __( 'The client redirect URI.', 'wp-graphql-headless-login' ),
+				],
+				'clientId'     => [
+					'type'        => 'String',
+					'description' => __( 'The client ID.', 'wp-graphql-headless-login' ),
+				],
+				'clientSecret' => [
+					'type'        => 'String',
+					'description' => __( 'The client Secret.', 'wp-graphql-headless-login' ),
+				],
+			]
+		);
 	}
 
 	/**
@@ -189,26 +292,28 @@ abstract class OAuth2Config extends ProviderConfig {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @return array
 	 */
-	public function authenticate_and_get_user_data( array $input ) : array {
-		// Get the resource owner.
+	public function authenticate_and_get_user_data( array $input ) {
+		// Get the args from the input.
 		$args = $this->prepare_mutation_input( $input );
 
+		// Get the resource owner.
 		$resource_owner = $this->get_resource_owner( $args );
 
 		// Get the user data for the resource owner.
-		$user_data = $this->get_user_data( $resource_owner );
+		return $this->get_user_data( $resource_owner );
+	}
 
-		/**
-		 * Filters the user data mapped from the Authentication provider before creating the user.
-		 * Useful for mapping custom fields from the Authentication provider to the WP_User.
-		 *
-		 * @param array $user_data      The WordPress user data.
-		 * @param array $resource_owner The the resouce owner data.
-		 * @param self $provider_config An instance of the provider configuration.
-		 *
-		 * @since 0.0.1
-		 */
-		return apply_filters( 'graphql_login_mapped_user_data', $user_data, $resource_owner, $this );
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param array $user_data The user data.
+	 *
+	 * @return \WP_User|false
+	 */
+	public function get_user_from_data( $user_data ) {
+		return User::get_user_by_identity( $this->get_slug(), $user_data['subject_identity'] );
 	}
 }

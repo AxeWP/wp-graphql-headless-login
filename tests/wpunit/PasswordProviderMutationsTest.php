@@ -1,12 +1,23 @@
 <?php
-
 /**
- * Tests access functons
+ * Tests Login mutation
  */
-class LoginWithPasswordMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
+
+use WPGraphQL\Login\Auth\User;
+
+
+class PasswordProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
+	/**
+	 * @const string The version of the Graph API we want to use for tests.
+	 */
+	protected const GRAPH_API_VERSION = 'v16.0';
+
 	public $tester;
 	public $admin;
 	public $test_user;
+	public $provider_config;
+	public $provider;
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -20,26 +31,40 @@ class LoginWithPasswordMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		);
 		$this->test_user = $this->factory()->user->create(
 			[
+				'role'       => 'subscriber',
 				'user_login' => 'test_user',
 				'user_pass'  => 'test_password',
-				'role'       => 'subscriber',
 			]
 		);
+
+		// Set the FB provider config.
+		$this->provider_config = [
+			'name'          => 'Password',
+			'slug'          => 'password',
+			'order'         => 0,
+			'isEnabled'     => true,
+			'clientOptions' => [],
+			'loginOptions'  => [],
+		];
+
+		$this->tester->set_client_config( 'password', $this->provider_config );
+		$this->clearSchema();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function tearDown(): void {
+		$this->tester->reset_utils_properties();
 		$this->clearSchema();
 		parent::tearDown();
 	}
 
-	public function query() : string {
+	public function login_query() : string {
 		return '
-			mutation LoginWithPassword( $username: String!, $password: String! ) {
-				loginWithPassword(
-					input: {username: $username, password: $password}
+			mutation Login( $username: String!, $password: String! ) {
+				login(
+					input: {credentials: {username: $username, password: $password }, provider: PASSWORD}
 				) {
 					authToken
 					authTokenExpiration
@@ -55,6 +80,9 @@ class LoginWithPasswordMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 							userSecret
 						}
 						databaseId
+						firstName
+						lastName
+						email
 						username
 					}
 				}
@@ -62,15 +90,16 @@ class LoginWithPasswordMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		';
 	}
 
-	public function testMutation() : void {
-		$query = $this->query();
+	public function testLoginWithNoProvisioning() : void {
+		$query = $this->login_query();
 
-		// Test bad username
+		// Test bad username.
 		$variables = [
 			'username' => 'baduser',
 			'password' => '12345',
 		];
 
+		// Test with no user to match.
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
 		$this->assertArrayHasKey( 'errors', $actual );
@@ -82,8 +111,10 @@ class LoginWithPasswordMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 		$this->assertArrayHasKey( 'errors', $actual );
-		$this->assertEquals( 'Error: The password you entered for the username test_user is incorrect. Lost your password?', $actual['errors'][0]['message'] );
+		$this->assertEquals( 'The user could not be logged in.', $actual['errors'][0]['message'] );
 
+		// Test with correct credentials.
+		$variables['password'] = 'test_password';
 		// Test with user already logged in.
 		wp_set_current_user( $this->test_user );
 
@@ -91,19 +122,23 @@ class LoginWithPasswordMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		$this->assertArrayHasKey( 'errors', $actual );
 		$this->assertEquals( 'You are already logged in.', $actual['errors'][0]['message'] );
 
-		// Test with correct credentials.
+		// Test with user logged in as someone else.
+		wp_set_current_user( $this->admin );
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertEquals( 'You are already logged in.', $actual['errors'][0]['message'] );
+
+		// Test when logged out.
 		wp_set_current_user( 0 );
 
-		$variables['password'] = 'test_password';
-
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
-		$this->assertArrayNotHasKey( 'errors', $actual );
 
+		$this->assertArrayNotHasKey( 'errors', $actual );
 		$this->assertQuerySuccessful(
 			$actual,
 			[
 				$this->expectedObject(
-					'loginWithPassword',
+					'login',
 					[
 						$this->expectedField( 'authToken', self::NOT_FALSY ),
 						$this->expectedField( 'authTokenExpiration', self::NOT_FALSY ),
@@ -113,7 +148,6 @@ class LoginWithPasswordMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 							'user',
 							[
 								$this->expectedField( 'databaseId', $this->test_user ),
-								$this->expectedField( 'username', 'test_user' ),
 								$this->expectedObject(
 									'auth',
 									[
@@ -129,30 +163,5 @@ class LoginWithPasswordMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 				),
 			]
 		);
-	}
-
-	public function testDisabledMutation() : void {
-		// Disable the mutation.
-		update_option( 'wpgraphql_login_settings_enable_password_mutation', false );
-		$this->tester->reset_utils_properties();
-		$this->clearSchema();
-
-		$query = $this->query();
-
-		// Test with correct credentials.
-		wp_set_current_user( 0 );
-
-		$variables = [
-			'username' => 'test_user',
-			'password' => 'test_password',
-		];
-
-		$actual = $this->graphql( compact( 'query', 'variables' ) );
-		$this->assertArrayHasKey( 'errors', $actual );
-		$this->assertEquals( 'Cannot query field "loginWithPassword" on type "RootMutation".', $actual['errors'][0]['message'] );
-
-		// Cleanup.
-		delete_option( 'wpgraphql_login_settings_enable_password_mutation' );
-		$this->tester->reset_utils_properties();
 	}
 }

@@ -42,36 +42,30 @@ class Auth {
 	 * @throws UserError If the user cannot be created.
 	 */
 	public static function login( array $input ) : array {
+		// If the user is already logged in, throw an error.
+		if ( is_user_logged_in() ) {
+			throw new UserError( __( 'You are already logged in.', 'wp-graphql-headless-login' ) );
+		}
+
 		// Get the client from the provider config.
 		$client = self::get_client( $input['provider'] );
 
+		// Authenticate and get the user data.
 		$user_data = $client->authenticate_and_get_user_data( $input );
 
-		switch ( $client->get_provider_type() ) {
-			case 'oauth2': // If the provider is OAuth2, we might need to create a new user.
-				$user = User::get_user_by_identity( $client->get_provider_slug(), $user_data['subject_identity'] );
+		if ( is_wp_error( $user_data ) ) {
+			throw new UserError( wp_strip_all_tags( $user_data->get_error_message() ) );
+		}
 
-				// Maybe create the user.
-				if ( false === $user ) {
-					$user = User::maybe_create_user( $client, $user_data );
-				}
-				break;
-			case 'saml':
-				// @todo .
-			default: // For custom types, we provide a filter to get the user.
-				/**
-				 * Filter to transform the user data returned from ProviderConfig::authenticate_and_get_user_data() to an instance of WP_User.
-				 *
-				 * @param WP_User|WP_Error|null $user The user.
-				 * @param string                $provider_type The provider type.
-				 * @param array                 $user_data The user data.
-				 * @param Client                $client The client instance.
-				 */
-				$user = apply_filters( 'graphql_login_auth_get_user', null, $client->get_provider_type(), $user_data, $client );
+		$user = ! empty( $user_data ) ? $client->get_user_from_data( $user_data ) : false;
+
+		// If there was no user, maybe create one.
+		if ( empty( $user ) ) {
+			$user = $client->maybe_create_user( $user_data );
 		}
 
 		if ( is_wp_error( $user ) ) {
-			throw new UserError( $user->get_error_message() );
+			throw new UserError( wp_strip_all_tags( $user->get_error_message() ) );
 		}
 
 		if ( ! $user instanceof \WP_User ) {
@@ -83,6 +77,7 @@ class Auth {
 
 		// Set the auth cookie if the provider is configured to use it.
 		$config = $client->get_config();
+		// @todo add: graphql_login_get_setting( 'password_use_auth_cookie', false ) .
 		if ( ! empty( $config['loginOptions']['useAuthenticationCookie'] ) ) {
 			wp_set_auth_cookie( $user->ID, false );
 		}
@@ -103,19 +98,18 @@ class Auth {
 		 *
 		 * @param array    $payload   The payload.
 		 * @param \WP_User $user      The user.
-		 * @param array    $user_data The user data.
 		 * @param Client   $client    The client instance.
 		 */
-		$payload = apply_filters( 'graphql_login_payload', $payload, $user, $user_data, $client );
+		$payload = apply_filters( 'graphql_login_payload', $payload, $user, $client );
 
 		/**
 		 * Fires after the user is successfully logged in.
 		 *
 		 * @param array  $payload   The payload.
-		 * @param array  $user_data The user data from the Provider.
+		 * @param \WP_User  $user_data The user data from the Provider.
 		 * @param Client $client    The client instance.
 		 */
-		do_action( 'graphql_login_after_successful_login', $payload, $user_data, $client );
+		do_action( 'graphql_login_after_successful_login', $payload, $user, $client );
 
 		return $payload ?: [];
 	}
@@ -141,10 +135,22 @@ class Auth {
 		// Get the client from the provider config.
 		$client = self::get_client( $input['provider'] );
 
+		// Try to authenticate the user.
 		$user_data = $client->authenticate_and_get_user_data( $input );
 
-		// Try to get the user.
-		$user = User::get_user_by_identity( $client->get_provider_slug(), $user_data['subject_identity'] );
+		if ( is_wp_error( $user_data ) ) {
+			throw new UserError( wp_strip_all_tags( $user_data->get_error_message() ) );
+		}
+
+		if ( empty( $user_data ) || ! is_array( $user_data ) ) {
+			throw new UserError( __( 'Unable to get user data.', 'wp-graphql-headless-login' ) );
+		}
+
+		$user = $client->get_user_from_data( $user_data );
+
+		if ( is_wp_error( $user ) ) {
+			throw new UserError( wp_strip_all_tags( $user->get_error_message() ) );
+		}
 
 		if ( false !== $user ) {
 			if ( $user->ID === $user_obj->ID ) {

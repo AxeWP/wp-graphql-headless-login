@@ -64,15 +64,18 @@ class LoginClientQueriesTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase
 					order
 					provider
 					clientOptions {
-						clientId
-						clientSecret
-						redirectUri
+						... on FacebookClientOptions {
+							clientId
+							clientSecret
+							redirectUri
+						}
 					}
 					loginOptions {
 						... on FacebookLoginOptions {
 							linkExistingUsers
+							createUserIfNoneExists
 						}
-						createUserIfNoneExists
+						useAuthenticationCookie
 					}
 				}
 			}
@@ -173,15 +176,18 @@ class LoginClientQueriesTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase
 					order
 					provider
 					clientOptions {
-						clientId
-						clientSecret
-						redirectUri
+						... on FacebookClientOptions {
+							clientId
+							clientSecret
+							redirectUri
+						}
 					}
 					loginOptions {
 						... on FacebookLoginOptions {
 							linkExistingUsers
+							createUserIfNoneExists
 						}
-						createUserIfNoneExists
+						useAuthenticationCookie
 					}
 				}
 			}
