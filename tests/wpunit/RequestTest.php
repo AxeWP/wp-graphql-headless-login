@@ -203,6 +203,22 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 	public function testResponseHeadersToSend() : void {
+		$default_client_config = [
+			'name'          => 'Site Token',
+			'slug'          => 'siteToken',
+			'order'         => 0,
+			'isEnabled'     => false,
+			'clientOptions' => [
+				'headerKey' => 'X-My-Secret-Auth-Token',
+				'secretKey' => 'some_secret',
+			],
+			'loginOptions'  => [
+				'useAuthenticationCookie' => true,
+				'metaKey'                 => 'email',
+			],
+		];
+		$this->tester->set_client_config( 'siteToken', $default_client_config );
+
 		$default_headers = [
 			'Access-Control-Allow-Origin'   => '*',
 			'Access-Control-Allow-Headers'  => implode(
@@ -242,6 +258,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertStringContainsString( 'Content-Type', $actual['Access-Control-Allow-Headers'] );
 		$this->assertStringContainsString( 'X-Custom-Header', $actual['Access-Control-Allow-Headers'] );
 		$this->assertStringContainsString( 'X-WPGraphQL-Login-Refresh-Token', $actual['Access-Control-Allow-Headers'] );
+		$this->assertStringNotContainsString( 'X-My-Secret-Auth-Token', $actual['Access-Control-Allow-Headers'] );
 
 		// Check Vary.
 		$this->assertArrayHasKey( 'Vary', $actual );
@@ -249,7 +266,10 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertStringContainsString( 'Origin', $actual['Vary'] );
 
 		// Test with custom headers and explicit origin.
+		$default_client_config['isEnabled'] = true;
+		$this->tester->set_client_config( 'siteToken', $default_client_config );
 		$_SERVER['HTTP_ORIGIN'] = site_url();
+
 		update_option(
 			AccessControlSettings::$settings_prefix . 'access_control',
 			array_merge(
@@ -276,6 +296,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertStringContainsString( 'X-Custom-Header-2', $actual['Access-Control-Allow-Headers'] );
 		$this->assertStringContainsString( 'X-WPGraphQL-Login-Token', $actual['Access-Control-Allow-Headers'] );
 		$this->assertStringContainsString( 'X-WPGraphQL-Login-Refresh-Token', $actual['Access-Control-Allow-Headers'] );
+		$this->assertStringContainsString( 'X-My-Secret-Auth-Token', $actual['Access-Control-Allow-Headers'] );
 
 		// Check Vary.
 		$this->assertArrayHasKey( 'Vary', $actual );
