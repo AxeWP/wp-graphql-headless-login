@@ -6,6 +6,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 - feat!: Remove `loginWithPassword` mutation in favor of Password provider.
+- feat: Add Site Token provider.
 - feat: Add support for setting Access Control headers.
 - dev!: Refactor settings page frontend components and app logic.
 - dev!: Refactor `ProviderConfig` methods.

@@ -10,6 +10,7 @@ namespace WPGraphQL\Login\Auth;
 
 use GraphQL\Error\UserError;
 use WPGraphQL;
+use WPGraphQL\Login\Auth\ProviderConfig\SiteToken;
 use WPGraphQL\Login\Utils\Utils;
 
 /**
@@ -245,6 +246,17 @@ class Request {
 		// If headers are already set, merge them.
 		if ( ! empty( $header['Access-Control-Allow-Headers'] ) ) {
 			$headers = array_merge( $headers, explode( ', ', $header['Access-Control-Allow-Headers'] ) );
+		}
+
+		// If the SiteLogin provider is active, then set add the provider's header key.
+		if ( SiteToken::is_enabled() ) {
+			$options = Utils::get_provider_settings( SiteToken::get_slug() );
+
+			$token_header = $options['clientOptions']['headerKey'];
+
+			if ( ! empty( $token_header ) ) {
+				$headers[] = $token_header;
+			}
 		}
 
 		// Add custom headers.
