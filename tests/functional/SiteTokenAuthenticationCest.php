@@ -4,7 +4,7 @@ use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 
 class SiteTokenAuthenticationCest {
 
-	public function _before( AcceptanceTester $I ) {
+	public function _before( FunctionalTester $I ) {
 		$I->set_client_config(
 			'siteToken',
 			[
