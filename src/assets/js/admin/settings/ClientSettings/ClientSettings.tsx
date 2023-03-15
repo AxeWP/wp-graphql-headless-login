@@ -19,12 +19,9 @@ const clientDefaults: ClientType = {
 	order: 0,
 	isEnabled: false,
 	clientOptions: {
-		clientId: '',
-		clientSecret: '',
 		redirectUri: '',
 	},
 	loginOptions: {
-		createUserIfNoneExists: true,
 		useAuthenticationCookie: false,
 	},
 };

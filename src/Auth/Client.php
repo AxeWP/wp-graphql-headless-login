@@ -9,6 +9,7 @@
 namespace WPGraphQL\Login\Auth;
 
 use GraphQL\Error\UserError;
+use WP_Error;
 use WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig;
 use WPGraphQL\Login\Utils\Utils;
 
@@ -129,9 +130,9 @@ class Client {
 	 *
 	 * @param array $input the input data.
 	 *
-	 * @throws UserError .
+	 * @return array|\WP_User|\WP_Error|false
 	 */
-	public function authenticate_and_get_user_data( array $input ) : array {
+	public function authenticate_and_get_user_data( array $input ) {
 		/**
 		 * Fires before the user is authenticated.
 		 *
@@ -143,12 +144,44 @@ class Client {
 		 */
 		do_action( 'graphql_login_before_authenticate', $this->slug, $input, $this->config, $this->provider_configurator, $this );
 
-		$user = $this->provider_configurator->authenticate_and_get_user_data( $input );
+		return $this->provider_configurator->authenticate_and_get_user_data( $input );
+	}
 
-		if ( empty( $user ) ) {
-			throw new UserError( __( 'Unable to authenticate user.', 'wp-graphql-headless-login' ) );
+	/**
+	 * Uses the authenticated user data to return the user.
+	 *
+	 * @param array|\WP_User $data the user data data.
+	 *
+	 * @return \WP_User|\WP_Error|false
+	 */
+	public function get_user_from_data( $data ) {
+		return $this->provider_configurator->get_user_from_data( $data );
+	}
+
+	/**
+	 * Maybe creates a user from the provided user data.
+	 *
+	 * @param array|mixed $user_data The user data.
+	 *
+	 * @return \WP_User|WP_Error|false
+	 */
+	public function maybe_create_user( $user_data ) {
+		/**
+		 * Filters the user data mapped from the Authentication provider before creating the user.
+		 * Useful for mapping custom fields from the Authentication provider to the WP_User.
+		 *
+		 * @param array $user_data      The WordPress user data.
+		 * @param self $provider_config An instance of the provider configuration.
+		 *
+		 * @since 0.0.1
+		 */
+		$user_data = apply_filters( 'graphql_login_mapped_user_data', $user_data, $this );
+
+		if ( ! is_array( $user_data ) ) {
+			return false;
 		}
 
-		return $user;
+		return User::maybe_create_user( $this, $user_data );
 	}
+
 }

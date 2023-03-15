@@ -54,8 +54,19 @@ abstract class ProviderConfig {
 	 * Authenticates the user based on the input and returns a valid WP_User.
 	 *
 	 * @param array $input  The mutation input.
+	 *
+	 * @return array|\WP_User|\WP_Error|false
 	 */
-	abstract public function authenticate_and_get_user_data( array $input ) : array;
+	abstract public function authenticate_and_get_user_data( array $input );
+
+	/**
+	 * Gets the user from the data returned by the provider.
+	 *
+	 * @param array|\WP_User $data The data returned by the provider.
+	 *
+	 * @return \WP_User|\WP_Error|false
+	 */
+	abstract public function get_user_from_data( $data );
 
 	/**
 	 * Process and validate the input data passed to the GraphQL mutation.
@@ -92,12 +103,7 @@ abstract class ProviderConfig {
 	 * Should probably be overwritten by the child ProviderConfig.
 	 */
 	protected static function login_options_fields() : array {
-		return [
-			'linkExistingUsers' => [
-				'type'        => 'Boolean',
-				'description' => __( 'Whether to link existing users.', 'wp-graphql-headless-login' ),
-			],
-		];
+		return [];
 	}
 
 	/**
@@ -110,13 +116,6 @@ abstract class ProviderConfig {
 	 * @see https://developer.wordpress.org/rest-api/extending-the-rest-api/schema
 	 */
 	protected static function login_options_schema() : array {
-		return [
-			'linkExistingUsers' => [
-				'type'        => 'boolean',
-				'description' => __( 'Login existing users', 'wp-graphql-headless-login' ),
-				'help'        => __( 'If a WordPress account already exists with the same identity as a newly-authenticated user, login as that user instead of generating an error.', 'wp-graphql-headless-login' ),
-				'order'       => 0,
-			],
-		];
+		return [];
 	}
 }

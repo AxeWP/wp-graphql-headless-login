@@ -25,22 +25,25 @@ class User {
 	public static string $identity_key_prefix = 'wp-graphql-headless-login-subject-identity';
 
 	/**
-	 * Gets the WP User by the ResourceOwner ID returned from the provider.
+	 * Gets the WP User by a given user meta key and value.
 	 *
-	 * @param string $provider the Provider slug.
-	 * @param string $subject_identity The ResourceOwner ID.
+	 * @param string $key   The meta key to check.
+	 * @param string $value The value to match.
 	 *
 	 * @return WP_User|false
 	 */
-	public static function get_user_by_identity( string $provider, string $subject_identity ) {
-		// Look for user by their wp-graphql-headless-login-subject-identity value.
+	public static function get_user_by( string $key, string $value ) {
+		if ( in_array( $key, [ 'id', 'ID', 'slug', 'email', 'login' ], true ) ) {
+			return get_user_by( $key, $value );
+		}
+
 		$user_query = new WP_User_Query(
 			[
 				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				'meta_query' => [
 					[
-						'key'   => self::get_identity_meta_key( $provider ),
-						'value' => $subject_identity,
+						'key'   => $key,
+						'value' => $value,
 					],
 				],
 			],
@@ -53,6 +56,18 @@ class User {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Gets the WP User by the ResourceOwner ID returned from the provider.
+	 *
+	 * @param string $provider the Provider slug.
+	 * @param string $subject_identity The ResourceOwner ID.
+	 *
+	 * @return WP_User|false
+	 */
+	public static function get_user_by_identity( string $provider, string $subject_identity ) {
+		return self::get_user_by( self::get_identity_meta_key( $provider ), $subject_identity );
 	}
 
 	/**

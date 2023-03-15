@@ -11,11 +11,11 @@ class GraphQL extends \Codeception\Module {
 	 *
 	 * @see https://github.com/wp-graphql/wp-graphql-woocommerce/blob/e4f7da8fdb631dc622e522347d586394f5f596f8/tests/_support/Helper/GraphQLE2E.php
 	 *
-	 * @param string      $mutation
-	 * @param array|null  $variables
-	 * @param string|null $session_header
+	 * @param string     $query
+	 * @param array|null $variables
+	 * @param array|null $request_headers
 	 */
-	public function sendGraphQLRequest( $query, $input = null, $request_headers = [] ) : array {
+	public function sendGraphQLRequest( $query, $variables = null, $request_headers = [] ) : array {
 		$rest = $this->getModule( 'REST' );
 
 		// Add item to cart.
@@ -32,7 +32,7 @@ class GraphQL extends \Codeception\Module {
 			json_encode(
 				[
 					'query'     => $query,
-					'variables' => [ 'input' => $input ],
+					'variables' => $variables,
 				]
 			)
 		);

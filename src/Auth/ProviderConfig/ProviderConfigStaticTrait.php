@@ -107,40 +107,24 @@ trait ProviderConfigStaticTrait {
 	 * Gets the default WPGraphQL fields config for the provider client options.
 	 */
 	public static function default_client_options_fields() : array {
-		$fields = [
-			'clientId'     => [
-				'type'        => 'String',
-				'description' => __( 'The client ID.', 'wp-graphql-headless-login' ),
-			],
-			'clientSecret' => [
-				'type'        => 'String',
-				'description' => __( 'The client Secret.', 'wp-graphql-headless-login' ),
-			],
-			'redirectUri'  => [
-				'type'        => 'String',
-				'description' => __( 'The client redirect URI.', 'wp-graphql-headless-login' ),
+		return [
+			'todo' => [
+				'type'        => 'Boolean',
+				'description' => __( 'This field exists solely to generate the  ClientOptions interface, in lieu of the shared custom fields that will be added in a future release', 'wp-graphql-headless-login' ),
 			],
 		];
-
-		return $fields;
 	}
 
 	/**
 	 * Gets the default WPGraphQL fields config for the provider client options.
 	 */
 	public static function default_login_options_fields() : array {
-		$fields = [
-			'createUserIfNoneExists'  => [
-				'type'        => 'Boolean',
-				'description' => __( 'Whether to create users if none exist.', 'wp-graphql-headless-login' ),
-			],
+		return [
 			'useAuthenticationCookie' => [
 				'type'        => 'Boolean',
 				'description' => __( 'Whether to set a WordPress authentication cookie on successful login.', 'wp-graphql-headless-login' ),
 			],
 		];
-
-		return $fields;
 	}
 
 	/**
@@ -149,28 +133,8 @@ trait ProviderConfigStaticTrait {
 	 * @see ProviderConfig::client_options_schema().
 	 */
 	protected static function default_client_options_schema() : array {
-		$settings = [
-			'clientId'     => [
-				'type'        => 'string',
-				'description' => __( 'Client ID', 'wp-graphql-headless-login' ),
-				'order'       => 0,
-			],
-			'clientSecret' => [
-				'type'        => 'string',
-				'description' => __( 'Client Secret', 'wp-graphql-headless-login' ),
-				'order'       => 1,
-			],
-			'redirectUri'  => [
-				'type'        => 'string',
-				'description' => __( 'Redirect URI', 'wp-graphql-headless-login' ),
-				'help'        => __( 'The frontend URL to redirect the user to after authorization.', 'wp-graphql-headless-login' ),
-				'order'       => 2,
-			],
-		];
-
-		return $settings;
+		return [];
 	}
-
 
 	/**
 	 * Returns the default schema properties for the Login options.
@@ -179,12 +143,6 @@ trait ProviderConfigStaticTrait {
 	 */
 	protected static function default_login_options_schema() : array {
 		$settings = [
-			'createUserIfNoneExists'  => [
-				'type'        => 'boolean',
-				'description' => __( 'Create new users', 'wp-graphql-headless-login' ),
-				'help'        => __( 'If the user identity is not linked to an existing WordPress user, it is created. If this setting is not enabled, and if the user authenticates with an account which is not linked to an existing WordPress user, then the authentication will fail.', 'wp-graphql-headless-login' ),
-				'order'       => 1,
-			],
 			'useAuthenticationCookie' => [
 				'type'        => 'boolean',
 				'description' => __( 'Set authentication cookie', 'wp-graphql-headless-login' ),

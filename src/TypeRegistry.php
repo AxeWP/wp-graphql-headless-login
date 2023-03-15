@@ -98,6 +98,7 @@ class TypeRegistry {
 	private static function inputs() : array {
 		$classes_to_register = [
 			Input\OAuthProviderResponseInput::class,
+			Input\PasswordProviderResponseInput::class,
 		];
 
 		/**
@@ -192,7 +193,6 @@ class TypeRegistry {
 		$classes_to_register = [
 			Mutation\LinkUserIdentity::class,
 			Mutation\Login::class,
-			Mutation\LoginWithPassword::class,
 			Mutation\RefreshToken::class,
 			Mutation\RefreshUserSecret::class,
 			Mutation\RevokeUserSecret::class,

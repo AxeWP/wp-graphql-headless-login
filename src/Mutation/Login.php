@@ -14,6 +14,7 @@ use WPGraphQL\Model\User;
 use WPGraphQL\Login\Auth\Auth;
 use WPGraphQL\Login\Type\Enum\ProviderEnum;
 use WPGraphQL\Login\Type\Input\OAuthProviderResponseInput;
+use WPGraphQL\Login\Type\Input\PasswordProviderResponseInput;
 use \WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationType;
 
 /**
@@ -33,9 +34,13 @@ class Login extends MutationType {
 	 */
 	public static function get_input_fields() : array {
 		return [
+			'credentials'   => [
+				'type'        => PasswordProviderResponseInput::get_type_name(),
+				'description' => __( 'The WordPress user credentials. Required by the Password provider.', 'wp-graphql-headless-login' ),
+			],
 			'oauthResponse' => [
-				'type'        => [ 'non_null' => OAuthProviderResponseInput::get_type_name() ],
-				'description' => __( 'The parsed response from the Authentication Provider.', 'wp-graphql-headless-login' ),
+				'type'        => OAuthProviderResponseInput::get_type_name(),
+				'description' => __( 'The parsed response from an OAuth2 Authentication Provider.', 'wp-graphql-headless-login' ),
 			],
 			'provider'      => [
 				'type'        => [ 'non_null' => ProviderEnum::get_type_name() ],
