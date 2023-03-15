@@ -51,7 +51,7 @@ abstract class OAuth2Config extends ProviderConfig {
 	protected string $authorization_url;
 
 	/**
-	 * The Constructor.
+	 * {@inheritDoc}
 	 *
 	 * @param class-string $provider_class The OAuth2 provider class.
 	 *
@@ -97,7 +97,7 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * Prepares the client options.
 	 */
-	public function prepare_client_options() : array {
+	protected function prepare_client_options() : array {
 		if ( ! isset( $this->client_options ) ) {
 			$provider_settings = Utils::get_provider_settings( static::get_slug() );
 
@@ -122,6 +122,33 @@ abstract class OAuth2Config extends ProviderConfig {
 	 */
 	public function get_provider() {
 		return $this->provider;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return array
+	 */
+	public function authenticate_and_get_user_data( array $input ) {
+		// Get the args from the input.
+		$args = $this->prepare_mutation_input( $input );
+
+		// Get the resource owner.
+		$resource_owner = $this->get_resource_owner( $args );
+
+		// Get the user data for the resource owner.
+		return $this->get_user_data( $resource_owner );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param array $user_data The user data.
+	 *
+	 * @return \WP_User|false
+	 */
+	public function get_user_from_data( $user_data ) {
+		return User::get_user_by_identity( $this->get_slug(), $user_data['subject_identity'] );
 	}
 
 	/**
@@ -154,39 +181,23 @@ abstract class OAuth2Config extends ProviderConfig {
 	}
 
 	/**
-	 * R{@inheritDoc}
-	 */
-	protected static function login_options_schema() : array {
-		return [
-			'createUserIfNoneExists' => [
-				'type'        => 'boolean',
-				'description' => __( 'Create new users', 'wp-graphql-headless-login' ),
-				'help'        => __( 'If the user identity is not linked to an existing WordPress user, it is created. If this setting is not enabled, and if the user authenticates with an account which is not linked to an existing WordPress user, then the authentication will fail.', 'wp-graphql-headless-login' ),
-				'order'       => 1,
-			],
-			'linkExistingUsers'      => [
-				'type'        => 'boolean',
-				'description' => __( 'Login existing users', 'wp-graphql-headless-login' ),
-				'help'        => __( 'If a WordPress account already exists with the same identity as a newly-authenticated user, login as that user instead of generating an error.', 'wp-graphql-headless-login' ),
-				'order'       => 0,
-			],
-		];
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
-	public static function default_login_options_fields() : array {
+	public static function default_client_options_fields() : array {
 		return array_merge(
-			parent::default_login_options_fields(),
+			parent::default_client_options_fields(),
 			[
-				'createUserIfNoneExists' => [
-					'type'        => 'Boolean',
-					'description' => __( 'Whether to create users if none exist.', 'wp-graphql-headless-login' ),
+				'redirectUri'  => [
+					'type'        => 'String',
+					'description' => __( 'The client redirect URI.', 'wp-graphql-headless-login' ),
 				],
-				'linkExistingUsers'      => [
-					'type'        => 'Boolean',
-					'description' => __( 'Whether to link existing users.', 'wp-graphql-headless-login' ),
+				'clientId'     => [
+					'type'        => 'String',
+					'description' => __( 'The client ID.', 'wp-graphql-headless-login' ),
+				],
+				'clientSecret' => [
+					'type'        => 'String',
+					'description' => __( 'The client Secret.', 'wp-graphql-headless-login' ),
 				],
 			]
 		);
@@ -222,24 +233,40 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function default_client_options_fields() : array {
+	public static function default_login_options_fields() : array {
 		return array_merge(
-			parent::default_client_options_fields(),
+			parent::default_login_options_fields(),
 			[
-				'redirectUri'  => [
-					'type'        => 'String',
-					'description' => __( 'The client redirect URI.', 'wp-graphql-headless-login' ),
+				'createUserIfNoneExists' => [
+					'type'        => 'Boolean',
+					'description' => __( 'Whether to create users if none exist.', 'wp-graphql-headless-login' ),
 				],
-				'clientId'     => [
-					'type'        => 'String',
-					'description' => __( 'The client ID.', 'wp-graphql-headless-login' ),
-				],
-				'clientSecret' => [
-					'type'        => 'String',
-					'description' => __( 'The client Secret.', 'wp-graphql-headless-login' ),
+				'linkExistingUsers'      => [
+					'type'        => 'Boolean',
+					'description' => __( 'Whether to link existing users.', 'wp-graphql-headless-login' ),
 				],
 			]
 		);
+	}
+
+	/**
+	 * R{@inheritDoc}
+	 */
+	protected static function login_options_schema() : array {
+		return [
+			'createUserIfNoneExists' => [
+				'type'        => 'boolean',
+				'description' => __( 'Create new users', 'wp-graphql-headless-login' ),
+				'help'        => __( 'If the user identity is not linked to an existing WordPress user, it is created. If this setting is not enabled, and if the user authenticates with an account which is not linked to an existing WordPress user, then the authentication will fail.', 'wp-graphql-headless-login' ),
+				'order'       => 1,
+			],
+			'linkExistingUsers'      => [
+				'type'        => 'boolean',
+				'description' => __( 'Login existing users', 'wp-graphql-headless-login' ),
+				'help'        => __( 'If a WordPress account already exists with the same identity as a newly-authenticated user, login as that user instead of generating an error.', 'wp-graphql-headless-login' ),
+				'order'       => 0,
+			],
+		];
 	}
 
 	/**
@@ -288,32 +315,5 @@ abstract class OAuth2Config extends ProviderConfig {
 		$resource_owner = $this->provider->getResourceOwner( $token );
 
 		return $resource_owner->toArray();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @return array
-	 */
-	public function authenticate_and_get_user_data( array $input ) {
-		// Get the args from the input.
-		$args = $this->prepare_mutation_input( $input );
-
-		// Get the resource owner.
-		$resource_owner = $this->get_resource_owner( $args );
-
-		// Get the user data for the resource owner.
-		return $this->get_user_data( $resource_owner );
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @param array $user_data The user data.
-	 *
-	 * @return \WP_User|false
-	 */
-	public function get_user_from_data( $user_data ) {
-		return User::get_user_by_identity( $this->get_slug(), $user_data['subject_identity'] );
 	}
 }

@@ -60,12 +60,12 @@ class PasswordLoginCest {
 			}
 		';
 
-		$input = [
+		$variables = [
 			'username' => 'testuser',
 			'password' => 'testpass',
 		];
 
-		$response = $I->sendGraphQlRequest( $query, $input );
+		$response = $I->sendGraphQlRequest( $query, $variables );
 
 		codecept_debug( $response );
 
@@ -79,7 +79,7 @@ class PasswordLoginCest {
 		// The response is properly returning data as expected.
 		$I->assertArrayHasKey( 'data', $response );
 
-		// Assert the wooSessionToken is the same as the header
+		// Assert the wooSessionToken is the same as the header.
 		$I->assertEquals( $I->grabHttpHeader( 'woocommerce-session' ), $response['data']['login']['wooSessionToken'] );
 
 		// Assert the Woo customer data is the same as the user.

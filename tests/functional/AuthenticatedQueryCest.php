@@ -3,7 +3,6 @@
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 
 class AuthenticatedQueryCest {
-
 	public function testQueryWithValidHeaders( FunctionalTester $I ) {
 		$I->wantTo( 'Query with valid authentication headers' );
 

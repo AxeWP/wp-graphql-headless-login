@@ -14,7 +14,6 @@ use GraphQL\Error\UserError;
  * Class - Password
  */
 class Password extends ProviderConfig {
-
 	/**
 	 * {@inheritdoc}
 	 */
@@ -34,28 +33,6 @@ class Password extends ProviderConfig {
 	 */
 	public static function get_slug() : string {
 		return 'password';
-	}
-
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @return array{username: ?string, password: ?string}
-	 *
-	 * @throws UserError
-	 */
-	protected function prepare_mutation_input( array $input ) : array {
-		if ( ! isset( $input['credentials'] ) ) {
-			throw new UserError(
-				__( 'The PASSWORD provider requires the use of the `credentials` input arg.', 'wp-graphql-headless-login' )
-			);
-		}
-
-		$args = [
-			'username' => ! empty( $input['credentials']['username'] ) ? sanitize_text_field( $input['credentials']['username'] ) : null,
-			'password' => ! empty( $input['credentials']['password'] ) ? trim( $input['credentials']['password'] ) : null,
-		];
-
-		return $args;
 	}
 
 	/**
@@ -93,5 +70,27 @@ class Password extends ProviderConfig {
 	 */
 	public function get_user_from_data( $user ) {
 		return $user instanceof \WP_User ? $user : false;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return array{username: ?string, password: ?string}
+	 *
+	 * @throws UserError
+	 */
+	protected function prepare_mutation_input( array $input ) : array {
+		if ( ! isset( $input['credentials'] ) ) {
+			throw new UserError(
+				__( 'The PASSWORD provider requires the use of the `credentials` input arg.', 'wp-graphql-headless-login' )
+			);
+		}
+
+		$args = [
+			'username' => ! empty( $input['credentials']['username'] ) ? sanitize_text_field( $input['credentials']['username'] ) : null,
+			'password' => ! empty( $input['credentials']['password'] ) ? trim( $input['credentials']['password'] ) : null,
+		];
+
+		return $args;
 	}
 }
