@@ -16,6 +16,7 @@ use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Google;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Instagram;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\LinkedIn;
 use WPGraphQL\Login\Auth\ProviderConfig\Password;
+use WPGraphQL\Login\Auth\ProviderConfig\SiteToken;
 
 /**
  * Class - ProviderRegistry
@@ -141,6 +142,7 @@ class ProviderRegistry {
 					'instagram' => Instagram::class,
 					'linkedin'  => LinkedIn::class,
 					'password'  => Password::class,
+					'siteToken' => SiteToken::class,
 				]
 			);
 

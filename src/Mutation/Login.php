@@ -42,6 +42,10 @@ class Login extends MutationType {
 				'type'        => OAuthProviderResponseInput::get_type_name(),
 				'description' => __( 'The parsed response from an OAuth2 Authentication Provider.', 'wp-graphql-headless-login' ),
 			],
+			'identity'      => [
+				'type'        => 'String',
+				'description' => __( 'The user identity to use when logging in. Required by the SiteToken provider.', 'wp-graphql-headless-login' ),
+			],
 			'provider'      => [
 				'type'        => [ 'non_null' => ProviderEnum::get_type_name() ],
 				'description' => __( 'The Headless Login provider to use when logging in.', 'wp-graphql-headless-login' ),
