@@ -19,7 +19,7 @@ class WoocommerceSchemaFilters implements Registrable {
 	 */
 	public static function init() : void {
 		// Bail if WPGraphQL for Woocommerce doesnt exist.
-		if ( ! class_exists( '\WPGraphQL\WooCommerce\WP_GraphQL_WooCommerce' ) ) {
+		if ( ! defined( 'WPGRAPHQL_WOOCOMMERCE_VERSION' ) ) {
 			return;
 		}
 

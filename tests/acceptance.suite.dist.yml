@@ -17,8 +17,9 @@ modules:
     - WPLoader
   config:
     WPDb:
-      cleanup: false
+      cleanup: true
     WPLoader:
+      loadOnly: true
       plugins:
         - wp-graphql/wp-graphql.php
         - woocommerce/woocommerce.php

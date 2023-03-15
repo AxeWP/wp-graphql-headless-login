@@ -1,7 +1,24 @@
 <?php
 
+use WPGraphQL\Login\Admin\Settings\PluginSettings;
 
 class PasswordLoginCest {
+	public function _before( AcceptanceTester $I ) {
+		$I->set_client_config(
+			'password',
+			[
+				'name'          => 'Password',
+				'slug'          => 'password',
+				'order'         => 0,
+				'isEnabled'     => true,
+				'clientOptions' => [],
+				'loginOptions'  => [
+					'useAuthenticationCookie' => true,
+				],
+			]
+		);
+	}
+
 	public function testMutation( AcceptanceTester $I ) {
 		$I->wantTo( 'Test the PASSWORD provider with 3rd party plugin data' );
 
@@ -9,7 +26,6 @@ class PasswordLoginCest {
 		$user_id = $I->haveUserInDatabase( 'testuser', 'administrator', [ 'user_pass' => 'testpass' ] );
 
 		$I->haveGraphQLDebug();
-
 		$expected_tokens = $I->generate_user_tokens( $user_id );
 
 		$query = '
@@ -64,11 +80,11 @@ class PasswordLoginCest {
 		$I->assertArrayHasKey( 'data', $response );
 
 		// Assert the wooSessionToken is the same as the header
-		$I->assertEquals( $I->grabHttpHeader( 'woocommerce-session' ), $response['data']['loginWithPassword']['wooSessionToken'] );
+		$I->assertEquals( $I->grabHttpHeader( 'woocommerce-session' ), $response['data']['login']['wooSessionToken'] );
 
 		// Assert the Woo customer data is the same as the user.
-		$I->assertEquals( $user_id, $response['data']['loginWithPassword']['customer']['databaseId'] );
-		$I->assertEquals( $response['data']['loginWithPassword']['user']['auth']['userSecret'], $response['data']['loginWithPassword']['customer']['auth']['userSecret'] );
+		$I->assertEquals( $user_id, $response['data']['login']['customer']['databaseId'] );
+		$I->assertEquals( $response['data']['login']['user']['auth']['userSecret'], $response['data']['login']['customer']['auth']['userSecret'] );
 
 		$cookies = $I->grabCookiesWithPattern( '/^wordpress_logged_in_/' );
 
@@ -83,7 +99,7 @@ class PasswordLoginCest {
 		wp_set_current_user( 0 );
 
 		// Query with the auth token.
-		$auth_token = $response['data']['loginWithPassword']['authToken'];
+		$auth_token = $response['data']['login']['authToken'];
 
 		$query = 'query {
 			viewer {
@@ -128,7 +144,6 @@ class PasswordLoginCest {
 		$I->assertNotEmpty( $response['data']['viewer']['auth']['wooSessionToken'] );
 
 		// Cleanup
-		wp_delete_user( $user_id );
 		delete_option( PluginSettings::$settings_prefix . 'jwt_secret_key' );
 	}
 }
