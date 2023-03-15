@@ -36,7 +36,7 @@ class SiteTokenProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 			'order'         => 0,
 			'isEnabled'     => true,
 			'clientOptions' => [
-				'headerKey' => 'X-My-Secret-Auth-Token',
+				'headerKey' => '',
 				'secretKey' => 'some_secret',
 			],
 			'loginOptions'  => [
@@ -60,8 +60,8 @@ class SiteTokenProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 
 	public function login_query() : string {
 		return '
-			mutation LoginWithSiteToken( $identity: String!) {
-				login( input: { identity: $identity, provider: SITETOKEN } ) {
+			mutation LoginWithSiteToken( $input: LoginInput! ) {
+				login( input: $input ) {
 					authToken
 					authTokenExpiration
 					refreshToken
@@ -90,10 +90,25 @@ class SiteTokenProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		$query = $this->login_query();
 
 		$variables = [
-			'identity' => 'test_user',
+			'input' => [
+				'identity' => 'test_user',
+				'provider' => 'SITETOKEN',
+			],
 		];
 
+		// Test with no header key
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertEquals( 'Header key for site token authentication is not defined.', $actual['errors'][0]['message'] );
+
 		// Test with no header.
+		$this->provider_config['clientOptions']['headerKey'] = 'X-My-Secret-Auth-Token';
+		$this->tester->set_client_config(
+			'siteToken',
+			$this->provider_config
+		);
+
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
 		$this->assertArrayHasKey( 'errors', $actual );
@@ -106,9 +121,16 @@ class SiteTokenProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		$this->assertArrayHasKey( 'errors', $actual );
 		$this->assertEquals( 'Invalid site token.', $actual['errors'][0]['message'] );
 
-		// Test with bad identity.
+		// Test with no identity.
 		$_SERVER['HTTP_X_MY_SECRET_AUTH_TOKEN'] = 'some_secret';
-		$variables['identity']                  = 'bad_user';
+		unset( $variables['input']['identity'] );
+
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertEquals( 'The SITE_TOKEN provider requires the use of the `identity` input arg.', $actual['errors'][0]['message'] );
+
+		// Test with bad identity.
+		$variables['input']['identity'] = 'bad_user';
 
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 		$this->assertArrayHasKey( 'errors', $actual );
@@ -116,7 +138,7 @@ class SiteTokenProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 
 		// Test user already logged in.
 		wp_set_current_user( $this->test_user );
-		$variables['identity'] = 'test_user';
+		$variables['input']['identity'] = 'test_user';
 
 		$this->assertEquals( 'The user could not be logged in.', $actual['errors'][0]['message'] );
 
