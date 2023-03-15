@@ -3,7 +3,7 @@
         'name' => 'axepress/wp-graphql-headless-login',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => 'fdda8f1ce46c394eb9e3a239e0c10f39f6cd971f',
+        'reference' => '25085a64d72c243cb4ec7a411f0bbb7b401d11d4',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'axepress/wp-graphql-headless-login' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => 'fdda8f1ce46c394eb9e3a239e0c10f39f6cd971f',
+            'reference' => '25085a64d72c243cb4ec7a411f0bbb7b401d11d4',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

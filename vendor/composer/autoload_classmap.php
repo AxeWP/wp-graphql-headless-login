@@ -209,7 +209,6 @@ return array(
     'WPGraphQL\\Login\\Model\\User' => $baseDir . '/src/Model/User.php',
     'WPGraphQL\\Login\\Mutation\\LinkUserIdentity' => $baseDir . '/src/Mutation/LinkUserIdentity.php',
     'WPGraphQL\\Login\\Mutation\\Login' => $baseDir . '/src/Mutation/Login.php',
-    'WPGraphQL\\Login\\Mutation\\LoginWithIdentity' => $baseDir . '/src/Mutation/LoginWithIdentity.php',
     'WPGraphQL\\Login\\Mutation\\RefreshToken' => $baseDir . '/src/Mutation/RefreshToken.php',
     'WPGraphQL\\Login\\Mutation\\RefreshUserSecret' => $baseDir . '/src/Mutation/RefreshUserSecret.php',
     'WPGraphQL\\Login\\Mutation\\RevokeUserSecret' => $baseDir . '/src/Mutation/RevokeUserSecret.php',
