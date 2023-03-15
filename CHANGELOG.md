@@ -5,9 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
 ## Unreleased
+- feat!: Remove `loginWithPassword` mutation in favor of Password provider.
 - feat: Add support for setting Access Control headers.
-- dev: Refactor settings registration for better extendability.
 - dev!: Refactor settings page frontend components and app logic.
+- dev!: Refactor `ProviderConfig` methods.
+- dev: Refactor settings registration for better extendability.
 - chore: update NPM dependencies.
 - chore: update Composer dependencies.
 
