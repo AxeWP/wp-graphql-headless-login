@@ -13,14 +13,13 @@ import { useDispatch, dispatch, useSelect } from '@wordpress/data';
 import type { wpGraphQLLogin } from '../..';
 import { ClientOptionList } from './ClientOptionList';
 import { OptionList } from '../../components';
+import type { AccessControlEntityProps } from '../AccessControlSettings';
 
 const clientDefaults: ClientType = {
 	name: 'New client',
 	order: 0,
 	isEnabled: false,
-	clientOptions: {
-		redirectUri: '',
-	},
+	clientOptions: {},
 	loginOptions: {
 		useAuthenticationCookie: false,
 	},
@@ -39,6 +38,11 @@ export function ClientSettings({ clientSlug, showAdvancedSettings }) {
 	const { saveEditedEntityRecord } = useDispatch(coreStore);
 
 	const [client, setClient] = useEntityProp('root', 'site', clientSlug);
+	const [accessControlSettings]: AccessControlEntityProps = useEntityProp(
+		'root',
+		'site',
+		'wpgraphql_login_access_control'
+	);
 
 	useEffect(() => {
 		if (undefined !== client && Object.keys(client || {})?.length === 0) {
@@ -98,6 +102,27 @@ export function ClientSettings({ clientSlug, showAdvancedSettings }) {
 			...loginOption,
 		});
 	};
+
+	// Disable siteToken if shouldBlockUnauthorizedDomains is false
+	useEffect(() => {
+		if (
+			!accessControlSettings?.shouldBlockUnauthorizedDomains &&
+			clientSlug === 'wpgraphql_login_provider_siteToken'
+		) {
+			updateClient('isEnabled', false);
+
+			dispatch('core/notices').createErrorNotice(
+				__(
+					'The Site Token provider can only be enabled if `Access Control Settings: Block unauthorized domains` is enabled.',
+					'wp-graphql-headless-login'
+				),
+				{
+					type: 'snackbar',
+					isDismissible: true,
+				}
+			);
+		}
+	}, [accessControlSettings, clientSlug, updateClient]);
 
 	const saveRecord = async () => {
 		const saved = await saveEditedEntityRecord('root', 'site', undefined, {

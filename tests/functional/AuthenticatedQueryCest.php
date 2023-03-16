@@ -186,7 +186,6 @@ class AuthenticatedQueryCest {
 		$I->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['date'] );
 	}
 
-
 	public function testQueryWithAccessControl( FunctionalTester $I ) {
 		$I->wantTo( 'Query with Access Control headers configured' );
 
