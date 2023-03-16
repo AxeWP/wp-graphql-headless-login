@@ -97,5 +97,9 @@ class CoreSchemaFiltersTest extends \Codeception\TestCase\WPTestCase {
 		$actual = CoreSchemaFilters::determine_current_user( $user_id );
 
 		$this->assertEquals( $user_id, $actual );
+
+		// cleanup.
+		unset( $_SERVER['HTTP_AUTHORIZATION'] );
+		wp_delete_user( $user_id );
 	}
 }
