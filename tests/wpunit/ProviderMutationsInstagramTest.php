@@ -4,21 +4,21 @@
  */
 
 use Mockery as m;
-use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\Github;
-use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Github as OAuth2Github;
+use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\Instagram;
+use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Instagram as OAuth2Instagram;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\OAuth2Config;
 use WPGraphQL\Login\Auth\User;
 
-class FooGithubProvider extends Github {
+class FooInstagramProvider extends Instagram {
 
 	protected function fetchResourceOwnerDetails( $token ) {
-		return json_decode( '{"id": 12345, "name": "mock_name", "email": "mock_email@email.com", "login": "mock_username"}', true );
+		return json_decode( '{"id": 12345, "username": "mock_username"}', true );
 	}
 }
 
-class FooGithubProviderConfig extends OAuth2Github {
+class FooInstagramProviderConfig extends OAuth2Instagram {
 	public function __construct() {
-		OAuth2Config::__construct( FooGithubProvider::class );
+		OAuth2Config::__construct( FooInstagramProvider::class );
 
 		// Mock and set the http client on the provider.
 		$response = m::mock( 'Psr\Http\Message\ResponseInterface' );
@@ -35,7 +35,7 @@ class FooGithubProviderConfig extends OAuth2Github {
 	}
 }
 
-class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
+class ProviderMutationsInstagramTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
 	public $tester;
 	public $test_user;
 	public $provider_config;
@@ -53,33 +53,29 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 			]
 		);
 
-		// Set the FB provider config.
+		// Set the Instagram provider config.
 		$this->provider_config = [
-			'name'          => 'Github',
-			'slug'          => 'github',
+			'name'          => 'Instagram',
+			'slug'          => 'instagram',
 			'order'         => 0,
 			'isEnabled'     => true,
 			'clientOptions' => [
 				'clientId'     => 'mock_client_id',
 				'clientSecret' => 'mock_client_secret',
 				'redirectUri'  => 'mock_redirect_uri',
-				'scope'        => [
-					'repo',
-					'gist',
-				],
+				'scope'        => [ 'user_profile', 'user_media' ],
 			],
 			'loginOptions'  => [
-				'linkExistingUsers'      => false,
 				'createUserIfNoneExists' => false,
 			],
 		];
 
-		$this->tester->set_client_config( 'github', $this->provider_config );
+		$this->tester->set_client_config( 'instagram', $this->provider_config );
 
 		add_filter(
 			'graphql_login_provider_config_instances',
 			function( $providers ) {
-				$providers['github'] = new FooGithubProviderConfig();
+				$providers['instagram'] = new FooInstagramProviderConfig();
 
 				return $providers;
 			}
@@ -100,7 +96,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 		return '
 			mutation Login( $code: String!, $state: String ) {
 				login(
-					input: {oauthResponse: {code: $code, state: $state }, provider: GITHUB}
+					input: {oauthResponse: {code: $code, state: $state }, provider: INSTAGRAM}
 				) {
 					authToken
 					authTokenExpiration
@@ -128,7 +124,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 		return '
 			mutation LinkUser( $code: String!, $state: String, $userId: ID! ) {
 				linkUserIdentity(
-					input: {oauthResponse: {code: $code, state: $state }, provider: GITHUB, userId: $userId}
+					input: {oauthResponse: {code: $code, state: $state }, provider: INSTAGRAM, userId: $userId}
 				) {
 					success
 					user {
@@ -150,7 +146,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'GITHUB',
+			'provider' => 'INSTAGRAM',
 		];
 
 		// Test with no user to match.
@@ -160,7 +156,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 		$this->assertEquals( 'The user could not be logged in.', $actual['errors'][0]['message'] );
 
 		// Test with user to match.
-		User::link_user_identity( $this->test_user, 'github', '12345' );
+		User::link_user_identity( $this->test_user, 'instagram', '12345' );
 
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
@@ -188,7 +184,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'GITHUB' ),
+												$this->expectedField( 'provider', 'INSTAGRAM' ),
 											],
 											0
 										),
@@ -207,111 +203,18 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 		$this->assertNotEquals( 'mock_username', $actual['data']['login']['user']['username'] );
 	}
 
-	public function testLoginWithLinkExistingUsers() : void {
-		$config                                      = $this->provider_config;
-		$config['loginOptions']['linkExistingUsers'] = true;
-
-		$this->tester->set_client_config( 'github', $config );
-
-		$query = $this->login_query();
-
-		$variables = [
-			'code'     => 'mock_authorization_code',
-			'provider' => 'GITHUB',
-		];
-
-		// Test with no user to match.
-		$actual = $this->graphql( compact( 'query', 'variables' ) );
-
-		$this->assertArrayHasKey( 'errors', $actual );
-		$this->assertEquals( 'The user could not be logged in.', $actual['errors'][0]['message'] );
-
-		// Test with user to match.
-		wp_update_user(
-			[
-				'ID'         => $this->test_user,
-				'user_email' => 'mock_email@email.com',
-			]
-		);
-
-		$actual = $this->graphql( compact( 'query', 'variables' ) );
-
-		$this->assertArrayNotHasKey( 'errors', $actual );
-		$this->assertQuerySuccessful(
-			$actual,
-			[
-				$this->expectedObject(
-					'login',
-					[
-						$this->expectedField( 'authToken', self::NOT_FALSY ),
-						$this->expectedField( 'authTokenExpiration', self::NOT_FALSY ),
-						$this->expectedField( 'refreshToken', self::NOT_FALSY ),
-						$this->expectedField( 'refreshTokenExpiration', self::NOT_FALSY ),
-						$this->expectedObject(
-							'user',
-							[
-								$this->expectedField( 'databaseId', $this->test_user ),
-								$this->expectedObject(
-									'auth',
-									[
-
-										$this->expectedField( 'isUserSecretRevoked', false ),
-										$this->expectedNode(
-											'linkedIdentities',
-											[
-												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'GITHUB' ),
-											],
-											0
-										),
-										$this->expectedField( 'userSecret', self::NOT_FALSY ),
-									]
-								),
-								$this->expectedField( 'email', 'mock_email@email.com' ),
-							]
-						),
-					]
-				),
-			]
-		);
-
-		// Currently we dont overwrite existing properties.
-		$this->assertNotEquals( 'mock_username', $actual['data']['login']['user']['username'] );
-	}
-
 	public function testLoginWithCreateUser() : void {
 		$config = $this->provider_config;
 		$config['loginOptions']['createUserIfNoneExists'] = true;
 
-		// Test with user to match.
-		wp_update_user(
-			[
-				'ID'         => $this->test_user,
-				'user_email' => 'mock_email@email.com',
-			]
-		);
-
-		$this->tester->set_client_config( 'github', $config );
+		$this->tester->set_client_config( 'instagram', $config );
 
 		$query = $this->login_query();
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'GITHUB',
+			'provider' => 'INSTAGRAM',
 		];
-
-		$actual = $this->graphql( compact( 'query', 'variables' ) );
-
-		$this->assertArrayHasKey( 'errors', $actual );
-		$this->assertEquals( 'Sorry, that email address is already used!', $actual['errors'][0]['message'] );
-
-		// Test with no user to match.
-		wp_update_user(
-			[
-				'ID'         => $this->test_user,
-				'user_email' => 'some_other_email@email.com',
-			]
-		);
 
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
@@ -338,14 +241,13 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'GITHUB' ),
+												$this->expectedField( 'provider', 'INSTAGRAM' ),
 											],
 											0
 										),
 										$this->expectedField( 'userSecret', self::NOT_FALSY ),
 									]
 								),
-								$this->expectedField( 'email', 'mock_email@email.com' ),
 								$this->expectedField( 'username', 'mock_username' ),
 							]
 						),
@@ -363,7 +265,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'GITHUB',
+			'provider' => 'INSTAGRAM',
 			'userId'   => $this->test_user,
 		];
 
@@ -371,7 +273,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
 		$this->assertArrayHasKey( 'errors', $actual );
-		$this->assertEquals( 'You must be logged in as the user to link your identity.', $actual['errors'][0]['message'] );
+		$this->assertEquals( 'You must be logged in to link your identity.', $actual['errors'][0]['message'] );
 
 		// Test with different user.
 		$admin_user = $this->factory()->user->create(
@@ -392,11 +294,11 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'GITHUB',
+			'provider' => 'INSTAGRAM',
 			'userId'   => $this->test_user,
 		];
 
-		User::link_user_identity( $this->test_user, 'GITHUB', '12345' );
+		User::link_user_identity( $this->test_user, 'INSTAGRAM', '12345' );
 
 		wp_set_current_user( $this->test_user );
 
@@ -411,13 +313,13 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'GITHUB',
+			'provider' => 'INSTAGRAM',
 			'userId'   => $this->test_user,
 		];
 
 		$new_user = $this->factory()->user->create();
 
-		User::link_user_identity( $new_user, 'github', '12345' );
+		User::link_user_identity( $new_user, 'instagram', '12345' );
 
 		wp_set_current_user( $this->test_user );
 
@@ -432,7 +334,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'GITHUB',
+			'provider' => 'INSTAGRAM',
 			'userId'   => $this->test_user,
 		];
 
@@ -459,7 +361,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'GITHUB' ),
+												$this->expectedField( 'provider', 'INSTAGRAM' ),
 											],
 											0
 										),

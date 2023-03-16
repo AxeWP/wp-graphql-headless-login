@@ -39,7 +39,7 @@ class FooLinkedInProviderConfig extends OAuth2LinkedIn {
 	}
 }
 
-class LinkedInProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
+class ProviderMutationsLinkedInTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
 	public $tester;
 	public $test_user;
 	public $provider_config;
@@ -379,7 +379,7 @@ class LinkedInProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
 		$this->assertArrayHasKey( 'errors', $actual );
-		$this->assertEquals( 'You must be logged in as the user to link your identity.', $actual['errors'][0]['message'] );
+		$this->assertEquals( 'You must be logged in to link your identity.', $actual['errors'][0]['message'] );
 
 		// Test with different user.
 		$admin_user = $this->factory()->user->create(

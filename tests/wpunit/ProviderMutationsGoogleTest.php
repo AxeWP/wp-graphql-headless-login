@@ -35,7 +35,7 @@ class FooGoogleProviderConfig extends OAuth2Google {
 	}
 }
 
-class GoogleProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
+class ProviderMutationsGoogleTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
 	public $tester;
 	public $test_user;
 	public $provider_config;
@@ -380,7 +380,7 @@ class GoogleProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
 		$this->assertArrayHasKey( 'errors', $actual );
-		$this->assertEquals( 'You must be logged in as the user to link your identity.', $actual['errors'][0]['message'] );
+		$this->assertEquals( 'You must be logged in to link your identity.', $actual['errors'][0]['message'] );
 
 		// Test with different user.
 		$admin_user = $this->factory()->user->create(
