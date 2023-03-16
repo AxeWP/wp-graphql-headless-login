@@ -296,18 +296,28 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertStringContainsString( 'X-Custom-Header-2', $actual['Access-Control-Allow-Headers'] );
 		$this->assertStringContainsString( 'X-WPGraphQL-Login-Token', $actual['Access-Control-Allow-Headers'] );
 		$this->assertStringContainsString( 'X-WPGraphQL-Login-Refresh-Token', $actual['Access-Control-Allow-Headers'] );
-		$this->assertStringContainsString( 'X-My-Secret-Auth-Token', $actual['Access-Control-Allow-Headers'] );
+		$this->assertStringNotContainsString( 'X-My-Secret-Auth-Token', $actual['Access-Control-Allow-Headers'] );
 
 		// Check Vary.
 		$this->assertArrayHasKey( 'Vary', $actual );
 		$this->assertStringContainsString( 'X-Custom-Header', $actual['Vary'] );
 		$this->assertStringNotContainsString( 'Origin', $actual['Vary'] );
 
-		// Test with authenticated user.
+		// Test with authenticated user and shouldBlockUnauthorizedDomains
 		$user_id = $this->factory()->user->create(
 			[
 				'role' => 'administrator',
 			]
+		);
+
+		update_option(
+			AccessControlSettings::$settings_prefix . 'access_control',
+			array_merge(
+				$this->default_options,
+				[
+					'shouldBlockUnauthorizedDomains' => true,
+				]
+			)
 		);
 
 		$tokens = $this->tester->generate_user_tokens( $user_id );
@@ -317,6 +327,9 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		$actual = Request::response_headers_to_send( $default_headers );
 
 		codecept_debug( $actual );
+
+		// Check SiteToken header.
+		$this->assertStringContainsString( 'X-My-Secret-Auth-Token', $actual['Access-Control-Allow-Headers'] );
 
 		// Check exposed headers.
 		$this->assertArrayHasKey( 'Access-Control-Expose-Headers', $actual );

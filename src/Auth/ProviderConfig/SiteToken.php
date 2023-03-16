@@ -56,6 +56,19 @@ class SiteToken extends ProviderConfig {
 	/**
 	 * {@inheritDoc}
 	 *
+	 * If shouldBlockUnauthorizedDomains is disabled, we need to disable this provider for security reasons.
+	 */
+	public static function is_enabled(): bool {
+		if ( ! Utils::get_access_control_setting( 'shouldBlockUnauthorizedDomains', false ) ) {
+			return false;
+		}
+
+		return parent::is_enabled();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
 	 * @return array|\WP_Error
 	 */
 	public function authenticate_and_get_user_data( array $input ) {

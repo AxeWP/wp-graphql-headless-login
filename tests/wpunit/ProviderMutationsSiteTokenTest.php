@@ -1,5 +1,6 @@
 <?php
 
+use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 use WPGraphQL\Login\Auth\User;
 
 /**
@@ -47,8 +48,18 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 				'metaKey'                 => 'login',
 			],
 		];
-
 		$this->tester->set_client_config( 'siteToken', $this->provider_config );
+
+		update_option(
+			AccessControlSettings::$settings_prefix . 'access_control',
+			[
+				'shouldBlockUnauthorizedDomains' => true,
+			]
+		);
+		$_SERVER['HTTP_ORIGIN'] = site_url();
+
+		$this->tester->reset_utils_properties();
+
 		$this->clearSchema();
 	}
 
@@ -56,6 +67,7 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 	 * {@inheritDoc}
 	 */
 	public function tearDown(): void {
+		delete_option( AccessControlSettings::$settings_prefix . 'access_control' );
 		$this->tester->reset_utils_properties();
 		wp_delete_user( $this->test_user );
 		$this->clearSchema();
@@ -111,6 +123,25 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		';
 	}
 
+	public function testLoginWithoutBlockedAuthorizedDomains() : void {
+		delete_option( AccessControlSettings::$settings_prefix . 'access_control' );
+		$this->tester->reset_utils_properties();
+
+		$query = $this->login_query();
+
+		$variables = [
+			'input' => [
+				'identity' => 'test_user',
+				'provider' => 'SITETOKEN',
+			],
+		];
+
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertEquals( 'Provider siteToken is not enabled.', $actual['errors'][0]['debugMessage'] );
+	}
+
 	public function testLoginWithNoProvisioning() : void {
 		$query = $this->login_query();
 
@@ -121,7 +152,6 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 			],
 		];
 
-		// Test with no header key
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
 		$this->assertArrayHasKey( 'errors', $actual );
