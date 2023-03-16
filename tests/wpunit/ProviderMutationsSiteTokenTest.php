@@ -1,4 +1,7 @@
 <?php
+
+use WPGraphQL\Login\Auth\User;
+
 /**
  * Tests Login mutation
  */
@@ -54,6 +57,7 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 	 */
 	public function tearDown(): void {
 		$this->tester->reset_utils_properties();
+		wp_delete_user( $this->test_user );
 		$this->clearSchema();
 		parent::tearDown();
 	}
@@ -86,6 +90,27 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		';
 	}
 
+	public function link_query() : string {
+		return '
+			mutation LinkUser( $input: LinkUserIdentityInput! ) {
+				linkUserIdentity(
+					input: $input
+				) {
+					success
+					user {
+						auth {
+							linkedIdentities {
+								id
+								provider
+							}
+						}
+						databaseId
+					}
+				}
+			}
+		';
+	}
+
 	public function testLoginWithNoProvisioning() : void {
 		$query = $this->login_query();
 
@@ -102,12 +127,10 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		$this->assertArrayHasKey( 'errors', $actual );
 		$this->assertEquals( 'Header key for site token authentication is not defined.', $actual['errors'][0]['message'] );
 
-		// Test with no header.
+		// Test with header.
 		$this->provider_config['clientOptions']['headerKey'] = 'X-My-Secret-Auth-Token';
-		$this->tester->set_client_config(
-			'siteToken',
-			$this->provider_config
-		);
+
+		$this->tester->set_client_config( 'siteToken', $this->provider_config );
 
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
@@ -171,9 +194,15 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 								$this->expectedObject(
 									'auth',
 									[
-
 										$this->expectedField( 'isUserSecretRevoked', false ),
-										$this->expectedField( 'linkedIdentities', self::IS_NULL ),
+										$this->expectedNode(
+											'linkedIdentities',
+											[
+												$this->expectedField( 'id', 'test_user' ),
+												$this->expectedField( 'provider', 'SITETOKEN' ),
+											],
+											0
+										),
 										$this->expectedField( 'userSecret', self::NOT_FALSY ),
 									]
 								),
@@ -183,5 +212,155 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 				),
 			]
 		);
+
+		// Cleanup.
+		unset( $_SERVER['HTTP_X_MY_SECRET_AUTH_TOKEN'] );
+	}
+
+	public function testLinkUserIdentityWithConflictingIdentity() : void {
+		$this->tester->set_client_config(
+			'siteToken',
+			[
+				'name'          => 'Site Token',
+				'slug'          => 'siteToken',
+				'order'         => 0,
+				'isEnabled'     => true,
+				'clientOptions' => [
+					'headerKey' => 'X-My-Secret-Auth-Token',
+					'secretKey' => 'some_secret',
+				],
+				'loginOptions'  => [
+					'useAuthenticationCookie' => true,
+					'metaKey'                 => 'my_meta_key',
+				],
+			]
+		);
+		$query = $this->link_query();
+
+		$variables                              = [
+			'input' => [
+				'provider' => 'SITETOKEN',
+				'userId'   => $this->test_user,
+				'identity' => '12345',
+			],
+		];
+		$_SERVER['HTTP_X_MY_SECRET_AUTH_TOKEN'] = 'some_secret';
+
+		$new_user = $this->factory()->user->create();
+
+		User::link_user_identity( $new_user, 'siteToken', '12345' );
+
+		wp_set_current_user( $this->test_user );
+
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertEquals( 'This identity is already linked to another account.', $actual['errors'][0]['message'] );
+
+		// Cleanup.
+		unset( $_SERVER['HTTP_X_MY_SECRET_AUTH_TOKEN'] );
+	}
+
+	public function testLinkUserIdentity() : void {
+		$query = $this->link_query();
+
+		$variables = [
+			'input' => [
+				'provider' => 'SITETOKEN',
+				'userId'   => $this->test_user,
+			],
+		];
+
+		// Test logged out.
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertEquals( 'You must be logged in to link your identity.', $actual['errors'][0]['message'] );
+
+		// Test with different user.
+		$admin_user = $this->factory()->user->create(
+			[
+				'role' => 'administrator',
+			]
+		);
+		wp_set_current_user( $admin_user );
+
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertEquals( 'You must be logged in as the user to link your identity.', $actual['errors'][0]['message'] );
+
+		wp_set_current_user( $this->test_user );
+
+		// Test with no identity
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertEquals( 'The SITE_TOKEN provider requires the use of the `identity` input arg.', $actual['errors'][0]['message'] );
+
+		// Test with no header key.
+		$variables['input']['identity'] = '12345';
+
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertEquals( 'Header key for site token authentication is not defined.', $actual['errors'][0]['message'] );
+
+		// Test with header key.
+		$this->provider_config['clientOptions']['headerKey'] = 'X-My-Secret-Auth-Token';
+
+		$this->tester->set_client_config( 'siteToken', $this->provider_config );
+
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertEquals( 'Missing site token in custom header.', $actual['errors'][0]['message'] );
+
+		// Test with bad header.
+		$_SERVER['HTTP_X_MY_SECRET_AUTH_TOKEN'] = 'bad_secret';
+
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertEquals( 'Invalid site token.', $actual['errors'][0]['message'] );
+
+		// Test with header.
+		$_SERVER['HTTP_X_MY_SECRET_AUTH_TOKEN'] = 'some_secret';
+
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assertArrayNotHasKey( 'errors', $actual );
+		$this->assertQuerySuccessful(
+			$actual,
+			[
+				$this->expectedObject(
+					'linkUserIdentity',
+					[
+						$this->expectedField( 'success', true ),
+						$this->expectedObject(
+							'user',
+							[
+								$this->expectedField( 'databaseId', $this->test_user ),
+								$this->expectedObject(
+									'auth',
+									[
+										$this->expectedNode(
+											'linkedIdentities',
+											[
+												$this->expectedField( 'id', '12345' ),
+												$this->expectedField( 'provider', 'SITETOKEN' ),
+											],
+											0
+										),
+									]
+								),
+							]
+						),
+					]
+				),
+			]
+		);
+
+		// Cleanup.
+		unset( $_SERVER['HTTP_X_MY_SECRET_AUTH_TOKEN'] );
 	}
 }

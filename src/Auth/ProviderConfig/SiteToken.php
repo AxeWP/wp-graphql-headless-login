@@ -103,9 +103,23 @@ class SiteToken extends ProviderConfig {
 			return false;
 		}
 
+		// Get user by linked identity.
+		$user = User::get_user_by_identity( $this->get_slug(), $user_data['subject_identity'] );
+
+		if ( $user instanceof \WP_User ) {
+			return $user;
+		}
+
 		$meta_key = $this->options['loginOptions']['metaKey'] ?? 'user_email';
 
-		return User::get_user_by( $meta_key, $user_data['subject_identity'] );
+		$user = User::get_user_by( $meta_key, $user_data['subject_identity'] );
+
+		// If we match a user, set the identity for future logins.
+		if ( $user instanceof \WP_User ) {
+			User::link_user_identity( $user->ID, $this->get_slug(), $user_data['subject_identity'] );
+		}
+
+		return $user;
 	}
 
 	/**
