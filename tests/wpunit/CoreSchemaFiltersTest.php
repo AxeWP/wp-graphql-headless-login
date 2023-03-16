@@ -8,6 +8,11 @@ use WPGraphQL\Login\CoreSchemaFilters;
  * Tests CoreSchemaFilters.
  */
 class CoreSchemaFiltersTest extends \Codeception\TestCase\WPTestCase {
+
+	/**
+	 * @var \WpunitTester
+	 */
+	protected $tester;
 	public $admin;
 
 	/**
@@ -69,5 +74,28 @@ class CoreSchemaFiltersTest extends \Codeception\TestCase\WPTestCase {
 		$actual = CoreSchemaFilters::check_if_secret_is_revoked( $expected, $user_id );
 
 		$this->assertEquals( $expected, $actual );
+	}
+
+	public function testDetermineCurrentUser(): void {
+		$user_id = $this->factory()->user->create();
+
+		// Test without token.
+		$actual = CoreSchemaFilters::determine_current_user( $this->admin );
+
+		$this->assertEquals( $this->admin, $actual );
+
+		// Test with valid secret.
+		$tokens = $this->tester->generate_user_tokens( $user_id );
+
+		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $tokens['auth_token'];
+
+		$actual = CoreSchemaFilters::determine_current_user( $this->admin );
+
+		$this->assertEquals( $user_id, $actual );
+
+		// Test user returns same user.
+		$actual = CoreSchemaFilters::determine_current_user( $user_id );
+
+		$this->assertEquals( $user_id, $actual );
 	}
 }
