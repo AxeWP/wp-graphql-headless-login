@@ -34,8 +34,12 @@ class LinkUserIdentity extends MutationType {
 	public static function get_input_fields() : array {
 		return [
 			'oauthResponse' => [
-				'type'        => [ 'non_null' => OAuthProviderResponseInput::get_type_name() ],
-				'description' => __( 'The parsed response from the Authentication Provider.', 'wp-graphql-headless-login' ),
+				'type'        => OAuthProviderResponseInput::get_type_name(),
+				'description' => __( 'The parsed response from an OAuth2 Authentication Provider.', 'wp-graphql-headless-login' ),
+			],
+			'identity'      => [
+				'type'        => 'String',
+				'description' => __( 'The user identity to use when logging in. Required by the SiteToken provider.', 'wp-graphql-headless-login' ),
 			],
 			'provider'      => [
 				'type'        => [ 'non_null' => ProviderEnum::get_type_name() ],

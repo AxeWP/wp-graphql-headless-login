@@ -11,6 +11,7 @@
 namespace WPGraphQL\Login\Auth\ProviderConfig\OAuth2;
 
 use GraphQL\Error\UserError;
+use WP_Error;
 use WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig;
 use WPGraphQL\Login\Auth\User;
 use WPGraphQL\Login\Utils\Utils;
@@ -127,11 +128,28 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @return array
+	 * @return array|\WP_Error
 	 */
 	public function authenticate_and_get_user_data( array $input ) {
+		// Start the session.
+		if ( ! session_id() ) {
+			session_start();
+		}
+
 		// Get the args from the input.
 		$args = $this->prepare_mutation_input( $input );
+
+		// Test if the state returned from the provider matches the state stored in the session.
+		if ( isset( $_SESSION['oauth2state'] ) && ! empty( $args['state'] ) && $args['state'] !== $_SESSION['oauth2state'] ) {
+			return new WP_Error(
+				'invalid-oauth2-state',
+				sprintf(
+					// translators: the provider name.
+					__( 'The state returned from the %s response does not match.', 'wp-graphql-headless-login' ),
+					$input['provider'] ?: 'OAuth2'
+				)
+			);
+		}
 
 		// Get the resource owner.
 		$resource_owner = $this->get_resource_owner( $args );
@@ -163,7 +181,7 @@ abstract class OAuth2Config extends ProviderConfig {
 			throw new UserError(
 				sprintf(
 					// translators: the provider name.
-					__( 'The %s provider requires the use of the `credentials` input arg.', 'wp-graphql-headless-login' ),
+					__( 'The %s provider requires the use of the `oauthResponse` input arg.', 'wp-graphql-headless-login' ),
 					$input['provider'] ?: 'OAuth2'
 				)
 			);

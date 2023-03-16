@@ -8,11 +8,16 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - feat!: Remove `loginWithPassword` mutation in favor of Password provider.
 - feat: Add Site Token provider.
 - feat: Add support for setting Access Control headers.
+- fix: check OAuth2 state against current `$_SESSION`.
 - dev!: Refactor settings page frontend components and app logic.
 - dev!: Refactor `ProviderConfig` methods.
+- dev!: Make `oauthResponse` input optional.
 - dev: Refactor settings registration for better extendability.
 - chore: update NPM dependencies.
 - chore: update Composer dependencies.
+- tests: Rename provider mutation test files.
+- tests: add tests for Settings registry.
+- tests: add tests for `OAuth2 Generic` provider.
 
 ## [0.0.5] - 2022-02-26
 

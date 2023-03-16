@@ -11,6 +11,8 @@ namespace WPGraphQL\Login\Auth;
 use GraphQL\Error\UserError;
 use WP_Error;
 use WPGraphQL\Login\Auth\Client;
+use WPGraphQL\Login\Auth\ProviderConfig\Password;
+use WPGraphQL\Type\WPEnumType;
 use WPGraphQL\Utils\Utils;
 
 /**
@@ -122,13 +124,21 @@ class Auth {
 	 * @throws UserError If the user cannot be linked.
 	 */
 	public static function link_user_identity( array $input ) : array {
+		if ( Password::get_slug() === $input['provider'] ) {
+			throw new UserError( __( 'You cannot link two identities from the same WordPress site. Please use a different `provider`.', 'wp-graphql-headless-login' ) );
+		}
+
+		if ( ! is_user_logged_in() ) {
+			throw new UserError( __( 'You must be logged in to link your identity.', 'wp-graphql-headless-login' ) );
+		}
+
 		$user_id  = Utils::get_database_id_from_id( $input['userId'] );
 		$user_obj = ! empty( $user_id ) ? get_user_by( 'ID', $user_id ) : false;
 
 		/**
 		 * Only allow the currently signed in user to link their identity.
 		 */
-		if ( ! is_user_logged_in() || empty( $user_obj ) || get_current_user_id() !== $user_obj->ID ) {
+		if ( empty( $user_obj ) || get_current_user_id() !== $user_obj->ID ) {
 			throw new UserError( __( 'You must be logged in as the user to link your identity.', 'wp-graphql-headless-login' ) );
 		}
 

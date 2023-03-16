@@ -4,30 +4,30 @@
  */
 
 use Mockery as m;
-use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\Instagram;
-use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Instagram as OAuth2Instagram;
+use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\Facebook;
+use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Facebook as OAuth2Facebook;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\OAuth2Config;
 use WPGraphQL\Login\Auth\User;
 
-class FooInstagramProvider extends Instagram {
+class FooFacebookProvider extends Facebook {
 
 	protected function fetchResourceOwnerDetails( $token ) {
-		return json_decode( '{"id": 12345, "username": "mock_username"}', true );
+		return json_decode( '{"id": 12345, "name": "mock_name", "username": "mock_username", "first_name": "mock_first_name", "last_name": "mock_last_name", "email": "mock_email@email.com", "Location": "mock_home", "link": "mock_facebook_url"}', true );
 	}
 }
 
-class FooInstagramProviderConfig extends OAuth2Instagram {
+class FooFacebookProviderConfig extends OAuth2Facebook {
 	public function __construct() {
-		OAuth2Config::__construct( FooInstagramProvider::class );
+		OAuth2Config::__construct( FooFacebookProvider::class );
 
 		// Mock and set the http client on the provider.
 		$response = m::mock( 'Psr\Http\Message\ResponseInterface' );
-		$response->shouldReceive( 'getBody' )
-			->andReturn( '{"access_token":"mock_access_token", "scope":"repo,gist", "token_type":"bearer"}' );
 		$response->shouldReceive( 'getHeader' )
-			->andReturn( [ 'content-type' => 'json' ] );
-		$response->shouldReceive( 'getStatusCode' )
-			->andReturn( 200 );
+		->times( 1 )
+		->andReturn( 'application/json' );
+		$response->shouldReceive( 'getBody' )
+		->times( 1 )
+		->andReturn( '{"access_token":"mock_access_token","token_type":"bearer","expires_in":3600}' );
 
 		$http_client = m::mock( 'WPGraphQL\Login\Vendor\GuzzleHttp\ClientInterface' );
 		$http_client->shouldReceive( 'send' )->times( 1 )->andReturn( $response );
@@ -35,7 +35,12 @@ class FooInstagramProviderConfig extends OAuth2Instagram {
 	}
 }
 
-class InstagramProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
+class ProviderMutationsFacebookTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
+	/**
+	 * @const string The version of the Graph API we want to use for tests.
+	 */
+	protected const GRAPH_API_VERSION = 'v16.0';
+
 	public $tester;
 	public $test_user;
 	public $provider_config;
@@ -53,29 +58,35 @@ class InstagramProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 			]
 		);
 
-		// Set the Instagram provider config.
+		// Set the FB provider config.
 		$this->provider_config = [
-			'name'          => 'Instagram',
-			'slug'          => 'instagram',
+			'name'          => 'Facebook',
+			'slug'          => 'facebook',
 			'order'         => 0,
 			'isEnabled'     => true,
 			'clientOptions' => [
-				'clientId'     => 'mock_client_id',
-				'clientSecret' => 'mock_client_secret',
-				'redirectUri'  => 'mock_redirect_uri',
-				'scope'        => [ 'user_profile', 'user_media' ],
+				'clientId'        => 'mock_client_id',
+				'clientSecret'    => 'mock_client_secret',
+				'redirectUri'     => 'mock_redirect_uri',
+				'graphAPIVersion' => self::GRAPH_API_VERSION,
+				'enableBetaTier'  => false,
+				'scope'           => [
+					'email',
+					'public_profile',
+				],
 			],
 			'loginOptions'  => [
+				'linkExistingUsers'      => false,
 				'createUserIfNoneExists' => false,
 			],
 		];
 
-		$this->tester->set_client_config( 'instagram', $this->provider_config );
+		$this->tester->set_client_config( 'facebook', $this->provider_config );
 
 		add_filter(
 			'graphql_login_provider_config_instances',
 			function( $providers ) {
-				$providers['instagram'] = new FooInstagramProviderConfig();
+				$providers['facebook'] = new FooFacebookProviderConfig();
 
 				return $providers;
 			}
@@ -96,7 +107,7 @@ class InstagramProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		return '
 			mutation Login( $code: String!, $state: String ) {
 				login(
-					input: {oauthResponse: {code: $code, state: $state }, provider: INSTAGRAM}
+					input: {oauthResponse: {code: $code, state: $state }, provider: FACEBOOK}
 				) {
 					authToken
 					authTokenExpiration
@@ -112,6 +123,8 @@ class InstagramProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 							userSecret
 						}
 						databaseId
+						firstName
+						lastName
 						email
 						username
 					}
@@ -124,7 +137,7 @@ class InstagramProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		return '
 			mutation LinkUser( $code: String!, $state: String, $userId: ID! ) {
 				linkUserIdentity(
-					input: {oauthResponse: {code: $code, state: $state }, provider: INSTAGRAM, userId: $userId}
+					input: {oauthResponse: {code: $code, state: $state }, provider: FACEBOOK, userId: $userId}
 				) {
 					success
 					user {
@@ -146,7 +159,7 @@ class InstagramProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'INSTAGRAM',
+			'provider' => 'FACEBOOK',
 		];
 
 		// Test with no user to match.
@@ -156,7 +169,7 @@ class InstagramProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		$this->assertEquals( 'The user could not be logged in.', $actual['errors'][0]['message'] );
 
 		// Test with user to match.
-		User::link_user_identity( $this->test_user, 'instagram', '12345' );
+		User::link_user_identity( $this->test_user, 'facebook', '12345' );
 
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
@@ -184,7 +197,7 @@ class InstagramProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'INSTAGRAM' ),
+												$this->expectedField( 'provider', 'FACEBOOK' ),
 											],
 											0
 										),
@@ -200,6 +213,82 @@ class InstagramProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 
 		// Currently we dont overwrite existing properties.
 		$this->assertNotEquals( 'mock_email@email.com', $actual['data']['login']['user']['email'] );
+		$this->assertNotEquals( 'mock_first_name', $actual['data']['login']['user']['firstName'] );
+		$this->assertNotEquals( 'mock_last_name', $actual['data']['login']['user']['lastName'] );
+		$this->assertNotEquals( 'mock_username', $actual['data']['login']['user']['username'] );
+	}
+
+	public function testLoginWithLinkExistingUsers() : void {
+		$config                                      = $this->provider_config;
+		$config['loginOptions']['linkExistingUsers'] = true;
+
+		$this->tester->set_client_config( 'facebook', $config );
+
+		$query = $this->login_query();
+
+		$variables = [
+			'code'     => 'mock_authorization_code',
+			'provider' => 'FACEBOOK',
+		];
+
+		// Test with no user to match.
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertEquals( 'The user could not be logged in.', $actual['errors'][0]['message'] );
+
+		// Test with user to match.
+		wp_update_user(
+			[
+				'ID'         => $this->test_user,
+				'user_email' => 'mock_email@email.com',
+			]
+		);
+
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assertArrayNotHasKey( 'errors', $actual );
+		$this->assertQuerySuccessful(
+			$actual,
+			[
+				$this->expectedObject(
+					'login',
+					[
+						$this->expectedField( 'authToken', self::NOT_FALSY ),
+						$this->expectedField( 'authTokenExpiration', self::NOT_FALSY ),
+						$this->expectedField( 'refreshToken', self::NOT_FALSY ),
+						$this->expectedField( 'refreshTokenExpiration', self::NOT_FALSY ),
+						$this->expectedObject(
+							'user',
+							[
+								$this->expectedField( 'databaseId', $this->test_user ),
+								$this->expectedObject(
+									'auth',
+									[
+
+										$this->expectedField( 'isUserSecretRevoked', false ),
+										$this->expectedNode(
+											'linkedIdentities',
+											[
+												$this->expectedField( 'id', '12345' ),
+												$this->expectedField( 'provider', 'FACEBOOK' ),
+											],
+											0
+										),
+										$this->expectedField( 'userSecret', self::NOT_FALSY ),
+									]
+								),
+								$this->expectedField( 'email', 'mock_email@email.com' ),
+							]
+						),
+					]
+				),
+			]
+		);
+
+		// Currently we dont overwrite existing properties.
+		$this->assertNotEquals( 'mock_first_name', $actual['data']['login']['user']['firstName'] );
+		$this->assertNotEquals( 'mock_last_name', $actual['data']['login']['user']['lastName'] );
 		$this->assertNotEquals( 'mock_username', $actual['data']['login']['user']['username'] );
 	}
 
@@ -207,14 +296,35 @@ class InstagramProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		$config = $this->provider_config;
 		$config['loginOptions']['createUserIfNoneExists'] = true;
 
-		$this->tester->set_client_config( 'instagram', $config );
+		// Test with user to match.
+		wp_update_user(
+			[
+				'ID'         => $this->test_user,
+				'user_email' => 'mock_email@email.com',
+			]
+		);
+
+		$this->tester->set_client_config( 'facebook', $config );
 
 		$query = $this->login_query();
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'INSTAGRAM',
+			'provider' => 'FACEBOOK',
 		];
+
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertEquals( 'Sorry, that email address is already used!', $actual['errors'][0]['message'] );
+
+		// Test with no user to match.
+		wp_update_user(
+			[
+				'ID'         => $this->test_user,
+				'user_email' => 'some_other_email@email.com',
+			]
+		);
 
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
@@ -241,13 +351,16 @@ class InstagramProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'INSTAGRAM' ),
+												$this->expectedField( 'provider', 'FACEBOOK' ),
 											],
 											0
 										),
 										$this->expectedField( 'userSecret', self::NOT_FALSY ),
 									]
 								),
+								$this->expectedField( 'email', 'mock_email@email.com' ),
+								$this->expectedField( 'firstName', 'mock_first_name' ),
+								$this->expectedField( 'lastName', 'mock_last_name' ),
 								$this->expectedField( 'username', 'mock_username' ),
 							]
 						),
@@ -265,7 +378,7 @@ class InstagramProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'INSTAGRAM',
+			'provider' => 'FACEBOOK',
 			'userId'   => $this->test_user,
 		];
 
@@ -273,7 +386,7 @@ class InstagramProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
 		$this->assertArrayHasKey( 'errors', $actual );
-		$this->assertEquals( 'You must be logged in as the user to link your identity.', $actual['errors'][0]['message'] );
+		$this->assertEquals( 'You must be logged in to link your identity.', $actual['errors'][0]['message'] );
 
 		// Test with different user.
 		$admin_user = $this->factory()->user->create(
@@ -294,11 +407,11 @@ class InstagramProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'INSTAGRAM',
+			'provider' => 'FACEBOOK',
 			'userId'   => $this->test_user,
 		];
 
-		User::link_user_identity( $this->test_user, 'INSTAGRAM', '12345' );
+		User::link_user_identity( $this->test_user, 'FACEBOOK', '12345' );
 
 		wp_set_current_user( $this->test_user );
 
@@ -313,13 +426,13 @@ class InstagramProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'INSTAGRAM',
+			'provider' => 'FACEBOOK',
 			'userId'   => $this->test_user,
 		];
 
 		$new_user = $this->factory()->user->create();
 
-		User::link_user_identity( $new_user, 'instagram', '12345' );
+		User::link_user_identity( $new_user, 'facebook', '12345' );
 
 		wp_set_current_user( $this->test_user );
 
@@ -334,7 +447,7 @@ class InstagramProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'INSTAGRAM',
+			'provider' => 'FACEBOOK',
 			'userId'   => $this->test_user,
 		];
 
@@ -361,7 +474,7 @@ class InstagramProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'INSTAGRAM' ),
+												$this->expectedField( 'provider', 'FACEBOOK' ),
 											],
 											0
 										),

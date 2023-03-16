@@ -4,30 +4,30 @@
  */
 
 use Mockery as m;
-use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\Facebook;
-use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Facebook as OAuth2Facebook;
+use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\Github;
+use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Github as OAuth2Github;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\OAuth2Config;
 use WPGraphQL\Login\Auth\User;
 
-class FooFacebookProvider extends Facebook {
+class FooGithubProvider extends Github {
 
 	protected function fetchResourceOwnerDetails( $token ) {
-		return json_decode( '{"id": 12345, "name": "mock_name", "username": "mock_username", "first_name": "mock_first_name", "last_name": "mock_last_name", "email": "mock_email@email.com", "Location": "mock_home", "link": "mock_facebook_url"}', true );
+		return json_decode( '{"id": 12345, "name": "mock_name", "email": "mock_email@email.com", "login": "mock_username"}', true );
 	}
 }
 
-class FooFacebookProviderConfig extends OAuth2Facebook {
+class FooGithubProviderConfig extends OAuth2Github {
 	public function __construct() {
-		OAuth2Config::__construct( FooFacebookProvider::class );
+		OAuth2Config::__construct( FooGithubProvider::class );
 
 		// Mock and set the http client on the provider.
 		$response = m::mock( 'Psr\Http\Message\ResponseInterface' );
-		$response->shouldReceive( 'getHeader' )
-		->times( 1 )
-		->andReturn( 'application/json' );
 		$response->shouldReceive( 'getBody' )
-		->times( 1 )
-		->andReturn( '{"access_token":"mock_access_token","token_type":"bearer","expires_in":3600}' );
+			->andReturn( '{"access_token":"mock_access_token", "scope":"repo,gist", "token_type":"bearer"}' );
+		$response->shouldReceive( 'getHeader' )
+			->andReturn( [ 'content-type' => 'json' ] );
+		$response->shouldReceive( 'getStatusCode' )
+			->andReturn( 200 );
 
 		$http_client = m::mock( 'WPGraphQL\Login\Vendor\GuzzleHttp\ClientInterface' );
 		$http_client->shouldReceive( 'send' )->times( 1 )->andReturn( $response );
@@ -35,12 +35,7 @@ class FooFacebookProviderConfig extends OAuth2Facebook {
 	}
 }
 
-class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
-	/**
-	 * @const string The version of the Graph API we want to use for tests.
-	 */
-	protected const GRAPH_API_VERSION = 'v16.0';
-
+class ProviderMutationsGithubTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
 	public $tester;
 	public $test_user;
 	public $provider_config;
@@ -60,19 +55,17 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 
 		// Set the FB provider config.
 		$this->provider_config = [
-			'name'          => 'Facebook',
-			'slug'          => 'facebook',
+			'name'          => 'Github',
+			'slug'          => 'github',
 			'order'         => 0,
 			'isEnabled'     => true,
 			'clientOptions' => [
-				'clientId'        => 'mock_client_id',
-				'clientSecret'    => 'mock_client_secret',
-				'redirectUri'     => 'mock_redirect_uri',
-				'graphAPIVersion' => self::GRAPH_API_VERSION,
-				'enableBetaTier'  => false,
-				'scope'           => [
-					'email',
-					'public_profile',
+				'clientId'     => 'mock_client_id',
+				'clientSecret' => 'mock_client_secret',
+				'redirectUri'  => 'mock_redirect_uri',
+				'scope'        => [
+					'repo',
+					'gist',
 				],
 			],
 			'loginOptions'  => [
@@ -81,12 +74,12 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 			],
 		];
 
-		$this->tester->set_client_config( 'facebook', $this->provider_config );
+		$this->tester->set_client_config( 'github', $this->provider_config );
 
 		add_filter(
 			'graphql_login_provider_config_instances',
 			function( $providers ) {
-				$providers['facebook'] = new FooFacebookProviderConfig();
+				$providers['github'] = new FooGithubProviderConfig();
 
 				return $providers;
 			}
@@ -107,7 +100,7 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		return '
 			mutation Login( $code: String!, $state: String ) {
 				login(
-					input: {oauthResponse: {code: $code, state: $state }, provider: FACEBOOK}
+					input: {oauthResponse: {code: $code, state: $state }, provider: GITHUB}
 				) {
 					authToken
 					authTokenExpiration
@@ -123,8 +116,6 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 							userSecret
 						}
 						databaseId
-						firstName
-						lastName
 						email
 						username
 					}
@@ -137,7 +128,7 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		return '
 			mutation LinkUser( $code: String!, $state: String, $userId: ID! ) {
 				linkUserIdentity(
-					input: {oauthResponse: {code: $code, state: $state }, provider: FACEBOOK, userId: $userId}
+					input: {oauthResponse: {code: $code, state: $state }, provider: GITHUB, userId: $userId}
 				) {
 					success
 					user {
@@ -159,7 +150,7 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'FACEBOOK',
+			'provider' => 'GITHUB',
 		];
 
 		// Test with no user to match.
@@ -169,7 +160,7 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		$this->assertEquals( 'The user could not be logged in.', $actual['errors'][0]['message'] );
 
 		// Test with user to match.
-		User::link_user_identity( $this->test_user, 'facebook', '12345' );
+		User::link_user_identity( $this->test_user, 'github', '12345' );
 
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
@@ -197,7 +188,7 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'FACEBOOK' ),
+												$this->expectedField( 'provider', 'GITHUB' ),
 											],
 											0
 										),
@@ -213,8 +204,6 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 
 		// Currently we dont overwrite existing properties.
 		$this->assertNotEquals( 'mock_email@email.com', $actual['data']['login']['user']['email'] );
-		$this->assertNotEquals( 'mock_first_name', $actual['data']['login']['user']['firstName'] );
-		$this->assertNotEquals( 'mock_last_name', $actual['data']['login']['user']['lastName'] );
 		$this->assertNotEquals( 'mock_username', $actual['data']['login']['user']['username'] );
 	}
 
@@ -222,13 +211,13 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		$config                                      = $this->provider_config;
 		$config['loginOptions']['linkExistingUsers'] = true;
 
-		$this->tester->set_client_config( 'facebook', $config );
+		$this->tester->set_client_config( 'github', $config );
 
 		$query = $this->login_query();
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'FACEBOOK',
+			'provider' => 'GITHUB',
 		];
 
 		// Test with no user to match.
@@ -271,7 +260,7 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'FACEBOOK' ),
+												$this->expectedField( 'provider', 'GITHUB' ),
 											],
 											0
 										),
@@ -287,8 +276,6 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		);
 
 		// Currently we dont overwrite existing properties.
-		$this->assertNotEquals( 'mock_first_name', $actual['data']['login']['user']['firstName'] );
-		$this->assertNotEquals( 'mock_last_name', $actual['data']['login']['user']['lastName'] );
 		$this->assertNotEquals( 'mock_username', $actual['data']['login']['user']['username'] );
 	}
 
@@ -304,13 +291,13 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 			]
 		);
 
-		$this->tester->set_client_config( 'facebook', $config );
+		$this->tester->set_client_config( 'github', $config );
 
 		$query = $this->login_query();
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'FACEBOOK',
+			'provider' => 'GITHUB',
 		];
 
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
@@ -351,7 +338,7 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'FACEBOOK' ),
+												$this->expectedField( 'provider', 'GITHUB' ),
 											],
 											0
 										),
@@ -359,8 +346,6 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 									]
 								),
 								$this->expectedField( 'email', 'mock_email@email.com' ),
-								$this->expectedField( 'firstName', 'mock_first_name' ),
-								$this->expectedField( 'lastName', 'mock_last_name' ),
 								$this->expectedField( 'username', 'mock_username' ),
 							]
 						),
@@ -378,7 +363,7 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'FACEBOOK',
+			'provider' => 'GITHUB',
 			'userId'   => $this->test_user,
 		];
 
@@ -386,7 +371,7 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
 		$this->assertArrayHasKey( 'errors', $actual );
-		$this->assertEquals( 'You must be logged in as the user to link your identity.', $actual['errors'][0]['message'] );
+		$this->assertEquals( 'You must be logged in to link your identity.', $actual['errors'][0]['message'] );
 
 		// Test with different user.
 		$admin_user = $this->factory()->user->create(
@@ -407,11 +392,11 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'FACEBOOK',
+			'provider' => 'GITHUB',
 			'userId'   => $this->test_user,
 		];
 
-		User::link_user_identity( $this->test_user, 'FACEBOOK', '12345' );
+		User::link_user_identity( $this->test_user, 'GITHUB', '12345' );
 
 		wp_set_current_user( $this->test_user );
 
@@ -426,13 +411,13 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'FACEBOOK',
+			'provider' => 'GITHUB',
 			'userId'   => $this->test_user,
 		];
 
 		$new_user = $this->factory()->user->create();
 
-		User::link_user_identity( $new_user, 'facebook', '12345' );
+		User::link_user_identity( $new_user, 'github', '12345' );
 
 		wp_set_current_user( $this->test_user );
 
@@ -447,7 +432,7 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'FACEBOOK',
+			'provider' => 'GITHUB',
 			'userId'   => $this->test_user,
 		];
 
@@ -474,7 +459,7 @@ class FacebookProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'FACEBOOK' ),
+												$this->expectedField( 'provider', 'GITHUB' ),
 											],
 											0
 										),

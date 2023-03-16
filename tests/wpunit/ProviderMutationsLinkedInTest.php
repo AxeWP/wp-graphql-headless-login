@@ -4,21 +4,25 @@
  */
 
 use Mockery as m;
-use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\Github;
-use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Github as OAuth2Github;
+use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\LinkedIn;
+use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\LinkedIn as OAuth2LinkedIn;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\OAuth2Config;
 use WPGraphQL\Login\Auth\User;
 
-class FooGithubProvider extends Github {
+class FooLinkedInProvider extends LinkedIn {
 
 	protected function fetchResourceOwnerDetails( $token ) {
-		return json_decode( '{"id": 12345, "name": "mock_name", "email": "mock_email@email.com", "login": "mock_username"}', true );
+		return json_decode( '{"id": 12345, "firstName": "mock_first_name", "lastName": "mock_last_name", "vanityName": "mock_username"}', true );
+	}
+
+	public function getResourceOwnerEmail( $token ) {
+		return 'mock_email@email.com';
 	}
 }
 
-class FooGithubProviderConfig extends OAuth2Github {
+class FooLinkedInProviderConfig extends OAuth2LinkedIn {
 	public function __construct() {
-		OAuth2Config::__construct( FooGithubProvider::class );
+		OAuth2Config::__construct( FooLinkedInProvider::class );
 
 		// Mock and set the http client on the provider.
 		$response = m::mock( 'Psr\Http\Message\ResponseInterface' );
@@ -35,7 +39,7 @@ class FooGithubProviderConfig extends OAuth2Github {
 	}
 }
 
-class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
+class ProviderMutationsLinkedInTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
 	public $tester;
 	public $test_user;
 	public $provider_config;
@@ -55,8 +59,8 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 
 		// Set the FB provider config.
 		$this->provider_config = [
-			'name'          => 'Github',
-			'slug'          => 'github',
+			'name'          => 'LinkedIn',
+			'slug'          => 'linkedin',
 			'order'         => 0,
 			'isEnabled'     => true,
 			'clientOptions' => [
@@ -74,12 +78,12 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 			],
 		];
 
-		$this->tester->set_client_config( 'github', $this->provider_config );
+		$this->tester->set_client_config( 'linkedin', $this->provider_config );
 
 		add_filter(
 			'graphql_login_provider_config_instances',
 			function( $providers ) {
-				$providers['github'] = new FooGithubProviderConfig();
+				$providers['linkedin'] = new FooLinkedInProviderConfig();
 
 				return $providers;
 			}
@@ -100,7 +104,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 		return '
 			mutation Login( $code: String!, $state: String ) {
 				login(
-					input: {oauthResponse: {code: $code, state: $state }, provider: GITHUB}
+					input: {oauthResponse: {code: $code, state: $state }, provider: LINKEDIN}
 				) {
 					authToken
 					authTokenExpiration
@@ -118,6 +122,8 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 						databaseId
 						email
 						username
+						firstName
+						lastName
 					}
 				}
 			}
@@ -128,7 +134,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 		return '
 			mutation LinkUser( $code: String!, $state: String, $userId: ID! ) {
 				linkUserIdentity(
-					input: {oauthResponse: {code: $code, state: $state }, provider: GITHUB, userId: $userId}
+					input: {oauthResponse: {code: $code, state: $state }, provider: LINKEDIN, userId: $userId}
 				) {
 					success
 					user {
@@ -150,7 +156,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'GITHUB',
+			'provider' => 'LINKEDIN',
 		];
 
 		// Test with no user to match.
@@ -160,7 +166,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 		$this->assertEquals( 'The user could not be logged in.', $actual['errors'][0]['message'] );
 
 		// Test with user to match.
-		User::link_user_identity( $this->test_user, 'github', '12345' );
+		User::link_user_identity( $this->test_user, 'linkedin', '12345' );
 
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
@@ -188,7 +194,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'GITHUB' ),
+												$this->expectedField( 'provider', 'LINKEDIN' ),
 											],
 											0
 										),
@@ -204,20 +210,20 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 
 		// Currently we dont overwrite existing properties.
 		$this->assertNotEquals( 'mock_email@email.com', $actual['data']['login']['user']['email'] );
-		$this->assertNotEquals( 'mock_username', $actual['data']['login']['user']['username'] );
+		$this->assertNotEquals( 'mock_email', $actual['data']['login']['user']['username'] );
 	}
 
 	public function testLoginWithLinkExistingUsers() : void {
 		$config                                      = $this->provider_config;
 		$config['loginOptions']['linkExistingUsers'] = true;
 
-		$this->tester->set_client_config( 'github', $config );
+		$this->tester->set_client_config( 'linkedin', $config );
 
 		$query = $this->login_query();
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'GITHUB',
+			'provider' => 'LINKEDIN',
 		];
 
 		// Test with no user to match.
@@ -260,7 +266,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'GITHUB' ),
+												$this->expectedField( 'provider', 'LINKEDIN' ),
 											],
 											0
 										),
@@ -276,7 +282,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 		);
 
 		// Currently we dont overwrite existing properties.
-		$this->assertNotEquals( 'mock_username', $actual['data']['login']['user']['username'] );
+		$this->assertNotEquals( 'mock_email', $actual['data']['login']['user']['username'] );
 	}
 
 	public function testLoginWithCreateUser() : void {
@@ -291,13 +297,13 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 			]
 		);
 
-		$this->tester->set_client_config( 'github', $config );
+		$this->tester->set_client_config( 'linkedin', $config );
 
 		$query = $this->login_query();
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'GITHUB',
+			'provider' => 'LINKEDIN',
 		];
 
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
@@ -338,7 +344,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'GITHUB' ),
+												$this->expectedField( 'provider', 'LINKEDIN' ),
 											],
 											0
 										),
@@ -346,7 +352,9 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 									]
 								),
 								$this->expectedField( 'email', 'mock_email@email.com' ),
-								$this->expectedField( 'username', 'mock_username' ),
+								$this->expectedField( 'firstName', 'mock_first_name' ),
+								$this->expectedField( 'lastName', 'mock_last_name' ),
+								$this->expectedField( 'username', 'mock_email' ),
 							]
 						),
 					]
@@ -363,7 +371,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'GITHUB',
+			'provider' => 'LINKEDIN',
 			'userId'   => $this->test_user,
 		];
 
@@ -371,7 +379,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
 		$this->assertArrayHasKey( 'errors', $actual );
-		$this->assertEquals( 'You must be logged in as the user to link your identity.', $actual['errors'][0]['message'] );
+		$this->assertEquals( 'You must be logged in to link your identity.', $actual['errors'][0]['message'] );
 
 		// Test with different user.
 		$admin_user = $this->factory()->user->create(
@@ -392,11 +400,11 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'GITHUB',
+			'provider' => 'LINKEDIN',
 			'userId'   => $this->test_user,
 		];
 
-		User::link_user_identity( $this->test_user, 'GITHUB', '12345' );
+		User::link_user_identity( $this->test_user, 'LINKEDIN', '12345' );
 
 		wp_set_current_user( $this->test_user );
 
@@ -411,13 +419,13 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'GITHUB',
+			'provider' => 'LINKEDIN',
 			'userId'   => $this->test_user,
 		];
 
 		$new_user = $this->factory()->user->create();
 
-		User::link_user_identity( $new_user, 'github', '12345' );
+		User::link_user_identity( $new_user, 'linkedin', '12345' );
 
 		wp_set_current_user( $this->test_user );
 
@@ -432,7 +440,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 
 		$variables = [
 			'code'     => 'mock_authorization_code',
-			'provider' => 'GITHUB',
+			'provider' => 'LINKEDIN',
 			'userId'   => $this->test_user,
 		];
 
@@ -459,7 +467,7 @@ class GithubProviderMutationsTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTes
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'GITHUB' ),
+												$this->expectedField( 'provider', 'LINKEDIN' ),
 											],
 											0
 										),

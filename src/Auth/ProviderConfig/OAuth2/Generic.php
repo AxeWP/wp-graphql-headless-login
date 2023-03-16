@@ -25,7 +25,7 @@ class Generic extends OAuth2Config {
 	 * {@inheritDoc}
 	 */
 	public static function get_name() : string {
-		return __( 'Generic - OAuth2', 'wp-graphql-headless-login' );
+		return __( 'OAuth2 (Generic)', 'wp-graphql-headless-login' );
 	}
 
 	/**
