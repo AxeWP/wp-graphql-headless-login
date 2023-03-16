@@ -78,6 +78,25 @@ class SiteTokenAuthenticationCest {
 
 		$I->dontSeeHttpHeader( 'X-My-Secret-Auth-Token' );
 
+		// The query has errors because the mutation is not allowed.
+
+		update_option(
+			AccessControlSettings::$settings_prefix . 'access_control',
+			[
+				'shouldBlockUnauthorizedDomains' => true,
+				'hasSiteAddressInOrigin'         => true,
+			]
+		);
+		$I->reset_utils_properties();
+
+		$response = $I->sendGraphQLRequest(
+			$query,
+			$variables,
+			[
+				'X-My-Secret-Auth-Token' => 'some_secret',
+			]
+		);
+
 		// The query is valid and has no errors.
 		$I->assertArrayNotHasKey( 'errors', $response );
 		$I->assertEmpty( $response['extensions']['debug'] );

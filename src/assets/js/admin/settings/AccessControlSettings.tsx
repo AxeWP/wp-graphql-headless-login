@@ -26,7 +26,7 @@ const accessControlDefaults: AccessControlSettings = {
 	customHeaders: [],
 };
 
-type AccessControlEntityProps = [
+export type AccessControlEntityProps = [
 	AccessControlSettings,
 	React.Dispatch<React.SetStateAction<AccessControlSettings>>
 ];
