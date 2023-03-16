@@ -124,7 +124,7 @@ class Auth {
 	 * @throws UserError If the user cannot be linked.
 	 */
 	public static function link_user_identity( array $input ) : array {
-		if ( Password::get_name() === $input['provider'] ) {
+		if ( Password::get_slug() === $input['provider'] ) {
 			throw new UserError( __( 'You cannot link two identities from the same WordPress site. Please use a different `provider`.', 'wp-graphql-headless-login' ) );
 		}
 

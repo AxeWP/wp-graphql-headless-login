@@ -81,6 +81,27 @@ class ProviderMutationsPasswordTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		';
 	}
 
+	public function link_query() : string {
+		return '
+			mutation LinkUser( $input: LinkUserIdentityInput! ) {
+				linkUserIdentity(
+					input: $input
+				) {
+					success
+					user {
+						auth {
+							linkedIdentities {
+								id
+								provider
+							}
+						}
+						databaseId
+					}
+				}
+			}
+		';
+	}
+
 	public function testLoginWithNoProvisioning() : void {
 		$query = $this->login_query();
 
@@ -154,5 +175,22 @@ class ProviderMutationsPasswordTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 				),
 			]
 		);
+	}
+
+	public function testLinkUserIdentity() : void {
+		$query = $this->link_query();
+
+		$variables = [
+			'input' => [
+				'provider' => 'PASSWORD',
+				'userId'   => $this->test_user,
+			],
+		];
+
+		// Test mutation.
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertEquals( 'You cannot link two identities from the same WordPress site. Please use a different `provider`.', $actual['errors'][0]['message'] );
 	}
 }
