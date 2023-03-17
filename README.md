@@ -1,7 +1,7 @@
 ![Headless Login for WPGraphQL Logo](./assets/header.png)
 # Headless Login for WPGraphQL
 
-A WordPress plugin that provides Headless login and authentication for <a href="https://wpgraphql.com" target="_blank">WPGraphQL</a>, supporting traditional passwords, OAuth2/OpenID Connect, JWT, and more.
+A WordPress plugin that provides headless login and authentication for <a href="https://wpgraphql.com" target="_blank">WPGraphQL</a>, supporting traditional passwords, OAuth2/OpenID Connect, JWT, and more.
 
 * [Join the WPGraphQL community on Slack.](https://join.slack.com/t/wp-graphql/shared_invite/zt-3vloo60z-PpJV2PFIwEathWDOxCTTLA)
 * [Documentation](#usage)
@@ -17,9 +17,9 @@ A WordPress plugin that provides Headless login and authentication for <a href="
 
 ## Description
 
-Headless Login for WPGraphQL is a flexible and extensible plugin that allows headless WordPress sites to login and authenticate users via <a href="https://wpgraphql.com" target="_blank">WPGraphQL</a> using a variety of authentication methods, including traditional WordPress username/password,<a href="https://oauth.net/2/" target="_blank">OAuth 2.0</a> / <a href="https://openid.net/connect/" target="_blank">OpenID Connect</a>, and <a href="https://jwt.io/" target="_blank">JSON Web Tokens (JWT)</a>.
+Headless Login for WPGraphQL is a flexible and extensible plugin that allows headless WordPress sites to login and authenticate users via <a href="https://wpgraphql.com" target="_blank">WPGraphQL</a> using a variety of authentication methods, including traditional WordPress credentials (username/password), <a href="https://oauth.net/2/" target="_blank">OAuth 2.0</a> / <a href="https://openid.net/connect/" target="_blank">OpenID Connect</a>, <a href="https://jwt.io/" target="_blank">JSON Web Tokens (JWT)</a>, and more.
 
-This plugin is inspired by and aims to replace <a href="https://github.com/wp-graphql/wp-graphql-jwt-authentication" target="_blank">WPGraphQL JWT Authentication</a> as more powerful and flexible authentication solution for Headless WP.
+This plugin is inspired by and aims to replace <a href="https://github.com/wp-graphql/wp-graphql-jwt-authentication" target="_blank">WPGraphQL JWT Authentication</a> as more powerful, comprehensive, and flexible authentication solution for Headless WP.
 
 ## System Requirements
 
@@ -51,7 +51,7 @@ Until we hit v1.0, we're using a _modified_ version of [SemVer](https://semver.o
 
 Development of Headless Login for WPGraphQL is provided by [AxePress Development](https://axepress.dev). Community contributions are _welcome_ and **encouraged**.
 
-Basic support is provided for free, both in [this repo](https://github.com/axewp/wp-graphql-rank-math/issues) and in [WPGraphQL Slack](https://join.slack.com/t/wp-graphql/shared_invite/zt-3vloo60z-PpJV2PFIwEathWDOxCTTLA).
+Basic support is provided for free, both in [this repo](https://github.com/axewp/wp-graphql-headnessl-login/issues) and in [WPGraphQL Slack](https://join.slack.com/t/wp-graphql/shared_invite/zt-3vloo60z-PpJV2PFIwEathWDOxCTTLA).
 
 Priority support and custom development are available to [our Sponsors](https://github.com/sponsors/AxeWP).
 
@@ -59,22 +59,25 @@ Priority support and custom development are available to [our Sponsors](https://
 
 ## Supported Features
 
-* Use a traditional WordPress username/password using [the `loginWithPassword` mutation](./docs/mutations.md#login-with-a-traditional-wordpress-usernamepassword).
-* Validate an OAuth 2.0 / OpenID Connect provider response using [the `login` mutation](./docs/mutations.md#login-with-an-oauth2openid-authorization-response).
+The following functionality is currently supported:
 
-	Supported providers (out of the box):
-	* Facebook
-	* GitHub
-	* Google
-	* Instagram
-	* LinkedIn
-	* OAuth2 - Generic: Any other OAuth 2.0 provider.
-	* SAML authentication and more coming soon!
-
-	Or add your own provider by [extending the `ProviderConfig` class](./docs/provider-config.md).
+* Authenticate with a [WordPress username and password](./docs/mutations.md#login-with-a-traditional-username-password).
+* Pass and validate [OAuth 2.0 / OpenID Connect provider response](./docs/mutations.md#login-with-an-oauth2openid-authorization-response) from the frontend. <br />
+Supported providers (out of the box):
+  * Facebook
+  * GitHub
+  * Google
+  * Instagram
+  * LinkedIn
+  * OAuth2 - Generic: Any other OAuth 2.0 provider.
+  * SAML authentication and more coming soon!
+* Use a [special Site Token](./docs/mutations.md#login-with-a-site-token-and-user-identity
+) to support WordPress authentication with any  externalaly authenticated user identity (e.g. [Auth.js](https://authjs.dev/)).
+* Add your own Authentication Provider by [extending the `ProviderConfig` class](./docs/provider-config.md).
 * Authenticate with JWT tokens using a [HTTP Authorization header](./docs/example-next-api-routes.md).
+* [Set CORS headers](./docs/settings.md) to allow or restrict access to the GraphQL endpoint.
 * Generate short-term `authToken`s and long term `refreshToken`s for seamless reauthentication in your headless app.
-* Optionally link a user account to an OAuth 2.0 / OpenID Connect provider, or create a new WordPress user if none exists, with data mapped from the provider identity.
+* [Link a user account](./docs/mutations.md#manually-link-the-wordpress-user-to-a-providers-resource-owner) to an authentication provider's resource owner, to allow users to authenticate with multiple providers.
 * Query the [enabled `loginClient` authorization urls](./docs/queries.md#querying-login-clients), to use in your frontend's login buttons.
 * Extensive WordPress [actions](./docs/actions.md) and [filters](./docs/filters.md) for customization of the plugin's behavior.
 * Log out all sessions for a user by [revoking](./docs/mutations.md#revoke-the-user-secret) or [refreshing](./docs/mutations.md#refresh-the-user-secret) their tokens, in GraphQL or the WordPress backend Profile Page.

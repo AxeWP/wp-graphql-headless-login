@@ -67,9 +67,9 @@ do_action( 'graphql_login_after_provider_init', $slug, $provider_config );
 * **`$slug`** _(string)_ : The provider slug.
 * **`$provider_config`** _(WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig)_ : The instance of the ProviderConfig.
 
-### `graphql_login_after_client_init`
+### `graphql_login_client_init`
 
-Fires after a Login Client has been initialized.
+Fires when a Login Client is initialized.
 
 ```php
 do_action( 'graphql_login_client_init', $slug, $settings, $provider_config, $client );
@@ -81,20 +81,6 @@ do_action( 'graphql_login_client_init', $slug, $settings, $provider_config, $cli
 * **`$settings`** _(array)_ : The client settings.
 * **`$provider_config`** _(WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig)_ : The instance of the ProviderConfig.
 * **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The instance of the Client.
-
-### `graphql_login_before_password_authenticate`
-
-Fires before the user is authenticated with a password.
-
-```php
-do_action( 'graphql_login_before_password_authenticate', $input );
-```
-
-#### Parameters
-
-* **`$input`** _(array)_ : The input data.
-	* **`$input['username']`** _(string)_ : The username.
-	* **`$input['password']`** _(string)_ : The password.
 
 ### `graphql_login_before_authenticate`
 
@@ -124,23 +110,6 @@ do_action( 'graphql_login_validate_client', $client );
 
 * **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The instance of the Client.
 
-### `graphql_login_after_successful_password_login`
-
-Fires after the user is authenticated with a password.
-
-```php
-do_action( 'graphql_login_after_successful_password_login', $payload );
-```
-
-#### Parameters
-
-* **`$payload`** _(array)_ : The payload data.
-	* **`$payload['authToken']`** _(string)_ : The authentication token.
-	* **`$payload['authTokenExpiration']`** _(int) : The authentication token expiration timestamp.
-	* **`$payload['refreshToken']`** _(string)_ : The refresh token.
-	* **`$payload['refreshTokenExpiration']`** _(int) : The refresh token expiration timestamp.
-	* **`$user`** _(WP_User)_ : The authenticated user.
-
 ### `graphql_login_after_successful_login`
 
 Fires after the user is successfully logged in.
@@ -152,11 +121,11 @@ do_action( 'graphql_login_after_successful_login', $payload, $user_data, $client
 #### Parameters
 
 * **`$payload`** _(array)_ : The payload data.
-	* **`$payload['authToken']`** _(string)_ : The user's Auth Token.
-	* **`$payload['authTokenExpiration']`** _(int)_ : The expiration timestamp of the Auth Token.
-	* **`$payload['refreshToken']`** _(string)_ : The user's Refresh Token.
-	* **`$payload['refreshTokenExpiration']`** _(int)_ : The expiration timestamp of the Refresh Token.
-	* **`$payload['user']`** _(WP_User)_ : The user object.
+  * **`$payload['authToken']`** _(string)_ : The user's Auth Token.
+  * **`$payload['authTokenExpiration']`** _(int)_ : The expiration timestamp of the Auth Token.
+  * **`$payload['refreshToken']`** _(string)_ : The user's Refresh Token.
+  * **`$payload['refreshTokenExpiration']`** _(int)_ : The expiration timestamp of the Refresh Token.
+  * **`$payload['user']`** _(WP_User)_ : The user object.
 
 ### `graphql_login_link_user_identity`
 

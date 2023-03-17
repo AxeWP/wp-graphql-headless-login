@@ -61,7 +61,7 @@ export async function authenticate(provider, code, state) {
 
   // replace fetchAPI with whatever you're using to connect to WPGraphQL.
   const data = await fetchAPI(
-    `mutation Login($input: OAuthLoginInput!) {
+    `mutation Login($input: LoginInput!) {
       login(input: $input) {
         authToken
         authTokenExpiration

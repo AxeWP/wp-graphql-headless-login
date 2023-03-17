@@ -2,8 +2,8 @@
 
 ## Login with an OAuth2/OpenID authorization response
 ```graphql
-mutation loginWithOAuth(
-  $provider: LoginProviderEnum!, # One of the enabled Authentication Provider types.
+mutation login(
+  $provider: LoginProviderEnum!, # One of the enabled Authentication Provider types. e.g. FACEBOOK, or GENERIC_OAUTH2
   $code:     String!,            # The Authorization Code sent by the Authentication Provider to the frontend's callback URI.
   $state:    String,             # A randomly-generated string used to verify the authenticity of the response sent by the Provider.
 ) {
@@ -38,10 +38,45 @@ mutation loginWithPassword(
   $username: String!,
   $password: String!,
 ) {
-  loginWithPassword(
+  login(
     input: {
-      username: $username,
-      password: $password,
+      provider: PASSWORD, # This tells the mutation to use the WordPress username/password authentication method.
+      credentials: {      # This is the input required for the PASSWORD provider.
+        username: $username,
+        password: $password,
+      }
+    }
+  ) {
+    authToken
+    authTokenExpiration
+    refreshToken
+    refreshTokenExpiration
+    user { # The authenticated WordPress user.
+      ...MyUserFrag
+    }
+    # The following fields are available if WPGraphQL for WooCommerce is installed.
+    wooSessionToken
+    customer {
+      ...MyCustomerFrag
+    }
+  }
+}
+```
+
+## Login with a Site Token and User Identity.
+
+**Note**: for the Site Token provider to work, you need to set the request header that your defined in the Provider Config settings, and have `Access Control : Block unauthorized domains`.
+
+This mutation should **only be used server-side** so as not to expose the Site Token.
+
+```graphql
+mutation loginAsIdentity(
+  $identity: String! # This is the value used to identify the WordPress user.
+) {
+  login(
+    input: {
+      provider: SITETOKEN, # This tells the mutation to use the Site Token provider.
+      identity: $identity
     }
   ) {
     authToken
@@ -71,7 +106,6 @@ mutation refreshToken(
   }
 }
 ```
-
 
 
 ## Manually link the WordPress user to a Provider's Resource Owner
