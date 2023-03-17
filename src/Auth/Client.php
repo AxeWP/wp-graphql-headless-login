@@ -8,7 +8,6 @@
 
 namespace WPGraphQL\Login\Auth;
 
-use GraphQL\Error\UserError;
 use WP_Error;
 use WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig;
 use WPGraphQL\Login\Utils\Utils;
@@ -183,5 +182,4 @@ class Client {
 
 		return User::maybe_create_user( $this, $user_data );
 	}
-
 }
