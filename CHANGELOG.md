@@ -5,28 +5,41 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
 ## Unreleased
+
+## [0.0.6] - 2023-03-17
+
+This release adds support for a special Site Token provider, which allows users to authenticate with a custom Header and a external resource identity. It also adds support for setting Access Control headers, and removes the `loginWithPassword` mutation in favor of a `Password` provider that can be used with `login` mutation.
+
 - feat!: Remove `loginWithPassword` mutation in favor of Password provider.
 - feat: Add Site Token provider.
 - feat: Add support for setting Access Control headers.
 - fix: check OAuth2 state against current `$_SESSION`.
+- fix: remove `codecept_debug()` call in plugin `src`.
 - dev!: Refactor settings page frontend components and app logic.
 - dev!: Refactor `ProviderConfig` methods.
 - dev!: Make `oauthResponse` input optional.
-- dev: Refactor settings registration for better extendability.
-- chore: update NPM dependencies.
-- chore: update Composer dependencies.
+- dev! Remove `graphql_login_before_password_authenticate` in favor of the existing `graphql_login_before_authenticate` filter.
+- dev!: Remove `graphql_login_after_successful_password_login` in favor of the existing `graphql_login_after_successful_login` filter.
+- dev: Add the `graphql_login_access_control_settings` filter.
+- dev: Refactor settings registration and screen for better extendability.
+- chore: Update NPM dependencies.
+- chore: Update Composer dependencies.
+- docs: Update docs to reflect new settings and providers.
+- ci: Don't set `WP_AUTO_UPDATE_CORE` and `AUTOMATIC_UPDATED_DISABLED` when spinning up a Docker instance.
 - tests: Rename provider mutation test files.
-- tests: add tests for Settings registry.
-- tests: add tests for `OAuth2 Generic` provider.
+- tests: Backfill tests for Settings registry.
+- tests: Backfill tests for `OAuth2 Generic` provider.
 
-## [0.0.5] - 2022-02-26
+
+
+## [0.0.5] - 2023-02-26
 
 - dev: relocate Strauss dependencies to `vendor-prefixed`.
 - dev: wrap activation and deactivation global functions in `function_exists()` checks.
 - chore: update Strauss and Composer deps.
 - chore: update NPM dependencies.
 
-## [0.0.4] - 2022-02-09
+## [0.0.4] - 2023-02-09
 
 This release adds support for setting a WP Authentication Cookie on successful login, as well as compatibility with WPGraphQL for WooCommerce. It also fixes a handful of bugs, and backfills/refactors CI tests.
 

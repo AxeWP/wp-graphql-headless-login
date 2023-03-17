@@ -3,7 +3,7 @@
  * The Password provider class.
  *
  * @package WPGraphQL\Login\Auth\ProviderConfig
- * @since @todo
+ * @since 0.0.6
  */
 
 namespace WPGraphQL\Login\Auth\ProviderConfig;

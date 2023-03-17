@@ -3,7 +3,7 @@
  * Handles the GraphQL Request.
  *
  * @package WPGraphQL\Login\Auth
- * @since @todo
+ * @since 0.0.6
  */
 
 namespace WPGraphQL\Login\Auth;

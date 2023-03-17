@@ -1,7 +1,7 @@
 /**
  * External Dependencies
  */
-import { useEffect } from '@wordpress/element';
+import { useEffect, useCallback } from '@wordpress/element';
 import { Button, Icon, PanelBody, PanelRow } from '@wordpress/components';
 import { sprintf, __ } from '@wordpress/i18n';
 import { store as coreStore, useEntityProp } from '@wordpress/core-data';
@@ -81,13 +81,16 @@ export function ClientSettings({ clientSlug, showAdvancedSettings }) {
 		}
 	}, [lastError, clientSlug]);
 
-	const updateClient = (key: string, value: string) => {
-		const newClient = {
-			...client,
-			[key]: value,
-		};
-		setClient(newClient);
-	};
+	const updateClient = useCallback(
+		(key: string, value: string) => {
+			const newClient = {
+				...client,
+				[key]: value,
+			};
+			setClient(newClient);
+		},
+		[client, setClient]
+	);
 
 	const setClientOption = (clientOption: object) => {
 		updateClient('clientOptions', {
@@ -119,6 +122,7 @@ export function ClientSettings({ clientSlug, showAdvancedSettings }) {
 				{
 					type: 'snackbar',
 					isDismissible: true,
+					explicitDismiss: true,
 				}
 			);
 		}
@@ -133,6 +137,7 @@ export function ClientSettings({ clientSlug, showAdvancedSettings }) {
 			dispatch('core/notices').createNotice('success', 'Settings saved', {
 				type: 'snackbar',
 				isDismissible: true,
+				explicitDismiss: true,
 			});
 		}
 	};
