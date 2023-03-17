@@ -103,7 +103,7 @@ class Auth {
 		 * @param array    $user_data The user data from the Provider.
 		 * @param Client   $client    The client instance.
 		 */
-		$payload = apply_filters( 'graphql_login_payload', $payload, $user, $client );
+		$payload = apply_filters( 'graphql_login_payload', $payload, $user, $user_data, $client );
 
 		/**
 		 * Fires after the user is successfully logged in.
