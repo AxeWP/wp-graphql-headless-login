@@ -1,8 +1,10 @@
 # Supporting Custom Providers with the `ProviderConfig` PHP Class.
 
-Headless Login for WPGraphQL supports custom providers by allowing you to register your own [`ProviderConfig` PHP class](../src/Auth/ProviderConfig/ProviderConfig.php). This class will handle the authentication flow for your provider, as well as its settings and GraphQL fields.
+Headless Login for WPGraphQL allows you to add support for other authentication provides by extending the  [`WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig` PHP class](../src/Auth/ProviderConfig/ProviderConfig.php). This class will handle the authentication flow for your provider, as well as its settings and GraphQL fields.
 
-The `ProviderConfig` class also has a child class called `OAuth2Config` that you can extend to handle OAuth2 providers. This class is built to work seamlessly with League's [OAuth2 Client](https://oauth2-client.thephpleague.com/) library, however you can extend it to work with any OAuth2 library, or use the parent `ProviderConfig` class to handle your own custom authentication flow, such as [SAML](https://en.wikipedia.org/wiki/Security_Assertion_Markup_Language), [keycloak](https://www.keycloak.org/), keycloak, or any other custom authentication flow.
+The `ProviderConfig` class also has a child class called `OAuth2Config` that you can extend to handle OAuth2 providers. This class is built to work seamlessly with League's [OAuth2 Client](https://oauth2-client.thephpleague.com/) library, however you can extend it to work with any OAuth2 library, or use the parent `ProviderConfig` class to handle your own custom authentication flow, such as [SAML](https://en.wikipedia.org/wiki/Security_Assertion_Markup_Language), [keycloak](https://www.keycloak.org/), or practically anything else.
+
+> **Note:** Headless Login for WPGraphQL dogfoods its own APIs. For real-world examples of how to use the `ProviderConfig` class, you can check out the included provider configs in the [src/Auth/ProviderConfig](../src/Auth/ProviderConfig) directory.
 
 ## Example: Registering a `OAuth2Config` class with League's OAuth2 Client library.
 
@@ -57,11 +59,9 @@ class GitHubProviderConfig extends \WPGraphQL\Login\Auth\ProviderConfig\OAuth2\O
   /**
    * Defines the Client Options REST API schema for the provider.
    *
-   * This is how the settings will be stored in the database.
+   * This is used to display and save the Client Options settings the Settings Page.
    *
    * Note: This method will inherit the default options schema, so you only need to add the fields specific to GitHub.
-   *
-   * @param array $settings The settings array from the WP database.
    */
   protected static function client_options_schema() : array {
     return [
@@ -83,8 +83,7 @@ class GitHubProviderConfig extends \WPGraphQL\Login\Auth\ProviderConfig\OAuth2\O
    *
    * These fields will be available in the generated ObjectType for the LoginClientOptions interface.
    *
-   * Note: This method will inherit the default options schema, so you only need to
-   * add the fields specific to GitHub.
+   * Note: This method will inherit the default options schema, so you only need to add the fields specific to GitHub.
    */
    protected static function client_options_fields() : array {
     return [
@@ -105,6 +104,7 @@ class GitHubProviderConfig extends \WPGraphQL\Login\Auth\ProviderConfig\OAuth2\O
     $first_name = implode( ' ', array_slice( $name_parts, 0, -1 ) ) ?: null;
     $last_name  = count( $name_parts ) > 1 ? end( $name_parts ) : null;
 
+    // IRL, you should sanitize these values.
     return [
       'user_login'       => $owner_details['login'] ?? null,
       'user_email'       => $owner_details['email'] ?? null,
@@ -138,7 +138,7 @@ class GitHubProviderConfig extends \WPGraphQL\Login\Auth\ProviderConfig\OAuth2\O
 
 ```php
 <?php
-add_action(
+add_filter(
   'graphql_login_registered_provider_configs',
   function( array $provider_configs ) {
     // Give the provider a unique slug, and pass the ProviderConfig class name.

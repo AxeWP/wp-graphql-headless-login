@@ -22,7 +22,7 @@ query getClients {
       createUserIfNoneExists
       useAuthenticationCookie # Whether to set the WordPress authentication cookie on successful login.
       ... on FacebookLoginOptions {
-      	linkExistingUsers
+        linkExistingUsers
         ...FBLoginOptionsFrag # other provider-specific options
       }
     }

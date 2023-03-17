@@ -98,11 +98,12 @@ class Auth {
 		/**
 		 * Filters the Login mutation payload before returning.
 		 *
-		 * @param array    $payload   The payload.
-		 * @param \WP_User $user      The user.
-		 * @param Client   $client    The client instance.
+		 * @param array          $payload   The payload.
+		 * @param \WP_User       $user      The user.
+		 * @param array|mixed    $user_data The user data from the Provider.
+		 * @param Client         $client    The client instance.
 		 */
-		$payload = apply_filters( 'graphql_login_payload', $payload, $user, $client );
+		$payload = apply_filters( 'graphql_login_payload', $payload, $user, $user_data, $client );
 
 		/**
 		 * Fires after the user is successfully logged in.

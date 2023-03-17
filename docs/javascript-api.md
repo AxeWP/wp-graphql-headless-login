@@ -4,7 +4,7 @@ The WPGraphQL Headless Login settings screen is powered by [React](https://react
 
 ## The `wpGraphQLLogin` object
 
-The `wpGraphQLLogin` Javascript object is available on the OAuth Settings Screen page, and serves as the entrypoint for the API.
+The `wpGraphQLLogin` Javascript object is available on the Headless Login Settings screen, and serves as the entrypoint for the API.
 
 The object contains the following properties:
 
@@ -15,9 +15,20 @@ wpGraphQLLogin {
     isConstant: Boolean // Whether the JWT secret key is defined with a Environment constant.
   },
   settings {
-    [wpgraphql_login_provider_${provider_slug}] : { // e.g. `wpgraphql_login_provider_google`
-      title: String // The provider name.
-      properties: object // The REST API schema properties.
+    plugin {
+      [wpgraphql_login_setting_${setting_slug}] : { // e.g. `wpgraphql_login_settings_delete_data_on_deactivate`
+        ...
+      }
+    }
+    accessControl {
+      [${settingName}] : {
+        ...
+      } // e.g. `additionalAuthorizedDomains`
+    }
+    providers {
+      [wpgraphql_login_provider_${provider_slug}] : { // e.g. `wpgraphql_login_provider_google`
+        ...
+      }
     }
   }
   hooks {

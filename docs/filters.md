@@ -20,7 +20,7 @@ apply_filters( 'graphql_login_registered_object_classes', $classes );
 
 #### Parameters
 
-* **`$classes`** _(array)_ : The list of PHP classes that are registered as GraphQL Types.
+* **`$classes`** _(array)_ : The list of PHP classes that are registered as GraphQL Types. These classes must extend the `WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\GraphQLType` interface.
 
 ## Authentication
 
@@ -234,7 +234,7 @@ apply_filters( 'graphql_login_registered_provider_configs', $provider_configs);
 
 #### Parameters
 
-* **`$provider_configs`** _(array)_ : The registered provider config classes, keyed to their slug.
+* **`$provider_configs`** _(array)_ : The registered `ProviderConfig` classes, keyed to their slug.
 
 ### `graphql_login_provider_config_instances`
 
@@ -290,6 +290,19 @@ apply_filters( 'graphql_login_setting', $value, $option_name, $default );
 * **`$option_name`** _(string)_ : The name of the setting. In the database, this is prefixed with `wpgraphql_login_settings`
 * **`$default`** _(mixed)_ : The default value of the setting.
 
+### `graphql_login_access_control_settings`
+
+Filters the settings for a provider.
+
+```php
+apply_filters( 'graphql_login_access_control_settings', $settings, $slug );
+```
+
+#### Parameters
+
+* **`$settings`** _(array)_ : The access control settings.
+* **`$default`** _(string)_ : The default value if none is set.
+
 ### `graphql_login_provider_settings`
 
 Filters the settings for a provider.
@@ -333,7 +346,7 @@ apply_filters( 'graphql_login_{$slug}_login_options_fields', $settings );
 
 ### `graphql_login_client_options`
 
-Filters the options used to configure the Authentication provider.
+Filters the options used to configure the OAuth2 provider instance within the ProviderConfig.
 
 ```php
 apply_filters( 'graphql_login_client_options', $options, $slug );
@@ -346,7 +359,7 @@ apply_filters( 'graphql_login_client_options', $options, $slug );
 
 ### `graphql_login_user_types`
 
-Filters the GraphQL 'user' types which should have 'AuthenticationData' added to them.
+Filters the GraphQL `User` types which should have the `auth: AuthenticationData` field added to them.
 
 ```php
 apply_filters( 'graphql_login_user_types', $type_names);
@@ -359,15 +372,14 @@ apply_filters( 'graphql_login_user_types', $type_names);
 
 ### `graphql_login_mapped_user_data`
 
-Filters the user data mapped from the OAuth provider before creating the user.
-Useful for mapping custom fields from the OAuth provider to the WP_User.
+Filters the user data mapped from the authentication rovider before creating the user.
+Useful for mapping custom fields from the provider to the WP_User.
 
 ```php
-apply_filters( 'graphql_login_mapped_user_data', $user_data, $resource_owner, $client );
+apply_filters( 'graphql_login_mapped_user_data', $user_data, $client );
 ```
 
 #### Parameters
 
 * **`$user_data`** _(array)_ : The WP User data.
-* **`$resourc_eowner`** _(array)_ : The OAuth provider user data.
 * **`$client`** _(\WPGraphQL\Login\Auth\ProviderConfig/ProviderConfig)_ : The ProviderConfig instance.
