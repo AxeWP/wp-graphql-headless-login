@@ -3,7 +3,7 @@
  * Registers the Access Control Settings
  *
  * @package WPGraphQL\Login\Admin\Settings
- * @since @todo
+ * @since 0.0.6
  */
 
 namespace WPGraphQL\Login\Admin\Settings;

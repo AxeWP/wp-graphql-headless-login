@@ -5,7 +5,7 @@ Requires at least: 5.6
 Tested up to: 6.1.1
 Requires PHP: 7.4
 Requires WPGraphQL: 1.12.0
-Stable tag: 0.0.5
+Stable tag: 0.0.6
 Maintained at: https://github.com/axewp/wp-graphql-headless-login
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html

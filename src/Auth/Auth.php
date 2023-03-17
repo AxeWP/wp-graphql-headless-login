@@ -79,7 +79,6 @@ class Auth {
 
 		// Set the auth cookie if the provider is configured to use it.
 		$config = $client->get_config();
-		// @todo add: graphql_login_get_setting( 'password_use_auth_cookie', false ) .
 		if ( ! empty( $config['loginOptions']['useAuthenticationCookie'] ) ) {
 			wp_set_auth_cookie( $user->ID, false );
 		}

@@ -3,7 +3,7 @@
  * The Site Token provider class.
  *
  * @package WPGraphQL\Login\Auth\ProviderConfig
- * @since @todo
+ * @since 0.0.6
  */
 
 namespace WPGraphQL\Login\Auth\ProviderConfig;
