@@ -6,9 +6,12 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
+## [0.0.7] - 2023-03-24
+
 - fix: Only create one notice when the SiteToken mutation cannot be enabled.
 - fix: Prevent PHP notice when the SiteToken header key is not set.
 - chore: Update Composer and NPM dependencies.
+
 ## [0.0.6] - 2023-03-17
 
 This release adds support for a special Site Token provider, which allows users to authenticate with a custom Header and a external resource identity. It also adds support for setting Access Control headers, and removes the `loginWithPassword` mutation in favor of a `Password` provider that can be used with `login` mutation.
