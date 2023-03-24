@@ -36,22 +36,12 @@ export type ClientType = {
 
 export function ClientSettings({ clientSlug, showAdvancedSettings }) {
 	const { saveEditedEntityRecord } = useDispatch(coreStore);
-
 	const [client, setClient] = useEntityProp('root', 'site', clientSlug);
 	const [accessControlSettings]: AccessControlEntityProps = useEntityProp(
 		'root',
 		'site',
 		'wpgraphql_login_access_control'
 	);
-
-	useEffect(() => {
-		if (undefined !== client && Object.keys(client || {})?.length === 0) {
-			setClient({
-				...clientDefaults,
-				slug: clientSlug.replace('wpgraphql_login_provider_', ''),
-			});
-		}
-	}, [client, setClient, clientSlug]);
 
 	const { lastError } = useSelect(
 		(select) => ({
@@ -61,25 +51,6 @@ export function ClientSettings({ clientSlug, showAdvancedSettings }) {
 		}),
 		[client]
 	);
-
-	useEffect(() => {
-		if (lastError) {
-			dispatch('core/notices').createErrorNotice(
-				sprintf(
-					// translators: %s: Error message.
-					__(
-						'Error saving settings: %s',
-						'wp-graphql-headless-login'
-					),
-					lastError?.data?.params?.[clientSlug] || lastError?.message
-				),
-				{
-					type: 'snackbar',
-					isDismissible: true,
-				}
-			);
-		}
-	}, [lastError, clientSlug]);
 
 	const updateClient = useCallback(
 		(key: string, value: string) => {
@@ -106,11 +77,40 @@ export function ClientSettings({ clientSlug, showAdvancedSettings }) {
 		});
 	};
 
+	useEffect(() => {
+		if (undefined !== client && Object.keys(client || {})?.length === 0) {
+			setClient({
+				...clientDefaults,
+				slug: clientSlug.replace('wpgraphql_login_provider_', ''),
+			});
+		}
+	}, [client, setClient, clientSlug]);
+
+	useEffect(() => {
+		if (lastError) {
+			dispatch('core/notices').createErrorNotice(
+				sprintf(
+					// translators: %s: Error message.
+					__(
+						'Error saving settings: %s',
+						'wp-graphql-headless-login'
+					),
+					lastError?.data?.params?.[clientSlug] || lastError?.message
+				),
+				{
+					type: 'snackbar',
+					isDismissible: true,
+				}
+			);
+		}
+	}, [lastError, clientSlug]);
+
 	// Disable siteToken if shouldBlockUnauthorizedDomains is false
 	useEffect(() => {
 		if (
 			!accessControlSettings?.shouldBlockUnauthorizedDomains &&
-			clientSlug === 'wpgraphql_login_provider_siteToken'
+			clientSlug === 'wpgraphql_login_provider_siteToken' &&
+			client?.isEnabled
 		) {
 			updateClient('isEnabled', false);
 
@@ -126,7 +126,7 @@ export function ClientSettings({ clientSlug, showAdvancedSettings }) {
 				}
 			);
 		}
-	}, [accessControlSettings, clientSlug, updateClient]);
+	}, [accessControlSettings, clientSlug, client, updateClient]);
 
 	const saveRecord = async () => {
 		const saved = await saveEditedEntityRecord('root', 'site', undefined, {
