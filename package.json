@@ -1,6 +1,6 @@
 {
 	"name": "wp-graphql-headless-login",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"description": "A WordPress plugin that provides headless login and authentication for WPGraphQL",
 	"homepage": "https://github.com/axewp/wp-graphql-headless-login",
 	"author": "AxePress Development <support@axepress.dev> (https://axepress.dev)",

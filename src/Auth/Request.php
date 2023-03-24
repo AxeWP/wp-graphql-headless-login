@@ -252,7 +252,7 @@ class Request {
 		if ( SiteToken::is_enabled() ) {
 			$options = Utils::get_provider_settings( SiteToken::get_slug() );
 
-			$token_header = $options['clientOptions']['headerKey'];
+			$token_header = $options['clientOptions']['headerKey'] ?? null;
 
 			if ( ! empty( $token_header ) ) {
 				$headers[] = $token_header;
