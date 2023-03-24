@@ -7,6 +7,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 ## Unreleased
 
 - fix: Only create one notice when the SiteToken mutation cannot be enabled.
+- fix: Prevent PHP notice when the SiteToken header key is not set.
 - chore: Update Composer and NPM dependencies.
 ## [0.0.6] - 2023-03-17
 
