@@ -4,11 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
-## Unreleased
+## [0.0.8] - 2023-04-05
+
+This release fixes a bug where OAuth2 (Generic) provider settings were not being accessed correctly (#56).
+
+To address this, the provider slug was renamed from `generic-oauth2` to `oauth2-generic`.
+
+**Note:** As a result, the `LoginProviderEnum` name for this provider has changed from `GENERIC_OAUTH2` to `OAUTH2_GENERIC`, and `GenericClientOptions` and `GenericLoginOptions` have been renamed to `OAuth2ClientOptions` and `OAuth2LoginOptions`, respectively. The OAuth2 Generic provider settings are **not** preserved.
 
 - dev!: Rename `OAuth2 (Generic)` provider slug to `oauth2-generic`.
-**Note:** As a result, the `LoginProviderEnum` name for this provider has changed from `GENERIC_OAUTH2` to `OAUTH2_GENERIC`, and `GenericClientOptions` and `GenericLoginOptions` have been renamed to `OAuth2ClientOptions` and `OAuth2LoginOptions`, respectively, and resets the OAuth2 Generic provider settings.
 - fix: Use `ProviderConfig::get_slug()` for Provider registry keys. H/t @ryntab and @stephane-segning.
+
 
 ## [0.0.7] - 2023-03-24
 
