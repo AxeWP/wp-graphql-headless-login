@@ -6,6 +6,10 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
+- dev!: Rename `OAuth2 (Generic)` provider slug to `oauth2-generic`.
+**Note:** As a result, the `LoginProviderEnum` name for this provider has changed from `GENERIC_OAUTH2` to `OAUTH2_GENERIC`, and `GenericClientOptions` and `GenericLoginOptions` have been renamed to `OAuth2ClientOptions` and `OAuth2LoginOptions`, respectively, and resets the OAuth2 Generic provider settings.
+- fix: Use `ProviderConfig::get_slug()` for Provider registry keys. H/t @ryntab and @stephane-segning.
+
 ## [0.0.7] - 2023-03-24
 
 - fix: Only create one notice when the SiteToken mutation cannot be enabled.

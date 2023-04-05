@@ -135,14 +135,14 @@ class ProviderRegistry {
 			$registered_providers = apply_filters(
 				'graphql_login_registered_provider_configs',
 				[
-					'facebook'  => Facebook::class,
-					'generic'   => Generic::class,
-					'github'    => GitHub::class,
-					'google'    => Google::class,
-					'instagram' => Instagram::class,
-					'linkedin'  => LinkedIn::class,
-					'password'  => Password::class,
-					'siteToken' => SiteToken::class,
+					Facebook::get_slug()  => Facebook::class,
+					Generic::get_slug()   => Generic::class,
+					Github::get_slug()    => GitHub::class,
+					Google::get_slug()    => Google::class,
+					Instagram::get_slug() => Instagram::class,
+					LinkedIn::get_slug()  => LinkedIn::class,
+					Password::get_slug()  => Password::class,
+					SiteToken::get_slug() => SiteToken::class,
 				]
 			);
 

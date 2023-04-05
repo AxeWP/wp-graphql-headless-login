@@ -123,6 +123,7 @@ class Utils {
 	public static function get_provider_settings( string $slug ) {
 		if ( ! isset( self::$providers[ $slug ] ) ) {
 			$settings = get_option( ProviderSettings::$settings_prefix . $slug, [] );
+
 			/**
 			 * Filter the provider settings before returning it
 			 *

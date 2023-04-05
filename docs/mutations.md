@@ -3,7 +3,7 @@
 ## Login with an OAuth2/OpenID authorization response
 ```graphql
 mutation login(
-  $provider: LoginProviderEnum!, # One of the enabled Authentication Provider types. e.g. FACEBOOK, or GENERIC_OAUTH2
+  $provider: LoginProviderEnum!, # One of the enabled Authentication Provider types. e.g. FACEBOOK, or OAUTH2_GENERIC
   $code:     String!,            # The Authorization Code sent by the Authentication Provider to the frontend's callback URI.
   $state:    String,             # A randomly-generated string used to verify the authenticity of the response sent by the Provider.
 ) {
