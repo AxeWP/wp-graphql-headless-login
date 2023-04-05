@@ -6,7 +6,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
-- fix: Use `ProviderConfig::get_slug()` for Provider registry keys.
+- fix: Use `ProviderConfig::get_slug()` for Provider registry keys. H/t @ryntab and @stephane-segning.
 
 ## [0.0.7] - 2023-03-24
 
