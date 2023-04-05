@@ -32,7 +32,7 @@ class Generic extends OAuth2Config {
 	 * {@inheritDoc}
 	 */
 	public static function get_slug() : string {
-		return 'generic-oauth2';
+		return 'oauth2-generic';
 	}
 
 	/**
@@ -45,7 +45,7 @@ class Generic extends OAuth2Config {
 			'redirectUri'             => $settings['redirectUri'] ?? null,
 			'urlAuthorize'            => ! empty( $settings['urlAuthorize'] ) ? $settings['urlAuthorize'] : null,
 			'urlAccessToken'          => ! empty( $settings['urlAccessToken'] ) ? $settings['urlAccessToken'] : null,
-			'urlResourceOwnerDetails' => ! empty( $settings['urlAccessToken'] ) ? $settings['urlResourceOwnerDetails'] : null,
+			'urlResourceOwnerDetails' => ! empty( $settings['urlResourceOwnerDetails'] ) ? $settings['urlResourceOwnerDetails'] : null,
 			'scope'                   => ! empty( $settings['scope'] ) ? $settings['scope'] : [],
 		];
 	}

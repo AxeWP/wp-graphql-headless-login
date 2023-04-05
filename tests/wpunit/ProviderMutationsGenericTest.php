@@ -66,7 +66,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		// Set the provider config.
 		$this->provider_config = [
 			'name'          => 'Generic - OAuth2',
-			'slug'          => 'generic-oauth2',
+			'slug'          => 'oauth2-generic',
 			'order'         => 0,
 			'isEnabled'     => true,
 			'clientOptions' => [
@@ -87,12 +87,12 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 			],
 		];
 
-		$this->tester->set_client_config( 'generic-oauth2', $this->provider_config );
+		$this->tester->set_client_config( 'oauth2-generic', $this->provider_config );
 
 		add_filter(
 			'graphql_login_provider_config_instances',
 			function( $providers ) {
-				$providers['generic-oauth2'] = new FooGenericProviderConfig();
+				$providers['oauth2-generic'] = new FooGenericProviderConfig();
 
 				return $providers;
 			}
@@ -166,14 +166,14 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		// Test with no oauthResponse.
 		$variables = [
 			'input' => [
-				'provider' => 'GENERIC_OAUTH2',
+				'provider' => 'OAUTH2_GENERIC',
 			],
 		];
 
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
 		$this->assertArrayHasKey( 'errors', $actual );
-		$this->assertEquals( 'The generic-oauth2 provider requires the use of the `oauthResponse` input arg.', $actual['errors'][0]['message'] );
+		$this->assertEquals( 'The oauth2-generic provider requires the use of the `oauthResponse` input arg.', $actual['errors'][0]['message'] );
 
 		// Test with no user to match.
 		$variables['input']['oauthResponse'] = [
@@ -185,7 +185,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		$this->assertEquals( 'The user could not be logged in.', $actual['errors'][0]['message'] );
 
 		// Test with user to match.
-		User::link_user_identity( $this->test_user, 'generic-oauth2', '12345' );
+		User::link_user_identity( $this->test_user, 'oauth2-generic', '12345' );
 
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
@@ -213,7 +213,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'GENERIC_OAUTH2' ),
+												$this->expectedField( 'provider', 'OAUTH2_GENERIC' ),
 											],
 											0
 										),
@@ -242,7 +242,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
 		$this->assertArrayHasKey( 'errors', $actual );
-		$this->assertEquals( 'The state returned from the generic-oauth2 response does not match.', $actual['errors'][0]['message'] );
+		$this->assertEquals( 'The state returned from the oauth2-generic response does not match.', $actual['errors'][0]['message'] );
 
 		// test with good state.
 		$variables['input']['oauthResponse']['state'] = 'mock_state';
@@ -274,7 +274,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'GENERIC_OAUTH2' ),
+												$this->expectedField( 'provider', 'OAUTH2_GENERIC' ),
 											],
 											0
 										),
@@ -293,7 +293,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		$config                                      = $this->provider_config;
 		$config['loginOptions']['linkExistingUsers'] = true;
 
-		$this->tester->set_client_config( 'generic-oauth2', $config );
+		$this->tester->set_client_config( 'oauth2-generic', $config );
 
 		$query = $this->login_query();
 
@@ -302,7 +302,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 				'oauthResponse' => [
 					'code' => 'mock_authorization_code',
 				],
-				'provider'      => 'GENERIC_OAUTH2',
+				'provider'      => 'OAUTH2_GENERIC',
 			],
 		];
 
@@ -346,7 +346,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'GENERIC_OAUTH2' ),
+												$this->expectedField( 'provider', 'OAUTH2_GENERIC' ),
 											],
 											0
 										),
@@ -379,7 +379,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 			]
 		);
 
-		$this->tester->set_client_config( 'generic-oauth2', $config );
+		$this->tester->set_client_config( 'oauth2-generic', $config );
 
 		$query = $this->login_query();
 
@@ -388,7 +388,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 				'oauthResponse' => [
 					'code' => 'mock_authorization_code',
 				],
-				'provider'      => 'GENERIC_OAUTH2',
+				'provider'      => 'OAUTH2_GENERIC',
 			],
 		];
 
@@ -430,7 +430,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'GENERIC_OAUTH2' ),
+												$this->expectedField( 'provider', 'OAUTH2_GENERIC' ),
 											],
 											0
 										),
@@ -460,7 +460,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 				'oauthResponse' => [
 					'code' => 'mock_authorization_code',
 				],
-				'provider'      => 'GENERIC_OAUTH2',
+				'provider'      => 'OAUTH2_GENERIC',
 				'userId'        => $this->test_user,
 			],
 		];
@@ -493,12 +493,12 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 				'oauthResponse' => [
 					'code' => 'mock_authorization_code',
 				],
-				'provider'      => 'GENERIC_OAUTH2',
+				'provider'      => 'OAUTH2_GENERIC',
 				'userId'        => $this->test_user,
 			],
 		];
 
-		User::link_user_identity( $this->test_user, 'generic-oauth2', '12345' );
+		User::link_user_identity( $this->test_user, 'oauth2-generic', '12345' );
 
 		wp_set_current_user( $this->test_user );
 
@@ -516,14 +516,14 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 				'oauthResponse' => [
 					'code' => 'mock_authorization_code',
 				],
-				'provider'      => 'GENERIC_OAUTH2',
+				'provider'      => 'OAUTH2_GENERIC',
 				'userId'        => $this->test_user,
 			],
 		];
 
 		$new_user = $this->factory()->user->create();
 
-		User::link_user_identity( $new_user, 'generic-oauth2', '12345' );
+		User::link_user_identity( $new_user, 'oauth2-generic', '12345' );
 
 		wp_set_current_user( $this->test_user );
 
@@ -541,7 +541,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 				'oauthResponse' => [
 					'code' => 'mock_authorization_code',
 				],
-				'provider'      => 'GENERIC_OAUTH2',
+				'provider'      => 'OAUTH2_GENERIC',
 				'userId'        => $this->test_user,
 			],
 		];
@@ -569,7 +569,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 											'linkedIdentities',
 											[
 												$this->expectedField( 'id', '12345' ),
-												$this->expectedField( 'provider', 'GENERIC_OAUTH2' ),
+												$this->expectedField( 'provider', 'OAUTH2_GENERIC' ),
 											],
 											0
 										),
