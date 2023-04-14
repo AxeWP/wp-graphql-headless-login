@@ -59,3 +59,12 @@ query getUserWithAuthenticationData( $id: ID!, $idType: UserNodeIdTypeEnum ) {
 ```
 
 If [WPGraphQL for WooCommerce](https://github.com/wp-graphql/wp-graphql-woocommerce) is installed, the `auth` field will also be available on the `Customer` Object type.
+
+## Reference
+
+- [Actions](/docs/reference/actions.md)
+- [Filters](/docs/reference/filters.md)
+- [Javascript API](/docs/reference/javascript-api.md)
+- [Mutations](/docs/reference/mutations.md)
+- [Queries ( 🎯 You are here )](/docs/reference/queries.md)
+- [Settings](/docs/reference/settings.md)

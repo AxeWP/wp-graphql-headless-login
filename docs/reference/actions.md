@@ -1,5 +1,21 @@
 # Action Hooks
 
+## Table of Contents
+* [Activation / Deactivation](#activation--deactivation)
+	* [`graphql_login_activate`](#graphql_login_activate)
+	* [`graphql_login_deactivate`](#graphql_login_deactivate)
+	* [`graphql_login_delete_data`](#graphql_login_delete_data)
+* [Lifecycle](#lifecycle)
+	* [`graphql_login_init`](#graphql_login_init)
+	* [`graphql_login_before_register_types`](#graphql_login_before_register_types)
+	* [`graphql_login_after_register_types`](#graphql_login_after_register_types)
+	* [`graphql_login_after_provider_init`](#graphql_login_after_provider_init)
+	* [`graphql_login_client_init`](#graphql_login_client_init)
+	* [`graphql_login_before_authenticate`](#graphql_login_before_authenticate)
+	* [`graphql_login_validate_client`](#graphql_login_validate_client)
+	* [`graphql_login_after_sucessful_login`](#graphql_login_after_sucessful_login)
+	* [`graphql_login_link_user_identity`](#graphql_login_link_user_identity)
+
 ## Activation / Deactivation
 ### `graphql_login_activate`
 
@@ -140,3 +156,11 @@ do_action( 'graphql_login_link_user_identity', $linked_user, $user_data, $client
 * **`$linked_user`** _(WP_User|false)_ : The user object. False if the identity could not be linked.
 * **`$user_data`** _(array)_ : The user data from the Authentication provider.
 * **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The instance of the Client.
+
+## Reference
+- [Actions ( 🎯 You are here )](/docs/reference/actions.md)
+- [Filters](/docs/reference/filters.md)
+- [Javascript API](/docs/reference/javascript-api.md)
+- [Mutations](/docs/reference/mutations.md)
+- [Queries](/docs/reference/queries.md)
+- [Settings](/docs/reference/settings.md)

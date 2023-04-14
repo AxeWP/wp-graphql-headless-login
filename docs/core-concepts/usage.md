@@ -28,9 +28,8 @@ As follows is a _brief_ overview of how the plugin works.
 6. You can get a new `authToken` and `refreshToken` for the user in the response of an authenticated query by querying for the `RootQuery.viewer.auth.authToken`, or exchanged a stored `refreshToken` for a new `authToken` using the `refreshToken` mutation.
 7. You can log the user out of all other devices by using `refreshUserSecret` or `revokeUserSecret` mutations.
 
-## API Documentation
-* [GraphQL Queries](queries.md)
-* [GraphQL Mutations](mutations.md)
-* [Javascript API](javascript-api.md)
-* [WordPress Actions](actions.md)
-* [WordPress Filters](filters.md)
+## Next Steps
+- [Common Terminology](terminology.md)
+- [Settings](../reference/settings.md)
+- [Queries](../reference/queries.md)
+- [Mutations](../reference/mutations.md)

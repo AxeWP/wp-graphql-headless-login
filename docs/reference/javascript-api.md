@@ -63,3 +63,12 @@ wpGraphQLLogin.hooks.applyFilters(
   CustomFragment,
 )
 ```
+
+## Reference
+
+- [Actions](/docs/reference/actions.md)
+- [Filters](/docs/reference/filters.md)
+- [Javascript API ( 🎯 You are here )](/docs/reference/javascript-api.md)
+- [Mutations](/docs/reference/mutations.md)
+- [Queries](/docs/reference/queries.md)
+- [Settings](/docs/reference/settings.md)

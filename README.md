@@ -61,8 +61,8 @@ Priority support and custom development are available to [our Sponsors](https://
 
 The following functionality is currently supported:
 
-* Authenticate with a [WordPress username and password](./docs/mutations.md#login-with-a-traditional-username-password).
-* Pass and validate [OAuth 2.0 / OpenID Connect provider response](./docs/mutations.md#login-with-an-oauth2openid-authorization-response) from the frontend. <br />
+- Authenticate with a [WordPress username and password](./docs/reference/mutations.md#login-with-a-traditional-username-password).
+- Pass and validate [OAuth 2.0 / OpenID Connect provider response](./docs/reference/mutations.md#login-with-an-oauth2openid-authorization-response) from the frontend. <br />
 Supported providers (out of the box):
   * Facebook
   * GitHub
@@ -71,32 +71,43 @@ Supported providers (out of the box):
   * LinkedIn
   * OAuth2 - Generic: Any other OAuth 2.0 provider.
   * SAML authentication and more coming soon!
-* Use a [special Site Token](./docs/mutations.md#login-with-a-site-token-and-user-identity
+- Use a [special Site Token](./docs/reference/mutations.md#login-with-a-site-token-and-user-identity
 ) to support WordPress authentication with any  externalaly authenticated user identity (e.g. [Auth.js](https://authjs.dev/)).
-* Add your own Authentication Provider by [extending the `ProviderConfig` class](./docs/provider-config.md).
-* Authenticate with JWT tokens using a [HTTP Authorization header](./docs/example-next-api-routes.md).
-* [Set CORS headers](./docs/settings.md) to allow or restrict access to the GraphQL endpoint.
-* Generate short-term `authToken`s and long term `refreshToken`s for seamless reauthentication in your headless app.
-* [Link a user account](./docs/mutations.md#manually-link-the-wordpress-user-to-a-providers-resource-owner) to an authentication provider's resource owner, to allow users to authenticate with multiple providers.
-* Query the [enabled `loginClient` authorization urls](./docs/queries.md#querying-login-clients), to use in your frontend's login buttons.
-* Extensive WordPress [actions](./docs/actions.md) and [filters](./docs/filters.md) for customization of the plugin's behavior.
-* Log out all sessions for a user by [revoking](./docs/mutations.md#revoke-the-user-secret) or [refreshing](./docs/mutations.md#refresh-the-user-secret) their tokens, in GraphQL or the WordPress backend Profile Page.
-* Manage WooCommerce Sessions with [WPGraphQL for WooCommerce](https://github.com/wp-graphql/wp-graphql-woocommerce).
+- Add your own Authentication Provider by [extending the `ProviderConfig` class](./docs/recipes/provider-config.md).
+- Authenticate with JWT tokens using a [HTTP Authorization header](./docs/recipes/example-next-api-routes.md).
+- [Set CORS headers](./docs/reference/settings.md) to allow or restrict access to the GraphQL endpoint.
+- Generate short-term `authToken`s and long term `refreshToken`s for seamless reauthentication in your headless app.
+- [Link a user account](./docs/reference/mutations.md#manually-link-the-wordpress-user-to-a-providers-resource-owner) to an authentication provider's resource owner, to allow users to authenticate with multiple providers.
+- Query the [enabled `loginClient` authorization urls](./docs/reference/queries.md#querying-login-clients), to use in your frontend's login buttons.
+- Extensive WordPress [actions](./docs/actions.md) and [filters](./docs/reference/filters.md) for customization of the plugin's behavior.
+- Log out all sessions for a user by [revoking](./docs/reference/mutations.md#revoke-the-user-secret) or [refreshing](./docs/reference/mutations.md#refresh-the-user-secret) their tokens, in GraphQL or the WordPress backend Profile Page.
+- Manage WooCommerce Sessions with [WPGraphQL for WooCommerce](https://github.com/wp-graphql/wp-graphql-woocommerce).
 - and more!
 
-## Usage
+## Documentation
 
-- [Overview / How To Use](./docs/usage.md)
-- [Settings Guide](./docs/settings.md)
-- [Example authentication flow - Next.js](./docs/example-next-api-routes.md)
-- [Adding custom `ProviderConfig`s](./docs/provider-config.md)
+### Getting Started ( 🎯 You are here! )
 
-### API Documentation
-* [GraphQL Queries](./docs/queries.md)
-* [GraphQL Mutations](./docs/mutations.md)
-* [Javascript API](./docs/javascript-api.md)
-* [WordPress Actions](./docs/actions.md)
-* [WordPress Filters](./docs/filters.md)
+- [System Requirements](#system-requirements)
+- [Installation](#quick-install)
+
+### Core Concepts
+
+- [Usage](./docs/core-concepts/usage.md)
+- [Terminology](./docs/core-concepts/terminology.md)
+
+### Reference
+
+- [Admin Settings](./docs/reference/settings.md)
+- [GraphQL Queries](./docs/reference/queries.md)
+- [GraphQL Mutations](./docs/reference/mutations.md)
+- [Javascript API](./docs/reference/javascript-api.md)
+- [WordPress Actions](./docs/reference/actions.md)
+- [WordPress Filters](./docs/reference/filters.md)
+
+### Recipes:
+- [Example authentication flow - Next.js](./docs/recipes/example-next-api-routes.md)
+- [Adding custom `ProviderConfig`s](./docs/recipes/provider-config.md)
 
 ## Testing
 

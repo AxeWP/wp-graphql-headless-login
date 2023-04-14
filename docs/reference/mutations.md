@@ -170,3 +170,12 @@ mutation refreshUserSecret(
 }
 
 ```
+
+## Reference
+
+- [Actions](/docs/reference/actions.md)
+- [Filters](/docs/reference/filters.md)
+- [Javascript API](/docs/reference/javascript-api.md)
+- [Mutations ( 🎯 You are here )](/docs/reference/mutations.md)
+- [Queries](/docs/reference/queries.md)
+- [Settings](/docs/reference/settings.md)
