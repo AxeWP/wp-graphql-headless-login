@@ -639,14 +639,14 @@ export default async function fetchAPI(query, { variables } = {}) {
 
   const headers = { 'Content-Type': 'application/json' };
 
-  if( currentUser?.authToken ) {
+  if ( currentUser?.authToken ) {
     headers.Authorization = `Bearer ${currentUser.authToken}`;
   }
 
   /**
    * This is the code we're adding. It adds the session token if it exists.
    */
-  if( currentUser?.wooSessionToken ) {
+  if ( currentUser?.wooSessionToken ) {
     headers['woocommerce-session']: `Session ${currentUser.wooSessionToken}`;
   }
 
