@@ -4,7 +4,27 @@ This example shows how to use Headless Login for WPGraphQL to authenticate users
 
 We'll be using [`iron-session`](https://github.com/vvo/iron-session) to store the user's session data, but you can use any session management library you like.
 
-## 1. Configure the Headless Login providers.
+## Table of Contents
+
+- [1. Configure the Headless Login providers](#1-configure-the-headless-login-providers)
+- [2. Create the Login component](#2-create-the-login-component)
+  - [2A. OAuth2 authentication](#2a-oauth2-authentication)
+  - [2B. Password authentication](#2b-password-authentication)
+- [3. Create the Authentication API route](#3-create-the-authentication-api-route)
+  - [3A. The `authenticate` function](#3a-the-authenticate-function)
+  - [3B. The `sessionHandler` function](#3b-the-sessionhandler-function)
+  - [3C. The provider-specific API routes](#3c-the-provider-specific-api-routes)
+- [4. Create the Logout API route](#4-create-the-logout-api-route)
+- [5. Create the Token Validation API route](#5-create-the-token-validation-api-route)
+- [6. Use the `authToken` in your GraphQL requests](#6-use-the-authtoken-in-your-graphql-requests)
+- [7. (Optional) Create custom hooks](#7-optional-create-some-custom-hooks)
+  - [`useAuth`](#useauth)
+  - [`useLogout`](#uselogout)
+  - [`usePasswordLogin`](#usepasswordlogin)
+- [8. (Optional) Add Support for WPGraphQL for WooCommerce](#8-optional-add-support-for-wpgraphql-for-woocommerce)
+
+
+## 1. Configure the Headless Login providers
 
 For more information on configuring the providers, see the [Settings Guide](..reference/settings.md).
 
@@ -12,7 +32,7 @@ For more information on configuring the providers, see the [Settings Guide](..re
 
 You can create a different API route for each Login Client, or use a [catch-all route](https://nextjs.org/docs/api-routes/dynamic-api-routes#catch-all-api-routes) to handle all of them (what we'll be doing in this example).
 
-## 2. Create the Login component.
+## 2. Create the Login component
 
 In your headless app, you will need to create a Login component that sends the user to authenticate with the provider. 
 
@@ -101,13 +121,13 @@ return (
 );
 ```
 
-## 3. Create the Authentication API route.
+## 3. Create the Authentication API route
 
 The Authentication API route is where we process the authentication data and send it to WPGraphQL. We're using an API route to prevent the authentication data from being exposed to the client, but you can also use middleware or a serverless function to do this.
 
 To keep our code DRY, we'll breaking our code into a few reusable parts, that we'll then use in the provider-specific API routes.
 
-### 3A. The `authenticate` function.
+### 3A. The `authenticate` function
 
 This function takes the authentication data from the provider, and sends it to WPGraphQL. It returns the user's authentication data, which we'll use to create the user's session.
 
@@ -138,7 +158,7 @@ async function authenticate( variables ) {
 }
 ```
 
-### 3B. The `sessionHandler` function.
+### 3B. The `sessionHandler` function
 
 This function takes the authentication data from the provider, and creates the user's session.
 
@@ -182,7 +202,7 @@ export const ironOptions = {
 };
 ```
 
-### 3C. The provider-specific API routes.
+### 3C. The provider-specific API routes
 
 Now that we have our `authenticate` and `sessionHandler` functions, we can create our provider-specific API routes.
 
@@ -232,7 +252,7 @@ async function handler(req, res) {
 export default withIronSessionApiRoute(sessionHandler, ironOptions);
 ```
 
-## 4. Create the Logout API route.
+## 4. Create the Logout API route
 
 On your Logout API route (e.g. `/pages/api/logout.js` ), you can clear the session data.
 
@@ -252,7 +272,7 @@ async function logoutHandler(req, res) {
 export default withIronSessionApiRoute(logoutHandler, ironOptions);
 ```
 
-## 5. Create the Token Validation API route.
+## 5. Create the Token Validation API route
 
 Headless Login uses JWT tokens for authentication. These tokens have an expiration time, and you will need to refresh them before they expire.
 
@@ -357,7 +377,7 @@ async function userHandler(req, res) {
 export default withIronSessionApiRoute(userHandler, ironOptions);
 ```
 
-## 6. Use the authToken in your GraphQL requests.
+## 6. Use the `authToken` in your GraphQL requests
 
 Now that we have a way to authenticate with WPGraphQL, we can use the `authToken` in our GraphQL requests.
 
@@ -406,7 +426,7 @@ export default async function fetchAPI(query, { variables } = {}) {
 
 The same approach can be taken with Apollo Client, or any other GraphQL client.
 
-## 7. (Optional) Create some custom hooks.
+## 7. (Optional) Create some custom hooks
 
 We can create custom hooks to make it easier to handle authentication flows.
 
