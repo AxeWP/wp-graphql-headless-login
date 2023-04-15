@@ -1,5 +1,41 @@
 # Filter Hooks
 
+## Table of Contents
+
+* [GraphQL Type Registration](#graphql-type-registration)
+	* [`graphql_login_registered_{type}_classes`](#graphql_login_registered_type_classes)
+* [Authentication](#authentication)
+	* [`graphql_login_auth_get_user`](#graphql_login_auth_get_user)
+	* [`graphql_login_payload`](#graphql_login_payload)
+* [Secrets & Tokens](#secrets--tokens)
+	* [`graphql_login_jwt_secret_key`](#graphql_login_jwt_secret_key)
+	* [`graphql_login_refresh_token_validity`](#graphql_login_refresh_token_validity)
+	* [`graphql_login_refresh_token_expiration_timestamp`](#graphql_login_refresh_token_expiration_timestamp)
+	* [`graphql_login_user_secret`](#graphql_login_user_secret)
+	* [`graphql_login_iss_allowed_domains`](#graphql_login_iss_allowed_domains)
+	* [`graphql_login_edit_jwt_capability`](#graphql_login_edit_jwt_capability)
+	* [`graphql_login_token_not_before_timestamp`](#graphql_login_token_not_before_timestamp)
+	* [`graphql_login_token_expiration_timestamp`](#graphql_login_token_expiration_timestamp)
+	* [`graphql_login_token_before_sign`](#graphql_login_token_before_sign)
+	* [`graphql_login_signed_token`](#graphql_login_signed_token)
+	* [`graphql_login_token_validity`](#graphql_login_token_validity)
+* [Authorization Headers](#authorization-headers)
+	* [`graphql_login_get_auth_header`](#graphql_login_get_auth_header)
+	* [`graphql_login_refresh_header`](#graphql_login_refresh_header)
+* [Client & Provider Configuration](#client--provider-configuration)
+	* [`graphql_login_registered_provider_configs`](#graphql_login_registered_provider_configs)
+	* [`graphql_login_provider_config_instances`](#graphql_login_client_settings)
+	* [`graphql_login_client_options_fields](#graphql_login_client_options_fields)
+	* [`graphql_login_client_options_schema`](#graphql_login_client_options_schema)
+	* [`graphql_login_setting`](#graphql_login_setting)
+	* [`graphql_login_access_control_settings`](#graphql_login_access_control_settings)
+	* [`graphql_login_provider_settings`](#graphql_login_provider_settings)
+	* [`graphql_login_login_options_fields`](#graphql_login_login_options_fields)
+	* [`graphql_login_login_options_schema`](#graphql_login_login_options_schema)
+	* [`graphql_login_client_options`](#graphql_login_client_options)
+	* [`graphql_login_user_types](#graphql_login_user_types)
+	* [`graphql_login_mapped_user_data`](#graphql_login_mapped_user_data)
+
 ## GraphQL Type Registration
 
 ### `graphql_login_registered_{type}_classes`
@@ -383,3 +419,12 @@ apply_filters( 'graphql_login_mapped_user_data', $user_data, $client );
 
 * **`$user_data`** _(array)_ : The WP User data.
 * **`$client`** _(\WPGraphQL\Login\Auth\ProviderConfig/ProviderConfig)_ : The ProviderConfig instance.
+
+## Reference
+
+- [Actions](/docs/reference/actions.md)
+- [Filters ( 🎯 You are here )](/docs/reference/filters.md)
+- [Javascript API](/docs/reference/javascript-api.md)
+- [Mutations](/docs/reference/mutations.md)
+- [Queries](/docs/reference/queries.md)
+- [Settings](/docs/reference/settings.md)

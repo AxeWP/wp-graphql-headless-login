@@ -21,3 +21,10 @@ Headless Login for WPGraphQL uses the [League OAuth2 Client](https://oauth2-clie
   - **Access-Control-Allow-Credentials**: The Access-Control-Allow-Credentials header determines whether a request is allowed to send cookies with the request. It can be set to `true` to allow cookies, or `false` to disallow cookies.
   - **Access-Control-Allow-Headers**: The Access-Control-Allow-Headers header determines which headers are allowed to be sent with the request.
   - **Access-Control-Expose-Headers**: The Access-Control-Expose-Headers header determines which headers are allowed to be exposed to the client. Be careful not to expose sensitive information, such as custom authentication tokens.
+
+## Next Steps
+
+- [Usage](usage.md)
+- [Settings](../reference/settings.md)
+- [Queries](../reference/queries.md)
+- [Mutations](../reference/mutations.md)
