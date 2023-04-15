@@ -74,7 +74,7 @@ Supported providers (out of the box):
 - Use a [special Site Token](./docs/reference/mutations.md#login-with-a-site-token-and-user-identity
 ) to support WordPress authentication with any  externalaly authenticated user identity (e.g. [Auth.js](https://authjs.dev/)).
 - Add your own Authentication Provider by [extending the `ProviderConfig` class](./docs/recipes/provider-config.md).
-- Authenticate with JWT tokens using a [HTTP Authorization header](./docs/recipes/example-next-api-routes.md).
+- Authenticate with JWT tokens using a [HTTP Authorization header]().
 - [Set CORS headers](./docs/reference/settings.md) to allow or restrict access to the GraphQL endpoint.
 - Generate short-term `authToken`s and long term `refreshToken`s for seamless reauthentication in your headless app.
 - [Link a user account](./docs/reference/mutations.md#manually-link-the-wordpress-user-to-a-providers-resource-owner) to an authentication provider's resource owner, to allow users to authenticate with multiple providers.
@@ -106,7 +106,7 @@ Supported providers (out of the box):
 - [WordPress Filters](./docs/reference/filters.md)
 
 ### Recipes:
-- [Example authentication flow - Next.js](./docs/recipes/example-next-api-routes.md)
+- [Server-side OAuth2 Authentication flow with Next.js](./docs/recipes/example-next-api-routes.md)
 - [Adding custom `ProviderConfig`s](./docs/recipes/provider-config.md)
 
 ## Testing
