@@ -1,7 +1,6 @@
-# Usage
+# How It Works
 ⚠️ _Headless authentication can be confusing. Before you continue, please review some [common terminology](terminology.md)._
 
-## How it works
 As follows is a _brief_ overview of how the plugin works.
 
 1. Visit your WordPress site's admin Dashboard > GraphQL > Settings > Headless Login, and enable/configure the authentication providers you want to use and any other plugin settings.

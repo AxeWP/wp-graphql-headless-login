@@ -84,7 +84,7 @@ Supported providers (out of the box):
 - Manage WooCommerce Sessions with [WPGraphQL for WooCommerce](https://github.com/wp-graphql/wp-graphql-woocommerce).
 - and more!
 
-## Documentation
+## Usage
 
 ### Getting Started ( 🎯 You are here! )
 
@@ -93,8 +93,8 @@ Supported providers (out of the box):
 
 ### Core Concepts
 
-- [Usage](./docs/core-concepts/usage.md)
 - [Terminology](./docs/core-concepts/terminology.md)
+- [How it works](./docs/core-concepts/how-it-works.md)
 
 ### Reference
 
