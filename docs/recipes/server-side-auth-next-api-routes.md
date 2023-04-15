@@ -1,6 +1,6 @@
 # Recipe: Server-side Authentication flow with Next.JS API Routes.
 
-This example shows how to use Headless Login for WPGraphQL to authenticate users on the server-side using one the built-in authentication providers. We'll show examples for OAuth2 and Password authentication.
+This recipe explains how to use to authenticate users server-side, using one of Headless Login for WPGraphQL's built-in authentication providers. We'll show examples for OAuth2 and Password authentication.
 
 We'll be using [`iron-session`](https://github.com/vvo/iron-session) to store the user's session data, but you can use any session management library you like.
 
