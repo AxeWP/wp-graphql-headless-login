@@ -41,7 +41,7 @@ const data = await fetchAPI(
 
 // Let's filter out the Password provider, since we'll be using a different method for that.
 data.loginClients = data.loginClients.filter(
-	(client) => client.name !== 'Password'
+  (client) => client.name !== 'Password'
 );
 
 return (
@@ -74,30 +74,30 @@ const [password, setPassword] = useState('');
 const { login, loading, error } = usePasswordLogin(); // We'll define this hook later.
 
 return (
-	<form
-		onSubmit={ (e) => {
-			e.preventDefault();
+  <form
+    onSubmit={ (e) => {
+      e.preventDefault();
 
-			// We'll define this later, but for now its enough to know it takes the username, password, and redirect URL and processes it via our Authentication API route.
-			login(username, password, '/dashboard');
-		} }
-	>
-		<input
-			type="text"
-			name="username"
-			placeholder="Username"
-			value={username}
-			onChange={setUsername}
-		/>
-		<input
-			type="password"
-			name="password"
-			placeholder="Password"
-			value={password}
-			onChange={setPassword}
-		/>
-		<button type="submit">Login</button>
-	</form>
+      // We'll define this later, but for now its enough to know it takes the username, password, and redirect URL and processes it via our Authentication API route.
+      login(username, password, '/dashboard');
+    } }
+  >
+    <input
+      type="text"
+      name="username"
+      placeholder="Username"
+      value={username}
+      onChange={setUsername}
+    />
+    <input
+      type="password"
+      name="password"
+      placeholder="Password"
+      value={password}
+      onChange={setPassword}
+    />
+    <button type="submit">Login</button>
+  </form>
 );
 ```
 
@@ -114,27 +114,27 @@ This function takes the authentication data from the provider, and sends it to W
 ```js
 // lib/auth/authenticate.js
 
-async function authenticate( input ) {
-	const query = `
-		mutation Login($input: LoginInput!) {
-			login(input: $input) {
-				authToken
-				refreshToken
-				user {
-					...UserFields
-				}
-			}
-		}
-	`;
+async function authenticate( variables ) {
+  const query = `
+    mutation Login($input: LoginInput!) {
+      login(input: $input) {
+        authToken
+        refreshToken
+        user {
+          ...UserFields
+        }
+      }
+    }
+  `;
 
-	// replace fetchAPI with whatever you're using to connect to WPGraphQL.
-	const res = await fetchAPI( query, { input } );
+  // replace fetchAPI with whatever you're using to connect to WPGraphQL.
+  const res = await fetchAPI( query, { variables } );
 
-	if( res?.errors ) {
-		throw new Error( res.errors[0].message );
-	}
+  if( res?.errors ) {
+    throw new Error( res.errors[0].message );
+  }
 
-	return res?.data?.login;
+  return res?.data?.login;
 }
 ```
 
@@ -146,28 +146,28 @@ This function takes the authentication data from the provider, and creates the u
 // lib/auth/sessionHandler.js
 
 export async function sessionHandler( req, res input ) {
-	try {
-		const data = await authenticate( input);
+  try {
+    const data = await authenticate( input);
 
-		// We're using iron session to store the session data in a secure httpOnly cookie, but you can use any session management library you like.
-		const session = await getIronSession( req, res, ironOptions );
-		const user = {
-			...data,
-			isLoggedIn: true,
-		};
+    // We're using iron session to store the session data in a secure httpOnly cookie, but you can use any session management library you like.
+    const session = await getIronSession( req, res, ironOptions );
+    const user = {
+      ...data,
+      isLoggedIn: true,
+    };
 
-		session.user = user;
-		await session.save();
+    session.user = user;
+    await session.save();
 
-		// Let's send them somewhere.
-		return res.redirect(307, '/dashboard');
-	} catch (e) {
+    // Let's send them somewhere.
+    return res.redirect(307, '/dashboard');
+  } catch (e) {
     // Do something with the error
     res.status(401).json({ error: e.message });
 
     // Or redirect them to the login page.
     return res.redirect(401, '/login');
-	}
+  }
 }
 
 // And some more iron-session stuff:
@@ -193,39 +193,39 @@ For this example, we're going to use a Catch-All route  (e.g. `/pages/api/auth/[
 
 // A simple helper function to get the provider-specific input for the mutation.
 async function getProviderInput( provider, req ) {
-	switch ( provider ) {
-		case 'password':
-			return {
-				provider,
-				credentials: {
-					username: req.body.username,
-					password: req.body.password,
-				},
-			};
-		default:
-			const providerEnum = provider.toUpperCase(); // IRL use the generated enum type, e.g. LoginProviderEnum[provider].
+  switch ( provider ) {
+    case 'password':
+      return {
+        provider,
+        credentials: {
+          username: req.body.username,
+          password: req.body.password,
+        },
+      };
+    default:
+      const providerEnum = provider.toUpperCase(); // IRL use the generated enum type, e.g. LoginProviderEnum[provider].
 
-			const input = {
-				provider: providerEnum,
-				oauthResponse: {
-					code: req.query.code,
-				},
-			}
+      const input = {
+        provider: providerEnum,
+        oauthResponse: {
+          code: req.query.code,
+        },
+      }
 
-			if ( req.query.state ) { // Not all providers send a state.
-				input.oauthResponse.state = req.query.state;
-			}
+      if ( req.query.state ) { // Not all providers send a state.
+        input.oauthResponse.state = req.query.state;
+      }
 
-			return input;
-	}
+      return input;
+  }
 }
 
 async function handler(req, res) {
-	const { provider } = req.query;
+  const { provider } = req.query;
 
-	const input = await getProviderInput(provider, req);
+  const input = await getProviderInput(provider, req);
 
-	return sessionHandler(req, res, input);
+  return sessionHandler(req, res, input);
 }
 
 // This is an iron-session thing.
@@ -280,13 +280,8 @@ function isTokenExpired( token ) : boolean {
 
 // Our refresh token call to WPGraphQL.
 async function refreshAuthToken( refreshToken ) {
-  const variables = {
-    refreshToken,
-  };
-
-  // replace fetchAPI with whatever you're using to connect to WPGraphQL.
-  const res = await fetchAPI(
-    `mutation RefreshToken( $refreshToken: String! ) {
+  const query = `
+    mutation RefreshToken( $refreshToken: String! ) {
       refreshToken(
         input: {refreshToken: $refreshToken }
       ) {
@@ -294,11 +289,15 @@ async function refreshAuthToken( refreshToken ) {
         refreshToken
         success
       }
-    }`,
-    {
-      variables,
-    },
-  );
+    }
+  `;
+
+  const variables = {
+    refreshToken,
+  };
+
+  // replace fetchAPI with whatever you're using to connect to WPGraphQL.
+  const res = await fetchAPI(query, { variables });
 
   if ( res?.errors ) {
     throw new Error( res?.errors[ 0 ].message );
@@ -514,60 +513,143 @@ This is the hook we used in our [example Login Form component above](#2B-Passwor
 // hooks/usePasswordLogin.js
 
 export function usePasswordLogin() {
-	const [ error, setError ] = useState( undefined );
-	const [ loading, setLoading ] = useState( false );
-	// We use a local copy, since we don't want to update the session data until the login is successful.
-	const [ data, setData ] = useState( undefined );
-	const [ loginRedirectUrl, setLoginRedirectUrl ] = useState( undefined );
+  const [ error, setError ] = useState( undefined );
+  const [ loading, setLoading ] = useState( false );
+  // We use a local copy, since we don't want to update the session data until the login is successful.
+  const [ data, setData ] = useState( undefined );
+  const [ loginRedirectUrl, setLoginRedirectUrl ] = useState( undefined );
 
-	/**
-	 * A function to log the user in.
-	 * @param {string} username The username to log in with.
-	 * @param {string} password The password to log in with.
-	 * @param {string} redirectUrl An optional URL to redirect to after login.
-	 */
-	async function login( username, password, redirectUrl ) {
-		// Clear old states.
-		setError( undefined );
-		setData( undefined );
-		setLoading( true );
-		setLoginRedirectUrl( redirectUrl );
+  /**
+   * A function to log the user in.
+   * @param {string} username The username to log in with.
+   * @param {string} password The password to log in with.
+   * @param {string} redirectUrl An optional URL to redirect to after login.
+   */
+  async function login( username, password, redirectUrl ) {
+    // Clear old states.
+    setError( undefined );
+    setData( undefined );
+    setLoading( true );
+    setLoginRedirectUrl( redirectUrl );
 
-		const loginUrl = `/api/auth/password`; // This is the route we created in step 3.
+    const loginUrl = `/api/auth/password`; // This is the route we created in step 3.
 
-		const res = await fetch( loginUrl, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify( {
-				username,
-				password,
-			} ),
-		} );
+    const res = await fetch( loginUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify( {
+        username,
+        password,
+      } ),
+    } );
 
-		const data = await res.json();
+    const data = await res.json();
 
-		if ( ! res.ok ) {
-			setError( data );
-			setLoading( false );
-			return;
-		}
+    if ( ! res.ok ) {
+      setError( data );
+      setLoading( false );
+      return;
+    }
 
-		setData( data );
+    setData( data );
 
-		// If we get here, the login was successful, so let's redirect.
-		if ( loginRedirectURL ) {
-			window.location.assign( loginRedirectUrl );
-		}
-		setLoading( false );
-	}
+    // If we get here, the login was successful, so let's redirect.
+    if ( loginRedirectURL ) {
+      window.location.assign( loginRedirectUrl );
+    }
+    setLoading( false );
+  }
 
-	return {
-		error,
-		login,
-		loading,
-		data,
-	};
+  return {
+    error,
+    login,
+    loading,
+    data,
+  };
+}
+```
+
+## 8. (Optional) Add Support for WPGraphQL for WooCommerce
+
+If you're using [WPGraphQL for WooCommerce](https://github.com/wp-graphql/wp-graphql-woocommerce), you can add support for the customer's [Session Token](https://woographql.com/guides/understanding-the-user-session) to handle things like guest checkout.
+
+To do this, we just need to alter our GraphQL queries a bit, and then set the session token header in our fetch requests.
+
+First lets update the query we use to authenticate to include the session token and the customer. This is the query we created in [Step 3](#3A-The-authenticate-function).
+
+```js
+// lib/auth/authenticate.js
+
+async function authenticate( variables ) {
+  const query = `
+    mutation Login($input: LoginInput!) {
+      login(input: $input) {
+        authToken
+        refreshToken
+        wooSessionToken # The added field.
+        user {
+          ...UserFields
+        }
+        customer { # We can also grab the customer data.
+          ...CustomerFields
+        }
+      }
+    }
+  `;
+
+  ... // The rest of the function.
+}
+```
+
+We will also want to update the query created in [Step 5](#5-Create-the-Token-Validation-API-route) to include the session token.
+ to refresh the token to include the Woocommerce session token.
+
+```js
+// pages/api/auth/user.js
+
+... // Other methods
+// Our refresh token call to WPGraphQL.
+async function refreshAuthToken( refreshToken ) {
+  const query = `
+    mutation RefreshToken( $refreshToken: String! ) {
+      refreshToken(
+        input: {refreshToken: $refreshToken }
+      ) {
+        authToken
+        refreshToken
+        wooSessionToken # The added field.
+        success
+      }
+    }
+  `;
+
+  ... // The rest of the function.
+}
+```
+
+Now that we've updated our GraphQL queries, we can update our [fetch requests](#6-use-the-authtoken-in-your-graphql-requests) to include the session token header.
+
+```jsx
+// utils/fetchAPI.js
+
+export default async function fetchAPI(query, { variables } = {}) {
+  const currentUser = await fetch('/api/auth/user').then(res => res.json());
+
+  const headers = { 'Content-Type': 'application/json' };
+
+  if( currentUser?.authToken ) {
+    headers.Authorization = `Bearer ${currentUser.authToken}`;
+  }
+
+  /**
+   * This is the code we're adding. It adds the session token if it exists.
+   */
+  if( currentUser?.wooSessionToken ) {
+    headers['woocommerce-session']: `Session ${currentUser.wooSessionToken}`;
+  }
+
+  try ...// The rest of the function.
 }
 ```
