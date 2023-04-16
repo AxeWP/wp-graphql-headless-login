@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
+## [Unreleased]
+
+- fix: Use `TokenManager::refresh_user_secret()` when revoking secrets on the backend to prevent `UserError`s for invalid secrets.
+- docs: Rewrite and restructure existing docs.
+
 ## [0.0.8] - 2023-04-05
 
 This release fixes a bug where OAuth2 (Generic) provider settings were not being accessed correctly (#56).

@@ -336,7 +336,7 @@ class UserProfile {
 		}
 
 		// Revoke the user secret key.
-		$status = TokenManager::revoke_user_secret( $user_id, false );
+		$status = TokenManager::refresh_user_secret( $user_id, true );
 		if ( is_wp_error( $status ) ) {
 			wp_send_json_error(
 				sprintf(
