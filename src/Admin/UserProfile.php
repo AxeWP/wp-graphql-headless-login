@@ -8,6 +8,7 @@
 
 namespace WPGraphQL\Login\Admin;
 
+use WPGraphQL\Login\Auth\ProviderConfig\Password;
 use WPGraphQL\Login\Auth\ProviderRegistry;
 use WPGraphQL\Login\Auth\TokenManager;
 use WPGraphQL\Login\Auth\User;
@@ -80,6 +81,11 @@ class UserProfile {
 			<tbody>
 				<?php
 				foreach ( array_keys( $providers ) as $provider ) {
+					// Exclude the password provider.
+					if ( Password::get_slug() === $provider ) {
+						continue;
+					}
+
 					self::provider_identity_field( $user->ID, $provider, $providers[ $provider ]::get_name(), $identities[ $provider ] ?? '' );
 				}
 				?>

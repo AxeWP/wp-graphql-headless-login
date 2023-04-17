@@ -7,6 +7,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 ## [Unreleased]
 
 - fix: Use `TokenManager::refresh_user_secret()` when revoking secrets on the backend to prevent `UserError`s for invalid secrets.
+- fix: Hide `Password` provider from the list of User Profile identities.
 - docs: Rewrite and restructure existing docs.
 
 ## [0.0.8] - 2023-04-05
