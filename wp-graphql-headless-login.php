@@ -113,6 +113,10 @@ if ( ! function_exists( 'graphql_login_plugin_conflicts' ) ) {
 			$conflicts[] = 'WPGraphQL JWT Authentication';
 		}
 
+		if ( class_exists( 'WP_GraphQL_CORS' ) && is_plugin_active( 'wp-graphql-cors/wp-graphql-cors.php' ) ) {
+			$conflicts[] = 'WPGraphQL CORS';
+		}
+
 		return $conflicts;
 	}
 }
