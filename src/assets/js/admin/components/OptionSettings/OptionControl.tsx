@@ -9,12 +9,15 @@ import {
 	ToggleControl,
 	SelectControl,
 	BaseControl,
+	useBaseControlProps,
 } from '@wordpress/components';
 
 const FormTokenControl = (props) => {
+	const { baseControlProps, controlProps } = useBaseControlProps(props);
+
 	return (
-		<BaseControl help={props?.help || null}>
-			<FormTokenField {...props} />
+		<BaseControl {...baseControlProps}>
+			<FormTokenField {...controlProps} />
 		</BaseControl>
 	);
 };

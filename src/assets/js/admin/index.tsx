@@ -20,8 +20,8 @@ export declare const wpGraphQLLogin: {
 	};
 	nonce: string;
 	secret: {
-		hasKey: bool;
-		isConstant: bool;
+		hasKey: boolean;
+		isConstant: boolean;
 	};
 };
 
