@@ -10,6 +10,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - fix: Hide `Password` provider from the list of User Profile identities.
 - fix: only start a PHP session if one is not already started.
 - fix: use `parent::register()` in `ClientOptions` and `LoginOptions` interface classes.
+- dev: show conflict `admin_notice` if WPGraphQL CORS is enabled.
 - chore: Update Composer dependencies.
 - ci: Check compatibility with WordPress 6.2
 - ci: Only test extensions against latest WP/PHP version.
