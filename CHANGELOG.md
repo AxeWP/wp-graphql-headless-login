@@ -4,17 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
-## [Unreleased]
+## [0.0.9] - 2023-04-22
 
 - fix: Use `TokenManager::refresh_user_secret()` when revoking secrets on the backend to prevent `UserError`s for invalid secrets.
 - fix: Hide `Password` provider from the list of User Profile identities.
-- fix: only start a PHP session if one is not already started.
-- fix: use `parent::register()` in `ClientOptions` and `LoginOptions` interface classes.
-- dev: show conflict `admin_notice` if WPGraphQL CORS is enabled.
+- fix: Only start a PHP session if one is not already started.
+- fix: Use `parent::register()` in `ClientOptions` and `LoginOptions` interface classes.
+- dev: Show conflict `admin_notice` if WPGraphQL CORS is enabled.
 - chore: Update Composer dependencies.
 - ci: Check compatibility with WordPress 6.2
 - ci: Only test extensions against latest WP/PHP version.
-- tests: fix `HttpClient` mocks for headers and body.
+- tests: Fix `HttpClient` mocks for headers and body.
 - docs: Rewrite and restructure existing docs.
 - docs: Update Next API Routes example.
 - docs: Add example for using NextAuth.js
