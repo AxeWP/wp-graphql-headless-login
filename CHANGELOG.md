@@ -11,6 +11,8 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - fix: only start a PHP session if one is not already started.
 - fix: use `parent::register()` in `ClientOptions` and `LoginOptions` interface classes.
 - chore: Update Composer dependencies.
+- ci: Check compatibility with WordPress 6.2
+- ci: Only test extensions against latest WP/PHP version.
 - tests: fix `HttpClient` mocks for headers and body.
 - docs: Rewrite and restructure existing docs.
 
