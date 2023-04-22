@@ -20,6 +20,7 @@ namespace WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Client as HttpClient;
 use WPGraphQL\Login\Vendor\GuzzleHttp\ClientInterface as HttpClientInterface;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Exception\BadResponseException;
+use InvalidArgumentException;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Grant\AbstractGrant;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Grant\GrantFactory;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\OptionProvider\OptionProviderInterface;
@@ -47,7 +48,7 @@ abstract class AbstractProvider
     use QueryBuilderTrait;
 
     /**
-     * @var string Key used in a token response to identify the resource owner.
+     * @var string|null Key used in a token response to identify the resource owner.
      */
     const ACCESS_TOKEN_RESOURCE_OWNER_ID = null;
 
@@ -60,6 +61,19 @@ abstract class AbstractProvider
      * @var string HTTP method used to fetch access tokens.
      */
     const METHOD_POST = 'POST';
+
+    /**
+     * @var string PKCE method used to fetch authorization token.
+     * The PKCE code challenge will be hashed with sha256 (recommended).
+     */
+    const PKCE_METHOD_S256 = 'S256';
+
+    /**
+     * @var string PKCE method used to fetch authorization token.
+     * The PKCE code challenge will be sent as plain text, this is NOT recommended.
+     * Only use `plain` if no other option is possible.
+     */
+    const PKCE_METHOD_PLAIN = 'plain';
 
     /**
      * @var string
@@ -80,6 +94,11 @@ abstract class AbstractProvider
      * @var string
      */
     protected $state;
+
+    /**
+     * @var string|null
+     */
+    protected $pkceCode = null;
 
     /**
      * @var GrantFactory
@@ -268,6 +287,32 @@ abstract class AbstractProvider
     }
 
     /**
+     * Set the value of the pkceCode parameter.
+     *
+     * When using PKCE this should be set before requesting an access token.
+     *
+     * @param string $pkceCode
+     * @return self
+     */
+    public function setPkceCode($pkceCode)
+    {
+        $this->pkceCode = $pkceCode;
+        return $this;
+    }
+
+    /**
+     * Returns the current value of the pkceCode parameter.
+     *
+     * This can be accessed by the redirect handler during authorization.
+     *
+     * @return string|null
+     */
+    public function getPkceCode()
+    {
+        return $this->pkceCode;
+    }
+
+    /**
      * Returns the base URL for authorizing a client.
      *
      * Eg. https://oauth.service.com/authorize
@@ -309,6 +354,27 @@ abstract class AbstractProvider
     }
 
     /**
+     * Returns a new random string to use as PKCE code_verifier and
+     * hashed as code_challenge parameters in an authorization flow.
+     * Must be between 43 and 128 characters long.
+     *
+     * @param  int $length Length of the random string to be generated.
+     * @return string
+     */
+    protected function getRandomPkceCode($length = 64)
+    {
+        return substr(
+            strtr(
+                base64_encode(random_bytes($length)),
+                '+/',
+                '-_'
+            ),
+            0,
+            $length
+        );
+    }
+
+    /**
      * Returns the default scopes used by this provider.
      *
      * This should only be the scopes that are required to request the details
@@ -327,6 +393,14 @@ abstract class AbstractProvider
     protected function getScopeSeparator()
     {
         return ',';
+    }
+
+    /**
+     * @return string|null
+     */
+    protected function getPkceMethod()
+    {
+        return null;
     }
 
     /**
@@ -357,6 +431,26 @@ abstract class AbstractProvider
 
         // Store the state as it may need to be accessed later on.
         $this->state = $options['state'];
+
+        $pkceMethod = $this->getPkceMethod();
+        if (!empty($pkceMethod)) {
+            $this->pkceCode = $this->getRandomPkceCode();
+            if ($pkceMethod === static::PKCE_METHOD_S256) {
+                $options['code_challenge'] = trim(
+                    strtr(
+                        base64_encode(hash('sha256', $this->pkceCode, true)),
+                        '+/',
+                        '-_'
+                    ),
+                    '='
+                );
+            } elseif ($pkceMethod === static::PKCE_METHOD_PLAIN) {
+                $options['code_challenge'] = $this->pkceCode;
+            } else {
+                throw new InvalidArgumentException('Unknown PKCE method "' . $pkceMethod . '".');
+            }
+            $options['code_challenge_method'] = $pkceMethod;
+        }
 
         // Business code layer might set a different redirect_uri parameter
         // depending on the context, leave it as-is
@@ -520,8 +614,8 @@ abstract class AbstractProvider
     /**
      * Requests an access token using a specified grant and option set.
      *
-     * @param  mixed $grant
-     * @param  array $options
+     * @param  mixed                $grant
+     * @param  array<string, mixed> $options
      * @throws IdentityProviderException
      * @return AccessTokenInterface
      */
@@ -534,6 +628,10 @@ abstract class AbstractProvider
             'client_secret' => $this->clientSecret,
             'redirect_uri'  => $this->redirectUri,
         ];
+
+        if (!empty($this->pkceCode)) {
+            $params['code_verifier'] = $this->pkceCode;
+        }
 
         $params   = $grant->prepareRequestParameters($params, $options);
         $request  = $this->getAccessTokenRequest($params);
@@ -567,7 +665,7 @@ abstract class AbstractProvider
      *
      * @param  string $method
      * @param  string $url
-     * @param  AccessTokenInterface|string $token
+     * @param  AccessTokenInterface|string|null $token
      * @param  array $options Any of "headers", "body", and "protocolVersion".
      * @return RequestInterface
      */

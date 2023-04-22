@@ -19,20 +19,12 @@ class LoginOptions extends InterfaceType {
 	use TypeResolverTrait;
 
 	/**
-	 * The WPGraphQL TypeRegistry instance.
-	 *
-	 * @var ?\WPGraphQL\Registry\TypeRegistry
-	 */
-	protected static $type_registry = null;
-
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public static function register( $type_registry = null ) : void {
-		self::$type_registry = WPGraphQL::get_type_registry();
+		$registry = $type_registry instanceof \WPGraphQL\Registry\TypeRegistry ? $type_registry : WPGraphQL::get_type_registry();
 
-		register_graphql_interface_type( static::get_type_name(), static::get_type_config() );
+		parent::register( $registry );
 	}
 
 	/**

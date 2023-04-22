@@ -132,7 +132,7 @@ abstract class OAuth2Config extends ProviderConfig {
 	 */
 	public function authenticate_and_get_user_data( array $input ) {
 		// Start the session.
-		if ( ! session_id() ) {
+		if ( ! session_id() && ! headers_sent() ) {
 			session_start();
 		}
 

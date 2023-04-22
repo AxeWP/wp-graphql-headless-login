@@ -8,6 +8,10 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 - fix: Use `TokenManager::refresh_user_secret()` when revoking secrets on the backend to prevent `UserError`s for invalid secrets.
 - fix: Hide `Password` provider from the list of User Profile identities.
+- fix: only start a PHP session if one is not already started.
+- fix: use `parent::register()` in `ClientOptions` and `LoginOptions` interface classes.
+- chore: Update Composer dependencies.
+- tests: fix `HttpClient` mocks for headers and body.
 - docs: Rewrite and restructure existing docs.
 
 ## [0.0.8] - 2023-04-05
