@@ -23,9 +23,11 @@ class FooGithubProviderConfig extends OAuth2Github {
 		// Mock and set the http client on the provider.
 		$response = m::mock( 'Psr\Http\Message\ResponseInterface' );
 		$response->shouldReceive( 'getBody' )
-			->andReturn( '{"access_token":"mock_access_token", "scope":"repo,gist", "token_type":"bearer"}' );
-		$response->shouldReceive( 'getHeader' )
-			->andReturn( [ 'content-type' => 'json' ] );
+			->andReturn(
+				\GuzzleHttp\Psr7\Utils::streamFor( '{"access_token":"mock_access_token", "scope":"repo,gist", "token_type":"bearer"}' )
+			);
+			$response->shouldReceive( 'getHeader' )
+			->andReturn( [ 'Content-Type' => 'application/json' ] );
 		$response->shouldReceive( 'getStatusCode' )
 			->andReturn( 200 );
 
