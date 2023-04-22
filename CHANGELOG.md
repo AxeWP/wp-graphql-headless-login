@@ -13,6 +13,8 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - chore: Update Composer dependencies.
 - tests: fix `HttpClient` mocks for headers and body.
 - docs: Rewrite and restructure existing docs.
+- docs: Update Next API Routes example.
+- docs: Add example for using NextAuth.js
 
 ## [0.0.8] - 2023-04-05
 
@@ -82,7 +84,6 @@ This release adds support for setting a WP Authentication Cookie on successful l
 - fix: Check for truthy values when using `graphql_get_login_setting()`.
 - fix: Return `401` for user ID of `0` when validating authentication tokens.
 - fix: use `WPGraphQL::debug()` instead of constant when adding headers.
-
 
 ### Changed
 - dev: Trigger `wp_login` action on successful login.

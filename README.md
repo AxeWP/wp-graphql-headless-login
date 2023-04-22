@@ -107,6 +107,7 @@ Supported providers (out of the box):
 
 ### Recipes:
 - [Server-side Authentication flow with Next.js](./docs/recipes/server-side-auth-next-api-routes.md)
+- [Client-side Authentication flow with NextAuth.js](./docs/recipes/client-side-auth-nextauth.md)
 - [Adding custom `ProviderConfig`s](./docs/recipes/provider-config.md)
 
 ## Testing

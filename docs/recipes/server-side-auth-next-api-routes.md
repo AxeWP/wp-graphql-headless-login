@@ -1,27 +1,29 @@
 # Recipe: Server-side Authentication flow with Next.JS API Routes.
 
-This recipe explains how to use to authenticate users server-side, using one of Headless Login for WPGraphQL's built-in authentication providers. We'll show examples for OAuth2 and Password authentication.
+This recipe explains how to authenticate users server-side, using one of Headless Login for WPGraphQL's built-in authentication providers. We'll show examples for OAuth2 and Password authentication.
 
 We'll be using [`iron-session`](https://github.com/vvo/iron-session) to store the user's session data, but you can use any session management library you like.
 
 ## Table of Contents
 
-- [1. Configure the Headless Login providers](#1-configure-the-headless-login-providers)
-- [2. Create the Login component](#2-create-the-login-component)
-  - [2A. OAuth2 authentication](#2a-oauth2-authentication)
-  - [2B. Password authentication](#2b-password-authentication)
-- [3. Create the Authentication API route](#3-create-the-authentication-api-route)
-  - [3A. The `authenticate` function](#3a-the-authenticate-function)
-  - [3B. The `sessionHandler` function](#3b-the-sessionhandler-function)
-  - [3C. The provider-specific API routes](#3c-the-provider-specific-api-routes)
-- [4. Create the Logout API route](#4-create-the-logout-api-route)
-- [5. Create the Token Validation API route](#5-create-the-token-validation-api-route)
-- [6. Use the `authToken` in your GraphQL requests](#6-use-the-authtoken-in-your-graphql-requests)
-- [7. (Optional) Create custom hooks](#7-optional-create-some-custom-hooks)
-  - [`useAuth`](#useauth)
-  - [`useLogout`](#uselogout)
-  - [`usePasswordLogin`](#usepasswordlogin)
-- [8. (Optional) Add Support for WPGraphQL for WooCommerce](#8-optional-add-support-for-wpgraphql-for-woocommerce)
+- [Recipe: Server-side Authentication flow with Next.JS API Routes.](#recipe-server-side-authentication-flow-with-nextjs-api-routes)
+	- [Table of Contents](#table-of-contents)
+	- [1. Configure the Headless Login providers](#1-configure-the-headless-login-providers)
+	- [2. Create the Login component](#2-create-the-login-component)
+		- [2A. OAuth2 authentication](#2a-oauth2-authentication)
+		- [2B. Password authentication.](#2b-password-authentication)
+	- [3. Create the Authentication API route](#3-create-the-authentication-api-route)
+		- [3A. The `authenticate` function](#3a-the-authenticate-function)
+		- [3B. The `sessionHandler` function](#3b-the-sessionhandler-function)
+		- [3C. The provider-specific API routes](#3c-the-provider-specific-api-routes)
+	- [4. Create the Logout API route](#4-create-the-logout-api-route)
+	- [5. Create the Token Validation API route](#5-create-the-token-validation-api-route)
+	- [6. Use the `authToken` in your GraphQL requests](#6-use-the-authtoken-in-your-graphql-requests)
+	- [7. (Optional) Create some custom hooks](#7-optional-create-some-custom-hooks)
+		- [`useAuth`](#useauth)
+		- [`useLogout`](#uselogout)
+		- [`usePasswordLogin`](#usepasswordlogin)
+	- [8. (Optional) Add Support for WPGraphQL for WooCommerce](#8-optional-add-support-for-wpgraphql-for-woocommerce)
 
 
 ## 1. Configure the Headless Login providers
@@ -597,7 +599,7 @@ If you're using [WPGraphQL for WooCommerce](https://github.com/wp-graphql/wp-gra
 
 To do this, we just need to alter our GraphQL queries a bit, and then set the session token header in our fetch requests.
 
-First lets update the query we use to authenticate to include the session token and the customer. This is the query we created in [Step 3](#3A-The-authenticate-function).
+First let's update the mutation we use to authenticate to include the session token and the customer. This is the mutation we created in [Step 3](#3A-The-authenticate-function).
 
 ```js
 // lib/auth/authenticate.js
