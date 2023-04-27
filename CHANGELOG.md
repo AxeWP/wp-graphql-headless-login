@@ -6,6 +6,14 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
+## [0.1.0] - 2023-4-27
+
+This release bumps the version of the plugin to v0.1.0 to reflect the fact that it is now in a stable state. This means future releases will be SemVer compliant.
+
+We also squashed a few bugs
+
+### What's changed
+
 - fix: Restore missing props on the `FormTokenControl` component. Thanks @ArkDouglas for reporting!
 - chore: Update NPM deps.
 - docs: Fix WooGraphQL example in Server-Side example. Thanks @kidunot89 for the help!
