@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
+## Unreleased
+
+- fix: Restore missing props on the `FormTokenControl` component. Thanks @ArkDouglas for reporting!
+- chore: Update NPM deps
+
 ## [0.0.9] - 2023-04-22
 
 - fix: Use `TokenManager::refresh_user_secret()` when revoking secrets on the backend to prevent `UserError`s for invalid secrets.

@@ -13,11 +13,11 @@ import {
 } from '@wordpress/components';
 
 const FormTokenControl = (props) => {
-	const { baseControlProps, controlProps } = useBaseControlProps(props);
+	const { controlProps } = useBaseControlProps(props);
 
 	return (
-		<BaseControl {...baseControlProps}>
-			<FormTokenField {...controlProps} />
+		<BaseControl help={props?.help || null}>
+			<FormTokenField {...controlProps} {...props} />
 		</BaseControl>
 	);
 };
