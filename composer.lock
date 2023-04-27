@@ -4392,16 +4392,16 @@
         },
         {
             "name": "php-stubs/woocommerce-stubs",
-            "version": "v7.6.0",
+            "version": "v7.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/woocommerce-stubs.git",
-                "reference": "8d59302c835f0099115be229d924e51d63823c66"
+                "reference": "56ab9401658bc416e978ca2b80b5ce515eb4e4a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/8d59302c835f0099115be229d924e51d63823c66",
-                "reference": "8d59302c835f0099115be229d924e51d63823c66",
+                "url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/56ab9401658bc416e978ca2b80b5ce515eb4e4a1",
+                "reference": "56ab9401658bc416e978ca2b80b5ce515eb4e4a1",
                 "shasum": ""
             },
             "require": {
@@ -4430,9 +4430,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/woocommerce-stubs/issues",
-                "source": "https://github.com/php-stubs/woocommerce-stubs/tree/v7.6.0"
+                "source": "https://github.com/php-stubs/woocommerce-stubs/tree/v7.6.1"
             },
-            "time": "2023-04-13T21:15:01+00:00"
+            "time": "2023-04-26T15:35:51+00:00"
         },
         {
             "name": "php-stubs/wordpress-stubs",
@@ -8643,16 +8643,16 @@
         },
         {
             "name": "szepeviktor/phpstan-wordpress",
-            "version": "v1.2.0",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/szepeviktor/phpstan-wordpress.git",
-                "reference": "534f2666a169ee7389722460178764db976ea1c3"
+                "reference": "5b5cc77ed51fdaf64efe3f00b5aae4b709d2cfa9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/szepeviktor/phpstan-wordpress/zipball/534f2666a169ee7389722460178764db976ea1c3",
-                "reference": "534f2666a169ee7389722460178764db976ea1c3",
+                "url": "https://api.github.com/repos/szepeviktor/phpstan-wordpress/zipball/5b5cc77ed51fdaf64efe3f00b5aae4b709d2cfa9",
+                "reference": "5b5cc77ed51fdaf64efe3f00b5aae4b709d2cfa9",
                 "shasum": ""
             },
             "require": {
@@ -8696,19 +8696,9 @@
             ],
             "support": {
                 "issues": "https://github.com/szepeviktor/phpstan-wordpress/issues",
-                "source": "https://github.com/szepeviktor/phpstan-wordpress/tree/v1.2.0"
+                "source": "https://github.com/szepeviktor/phpstan-wordpress/tree/v1.3.0"
             },
-            "funding": [
-                {
-                    "url": "https://www.paypal.me/szepeviktor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/szepeviktor",
-                    "type": "github"
-                }
-            ],
-            "time": "2023-04-08T07:07:36+00:00"
+            "time": "2023-04-23T06:15:06+00:00"
         },
         {
             "name": "theseer/tokenizer",
@@ -8889,16 +8879,16 @@
         },
         {
             "name": "wp-cli/cache-command",
-            "version": "v2.0.11",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-cli/cache-command.git",
-                "reference": "80aa8e1546ac278be035731d41ec6d28213fb7db"
+                "reference": "e646bd57d3a43614d08239c2a71ff4eda2b862a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-cli/cache-command/zipball/80aa8e1546ac278be035731d41ec6d28213fb7db",
-                "reference": "80aa8e1546ac278be035731d41ec6d28213fb7db",
+                "url": "https://api.github.com/repos/wp-cli/cache-command/zipball/e646bd57d3a43614d08239c2a71ff4eda2b862a0",
+                "reference": "e646bd57d3a43614d08239c2a71ff4eda2b862a0",
                 "shasum": ""
             },
             "require": {
@@ -8920,10 +8910,12 @@
                     "cache decr",
                     "cache delete",
                     "cache flush",
+                    "cache flush-group",
                     "cache get",
                     "cache incr",
                     "cache replace",
                     "cache set",
+                    "cache supports",
                     "cache type",
                     "transient",
                     "transient delete",
@@ -8956,9 +8948,9 @@
             "homepage": "https://github.com/wp-cli/cache-command",
             "support": {
                 "issues": "https://github.com/wp-cli/cache-command/issues",
-                "source": "https://github.com/wp-cli/cache-command/tree/v2.0.11"
+                "source": "https://github.com/wp-cli/cache-command/tree/v2.1.0"
             },
-            "time": "2023-02-27T12:17:33+00:00"
+            "time": "2023-04-26T19:05:07+00:00"
         },
         {
             "name": "wp-cli/checksum-command",
@@ -9094,16 +9086,16 @@
         },
         {
             "name": "wp-cli/core-command",
-            "version": "v2.1.10",
+            "version": "v2.1.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-cli/core-command.git",
-                "reference": "181f41645a8ca869d886a0ce84fbde2008bdab9f"
+                "reference": "e3212a3e18fe4affabc54c76cc6a59f3d8059d24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-cli/core-command/zipball/181f41645a8ca869d886a0ce84fbde2008bdab9f",
-                "reference": "181f41645a8ca869d886a0ce84fbde2008bdab9f",
+                "url": "https://api.github.com/repos/wp-cli/core-command/zipball/e3212a3e18fe4affabc54c76cc6a59f3d8059d24",
+                "reference": "e3212a3e18fe4affabc54c76cc6a59f3d8059d24",
                 "shasum": ""
             },
             "require": {
@@ -9159,9 +9151,9 @@
             "homepage": "https://github.com/wp-cli/core-command",
             "support": {
                 "issues": "https://github.com/wp-cli/core-command/issues",
-                "source": "https://github.com/wp-cli/core-command/tree/v2.1.10"
+                "source": "https://github.com/wp-cli/core-command/tree/v2.1.11"
             },
-            "time": "2023-04-10T13:44:51+00:00"
+            "time": "2023-04-27T09:50:50+00:00"
         },
         {
             "name": "wp-cli/cron-command",
@@ -10955,16 +10947,16 @@
         },
         {
             "name": "wp-cli/wp-config-transformer",
-            "version": "v1.3.2",
+            "version": "v1.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-cli/wp-config-transformer.git",
-                "reference": "474bce451d435993a4c300368557ee7637b58e9b"
+                "reference": "b1a6a013e4a8c74b29ba185368b78a140b3268da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-cli/wp-config-transformer/zipball/474bce451d435993a4c300368557ee7637b58e9b",
-                "reference": "474bce451d435993a4c300368557ee7637b58e9b",
+                "url": "https://api.github.com/repos/wp-cli/wp-config-transformer/zipball/b1a6a013e4a8c74b29ba185368b78a140b3268da",
+                "reference": "b1a6a013e4a8c74b29ba185368b78a140b3268da",
                 "shasum": ""
             },
             "require": {
@@ -10993,9 +10985,9 @@
             "homepage": "https://github.com/wp-cli/wp-config-transformer",
             "support": {
                 "issues": "https://github.com/wp-cli/wp-config-transformer/issues",
-                "source": "https://github.com/wp-cli/wp-config-transformer/tree/v1.3.2"
+                "source": "https://github.com/wp-cli/wp-config-transformer/tree/v1.3.3"
             },
-            "time": "2023-04-12T22:59:37+00:00"
+            "time": "2023-04-26T19:51:31+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
