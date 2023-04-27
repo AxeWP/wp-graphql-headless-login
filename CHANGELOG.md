@@ -7,7 +7,8 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 ## Unreleased
 
 - fix: Restore missing props on the `FormTokenControl` component. Thanks @ArkDouglas for reporting!
-- chore: Update NPM deps
+- chore: Update NPM deps.
+- docs: Fix WooGraphQL example in Server-Side example.
 
 ## [0.0.9] - 2023-04-22
 

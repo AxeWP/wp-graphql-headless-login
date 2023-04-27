@@ -308,8 +308,6 @@ async function refreshAuthToken( refreshToken ) {
         input: {refreshToken: $refreshToken }
       ) {
         authToken
-        refreshToken
-        success
       }
     }
   `;
@@ -594,64 +592,11 @@ export function usePasswordLogin() {
 ```
 
 ## 8. (Optional) Add Support for WPGraphQL for WooCommerce
-
 If you're using [WPGraphQL for WooCommerce](https://github.com/wp-graphql/wp-graphql-woocommerce), you can add support for the customer's [Session Token](https://woographql.com/guides/understanding-the-user-session) to handle things like guest checkout.
 
-To do this, we just need to alter our GraphQL queries a bit, and then set the session token header in our fetch requests.
+When that plugin is enabled, a `woocommerce-session` header is added to every GraphQL response where an existing session header isn't provided. To reuse the same session token for future requests, we can just grab it from the response in our [Session Handler function](#3b-the-sessionhandler-function) and store it in the user's session, and then add it to future requests.
 
-First let's update the mutation we use to authenticate to include the session token and the customer. This is the mutation we created in [Step 3](#3A-The-authenticate-function).
-
-```js
-// lib/auth/authenticate.js
-
-async function authenticate( variables ) {
-  const query = `
-    mutation Login($input: LoginInput!) {
-      login(input: $input) {
-        authToken
-        refreshToken
-        wooSessionToken # The added field.
-        user {
-          ...UserFields
-        }
-        customer { # We can also grab the customer data.
-          ...CustomerFields
-        }
-      }
-    }
-  `;
-
-  ... // The rest of the function.
-}
-```
-
-We will also want to update the query created in [Step 5](#5-Create-the-Token-Validation-API-route) to include the session token.
- to refresh the token to include the Woocommerce session token.
-
-```js
-// pages/api/auth/user.js
-
-... // Other methods
-// Our refresh token call to WPGraphQL.
-async function refreshAuthToken( refreshToken ) {
-  const query = `
-    mutation RefreshToken( $refreshToken: String! ) {
-      refreshToken(
-        input: {refreshToken: $refreshToken }
-      ) {
-        authToken
-        refreshToken
-        wooSessionToken # The added field.
-        success
-      }
-    }
-  `;
-
-  ... // The rest of the function.
-}
-```
-
-Now that we've updated our GraphQL queries, we can update our [fetch requests](#6-use-the-authtoken-in-your-graphql-requests) to include the session token header.
+We can then update our [fetch requests](#6-use-the-authtoken-in-your-graphql-requests) to include the session token header.
 
 ```jsx
 // utils/fetchAPI.js
@@ -675,3 +620,4 @@ export default async function fetchAPI(query, { variables } = {}) {
   try ...// The rest of the function.
 }
 ```
+**Note:** You can also get a _new_ `wooSessionToken` from the `login` mutation payload when the user logs in. However, this will be a _new_ session token, and will not be associated with the user's existing session. This means that any items in the user's cart will not be transferred to the new session. If you want to transfer the user's cart to the new session, it's best to rely solely on the `woocommerce-session` header, and forget the `LoginPayload.wooSessionToken` GraphQL field altogether.
