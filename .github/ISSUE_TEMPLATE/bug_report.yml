@@ -58,7 +58,7 @@ body:
   - type: textarea
     attributes:
       label: Additional enviornmental details
-      description: PHP version, React framework, additional GF plugins, etc.
+      description: PHP version, React framework, additional plugins, etc.
   - type: checkboxes
     attributes:
       label: Please confirm that you have searched existing issues in the repo.
