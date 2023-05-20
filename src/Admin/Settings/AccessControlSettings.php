@@ -154,6 +154,10 @@ class AccessControlSettings {
 	 * @return mixed
 	 */
 	public static function sanitize_callback( $value ) {
+		if ( isset( $value['hasAccessControlAllowCredentials'] ) ) {
+			$value['hasAccessControlAllowCredentials'] = (bool) $value['hasAccessControlAllowCredentials'];
+		}
+		
 		if ( isset( $value['hasSiteAddressInOrigin'] ) ) {
 			$value['hasSiteAddressInOrigin'] = (bool) $value['hasSiteAddressInOrigin'];
 		}
