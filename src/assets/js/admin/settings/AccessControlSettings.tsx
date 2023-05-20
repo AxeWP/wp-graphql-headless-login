@@ -13,6 +13,7 @@ import { useDispatch, dispatch, useSelect } from '@wordpress/data';
 import { OptionList } from '../components';
 
 interface AccessControlSettings {
+	hasAccessControlAllowCredentials: boolean;
 	hasSiteAddressInOrigin: boolean;
 	additionalAuthorizedDomains: string[];
 	shouldBlockUnauthorizedDomains: boolean;
@@ -20,11 +21,11 @@ interface AccessControlSettings {
 }
 
 const accessControlDefaults: AccessControlSettings = {
+	hasAccessControlAllowCredentials: false,
 	hasSiteAddressInOrigin: false,
 	additionalAuthorizedDomains: [],
 	shouldBlockUnauthorizedDomains: false,
 	customHeaders: [],
-};
 
 export type AccessControlEntityProps = [
 	AccessControlSettings,
