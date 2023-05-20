@@ -8,6 +8,11 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - chore: Update Composer and NPM dependencies.
 - ci: Fix typo in `GRAPHQL_LOGIN_JWT_SECRET_KEY` when defining constants for test environment.
 
+## [0.1.1] - 2023-5-20
+
+This release adds the 'Access-Control-Allow-Credentials' setting to be enabled in the settings panel.
+
+
 ## [0.1.0] - 2023-4-27
 
 This release bumps the version of the plugin to v0.1.0 to reflect the fact that it is now in a stable state. This means future releases will be SemVer compliant.
