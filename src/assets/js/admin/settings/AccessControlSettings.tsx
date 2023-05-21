@@ -26,19 +26,16 @@ const accessControlDefaults: AccessControlSettings = {
 	additionalAuthorizedDomains: [],
 	shouldBlockUnauthorizedDomains: false,
 	customHeaders: [],
+};
 
-export type AccessControlEntityProps = [
-	AccessControlSettings,
-	React.Dispatch<React.SetStateAction<AccessControlSettings>>
-];
-
-export function AccessControlSettings({ showAdvancedSettings }) {
+export function AccessControlSettings({
+	showAdvancedSettings,
+}: {
+	showAdvancedSettings: boolean;
+}) {
 	const { saveEditedEntityRecord } = useDispatch(coreStore);
 
-	const [
-		accessControlSettings,
-		setAccessControlSettings,
-	]: AccessControlEntityProps = useEntityProp(
+	const [accessControlSettings, setAccessControlSettings] = useEntityProp(
 		'root',
 		'site',
 		'wpgraphql_login_access_control'
