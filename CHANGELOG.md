@@ -8,10 +8,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - chore: Update Composer and NPM dependencies.
 - ci: Fix typo in `GRAPHQL_LOGIN_JWT_SECRET_KEY` when defining constants for test environment.
 
-## [0.1.1] - 2023-5-20
-
-This release adds the 'Access-Control-Allow-Credentials' setting to be enabled in the settings panel.
-
+- feat: Add support for setting 'Access-Control-Allow-Credentials' header to te Settings Panel. Props @ArkDouglas.
 
 ## [0.1.0] - 2023-4-27
 
