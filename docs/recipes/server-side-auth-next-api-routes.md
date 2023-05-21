@@ -74,7 +74,7 @@ return (
   <>
     {
       oauthClients?.length && oauthClients.map(
-        (client) => (
+        ( client ) => (
           <a key={client.provider} href={client.authorizationUrl}>
             Login with ${client.name}
           </a>
@@ -101,7 +101,7 @@ const { login, isLoading, errors } = usePasswordLogin(); // We'll define this ho
 
 return (
   <form
-    onSubmit={ (e) => {
+    onSubmit={ ( e ) => {
       e.preventDefault();
 
       // We'll define this later, but for now its enough to know it takes the username, password, and redirect URL and processes it via our Authentication API route.
@@ -428,7 +428,7 @@ For example: here's the `fetchAPI` function we've been using until now.
 
 export default async function fetchAPI( query, { variables } = {} ) {
 	// Get the current user from the session data.
-  const currentUser = await fetch('/api/auth/user').then(res => res.json());
+  const currentUser = await fetch('/api/auth/user').then( res => res.json() );
 
   const headers = { 'Content-Type': 'application/json' };
 
@@ -563,7 +563,7 @@ export function useLogout() {
     } else {
       window.location.reload();
     }
-  } catch (e) {
+  } catch ( e ) {
     setError( e );
   } finally {
     setLoading( false );
@@ -652,7 +652,7 @@ We can then update our [fetch requests](#6-use-the-authtoken-in-your-graphql-req
 // utils/fetchAPI.js
 
 export default async function fetchAPI( query, { variables } = {} ) {
-  const currentUser = await fetch('/api/auth/user').then(res => res.json());
+  const currentUser = await fetch('/api/auth/user').then( res => res.json() );
 
   const headers = { 'Content-Type': 'application/json' };
 
