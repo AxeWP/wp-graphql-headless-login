@@ -16,7 +16,7 @@
 		}
 	],
 	"require": {
-		"php": ">=7.4 || ^8.0 || ^8.1",
+		"php": ">=7.4",
 		"axepress/wp-graphql-plugin-boilerplate":
 		"^0.0.8",
 		"league/oauth2-facebook": "^2.2",
@@ -137,7 +137,7 @@
 			"vendor/bin/phpstan analyze --ansi --memory-limit=1G"
 		],
 		"strauss": [
-			"test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.13.0/strauss.phar",
+			"test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.14.0/strauss.phar",
 			"@php bin/strauss.phar",
 			"composer dump-autoload --optimize"
 		],

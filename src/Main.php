@@ -74,6 +74,7 @@ if ( ! class_exists( \WPGraphQL\Login\Main::class ) ) :
 		private function setup() : void {
 			// Setup boilerplate hook prefix.
 			Helper::set_hook_prefix( 'graphql_login' );
+
 			// Setup plugin.
 			CoreSchemaFilters::init();
 			WoocommerceSchemaFilters::init();
