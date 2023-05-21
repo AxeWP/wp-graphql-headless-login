@@ -76,7 +76,7 @@ class Request {
 
 		// Get the Access-Control-Allow-Credentials header.
 		$headers['Access-Control-Allow-Credentials'] = self::get_acac_header();
-		
+
 		// Get Vary header.
 		$headers['Vary'] = self::get_vary_header( $headers, $allowed_origins );
 
@@ -125,7 +125,7 @@ class Request {
 	 * Returns the headers with the Access-Control-Allow-Credentials set.
 	 */
 	protected static function get_acac_header() : string {
-		
+
 		// If Access-Control-Allow-Credentials is enabled, return true.
 		if ( Utils::get_access_control_setting( 'hasAccessControlAllowCredentials' ) ) {
 			return 'true';
@@ -134,7 +134,7 @@ class Request {
 		// Default to false.
 		return false;
 	}
-	
+
 	/**
 	 * Returns the headers with the Access-Control-Allow-Orgin set.
 	 *

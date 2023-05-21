@@ -39,7 +39,7 @@ class AccessControlSettings {
 	public static function get_config() : array {
 		if ( empty( self::$config ) ) {
 			self::$config = [
-				'hasAccessControlAllowCredentials'  => [
+				'hasAccessControlAllowCredentials' => [
 					'advanced'    => false,
 					'default'     => false,
 					'description' => __( 'Whether the should be add `Access-Control-Allow-Credentials` header', 'wp-graphql-headless-login' ),
@@ -49,7 +49,7 @@ class AccessControlSettings {
 					'required'    => false,
 					'type'        => 'boolean',
 				],
-				'hasSiteAddressInOrigin'         => [
+				'hasSiteAddressInOrigin'           => [
 					'advanced'    => false,
 					'default'     => false,
 					'description' => __( 'Whether the Site URL should be added to the `Access-Control-Allow-Origin` header', 'wp-graphql-headless-login' ),
@@ -59,7 +59,7 @@ class AccessControlSettings {
 					'required'    => true,
 					'type'        => 'boolean',
 				],
-				'additionalAuthorizedDomains'    => [
+				'additionalAuthorizedDomains'      => [
 					'advanced'    => true,
 					'default'     => [],
 					'description' => __( 'An array additional authorized domains to include in the Access-Control-Allow-Origin header.', 'wp-graphql-headless-login' ),
@@ -73,7 +73,7 @@ class AccessControlSettings {
 					'required'    => false,
 					'type'        => 'array',
 				],
-				'shouldBlockUnauthorizedDomains' => [
+				'shouldBlockUnauthorizedDomains'   => [
 					'advanced'    => false,
 					'default'     => false,
 					'description' => __( 'Whether to block requests from unauthorized domains', 'wp-graphql-headless-login' ),
@@ -83,7 +83,7 @@ class AccessControlSettings {
 					'required'    => true,
 					'type'        => 'boolean',
 				],
-				'customHeaders'                  => [
+				'customHeaders'                    => [
 					'advanced'    => true,
 					'default'     => [],
 					'description' => __( 'An array of custom headers to add to the response', 'wp-graphql-headless-login' ),
@@ -157,7 +157,7 @@ class AccessControlSettings {
 		if ( isset( $value['hasAccessControlAllowCredentials'] ) ) {
 			$value['hasAccessControlAllowCredentials'] = (bool) $value['hasAccessControlAllowCredentials'];
 		}
-		
+
 		if ( isset( $value['hasSiteAddressInOrigin'] ) ) {
 			$value['hasSiteAddressInOrigin'] = (bool) $value['hasSiteAddressInOrigin'];
 		}
