@@ -20,10 +20,11 @@ Full-size screenshot</a>
    **Note:** You can also set the JWT secret with code using the `WPGRAPHQL_LOGIN_JWT_SECRET_KEY` constant or [the `graphql_login_jwt_secret_key` filter](./filters.md#graphql_login_jwt_secret_key)
    * **Delete plugin data on deactivate**: If enabled, the plugin will delete all of its data when deactivated. This includes all of the plugin's settings including the client configurations. **Note:** The user meta will not be deleted.
 6. **Access Control Settings**: These settings let you configure CORS headers, and tighten the security of GraphQl requests.
+  * **Block Unauthorized Domains**: If enabled, the plugin will block all requests from unauthorized domains. This is useful if you want to prevent unauthorized requests from making GraphQL requests.
+	* **Add Access-Control-Allow-Credentials**: If enabled, the plugin will add the `Access-Control-Allow-Credentials` header to GraphQL requests. This is useful if you want to allow authenticated requests from a different domain than the WordPress site URL. Requires `Block Unauthorized Domains` to be enabled.
   * **Add Site URL to Access-Control-Allow-Origin**: If enabled, the plugin will add the WordPress site URL to the `Access-Control-Allow-Origin` header.
   * **Additional Authorized Domains**: A list of additional domains that will be allowed to make GraphQL requests. This is useful if you want to allow requests from a different domain than the WordPress site URL.
   * **Custom Headers**: A list of custom headers that will be added to Access-Control-Allow-Headers. This is useful if your custom implementation requires additional headers.
-  * **Block Unauthorized Domains**: If enabled, the plugin will block all requests from unauthorized domains. This is useful if you want to prevent unauthorized requests from making GraphQL requests.
 
 ## Reference
 
