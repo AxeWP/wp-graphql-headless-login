@@ -106,7 +106,7 @@ Supported providers (out of the box):
 - [WordPress Filters](./docs/reference/filters.md)
 
 ### Recipes:
-- [Server-side Authentication flow with Next.js](./docs/recipes/server-side-auth-next-api-routes.md)
+- [Server-side Authentication flow with Next.js](./docs/recipes/server-side-auth-next-api-routes.md) ( [demo](https://github.com/AxeWP/axepress-playground/blob/demo/server-side-auth/HowTo.md) ).
 - [Client-side Authentication flow with NextAuth.js](./docs/recipes/client-side-auth-nextauth.md)
 - [Adding custom `ProviderConfig`s](./docs/recipes/provider-config.md)
 
