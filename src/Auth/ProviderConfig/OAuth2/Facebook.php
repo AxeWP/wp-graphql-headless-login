@@ -87,14 +87,14 @@ class Facebook extends OAuth2Config {
 			'graphApiVersion' => [
 				'type'        => 'String',
 				'description' => __( 'The Facebook Graph API version.', 'wp-graphql-headless-login' ),
-				'resolve'     => function( array $settings ) : ?string {
+				'resolve'     => static function( array $settings ) : ?string {
 					return $settings['graphAPIVersion'] ?? null;
 				},
 			],
 			'enableBetaTier'  => [
 				'type'        => 'Boolean',
 				'description' => __( 'Enable the Facebook Beta Tier.', 'wp-graphql-headless-login' ),
-				'resolve'     => fn ( $value ) : bool => $value['enableBetaTier'] ?? false,
+				'resolve'     => static fn ( $value ) : bool => $value['enableBetaTier'] ?? false,
 			],
 			'scope'           => [
 				'type'        => [ 'list_of' => 'String' ],

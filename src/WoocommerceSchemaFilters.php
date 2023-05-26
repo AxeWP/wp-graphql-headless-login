@@ -49,7 +49,7 @@ class WoocommerceSchemaFilters implements Registrable {
 			[
 				'type'        => 'String',
 				'description' => __( 'A JWT token used to identify the current WooCommerce session', 'wp-graphql-headless-login' ),
-				'resolve'     => function ( $user ) {
+				'resolve'     => static function ( $user ) {
 					if ( ! function_exists( 'WC' ) ) {
 						return null;
 					}
@@ -74,7 +74,7 @@ class WoocommerceSchemaFilters implements Registrable {
 				'customer'        => [
 					'type'        => 'Customer',
 					'description' => __( 'The customer object for the logged in user', 'wp-graphql-headless-login' ),
-					'resolve'     => function ( $payload ) {
+					'resolve'     => static function ( $payload ) {
 						$user_id = isset( $payload['user']->ID ) ? $payload['user']->ID : null;
 
 						if ( ! $user_id ) {
@@ -87,7 +87,7 @@ class WoocommerceSchemaFilters implements Registrable {
 				'wooSessionToken' => [
 					'type'        => 'String',
 					'description' => __( 'A JWT token used to identify the current WooCommerce session', 'wp-graphql-headless-login' ),
-					'resolve'     => function () {
+					'resolve'     => static function () {
 						if ( ! function_exists( 'WC' ) ) {
 							return null;
 						}

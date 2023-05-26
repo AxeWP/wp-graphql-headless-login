@@ -67,13 +67,13 @@ class Client extends Model {
 
 			$this->fields = [
 				'authorizationUrl' => fn() => $this->data->get_authorization_url(),
-				'clientOptions'    => fn() => $config['clientOptions'] + [ '__typename' => $slug ],
+				'clientOptions'    => static fn() => $config['clientOptions'] + [ '__typename' => $slug ],
 				'clientId'         => static fn() => $config['clientOptions']['clientId'] ?? null,
 				'isEnabled'        => static fn() => ! empty( $config['isEnabled'] ),
-				'loginOptions'     => fn() => $config['loginOptions'] + [ '__typename' => $slug ],
+				'loginOptions'     => static fn() => $config['loginOptions'] + [ '__typename' => $slug ],
 				'name'             => static fn() => $config['name'] ?? null,
 				'order'            => static fn() => $config['order'] ?? null,
-				'provider'         => fn() => $slug,
+				'provider'         => static fn() => $slug,
 			];
 		}
 	}
