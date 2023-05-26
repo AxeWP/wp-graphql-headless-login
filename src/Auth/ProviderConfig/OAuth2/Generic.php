@@ -94,17 +94,17 @@ class Generic extends OAuth2Config {
 			'authorizationUrl' => [
 				'type'        => 'String',
 				'description' => __( 'The URL to redirect the user to in order to authorize the client.', 'wp-graphql-headless-login' ),
-				'resolve'     => fn( $source ) : string => $source['urlAuthorize'],
+				'resolve'     => static fn( $source ) : string => $source['urlAuthorize'],
 			],
 			'accessTokenUrl'   => [
 				'type'        => 'String',
 				'description' => __( 'The URL to request an access token.', 'wp-graphql-headless-login' ),
-				'resolve'     => fn( $source ) : string => $source['urlAccessToken'],
+				'resolve'     => static fn( $source ) : string => $source['urlAccessToken'],
 			],
 			'resourceOwnerUrl' => [
 				'type'        => 'String',
 				'description' => __( 'The URL to request the resource owner details.', 'wp-graphql-headless-login' ),
-				'resolve'     => fn( $source ) : string => $source['urlResourceOwnerDetails'],
+				'resolve'     => static fn( $source ) : string => $source['urlResourceOwnerDetails'],
 			],
 			'scope'            => [
 				'type'        => [ 'list_of' => 'String' ],

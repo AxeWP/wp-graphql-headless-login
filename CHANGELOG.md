@@ -6,6 +6,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 - feat: Add support for setting `Access-Control-Allow-Credentials` header via the Headless Login settings panel. Props @ArkDouglas.
+- dev: Make anonymous functions static where possible to reduce memory usage.
 - chore: Update Composer and NPM dependencies.
 - docs: Update the Server-side Auth example, and add references to the AxePress Playground demo. 
 - ci: Fix typo in `GRAPHQL_LOGIN_JWT_SECRET_KEY` when defining constants for test environment.
