@@ -6,6 +6,8 @@
  * @see https://github.com/BrianHenryIE/strauss
  */
 
+declare(strict_types=1);
+
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Promise;
 
 /**

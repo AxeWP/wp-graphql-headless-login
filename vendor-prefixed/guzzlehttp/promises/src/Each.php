@@ -6,6 +6,8 @@
  * @see https://github.com/BrianHenryIE/strauss
  */
 
+declare(strict_types=1);
+
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Promise;
 
 final class Each
@@ -26,17 +28,15 @@ final class Each
      * @param mixed    $iterable    Iterator or array to iterate over.
      * @param callable $onFulfilled
      * @param callable $onRejected
-     *
-     * @return PromiseInterface
      */
     public static function of(
         $iterable,
         callable $onFulfilled = null,
         callable $onRejected = null
-    ) {
+    ): PromiseInterface {
         return (new EachPromise($iterable, [
             'fulfilled' => $onFulfilled,
-            'rejected'  => $onRejected
+            'rejected' => $onRejected,
         ]))->promise();
     }
 
@@ -52,19 +52,17 @@ final class Each
      * @param int|callable $concurrency
      * @param callable     $onFulfilled
      * @param callable     $onRejected
-     *
-     * @return PromiseInterface
      */
     public static function ofLimit(
         $iterable,
         $concurrency,
         callable $onFulfilled = null,
         callable $onRejected = null
-    ) {
+    ): PromiseInterface {
         return (new EachPromise($iterable, [
-            'fulfilled'   => $onFulfilled,
-            'rejected'    => $onRejected,
-            'concurrency' => $concurrency
+            'fulfilled' => $onFulfilled,
+            'rejected' => $onRejected,
+            'concurrency' => $concurrency,
         ]))->promise();
     }
 
@@ -76,19 +74,17 @@ final class Each
      * @param mixed        $iterable
      * @param int|callable $concurrency
      * @param callable     $onFulfilled
-     *
-     * @return PromiseInterface
      */
     public static function ofLimitAll(
         $iterable,
         $concurrency,
         callable $onFulfilled = null
-    ) {
-        return each_limit(
+    ): PromiseInterface {
+        return self::ofLimit(
             $iterable,
             $concurrency,
             $onFulfilled,
-            function ($reason, $idx, PromiseInterface $aggregate) {
+            function ($reason, $idx, PromiseInterface $aggregate): void {
                 $aggregate->reject($reason);
             }
         );

@@ -6,6 +6,8 @@
  * @see https://github.com/BrianHenryIE/strauss
  */
 
+declare(strict_types=1);
+
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Promise;
 
 /**
@@ -13,7 +15,7 @@ namespace WPGraphQL\Login\Vendor\GuzzleHttp\Promise;
  */
 class AggregateException extends RejectionException
 {
-    public function __construct($msg, array $reasons)
+    public function __construct(string $msg, array $reasons)
     {
         parent::__construct(
             $reasons,
