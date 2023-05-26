@@ -92,14 +92,14 @@ class HandlerStack
         $stack = [];
 
         if ($this->handler !== null) {
-            $stack[] = "0) Handler: " . $this->debugCallable($this->handler);
+            $stack[] = '0) Handler: '.$this->debugCallable($this->handler);
         }
 
         $result = '';
         foreach (\array_reverse($this->stack) as $tuple) {
-            $depth++;
+            ++$depth;
             $str = "{$depth}) Name: '{$tuple[1]}', ";
-            $str .= "Function: " . $this->debugCallable($tuple[0]);
+            $str .= 'Function: '.$this->debugCallable($tuple[0]);
             $result = "> {$str}\n{$result}";
             $stack[] = $str;
         }
@@ -128,7 +128,7 @@ class HandlerStack
      */
     public function hasHandler(): bool
     {
-        return $this->handler !== null ;
+        return $this->handler !== null;
     }
 
     /**
@@ -272,10 +272,10 @@ class HandlerStack
         if (\is_array($fn)) {
             return \is_string($fn[0])
                 ? "callable({$fn[0]}::{$fn[1]})"
-                : "callable(['" . \get_class($fn[0]) . "', '{$fn[1]}'])";
+                : "callable(['".\get_class($fn[0])."', '{$fn[1]}'])";
         }
 
         /** @var object $fn */
-        return 'callable(' . \spl_object_hash($fn) . ')';
+        return 'callable('.\spl_object_hash($fn).')';
     }
 }

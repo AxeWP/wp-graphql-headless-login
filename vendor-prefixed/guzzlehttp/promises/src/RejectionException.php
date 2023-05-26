@@ -6,6 +6,8 @@
  * @see https://github.com/BrianHenryIE/strauss
  */
 
+declare(strict_types=1);
+
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Promise;
 
 /**
@@ -19,8 +21,8 @@ class RejectionException extends \RuntimeException
     private $reason;
 
     /**
-     * @param mixed  $reason      Rejection reason.
-     * @param string $description Optional description
+     * @param mixed       $reason      Rejection reason.
+     * @param string|null $description Optional description.
      */
     public function __construct($reason, $description = null)
     {
@@ -29,14 +31,13 @@ class RejectionException extends \RuntimeException
         $message = 'The promise was rejected';
 
         if ($description) {
-            $message .= ' with reason: ' . $description;
+            $message .= ' with reason: '.$description;
         } elseif (is_string($reason)
             || (is_object($reason) && method_exists($reason, '__toString'))
         ) {
-            $message .= ' with reason: ' . $this->reason;
+            $message .= ' with reason: '.$this->reason;
         } elseif ($reason instanceof \JsonSerializable) {
-            $message .= ' with reason: '
-                . json_encode($this->reason, JSON_PRETTY_PRINT);
+            $message .= ' with reason: '.json_encode($this->reason, JSON_PRETTY_PRINT);
         }
 
         parent::__construct($message);

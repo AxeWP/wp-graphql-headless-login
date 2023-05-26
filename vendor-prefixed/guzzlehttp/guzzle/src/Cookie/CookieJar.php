@@ -56,10 +56,10 @@ class CookieJar implements CookieJarInterface
         $cookieJar = new self();
         foreach ($cookies as $name => $value) {
             $cookieJar->setCookie(new SetCookie([
-                'Domain'  => $domain,
-                'Name'    => $name,
-                'Value'   => $value,
-                'Discard' => true
+                'Domain' => $domain,
+                'Name' => $name,
+                'Value' => $value,
+                'Discard' => true,
             ]));
         }
 
@@ -103,7 +103,7 @@ class CookieJar implements CookieJarInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function toArray(): array
     {
@@ -113,12 +113,13 @@ class CookieJar implements CookieJarInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function clear(?string $domain = null, ?string $path = null, ?string $name = null): void
     {
         if (!$domain) {
             $this->cookies = [];
+
             return;
         } elseif (!$path) {
             $this->cookies = \array_filter(
@@ -148,7 +149,7 @@ class CookieJar implements CookieJarInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function clearSessionCookies(): void
     {
@@ -161,7 +162,7 @@ class CookieJar implements CookieJarInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function setCookie(SetCookie $cookie): bool
     {
@@ -176,9 +177,10 @@ class CookieJar implements CookieJarInterface
         $result = $cookie->validate();
         if ($result !== true) {
             if ($this->strictMode) {
-                throw new \RuntimeException('Invalid cookie: ' . $result);
+                throw new \RuntimeException('Invalid cookie: '.$result);
             }
             $this->removeCookieIfEmpty($cookie);
+
             return false;
         }
 
@@ -259,7 +261,7 @@ class CookieJar implements CookieJarInterface
     /**
      * Computes cookie path following RFC 6265 section 5.1.4
      *
-     * @link https://tools.ietf.org/html/rfc6265#section-5.1.4
+     * @see https://tools.ietf.org/html/rfc6265#section-5.1.4
      */
     private function getCookiePathFromRequest(RequestInterface $request): string
     {
@@ -295,8 +297,8 @@ class CookieJar implements CookieJarInterface
                 !$cookie->isExpired() &&
                 (!$cookie->getSecure() || $scheme === 'https')
             ) {
-                $values[] = $cookie->getName() . '='
-                    . $cookie->getValue();
+                $values[] = $cookie->getName().'='
+                    .$cookie->getValue();
             }
         }
 
