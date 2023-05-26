@@ -1,6 +1,6 @@
 # Settings Guide
 
-<a href="https://raw.githubusercontent.com/axewp/wp-graphql-headless-login/main/assets/screenshot-1.jpeg" target="_blank"><img src="./../../assets/screenshot-1.jpeg" alt="Screenshot of the Headless Login for WPGraphQL settings page" width="600" height="auto" /><br />
+<a href="./../../assets/screenshot-1.jpg" target="_blank"><img src="./../../assets/screenshot-1.jpg" alt="Screenshot of the Headless Login for WPGraphQL settings page" width="600" height="auto" /><br />
 Full-size screenshot</a>
 </a>
 
