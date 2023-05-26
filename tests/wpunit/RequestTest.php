@@ -16,9 +16,10 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 	public $tester;
 
 	public $default_options = [
-		'shouldBlockUnauthorizedDomains' => false,
-		'hasSiteAddressInOrigin'         => false,
-		'additionalAuthorizedDomains'    => [],
+		'shouldBlockUnauthorizedDomains'   => false,
+		'hasAccessControlAllowCredentials' => false,
+		'hasSiteAddressInOrigin'           => false,
+		'additionalAuthorizedDomains'      => [],
 	];
 
 	/**
@@ -65,8 +66,6 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		// cleanup
 		unset( $_SERVER['HTTP_AUTHORIZATION'] );
 	}
-
-
 
 	public function testAuthenticateOriginOnRequestWithUnauthorizedDomain() {
 		// Test with no origin set doesnt throw an error.
@@ -247,6 +246,9 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertArrayHasKey( 'Access-Control-Allow-Origin', $actual );
 		$this->assertStringContainsString( '*', $actual['Access-Control-Allow-Origin'] );
 
+		// Check Access-Control-Allow-Credentials.
+		$this->assertArrayNotHasKey( 'Access-Control-Allow-Credentials', $actual );
+
 		// Check Access-Control-Expose-Headers.
 		$this->assertArrayHasKey( 'Access-Control-Expose-Headers', $actual );
 		$this->assertStringContainsString( 'X-Custom-Header', $actual['Access-Control-Expose-Headers'] );
@@ -264,6 +266,55 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertArrayHasKey( 'Vary', $actual );
 		$this->assertStringContainsString( 'X-Custom-Header', $actual['Vary'] );
 		$this->assertStringContainsString( 'Origin', $actual['Vary'] );
+
+		// Test with hasAccessControlAllowCredentials.
+		update_option(
+			AccessControlSettings::$settings_prefix . 'access_control',
+			array_merge(
+				$this->default_options,
+				[
+					'hasAccessControlAllowCredentials' => true,
+				]
+			)
+		);
+
+		$this->tester->reset_utils_properties();
+
+		$actual = Request::response_headers_to_send( $default_headers );
+
+		codecept_debug( $actual );
+
+		// Check Access-Control-Allow-Origin.
+		$this->assertArrayHasKey( 'Access-Control-Allow-Origin', $actual );
+		$this->assertStringContainsString( '*', $actual['Access-Control-Allow-Origin'] );
+
+		// Check Access-Control-Allow-Credentials.
+		$this->assertArrayNotHasKey( 'Access-Control-Allow-Credentials', $actual );
+
+		// Test with hasAccessControlAllowCredentials and shouldBlockUnauthorizedDomains.
+		update_option(
+			AccessControlSettings::$settings_prefix . 'access_control',
+			array_merge(
+				$this->default_options,
+				[
+					'shouldBlockUnauthorizedDomains'   => true,
+					'hasAccessControlAllowCredentials' => true,
+				]
+			)
+		);
+
+		$this->tester->reset_utils_properties();
+
+		$actual = Request::response_headers_to_send( $default_headers );
+
+		codecept_debug( $actual );
+
+		// Check Access-Control-Allow-Origin.
+		$this->assertArrayHasKey( 'Access-Control-Allow-Origin', $actual );
+		$this->assertStringContainsString( '', $actual['Access-Control-Allow-Origin'] );
+
+		// Check Access-Control-Allow-Credentials.
+		$this->assertArrayHasKey( 'Access-Control-Allow-Credentials', $actual );
 
 		// Test with custom headers and explicit origin.
 		$default_client_config['isEnabled'] = true;

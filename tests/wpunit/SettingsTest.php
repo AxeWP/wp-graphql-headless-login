@@ -127,13 +127,15 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 	public function testSanitizeAccessControlOptions() {
 		// Test sanitization
 		$original = [
-			'hasSiteAddressInOrigin'         => 'true',
-			'shouldBlockUnauthorizedDomains' => '0',
-			'customHeaders'                  => [ '*', '<strong>X-Wrapped-In-HTML</strong>' ],
+			'hasAccessControlAllowCredentials' => 'true',
+			'hasSiteAddressInOrigin'           => 'true',
+			'shouldBlockUnauthorizedDomains'   => '0',
+			'customHeaders'                    => [ '*', '<strong>X-Wrapped-In-HTML</strong>' ],
 		];
 
 		$actual = AccessControlSettings::sanitize_callback( $original );
 
+		$this->assertTrue( $actual['hasAccessControlAllowCredentials'], 'hasSiteAddressInOrigin should be (bool) true.' );
 		$this->assertTrue( $actual['hasSiteAddressInOrigin'], 'hasSiteAddressInOrigin should be (bool) true.' );
 		$this->assertFalse( $actual['shouldBlockUnauthorizedDomains'], 'shouldBlockUnauthorizedDomains should be (bool) false.' );
 		$this->assertEquals( [ '*', 'X-Wrapped-In-HTML' ], $actual['customHeaders'], 'customHeaders should be sanitized.' );
