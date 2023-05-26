@@ -13,6 +13,7 @@ import { useDispatch, dispatch, useSelect } from '@wordpress/data';
 import { OptionList } from '../components';
 
 interface AccessControlSettings {
+	hasAccessControlAllowCredentials: boolean;
 	hasSiteAddressInOrigin: boolean;
 	additionalAuthorizedDomains: string[];
 	shouldBlockUnauthorizedDomains: boolean;
@@ -20,24 +21,21 @@ interface AccessControlSettings {
 }
 
 const accessControlDefaults: AccessControlSettings = {
+	hasAccessControlAllowCredentials: false,
 	hasSiteAddressInOrigin: false,
 	additionalAuthorizedDomains: [],
 	shouldBlockUnauthorizedDomains: false,
 	customHeaders: [],
 };
 
-export type AccessControlEntityProps = [
-	AccessControlSettings,
-	React.Dispatch<React.SetStateAction<AccessControlSettings>>
-];
-
-export function AccessControlSettings({ showAdvancedSettings }) {
+export function AccessControlSettings({
+	showAdvancedSettings,
+}: {
+	showAdvancedSettings: boolean;
+}) {
 	const { saveEditedEntityRecord } = useDispatch(coreStore);
 
-	const [
-		accessControlSettings,
-		setAccessControlSettings,
-	]: AccessControlEntityProps = useEntityProp(
+	const [accessControlSettings, setAccessControlSettings] = useEntityProp(
 		'root',
 		'site',
 		'wpgraphql_login_access_control'

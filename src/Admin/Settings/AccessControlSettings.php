@@ -39,17 +39,27 @@ class AccessControlSettings {
 	public static function get_config() : array {
 		if ( empty( self::$config ) ) {
 			self::$config = [
-				'hasSiteAddressInOrigin'         => [
+				'hasAccessControlAllowCredentials' => [
+					'advanced'    => false,
+					'default'     => false,
+					'description' => __( 'Whether the `Access-Control-Allow-Credentials` header should be added to the request.', 'wp-graphql-headless-login' ),
+					'help'        => __( 'If enabled, the `Access-Control-Allow-Credentials` header will be included in the request. Requires `Block Unauthorized Domains` to be enabled.', 'wp-graphql-headless-login' ),
+					'label'       => __( 'Add Access-Control-Allow-Credentials', 'wp-graphql-headless-login' ),
+					'order'       => 2,
+					'required'    => false,
+					'type'        => 'boolean',
+				],
+				'hasSiteAddressInOrigin'           => [
 					'advanced'    => false,
 					'default'     => false,
 					'description' => __( 'Whether the Site URL should be added to the `Access-Control-Allow-Origin` header', 'wp-graphql-headless-login' ),
 					'help'        => __( 'If enabled, the Site URL will be added to the `Access-Control-Allow-Origin` header. This is the URL defined in Settings > General > Site URL.', 'wp-graphql-headless-login' ),
 					'label'       => __( 'Add Site URL to Access-Control-Allow-Origin', 'wp-graphql-headless-login' ),
-					'order'       => 1,
+					'order'       => 3,
 					'required'    => true,
 					'type'        => 'boolean',
 				],
-				'additionalAuthorizedDomains'    => [
+				'additionalAuthorizedDomains'      => [
 					'advanced'    => true,
 					'default'     => [],
 					'description' => __( 'An array additional authorized domains to include in the Access-Control-Allow-Origin header.', 'wp-graphql-headless-login' ),
@@ -59,21 +69,21 @@ class AccessControlSettings {
 						'type'   => 'string',
 						'format' => 'uri',
 					],
-					'order'       => 2,
+					'order'       => 4,
 					'required'    => false,
 					'type'        => 'array',
 				],
-				'shouldBlockUnauthorizedDomains' => [
+				'shouldBlockUnauthorizedDomains'   => [
 					'advanced'    => false,
 					'default'     => false,
 					'description' => __( 'Whether to block requests from unauthorized domains', 'wp-graphql-headless-login' ),
 					'help'        => __( 'If enabled, requests from unauthorized domains will throw an error.', 'wp-graphql-headless-login' ),
 					'label'       => __( 'Block unauthorized domains', 'wp-graphql-headless-login' ),
-					'order'       => 3,
+					'order'       => 1,
 					'required'    => true,
 					'type'        => 'boolean',
 				],
-				'customHeaders'                  => [
+				'customHeaders'                    => [
 					'advanced'    => true,
 					'default'     => [],
 					'description' => __( 'An array of custom headers to add to the response', 'wp-graphql-headless-login' ),
@@ -82,7 +92,7 @@ class AccessControlSettings {
 						'type' => 'string',
 					],
 					'label'       => __( 'Custom Headers', 'wp-graphql-headless-login' ),
-					'order'       => 3,
+					'order'       => 5,
 					'required'    => false,
 					'type'        => 'array',
 				],
@@ -144,6 +154,10 @@ class AccessControlSettings {
 	 * @return mixed
 	 */
 	public static function sanitize_callback( $value ) {
+		if ( isset( $value['hasAccessControlAllowCredentials'] ) ) {
+			$value['hasAccessControlAllowCredentials'] = (bool) $value['hasAccessControlAllowCredentials'];
+		}
+
 		if ( isset( $value['hasSiteAddressInOrigin'] ) ) {
 			$value['hasSiteAddressInOrigin'] = (bool) $value['hasSiteAddressInOrigin'];
 		}
