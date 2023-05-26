@@ -5,11 +5,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
 ## Unreleased
+
+
+## [0.1.1] - 2023-5-26
+
+This release adds support for setting the `Access-Control-Allow-Credentials` header via the Headless Login settings panel. We also updated the Server-side Auth example based on the feedback and issues discovered during the [WPE Builders session](https://youtu.be/RnJZ8VRjtBk).
+
+### What's changed
+
 - feat: Add support for setting `Access-Control-Allow-Credentials` header via the Headless Login settings panel. Props @ArkDouglas.
 - dev: Make anonymous functions static where possible to reduce memory usage.
 - chore: Update Composer and NPM dependencies.
+- ci: Fix typo in `GRAPHQL_LOGIN_JWT_SECRET_KEY` when defining constants for test ehttps://youtu.be/RnJZ8VRjtBknvironment.
 - docs: Update the Server-side Auth example, and add references to the AxePress Playground demo. 
-- ci: Fix typo in `GRAPHQL_LOGIN_JWT_SECRET_KEY` when defining constants for test environment.
 
 ## [0.1.0] - 2023-4-27
 
