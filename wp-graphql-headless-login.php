@@ -53,7 +53,7 @@ if ( ! function_exists( 'graphql_login_constants' ) ) {
 	 *
 	 * @since 0.0.1
 	 */
-	function graphql_login_constants() : void {
+	function graphql_login_constants(): void {
 		// Plugin version.
 		if ( ! defined( 'WPGRAPHQL_LOGIN_VERSION' ) ) {
 			define( 'WPGRAPHQL_LOGIN_VERSION', '0.1.1' );
@@ -86,8 +86,10 @@ if ( ! function_exists( 'graphql_login_dependencies_not_ready' ) ) {
 	 * Checks if all the the required plugins are installed and activated.
 	 *
 	 * @since 0.0.1
+	 *
+	 * @return array<string, string>
 	 */
-	function graphql_login_dependencies_not_ready() : array {
+	function graphql_login_dependencies_not_ready(): array {
 		$wpgraphql_version = '1.12.0';
 
 		$deps = [];
@@ -105,8 +107,10 @@ if ( ! function_exists( 'graphql_login_plugin_conflicts' ) ) {
 	 * Checks if any known plugin conflicts are present.
 	 *
 	 * @since 0.0.4
+	 *
+	 * @return string[]
 	 */
-	function graphql_login_plugin_conflicts() : array {
+	function graphql_login_plugin_conflicts(): array {
 		$conflicts = [];
 
 		if ( class_exists( 'WPGraphQL\JWT_Authentication\JWT_Authentication' ) && is_plugin_active( 'wp-graphql-jwt-authentication/wp-graphql-jwt-authentication.php' ) ) {
@@ -127,7 +131,7 @@ if ( ! function_exists( 'graphql_login_init' ) ) {
 	 *
 	 * @since 0.0.1
 	 */
-	function graphql_login_init() : void {
+	function graphql_login_init(): void {
 		graphql_login_constants();
 
 		// Get the dependencies that are not ready.
