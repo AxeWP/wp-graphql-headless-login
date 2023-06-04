@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "efeed78ff7b883753b7fff1b0197605d",
+    "content-hash": "99272ac8fef986373865e30488055d61",
     "packages": [
         {
             "name": "axepress/wp-graphql-plugin-boilerplate",
@@ -1290,16 +1290,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/AxeWP/WPGraphQL-Coding-Standards.git",
-                "reference": "0431522f52499b630cf4ffadc7a64b2a7bca630d"
+                "reference": "bd1ae39aa46dfc15b081c68620afaf01e00dfbb7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AxeWP/WPGraphQL-Coding-Standards/zipball/0431522f52499b630cf4ffadc7a64b2a7bca630d",
-                "reference": "0431522f52499b630cf4ffadc7a64b2a7bca630d",
+                "url": "https://api.github.com/repos/AxeWP/WPGraphQL-Coding-Standards/zipball/bd1ae39aa46dfc15b081c68620afaf01e00dfbb7",
+                "reference": "bd1ae39aa46dfc15b081c68620afaf01e00dfbb7",
                 "shasum": ""
             },
             "require": {
-                "automattic/vipwpcs": "^2.2",
+                "automattic/vipwpcs": "^2.3",
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2 || ^0.7 || ^1.0",
                 "php": ">=7.2",
                 "phpcompatibility/phpcompatibility-wp": "^2.1",
@@ -1343,7 +1343,7 @@
                 "issues": "https://github.com/AxeWP/WPGraphQL-Coding-Standards/issues",
                 "source": "https://github.com/AxeWP/WPGraphQL-Coding-Standards"
             },
-            "time": "2023-06-03T22:49:02+00:00"
+            "time": "2023-06-04T14:01:43+00:00"
         },
         {
             "name": "axepress/wp-graphql-stubs",
