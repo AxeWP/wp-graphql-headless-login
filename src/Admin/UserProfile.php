@@ -71,11 +71,11 @@ class UserProfile {
 				outline: none
 			}
 		</style>
-		<h2 style="padding-top:1rem"><?php echo esc_attr__( 'Headless Login - JWT Secret', 'wp-graphql-headless-login' ); ?></h2>
+		<h2 style="padding-top:1rem"><?php echo esc_html__( 'Headless Login - JWT Secret', 'wp-graphql-headless-login' ); ?></h2>
 
 		<?php self::revoke_user_secret_key_field( $user->ID ); ?>
 
-		<h2><?php echo esc_attr__( 'Linked User Identities', 'wp-graphql-headless-login' ); ?></h2>
+		<h2><?php echo esc_html__( 'Linked User Identities', 'wp-graphql-headless-login' ); ?></h2>
 
 		<table class="form-table">
 			<tbody>

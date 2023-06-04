@@ -505,13 +505,13 @@ class TokenManager {
 		/**
 		 * Looking for the HTTP_AUTHORIZATION header.
 		 */
-		$auth_header = isset( $_SERVER['HTTP_AUTHORIZATION'] ) ? $_SERVER['HTTP_AUTHORIZATION'] : false;
+		$auth_header = isset( $_SERVER['HTTP_AUTHORIZATION'] ) ? sanitize_text_field( $_SERVER['HTTP_AUTHORIZATION'] ) : false;
 
 		if ( false === $auth_header ) {
 			/**
 			 * Looking for the REDIRECT_HTTP_AUTHORIZATION header.
 			 */
-			$auth_header = isset( $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ) ? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] : false;
+			$auth_header = isset( $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ) ? sanitize_text_field( $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ) : false;
 		}
 
 		// Ensure the auth header is a string.

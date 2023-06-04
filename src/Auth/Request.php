@@ -181,7 +181,10 @@ class Request {
 	 * @param string[] $origins The allowed origins.
 	 */
 	protected static function get_origin_for_request( array $origins ) : ?string {
-		$current_origin = get_http_origin() ?: ( $_SERVER['HTTP_REFERER'] ?? null );
+		$current_origin = get_http_origin();
+		if ( empty( $current_origin ) ) {
+			$current_origin = ! empty( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( $_SERVER['HTTP_REFERER'] ) : null;
+		}
 
 		// Unslash the origin.
 		$current_host = ! empty( $current_origin ) ? wp_unslash( $current_origin ) : null;

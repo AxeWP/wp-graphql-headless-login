@@ -132,15 +132,15 @@ abstract class OAuth2Config extends ProviderConfig {
 	 */
 	public function authenticate_and_get_user_data( array $input ) {
 		// Start the session.
-		if ( ! session_id() && ! headers_sent() ) {
-			session_start();
+		if ( ! session_id() && ! headers_sent() ) { // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.session_session_id
+			session_start(); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.session_session_start
 		}
 
 		// Get the args from the input.
 		$args = $this->prepare_mutation_input( $input );
 
 		// Test if the state returned from the provider matches the state stored in the session.
-		if ( isset( $_SESSION['oauth2state'] ) && ! empty( $args['state'] ) && $args['state'] !== $_SESSION['oauth2state'] ) {
+		if ( isset( $_SESSION['oauth2state'] ) && ! empty( $args['state'] ) && $args['state'] !== $_SESSION['oauth2state'] ) { // phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.session___SESSION
 			return new WP_Error(
 				'invalid-oauth2-state',
 				sprintf(

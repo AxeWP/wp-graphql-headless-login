@@ -85,7 +85,7 @@ class SiteToken extends ProviderConfig {
 			);
 		}
 
-		$secret = $_SERVER[ 'HTTP_' . $header_key ] ?? '';
+		$secret = isset( $_SERVER[ 'HTTP_' . $header_key ] ) ? sanitize_text_field( $_SERVER[ 'HTTP_' . $header_key ] ) : '';
 
 		if ( empty( $secret ) ) {
 			return new \WP_Error(

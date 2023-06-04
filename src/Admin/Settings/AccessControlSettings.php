@@ -173,7 +173,7 @@ class AccessControlSettings {
 			}
 
 			$value['additionalAuthorizedDomains'] = is_array( $value['additionalAuthorizedDomains'] ) ? array_map(
-				function( $domain ) {
+				function ( $domain ) {
 					if ( '*' === $domain ) {
 						return $domain;
 					}
@@ -186,7 +186,7 @@ class AccessControlSettings {
 
 		if ( isset( $value['customHeaders'] ) ) {
 			$value['customHeaders'] = array_map(
-				function( $header ) {
+				function ( $header ) {
 					return sanitize_text_field( $header );
 				},
 				$value['customHeaders']
