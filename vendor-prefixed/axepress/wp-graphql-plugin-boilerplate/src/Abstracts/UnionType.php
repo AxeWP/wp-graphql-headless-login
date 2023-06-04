@@ -22,34 +22,23 @@ if ( ! class_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\UnionType'
 		use TypeResolverTrait;
 
 		/**
-		 * The WPGraphQL TypeRegistry instance.
-		 *
-		 * @var ?\WPGraphQL\Registry\TypeRegistry
-		 */
-		protected static $type_registry;
-
-		/**
 		 * Gets the array of possible GraphQL types that can be resolved to.
 		 *
 		 * @return string[]
 		 */
-		abstract public static function get_possible_types() : array;
+		abstract public static function get_possible_types(): array;
 
 		/**
 		 * {@inheritDoc}
-		 *
-		 * @param \WPGraphQL\Registry\TypeRegistry|null $type_registry The WPGraphQL TypeRegistry instance.
 		 */
-		public static function register( $type_registry = null ) : void {
-			self::$type_registry = $type_registry;
-
+		public static function register(): void {
 			register_graphql_union_type( static::get_type_name(), static::get_type_config() );
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
-		protected static function get_type_config() : array {
+		protected static function get_type_config(): array {
 			$config = parent::get_type_config();
 
 			$config['typeNames']   = static::get_possible_types();

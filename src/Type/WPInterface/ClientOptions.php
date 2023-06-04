@@ -7,7 +7,6 @@
 
 namespace WPGraphQL\Login\Type\WPInterface;
 
-use WPGraphQL;
 use WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig;
 use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\InterfaceType;
 use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Traits\TypeResolverTrait;
@@ -17,15 +16,6 @@ use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Traits\TypeResolverTrait;
  */
 class ClientOptions extends InterfaceType {
 	use TypeResolverTrait;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public static function register( $type_registry = null ): void {
-		$registry = $type_registry instanceof \WPGraphQL\Registry\TypeRegistry ? $type_registry : WPGraphQL::get_type_registry();
-
-		parent::register( $registry );
-	}
 
 	/**
 	 * {@inheritDoc}

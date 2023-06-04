@@ -29,14 +29,14 @@ if ( ! class_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Helper\Helper' ) ) {
 		 *
 		 * @param string $hook_prefix the hook prefix to use for this plugin.
 		 */
-		public static function set_hook_prefix( string $hook_prefix ) : void {
+		public static function set_hook_prefix( string $hook_prefix ): void {
 			self::$hook_prefix = $hook_prefix;
 		}
 
 		/**
 		 * Gets the hook prefix for the plugin.
 		 */
-		public static function hook_prefix() : string {
+		public static function hook_prefix(): string {
 			if ( empty( self::$hook_prefix ) ) {
 				_doing_it_wrong( __METHOD__, esc_html__( 'The hook prefix has not been set. Use set_hook_prefix() to set it.', 'wp-graphql-plugin-name' ), '0.0.8' );
 

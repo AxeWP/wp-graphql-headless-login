@@ -26,6 +26,6 @@ if ( ! interface_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\TypeW
 		 *   defaultValue?: string
 		 * }>
 		 */
-		public static function get_fields() : array;
+		public static function get_fields(): array;
 	}
 }

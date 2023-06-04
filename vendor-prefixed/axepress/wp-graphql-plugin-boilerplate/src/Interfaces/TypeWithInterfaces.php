@@ -22,6 +22,6 @@ if ( ! interface_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\TypeW
 		 *
 		 * @return string[]
 		 */
-		public static function get_interfaces() : array;
+		public static function get_interfaces(): array;
 	}
 }
