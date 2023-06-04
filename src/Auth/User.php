@@ -14,7 +14,6 @@ use WP_User_Query;
  * Class - User
  */
 class User {
-
 	/**
 	 * The prefix for the WP_User meta identity key.
 	 *
@@ -89,7 +88,7 @@ class User {
 	 * @param integer $user_id The WP User ID.
 	 * @param string  $provider The Provider slug.
 	 */
-	public static function unlink_user_identity( int $user_id, string $provider ) : bool {
+	public static function unlink_user_identity( int $user_id, string $provider ): bool {
 		return delete_user_meta( $user_id, self::get_identity_meta_key( $provider ) );
 	}
 
@@ -97,7 +96,7 @@ class User {
 	 * If the proper options are enabled, tries first to link an existing WP_User to the ResourceOwner, then creates a new WP_User.
 	 *
 	 * @param \WPGraphQL\Login\Auth\Client $client The Auth client.
-	 * @param array                        $user_data The user data.
+	 * @param array<string, mixed>         $user_data The user data.
 	 *
 	 * @return \WP_User|\WP_Error|false
 	 */
@@ -142,8 +141,10 @@ class User {
 	 * Gets all the identities for a user, keyed to the provider slug.
 	 *
 	 * @param integer $user_id The WP User ID.
+	 *
+	 * @return array<string, string>
 	 */
-	public static function get_user_identities( int $user_id ) : array {
+	public static function get_user_identities( int $user_id ): array {
 		$providers = ProviderRegistry::get_instance()->get_providers();
 
 		$identities = [];
@@ -162,7 +163,7 @@ class User {
 	 *
 	 * @param string $provider The provider slug.
 	 */
-	public static function get_identity_meta_key( string $provider ) : string {
+	public static function get_identity_meta_key( string $provider ): string {
 		return self::$identity_key_prefix . '-' . $provider;
 	}
 
@@ -171,7 +172,7 @@ class User {
 	 *
 	 * @param int $user_id The WP User ID.
 	 */
-	public static function get_auth_token_expiration( int $user_id ) : ?int {
+	public static function get_auth_token_expiration( int $user_id ): ?int {
 		$value = get_user_meta( $user_id, 'graphql_login_token_expiration', true );
 
 		return ! empty( $value ) ? absint( $value ) : null;
@@ -182,7 +183,7 @@ class User {
 	 *
 	 * @param int $user_id The WP User ID.
 	 */
-	public static function get_refresh_token_expiration( int $user_id ) : ?int {
+	public static function get_refresh_token_expiration( int $user_id ): ?int {
 		$value = get_user_meta( $user_id, 'graphql_login_refresh_token_expiration', true );
 
 		return ! empty( $value ) ? absint( $value ) : null;
@@ -193,7 +194,7 @@ class User {
 	 *
 	 * @param int $user_id The WP User ID.
 	 */
-	public static function get_secret( int $user_id ) : ?string {
+	public static function get_secret( int $user_id ): ?string {
 		if ( self::get_is_secret_revoked( $user_id ) ) {
 			return null;
 		}
@@ -208,7 +209,7 @@ class User {
 	 *
 	 * @param int $user_id The WP User ID.
 	 */
-	public static function get_is_secret_revoked( int $user_id ) : bool {
+	public static function get_is_secret_revoked( int $user_id ): bool {
 		$value = get_user_meta( $user_id, 'graphql_login_secret_revoked', true );
 
 		return ! empty( $value );
@@ -220,7 +221,7 @@ class User {
 	 * @param int $user_id The WP User ID.
 	 * @param int $expiration The expiration timestamp.
 	 */
-	public static function set_auth_token_expiration( int $user_id, int $expiration ) : bool {
+	public static function set_auth_token_expiration( int $user_id, int $expiration ): bool {
 		return (bool) update_user_meta( $user_id, 'graphql_login_token_expiration', $expiration );
 	}
 
@@ -230,7 +231,7 @@ class User {
 	 * @param int $user_id The WP User ID.
 	 * @param int $expiration The expiration timestamp.
 	 */
-	public static function set_refresh_token_expiration( int $user_id, int $expiration ) : bool {
+	public static function set_refresh_token_expiration( int $user_id, int $expiration ): bool {
 		return (bool) update_user_meta( $user_id, 'graphql_login_refresh_token_expiration', $expiration );
 	}
 
@@ -240,7 +241,7 @@ class User {
 	 * @param int    $user_id The WP User ID.
 	 * @param string $secret The secret.
 	 */
-	public static function set_secret( int $user_id, string $secret ) : bool {
+	public static function set_secret( int $user_id, string $secret ): bool {
 		return (bool) update_user_meta( $user_id, 'graphql_login_secret', $secret );
 	}
 
@@ -250,7 +251,7 @@ class User {
 	 * @param int  $user_id The WP User ID.
 	 * @param bool $is_revoked Whether the secret is revoked.
 	 */
-	public static function set_is_secret_revoked( int $user_id, bool $is_revoked ) : bool {
+	public static function set_is_secret_revoked( int $user_id, bool $is_revoked ): bool {
 		return (bool) update_user_meta( $user_id, 'graphql_login_secret_revoked', $is_revoked );
 	}
 }

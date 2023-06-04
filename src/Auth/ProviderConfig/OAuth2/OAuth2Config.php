@@ -11,21 +11,20 @@
 namespace WPGraphQL\Login\Auth\ProviderConfig\OAuth2;
 
 use GraphQL\Error\UserError;
-use WP_Error;
 use WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig;
 use WPGraphQL\Login\Auth\User;
 use WPGraphQL\Login\Utils\Utils;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\AbstractProvider;
+use WP_Error;
 
 /**
  * Class - ProviderConfig
  */
 abstract class OAuth2Config extends ProviderConfig {
-
 	/**
 	 * The client options.
 	 *
-	 * @var array
+	 * @var array<string,mixed>
 	 */
 	protected array $client_options;
 
@@ -74,7 +73,7 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * {@inheritdoc}
 	 */
-	public static function get_type() : string {
+	public static function get_type(): string {
 		return 'oauth2';
 	}
 
@@ -85,19 +84,23 @@ abstract class OAuth2Config extends ProviderConfig {
 	 *
 	 * @return array<string, mixed>
 	 */
-	abstract protected function get_options( array $settings ) : array;
+	abstract protected function get_options( array $settings ): array;
 
 	/**
 	 * Maps the provider's user data to WP_User arguments.
 	 *
-	 * @param array $owner_details The Resource Owner details returned from the Authentication provider.
+	 * @param array<string, mixed> $owner_details The Resource Owner details returned from the Authentication provider.
+	 *
+	 * @return array<string, mixed>
 	 */
-	abstract public function get_user_data( array $owner_details ) : array;
+	abstract public function get_user_data( array $owner_details ): array;
 
 	/**
 	 * Prepares the client options.
+	 *
+	 * @return array<string, mixed>
 	 */
-	protected function prepare_client_options() : array {
+	protected function prepare_client_options(): array {
 		if ( ! isset( $this->client_options ) ) {
 			$provider_settings = Utils::get_provider_settings( static::get_slug() );
 
@@ -175,7 +178,7 @@ abstract class OAuth2Config extends ProviderConfig {
 	 *
 	 * @throws \GraphQL\Error\UserError
 	 */
-	protected function prepare_mutation_input( array $input ) : array {
+	protected function prepare_mutation_input( array $input ): array {
 		if ( ! isset( $input['oauthResponse'] ) ) {
 			throw new UserError(
 				sprintf(
@@ -200,7 +203,7 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function default_client_options_fields() : array {
+	public static function default_client_options_fields(): array {
 		return array_merge(
 			parent::default_client_options_fields(),
 			[
@@ -223,7 +226,7 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected static function default_client_options_schema() : array {
+	protected static function default_client_options_schema(): array {
 		return array_merge(
 			parent::default_client_options_schema(),
 			[
@@ -250,7 +253,7 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function default_login_options_fields() : array {
+	public static function default_login_options_fields(): array {
 		return array_merge(
 			parent::default_login_options_fields(),
 			[
@@ -269,7 +272,7 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * R{@inheritDoc}
 	 */
-	protected static function login_options_schema() : array {
+	protected static function login_options_schema(): array {
 		return [
 			'createUserIfNoneExists' => [
 				'type'        => 'boolean',
@@ -289,9 +292,9 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * Prepares the authorization url from the provider.
 	 *
-	 * @param array $options The options used to configure the provider.
+	 * @param array<string, mixed> $options The options used to configure the provider.
 	 */
-	protected function prepare_authorization_url( array $options = [] ) : string {
+	protected function prepare_authorization_url( array $options = [] ): string {
 
 		// Manually scope the options to avoid leaking sensitive data.
 		$scoped_options = [];
@@ -311,7 +314,7 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * Gets the authorization URL
 	 */
-	public function get_authorization_url() : string {
+	public function get_authorization_url(): string {
 		return $this->authorization_url;
 	}
 
@@ -319,8 +322,10 @@ abstract class OAuth2Config extends ProviderConfig {
 	 * Gets the Resource Owner (User) data from the Provider.
 	 *
 	 * @param array<string, mixed> $args The arguments.
+	 *
+	 * @return array<string, mixed> The resource owner data.
 	 */
-	public function get_resource_owner( array $args ) : array {
+	public function get_resource_owner( array $args ): array {
 		/**
 		 * Get the access token.
 		 *

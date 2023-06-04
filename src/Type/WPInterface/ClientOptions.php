@@ -21,7 +21,7 @@ class ClientOptions extends InterfaceType {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function register( $type_registry = null ) : void {
+	public static function register( $type_registry = null ): void {
 		$registry = $type_registry instanceof \WPGraphQL\Registry\TypeRegistry ? $type_registry : WPGraphQL::get_type_registry();
 
 		parent::register( $registry );
@@ -30,21 +30,21 @@ class ClientOptions extends InterfaceType {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function type_name() : string {
+	public static function type_name(): string {
 		return 'LoginClientOptions';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_description() : string {
+	public static function get_description(): string {
 		return __( 'The Client Options for the Headless Login provider.', 'wp-graphql-headless-login' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_fields() : array {
+	public static function get_fields(): array {
 		return ProviderConfig::default_client_options_fields();
 	}
 

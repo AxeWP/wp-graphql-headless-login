@@ -10,29 +10,28 @@ namespace WPGraphQL\Login\Mutation;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use WPGraphQL\AppContext;
-use WPGraphQL\Model\User;
 use WPGraphQL\Login\Auth\Auth;
 use WPGraphQL\Login\Type\Enum\ProviderEnum;
 use WPGraphQL\Login\Type\Input\OAuthProviderResponseInput;
 use WPGraphQL\Login\Type\Input\PasswordProviderResponseInput;
 use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationType;
+use WPGraphQL\Model\User;
 
 /**
  * Class - Login
  */
 class Login extends MutationType {
-
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function type_name() : string {
+	public static function type_name(): string {
 		return 'Login';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_input_fields() : array {
+	public static function get_input_fields(): array {
 		return [
 			'credentials'   => [
 				'type'        => PasswordProviderResponseInput::get_type_name(),
@@ -56,7 +55,7 @@ class Login extends MutationType {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_output_fields() : array {
+	public static function get_output_fields(): array {
 		return [
 			'authToken'              => [
 				'type'        => 'String',
@@ -87,7 +86,7 @@ class Login extends MutationType {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function mutate_and_get_payload() : callable {
+	public static function mutate_and_get_payload(): callable {
 		return static function ( array $input, AppContext $context, ResolveInfo $info ): array {
 			// Validate the response, login the user, and get an authToken and user in response.
 			return Auth::login( $input );

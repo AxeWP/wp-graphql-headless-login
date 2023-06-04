@@ -24,21 +24,21 @@ class Generic extends OAuth2Config {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_name() : string {
+	public static function get_name(): string {
 		return __( 'OAuth2 (Generic)', 'wp-graphql-headless-login' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_slug() : string {
+	public static function get_slug(): string {
 		return 'oauth2-generic';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function get_options( array $settings ) : array {
+	protected function get_options( array $settings ): array {
 		return [
 			'clientId'                => $settings['clientId'] ?? null,
 			'clientSecret'            => $settings['clientSecret'] ?? null,
@@ -53,7 +53,7 @@ class Generic extends OAuth2Config {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected static function client_options_schema() : array {
+	protected static function client_options_schema(): array {
 		return [
 			'urlAuthorize'            => [
 				'type'        => 'string',
@@ -89,22 +89,22 @@ class Generic extends OAuth2Config {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected static function client_options_fields() : array {
+	protected static function client_options_fields(): array {
 		return [
 			'authorizationUrl' => [
 				'type'        => 'String',
 				'description' => __( 'The URL to redirect the user to in order to authorize the client.', 'wp-graphql-headless-login' ),
-				'resolve'     => static fn( $source ) : string => $source['urlAuthorize'],
+				'resolve'     => static fn ( $source ): string => $source['urlAuthorize'],
 			],
 			'accessTokenUrl'   => [
 				'type'        => 'String',
 				'description' => __( 'The URL to request an access token.', 'wp-graphql-headless-login' ),
-				'resolve'     => static fn( $source ) : string => $source['urlAccessToken'],
+				'resolve'     => static fn ( $source ): string => $source['urlAccessToken'],
 			],
 			'resourceOwnerUrl' => [
 				'type'        => 'String',
 				'description' => __( 'The URL to request the resource owner details.', 'wp-graphql-headless-login' ),
-				'resolve'     => static fn( $source ) : string => $source['urlResourceOwnerDetails'],
+				'resolve'     => static fn ( $source ): string => $source['urlResourceOwnerDetails'],
 			],
 			'scope'            => [
 				'type'        => [ 'list_of' => 'String' ],
@@ -116,9 +116,11 @@ class Generic extends OAuth2Config {
 	/**
 	 * Maps the provider's user data to WP_User arguments.
 	 *
-	 * @param array $owner_details The Resource Owner details returned from the OAuth2 provider.
+	 * @param array<string,mixed> $owner_details The Resource Owner details returned from the OAuth2 provider.
+	 *
+	 * @return array<string,mixed> The WP_User arguments.
 	 */
-	public function get_user_data( array $owner_details ) : array {
+	public function get_user_data( array $owner_details ): array {
 		$email    = $owner_details['email'] ?? null;
 		$username = $owner_details['username'] ?? ( strstr( (string) $email, '@', true ) ?: null );
 

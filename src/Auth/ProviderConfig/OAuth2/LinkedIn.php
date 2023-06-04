@@ -24,21 +24,21 @@ class LinkedIn extends OAuth2Config {
 		/**
 		 * {@inheritDoc}
 		 */
-	public static function get_name() : string {
+	public static function get_name(): string {
 		return __( 'LinkedIn', 'wp-graphql-headless-login' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_slug() : string {
+	public static function get_slug(): string {
 		return 'linkedin';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected static function client_options_schema() : array {
+	protected static function client_options_schema(): array {
 		return [
 			'scope' => [
 				'type'        => 'array',
@@ -60,7 +60,7 @@ class LinkedIn extends OAuth2Config {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected static function client_options_fields() : array {
+	protected static function client_options_fields(): array {
 		return [
 			'scope' => [
 				'type'        => [ 'list_of' => 'String' ],
@@ -76,7 +76,7 @@ class LinkedIn extends OAuth2Config {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_user_data( array $owner_details ) : array {
+	public function get_user_data( array $owner_details ): array {
 		$email    = $owner_details['email'];
 		$username = strstr( $email, '@', true );
 
@@ -95,7 +95,7 @@ class LinkedIn extends OAuth2Config {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function get_options( array $settings ) : array {
+	protected function get_options( array $settings ): array {
 		return [
 			'clientId'     => $settings['clientId'] ?? null,
 			'clientSecret' => $settings['clientSecret'] ?? null,

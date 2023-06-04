@@ -16,18 +16,17 @@ use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationType;
  * Class - RefreshToken
  */
 class RefreshToken extends MutationType {
-
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function type_name() : string {
+	public static function type_name(): string {
 		return 'RefreshToken';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_input_fields() : array {
+	public static function get_input_fields(): array {
 		return [
 			'refreshToken' => [
 				'type'        => [ 'non_null' => 'String' ],
@@ -39,7 +38,7 @@ class RefreshToken extends MutationType {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_output_fields() : array {
+	public static function get_output_fields(): array {
 		return [
 			'authToken' => [
 				'type'        => 'String',
@@ -55,7 +54,7 @@ class RefreshToken extends MutationType {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function mutate_and_get_payload() : callable {
+	public static function mutate_and_get_payload(): callable {
 		return static function ( array $input, AppContext $context, ResolveInfo $info ): array {
 			// Sanitize the refresh token.
 			$sanitized_token = sanitize_text_field( $input['refreshToken'] );

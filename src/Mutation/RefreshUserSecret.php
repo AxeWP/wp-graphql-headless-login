@@ -19,18 +19,17 @@ use WPGraphQL\Utils\Utils as WPGraphQL_Utils;
  * Class - RefreshUserSecret
  */
 class RefreshUserSecret extends MutationType {
-
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function type_name() : string {
+	public static function type_name(): string {
 		return 'RefreshUserSecret';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_input_fields() : array {
+	public static function get_input_fields(): array {
 		return [
 			'userId' => [
 				'type'        => [ 'non_null' => 'ID' ],
@@ -42,7 +41,7 @@ class RefreshUserSecret extends MutationType {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_output_fields() : array {
+	public static function get_output_fields(): array {
 		return [
 			'success'           => [
 				'type'        => 'Boolean',
@@ -70,7 +69,7 @@ class RefreshUserSecret extends MutationType {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function mutate_and_get_payload() : callable {
+	public static function mutate_and_get_payload(): callable {
 		return static function ( array $input, AppContext $context, ResolveInfo $info ): array {
 			$user_id = WPGraphQL_Utils::get_database_id_from_id( esc_attr( $input['userId'] ) );
 

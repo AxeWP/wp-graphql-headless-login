@@ -16,25 +16,24 @@ use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\ObjectType;
  * Class - Client
  */
 class Client extends ObjectType {
-
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function type_name() : string {
+	public static function type_name(): string {
 		return 'LoginClient';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_description() : string {
+	public static function get_description(): string {
 		return __( 'The Headless Login client.', 'wp-graphql-headless-login' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_fields() : array {
+	public static function get_fields(): array {
 		return [
 			'authorizationUrl' => [
 				'type'        => 'String',

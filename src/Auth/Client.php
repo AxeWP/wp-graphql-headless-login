@@ -18,7 +18,7 @@ class Client {
 	/**
 	 * The client config.
 	 *
-	 * @var array
+	 * @var array<string,mixed>
 	 */
 	private array $config;
 
@@ -50,7 +50,6 @@ class Client {
 	 */
 	private string $type;
 
-
 	/**
 	 * The class constructor.
 	 *
@@ -78,35 +77,37 @@ class Client {
 	/**
 	 * Gets the provider slug.
 	 */
-	public function get_provider_slug() : string {
+	public function get_provider_slug(): string {
 		return $this->slug;
 	}
 
 	/**
 	 * Gets the provider name.
 	 */
-	public function get_provider_name() : string {
+	public function get_provider_name(): string {
 		return $this->name;
 	}
 
 	/**
 	 * Gets the provider type.
 	 */
-	public function get_provider_type() : string {
+	public function get_provider_type(): string {
 		return $this->type;
 	}
 
 	/**
 	 * Gets the instance of the ProviderConfig class.
 	 */
-	public function get_provider_configurator() : ProviderConfig {
+	public function get_provider_configurator(): ProviderConfig {
 		return $this->provider_configurator;
 	}
 
 	/**
 	 * Returns the config used to configure the client.
+	 *
+	 * @return array<string,mixed>
 	 */
-	public function get_config() : array {
+	public function get_config(): array {
 		return $this->config;
 	}
 
@@ -115,7 +116,7 @@ class Client {
 	 *
 	 * @uses ProviderConfig::get_authorization_url()
 	 */
-	public function get_authorization_url() : ?string {
+	public function get_authorization_url(): ?string {
 		if ( method_exists( $this->provider_configurator, 'get_authorization_url' ) ) {
 			return $this->provider_configurator->get_authorization_url( $this->config );
 		}
@@ -126,9 +127,9 @@ class Client {
 	/**
 	 * Uses the provider config to authenticate and return the user.
 	 *
-	 * @param array $input the input data.
+	 * @param array<string,mixed> $input The mutation input data.
 	 *
-	 * @return array|\WP_User|\WP_Error|false
+	 * @return array<string,mixed>|\WP_User|\WP_Error|false
 	 */
 	public function authenticate_and_get_user_data( array $input ) {
 		/**
@@ -148,7 +149,7 @@ class Client {
 	/**
 	 * Uses the authenticated user data to return the user.
 	 *
-	 * @param array|\WP_User $data the user data data.
+	 * @param array<string,mixed>|\WP_User $data the user data data.
 	 *
 	 * @return \WP_User|\WP_Error|false
 	 */
@@ -159,7 +160,7 @@ class Client {
 	/**
 	 * Maybe creates a user from the provided user data.
 	 *
-	 * @param array|mixed $user_data The user data.
+	 * @param array<string,mixed>|mixed $user_data The user data.
 	 *
 	 * @return \WP_User|\WP_Error|false
 	 */

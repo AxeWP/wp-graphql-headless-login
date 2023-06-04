@@ -22,21 +22,23 @@ class AccessControlSettings {
 	/**
 	 * The setting configuration.
 	 *
-	 * @var array
+	 * @var array<string, array<string, mixed>>
 	 */
 	private static array $config = [];
 
 	/**
 	 * The args used to register the settings.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	private static array $args = [];
 
 	/**
 	 * Gets the setting configuration.
+	 *
+	 * @return array<string, array<string, mixed>>
 	 */
-	public static function get_config() : array {
+	public static function get_config(): array {
 		if ( empty( self::$config ) ) {
 			self::$config = [
 				'hasAccessControlAllowCredentials' => [
@@ -104,8 +106,10 @@ class AccessControlSettings {
 
 	/**
 	 * Returns the args used to register the settings.
+	 *
+	 * @return array<string,array<string,mixed>>
 	 */
-	public static function get_settings_args() : array {
+	public static function get_settings_args(): array {
 		if ( empty( self::$args ) ) {
 			$config = self::get_config();
 

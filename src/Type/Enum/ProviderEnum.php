@@ -19,21 +19,21 @@ class ProviderEnum extends EnumType {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function type_name() : string {
+	public static function type_name(): string {
 		return 'LoginProviderEnum';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_description() : string {
+	public static function get_description(): string {
 		return __( 'The Headless Login Provider.', 'wp-graphql-headless-login' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_values() : array {
+	public static function get_values(): array {
 		$providers = ProviderRegistry::get_instance()->get_registered_providers();
 
 		$values = [];

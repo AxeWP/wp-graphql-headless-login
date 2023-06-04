@@ -18,7 +18,6 @@ use WPGraphQL\Login\Auth\TokenManager;
  * Class - Settings
  */
 class Settings {
-
 	/**
 	 * The name of the plugin option group.
 	 *
@@ -36,7 +35,7 @@ class Settings {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function init() : void {
+	public static function init(): void {
 		add_action( 'init', [ self::class, 'register_settings' ] );
 		add_action( 'graphql_register_settings', [ self::class, 'register_settings_tab' ] );
 		add_action( 'admin_enqueue_scripts', [ self::class, 'register_admin_scripts' ] );
@@ -45,8 +44,10 @@ class Settings {
 
 	/**
 	 * Store and get the registered settings.
+	 *
+	 * @return array<string, array<string, mixed>>
 	 */
-	public static function get_all_settings() : array {
+	public static function get_all_settings(): array {
 		return [
 			'plugin'         => PluginSettings::get_settings_args(),
 			'providers'      => ProviderSettings::get_settings_args(),
@@ -57,7 +58,7 @@ class Settings {
 	/**
 	 * Register the settings to WordPress.
 	 */
-	public static function register_settings() : void {
+	public static function register_settings(): void {
 		$all_settings = self::get_all_settings();
 
 		foreach ( $all_settings as $settings ) {
@@ -74,7 +75,7 @@ class Settings {
 	/**
 	 * Register the Settings Tab to WPGraphQL.
 	 */
-	public static function register_settings_tab() : void {
+	public static function register_settings_tab(): void {
 		register_graphql_settings_section(
 			self::$option_group,
 			[
@@ -94,7 +95,7 @@ class Settings {
 	 *
 	 * @param string $hook_suffix The current admin page.
 	 */
-	public static function register_admin_scripts( string $hook_suffix ) : void {
+	public static function register_admin_scripts( string $hook_suffix ): void {
 		if ( 'graphql_page_graphql-settings' !== $hook_suffix ) {
 			return;
 		}
@@ -116,7 +117,7 @@ class Settings {
 	 *
 	 * @throws \Error If the asset file is not found.
 	 */
-	private static function register_asset_js( string $handle, string $asset_name ) : void {
+	private static function register_asset_js( string $handle, string $asset_name ): void {
 		$script_asset_path = WPGRAPHQL_LOGIN_PLUGIN_DIR . 'build/' . $asset_name . '.asset.php';
 		if ( ! file_exists( $script_asset_path ) ) {
 			throw new Error( __( 'You need to run `npm start` or `npm run build` for Headless Login for WPGraphQL to work.', 'wp-graphql-headless-login' ) );
@@ -141,8 +142,10 @@ class Settings {
 
 	/**
 	 * Gets the plugin setting data to pass to the JS.
+	 *
+	 * @return array<string, mixed>
 	 */
-	private static function get_settings_data() : array {
+	private static function get_settings_data(): array {
 		// Add meta about the secret without exposing it.
 		$secret = [
 			'hasKey'     => (bool) TokenManager::get_secret_key(),

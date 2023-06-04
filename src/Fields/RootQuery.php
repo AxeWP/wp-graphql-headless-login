@@ -18,11 +18,10 @@ use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\FieldsType;
  * Class - RootQuery
  */
 class RootQuery extends FieldsType {
-
 	/**
 	 * {@inheritDoc}
 	 */
-	protected static function type_name() : string {
+	protected static function type_name(): string {
 		return 'RootQuery';
 	}
 
@@ -31,14 +30,14 @@ class RootQuery extends FieldsType {
 	 *
 	 * @return string
 	 */
-	public static function get_type_name() : string {
+	public static function get_type_name(): string {
 		return static::type_name();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_fields() : array {
+	public static function get_fields(): array {
 		return [
 			'loginClients' => [
 				'type'        => [ 'list_of' => Client::get_type_name() ],

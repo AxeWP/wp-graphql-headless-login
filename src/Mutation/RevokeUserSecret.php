@@ -19,11 +19,10 @@ use WPGraphQL\Utils\Utils as GraphQL_Utils;
  * Class - RevokeUserSecret
  */
 class RevokeUserSecret extends MutationType {
-
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function type_name() : string {
+	public static function type_name(): string {
 		return 'RevokeUserSecret';
 	}
 
@@ -32,7 +31,7 @@ class RevokeUserSecret extends MutationType {
 	 *
 	 * @return array{userId: array{type: array{non_null: string}, description: string}}
 	 */
-	public static function get_input_fields() : array {
+	public static function get_input_fields(): array {
 		return [
 			'userId' => [
 				'type'        => [ 'non_null' => 'ID' ],
@@ -46,7 +45,7 @@ class RevokeUserSecret extends MutationType {
 	 *
 	 * @return array{revokedUserSecret: array{type: string, description: string}, success: array{type: string, description: string}}
 	 */
-	public static function get_output_fields() : array {
+	public static function get_output_fields(): array {
 		return [
 			'revokedUserSecret' => [
 				'type'        => 'String',
@@ -62,7 +61,7 @@ class RevokeUserSecret extends MutationType {
 	/**
 	 * Gets the `mutateAndGetPayload` callable for the mutation.
 	 */
-	public static function mutate_and_get_payload() : callable {
+	public static function mutate_and_get_payload(): callable {
 		return static function ( array $input, AppContext $context, ResolveInfo $info ): array {
 			$user_id = GraphQL_Utils::get_database_id_from_id( esc_attr( $input['userId'] ) );
 

@@ -14,15 +14,17 @@ trait ProviderConfigStaticTrait {
 	/**
 	 * Returns whether the provider is enabled in the settings.
 	 */
-	public static function is_enabled() : bool {
+	public static function is_enabled(): bool {
 		$config = Utils::get_provider_settings( static::get_slug() );
 		return ! empty( $config['isEnabled'] );
 	}
 
 	/**
 	 * Gets the WPGraphQL fields config for the provider settings.
+	 *
+	 * @return array<string,array<string,mixed>>
 	 */
-	public static function get_client_options_fields() : array {
+	public static function get_client_options_fields(): array {
 		$fields = array_merge(
 			static::default_client_options_fields(),
 			static::client_options_fields(),
@@ -41,8 +43,10 @@ trait ProviderConfigStaticTrait {
 
 	/**
 	 * Gets the WP REST schema config for the client options.
+	 *
+	 * @return array<string,array<string,mixed>>
 	 */
-	public static function get_client_options_schema() : array {
+	public static function get_client_options_schema(): array {
 		$settings = array_merge(
 			static::default_client_options_schema(),
 			static::client_options_schema(),
@@ -63,8 +67,10 @@ trait ProviderConfigStaticTrait {
 
 	/**
 	 * Gets the WPGraphQL fields config for the provider settings.
+	 *
+	 * @return array<string,array<string,mixed>>
 	 */
-	public static function get_login_options_fields() : array {
+	public static function get_login_options_fields(): array {
 		$fields = array_merge(
 			static::default_login_options_fields(),
 			static::login_options_fields(),
@@ -83,8 +89,10 @@ trait ProviderConfigStaticTrait {
 
 	/**
 	 * Gets the WP REST schema config for the Login options.
+	 *
+	 * @return array<string,array<string,mixed>>
 	 */
-	public static function get_login_options_schema() : array {
+	public static function get_login_options_schema(): array {
 		$settings = array_merge(
 			static::default_login_options_schema(),
 			static::login_options_schema(),
@@ -105,8 +113,20 @@ trait ProviderConfigStaticTrait {
 
 	/**
 	 * Gets the default WPGraphQL fields config for the provider client options.
+	 *
+	 * @return array<string, array{
+	 *   type: string|array<string, string | array<string, string>>,
+	 *   description: string,
+	 *   args?: array<string, array{
+	 *     type: string|array<string, string | array<string, string>>,
+	 *     description: string,
+	 *     defaultValue?: mixed
+	 *   }>,
+	 *   resolve?: callable,
+	 *   deprecationReason?: string,
+	 * }>
 	 */
-	public static function default_client_options_fields() : array {
+	public static function default_client_options_fields(): array {
 		return [
 			'todo' => [
 				'type'        => 'Boolean',
@@ -117,8 +137,20 @@ trait ProviderConfigStaticTrait {
 
 	/**
 	 * Gets the default WPGraphQL fields config for the provider client options.
+	 *
+	 * @return array<string, array{
+	 *   type: string|array<string, string | array<string, string>>,
+	 *   description: string,
+	 *   args?: array<string, array{
+	 *     type: string|array<string, string | array<string, string>>,
+	 *     description: string,
+	 *     defaultValue?: mixed
+	 *   }>,
+	 *   resolve?: callable,
+	 *   deprecationReason?: string,
+	 * }>
 	 */
-	public static function default_login_options_fields() : array {
+	public static function default_login_options_fields(): array {
 		return [
 			'useAuthenticationCookie' => [
 				'type'        => 'Boolean',
@@ -131,8 +163,10 @@ trait ProviderConfigStaticTrait {
 	 * Returns the schema properties for the client options.
 	 *
 	 * @see ProviderConfig::client_options_schema().
+	 *
+	 * @return array<string,array<string,mixed>>
 	 */
-	protected static function default_client_options_schema() : array {
+	protected static function default_client_options_schema(): array {
 		return [];
 	}
 
@@ -140,9 +174,11 @@ trait ProviderConfigStaticTrait {
 	 * Returns the default schema properties for the Login options.
 	 *
 	 * @see ProviderConfig::login_options_schema().
+	 *
+	 * @return array<string,array<string,mixed>>
 	 */
-	protected static function default_login_options_schema() : array {
-		$settings = [
+	protected static function default_login_options_schema(): array {
+		return [
 			'useAuthenticationCookie' => [
 				'type'        => 'boolean',
 				'description' => __( 'Set authentication cookie', 'wp-graphql-headless-login' ),
@@ -150,7 +186,5 @@ trait ProviderConfigStaticTrait {
 				'order'       => 2,
 			],
 		];
-
-		return $settings;
 	}
 }

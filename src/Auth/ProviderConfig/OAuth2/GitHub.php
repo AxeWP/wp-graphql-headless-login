@@ -24,21 +24,21 @@ class GitHub extends OAuth2Config {
 		/**
 		 * {@inheritDoc}
 		 */
-	public static function get_name() : string {
+	public static function get_name(): string {
 		return __( 'GitHub', 'wp-graphql-headless-login' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_slug() : string {
+	public static function get_slug(): string {
 		return 'github';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected static function client_options_schema() : array {
+	protected static function client_options_schema(): array {
 		return [
 			'scope' => [
 				'type'        => 'array',
@@ -56,7 +56,7 @@ class GitHub extends OAuth2Config {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected static function client_options_fields() : array {
+	protected static function client_options_fields(): array {
 		return [
 			'scope' => [
 				'type'        => [ 'list_of' => 'String' ],
@@ -68,7 +68,7 @@ class GitHub extends OAuth2Config {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_user_data( array $owner_details ) : array {
+	public function get_user_data( array $owner_details ): array {
 		$name_parts = explode( ' ', $owner_details['name'] ?? '' );
 
 		// Get a string from all parts but last.
@@ -89,7 +89,7 @@ class GitHub extends OAuth2Config {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function get_options( array $settings ) : array {
+	protected function get_options( array $settings ): array {
 		return [
 			'clientId'     => $settings['clientId'] ?? null,
 			'clientSecret' => $settings['clientSecret'] ?? null,

@@ -22,7 +22,6 @@ use WPGraphQL\Model\Model;
  * @property string  $provider
  */
 class Client extends Model {
-
 	/**
 	 * Stores the incoming Client to be modeled
 	 *
@@ -65,14 +64,14 @@ class Client extends Model {
 			$slug = $this->data->get_provider_slug();
 
 			$this->fields = [
-				'authorizationUrl' => fn() => $this->data->get_authorization_url(),
-				'clientOptions'    => static fn() => $config['clientOptions'] + [ '__typename' => $slug ],
-				'clientId'         => static fn() => $config['clientOptions']['clientId'] ?? null,
-				'isEnabled'        => static fn() => ! empty( $config['isEnabled'] ),
-				'loginOptions'     => static fn() => $config['loginOptions'] + [ '__typename' => $slug ],
-				'name'             => static fn() => $config['name'] ?? null,
-				'order'            => static fn() => $config['order'] ?? null,
-				'provider'         => static fn() => $slug,
+				'authorizationUrl' => fn () => $this->data->get_authorization_url(),
+				'clientOptions'    => static fn () => $config['clientOptions'] + [ '__typename' => $slug ],
+				'clientId'         => static fn () => $config['clientOptions']['clientId'] ?? null,
+				'isEnabled'        => static fn () => ! empty( $config['isEnabled'] ),
+				'loginOptions'     => static fn () => $config['loginOptions'] + [ '__typename' => $slug ],
+				'name'             => static fn () => $config['name'] ?? null,
+				'order'            => static fn () => $config['order'] ?? null,
+				'provider'         => static fn () => $slug,
 			];
 		}
 	}

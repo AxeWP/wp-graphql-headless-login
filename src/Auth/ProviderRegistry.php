@@ -8,7 +8,6 @@
 
 namespace WPGraphQL\Login\Auth;
 
-use WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Facebook;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Generic;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\GitHub;
@@ -16,13 +15,13 @@ use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Google;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Instagram;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\LinkedIn;
 use WPGraphQL\Login\Auth\ProviderConfig\Password;
+use WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig;
 use WPGraphQL\Login\Auth\ProviderConfig\SiteToken;
 
 /**
  * Class - ProviderRegistry
  */
 class ProviderRegistry {
-
 	/**
 	 * The one true ProviderRegistry
 	 *
@@ -106,10 +105,8 @@ class ProviderRegistry {
 
 	/**
 	 * Get the singleton instance of the registry.
-	 *
-	 * @return self
 	 */
-	public static function get_instance() : self {
+	public static function get_instance(): self {
 		if ( empty( self::$instance ) ) {
 			self::$instance = new self();
 		}
@@ -124,7 +121,7 @@ class ProviderRegistry {
 	 *
 	 * @return array<string, class-string<\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig>>
 	 */
-	public function get_registered_providers() : array {
+	public function get_registered_providers(): array {
 		if ( empty( $this->registered_providers ) ) {
 			/**
 			 * Filters the registered providers configs.
@@ -162,7 +159,7 @@ class ProviderRegistry {
 	 *
 	 * @throws \Exception When provider slug is not supported.
 	 */
-	public function get_provider_config( string $provider_slug ) : ProviderConfig {
+	public function get_provider_config( string $provider_slug ): ProviderConfig {
 		if ( ! isset( $this->providers[ $provider_slug ] ) ) {
 			throw new \Exception( sprintf( 'Provider %s is not enabled.', $provider_slug ) );
 		}
@@ -175,7 +172,7 @@ class ProviderRegistry {
 	 *
 	 * @return array<string, \WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig>
 	 */
-	public function get_providers() : array {
+	public function get_providers(): array {
 		return $this->providers;
 	}
 }

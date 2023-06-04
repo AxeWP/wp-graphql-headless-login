@@ -14,11 +14,10 @@ use WPGraphQL\Model\User;
  * Class - AuthenticationData
  */
 class AuthenticationData extends ObjectType {
-
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function register() : void {
+	public static function register(): void {
 		parent::register();
 
 		/**
@@ -53,21 +52,21 @@ class AuthenticationData extends ObjectType {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function type_name() : string {
+	public static function type_name(): string {
 		return 'AuthenticationData';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_description() : string {
+	public static function get_description(): string {
 		return __( 'The Headless Login authentication data.', 'wp-graphql-headless-login' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_fields() : array {
+	public static function get_fields(): array {
 		return [
 			'authToken'              => [
 				'type'        => 'String',

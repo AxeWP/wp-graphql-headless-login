@@ -24,21 +24,23 @@ class ProviderSettings {
 	/**
 	 * The setting configuration.
 	 *
-	 * @var array
+	 * @var array<string, array<string, mixed>>
 	 */
 	private static array $config = [];
 
 	/**
 	 * The args used to register the settings.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	private static array $args = [];
 
 	/**
 	 * Gets the setting configuration.
+	 *
+	 * @return array<string, array<string, mixed>>
 	 */
-	public static function get_config() : array {
+	public static function get_config(): array {
 		if ( empty( self::$config ) ) {
 			$providers = ProviderRegistry::get_instance()->get_registered_providers();
 
@@ -104,8 +106,10 @@ class ProviderSettings {
 
 	/**
 	 * Returns the args used to register the settings.
+	 *
+	 * @return array<string, mixed>
 	 */
-	public static function get_settings_args() : array {
+	public static function get_settings_args(): array {
 		if ( empty( self::$args ) ) {
 			$config = self::get_config();
 

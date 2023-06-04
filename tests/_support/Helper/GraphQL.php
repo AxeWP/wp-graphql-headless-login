@@ -55,7 +55,8 @@ class GraphQL extends \Codeception\Module {
 	 */
 	public function haveGraphQLDebug() {
 		// Enable graphql debug
-		$graphql_settings                       = get_option( 'graphql_general_settings', [] );
+		$graphql_settings                       = get_option( 'graphql_general_settings', [] ) ?: [];
+
 		$graphql_settings['debug_mode_enabled'] = 'on';
 		update_option( 'graphql_general_settings', $graphql_settings );
 	}
