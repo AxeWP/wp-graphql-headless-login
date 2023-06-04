@@ -12,7 +12,7 @@ use GraphQL\Error\UserError;
 use GraphQL\Type\Definition\ResolveInfo;
 use WPGraphQL\AppContext;
 use WPGraphQL\Login\Auth\TokenManager;
-use \WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationType;
+use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationType;
 use WPGraphQL\Utils\Utils as WPGraphQL_Utils;
 
 /**

@@ -8,7 +8,6 @@
 
 namespace WPGraphQL\Login\Auth;
 
-use WP_Error;
 use WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig;
 use WPGraphQL\Login\Utils\Utils;
 
@@ -33,7 +32,7 @@ class Client {
 	/**
 	 * The instance of the ProviderConfig class.
 	 *
-	 * @var ProviderConfig
+	 * @var \WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig
 	 */
 	private $provider_configurator;
 
@@ -70,8 +69,8 @@ class Client {
 		 *
 		 * @param string         $slug            The slug of the provider config.
 		 * @param array          $settings        The client settings.
-		 * @param ProviderConfig $provider_config The provider configurator.
-		 * @param Client         $client          The Client instance.
+		 * @param \WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig $provider_config The provider configurator.
+		 * @param \WPGraphQL\Login\Auth\Client $client The Client instance.
 		 */
 		do_action( 'graphql_login_client_init', $this->slug, $this->config, $this->provider_configurator, $this );
 	}
@@ -138,8 +137,8 @@ class Client {
 		 * @param string         $slug            The provider slug.
 		 * @param array          $input           The mutation input data.
 		 * @param array          $settings        The client settings.
-		 * @param ProviderConfig $provider_config The provider config.
-		 * @param Client         $client          The Client instance.
+		 * @param \WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig $provider_config The provider config.
+		 * @param \WPGraphQL\Login\Auth\Client $client The Client instance.
 		 */
 		do_action( 'graphql_login_before_authenticate', $this->slug, $input, $this->config, $this->provider_configurator, $this );
 
@@ -162,7 +161,7 @@ class Client {
 	 *
 	 * @param array|mixed $user_data The user data.
 	 *
-	 * @return \WP_User|WP_Error|false
+	 * @return \WP_User|\WP_Error|false
 	 */
 	public function maybe_create_user( $user_data ) {
 		/**

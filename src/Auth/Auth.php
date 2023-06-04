@@ -12,7 +12,6 @@ use GraphQL\Error\UserError;
 use WP_Error;
 use WPGraphQL\Login\Auth\Client;
 use WPGraphQL\Login\Auth\ProviderConfig\Password;
-use WPGraphQL\Type\WPEnumType;
 use WPGraphQL\Utils\Utils;
 
 /**
@@ -25,7 +24,7 @@ class Auth {
 	 *
 	 * @param string $provider The provider slug.
 	 *
-	 * @throws UserError If the client is invalid.
+	 * @throws \GraphQL\Error\UserError If the client is invalid.
 	 */
 	public static function get_client( string $provider ) : Client {
 		$client = new Client( $provider );
@@ -41,7 +40,7 @@ class Auth {
 	 *
 	 * @param array $input the mutation input.
 	 *
-	 * @throws UserError If the user cannot be created.
+	 * @throws \GraphQL\Error\UserError If the user cannot be created.
 	 */
 	public static function login( array $input ) : array {
 		// If the user is already logged in, throw an error.
@@ -100,7 +99,7 @@ class Auth {
 		 * @param array          $payload   The payload.
 		 * @param \WP_User       $user      The user.
 		 * @param array|mixed    $user_data The user data from the Provider.
-		 * @param Client         $client    The client instance.
+		 * @param \WPGraphQL\Login\Auth\Client $client The client instance.
 		 */
 		$payload = apply_filters( 'graphql_login_payload', $payload, $user, $user_data, $client );
 
@@ -109,7 +108,7 @@ class Auth {
 		 *
 		 * @param array  $payload   The payload.
 		 * @param \WP_User  $user_data The user data from the Provider.
-		 * @param Client $client    The client instance.
+		 * @param \WPGraphQL\Login\Auth\Client $client The client instance.
 		 */
 		do_action( 'graphql_login_after_successful_login', $payload, $user, $client );
 
@@ -121,7 +120,7 @@ class Auth {
 	 *
 	 * @param array $input the mutation input.
 	 *
-	 * @throws UserError If the user cannot be linked.
+	 * @throws \GraphQL\Error\UserError If the user cannot be linked.
 	 */
 	public static function link_user_identity( array $input ) : array {
 		if ( Password::get_slug() === $input['provider'] ) {
@@ -176,7 +175,7 @@ class Auth {
 		 *
 		 * @param \WP_User|false $linked_user The linked user.
 		 * @param array         $user_data   The user data from the Provider.
-		 * @param Client        $client      The client instance.
+		 * @param \WPGraphQL\Login\Auth\Client $client The client instance.
 		 */
 		do_action( 'graphql_login_link_user_identity', $linked_user, $user_data, $client );
 
@@ -191,7 +190,7 @@ class Auth {
 	 *
 	 * @param mixed $client The client instance.
 	 *
-	 * @throws UserError If the client is invalid.
+	 * @throws \GraphQL\Error\UserError If the client is invalid.
 	 */
 	private static function validate_client( $client ) : void {
 		if ( $client instanceof WP_Error ) {

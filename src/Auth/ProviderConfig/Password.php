@@ -77,7 +77,7 @@ class Password extends ProviderConfig {
 	 *
 	 * @return array{username: ?string, password: ?string}
 	 *
-	 * @throws UserError
+	 * @throws \GraphQL\Error\UserError
 	 */
 	protected function prepare_mutation_input( array $input ) : array {
 		if ( ! isset( $input['credentials'] ) ) {

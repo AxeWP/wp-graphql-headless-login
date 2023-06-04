@@ -16,7 +16,6 @@ use WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig;
 use WPGraphQL\Login\Auth\User;
 use WPGraphQL\Login\Utils\Utils;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\AbstractProvider;
-use WPGraphQL\Login\Vendor\League\OAuth2\Client\Token\AccessToken;
 
 /**
  * Class - ProviderConfig
@@ -33,14 +32,14 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * The provider class.
 	 *
-	 * @var class-string<AbstractProvider>
+	 * @var class-string<\WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\AbstractProvider>
 	 */
 	protected string $provider_class;
 
 	/**
 	 * The OAuth2 provider instance.
 	 *
-	 * @var AbstractProvider
+	 * @var \WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\AbstractProvider
 	 */
 	protected AbstractProvider $provider;
 
@@ -119,7 +118,7 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * Gets the instance of the OAuth2 Provider.
 	 *
-	 * @return AbstractProvider
+	 * @return \WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\AbstractProvider
 	 */
 	public function get_provider() {
 		return $this->provider;
@@ -174,7 +173,7 @@ abstract class OAuth2Config extends ProviderConfig {
 	 *
 	 * @return array{code: mixed, state?: mixed}
 	 *
-	 * @throws UserError
+	 * @throws \GraphQL\Error\UserError
 	 */
 	protected function prepare_mutation_input( array $input ) : array {
 		if ( ! isset( $input['oauthResponse'] ) ) {
@@ -325,7 +324,7 @@ abstract class OAuth2Config extends ProviderConfig {
 		/**
 		 * Get the access token.
 		 *
-		 * @var AccessToken $token
+		 * @var \WPGraphQL\Login\Vendor\League\OAuth2\Client\Token\AccessToken $token
 		 */
 		$token = $this->provider->getAccessToken( 'authorization_code', $args );
 

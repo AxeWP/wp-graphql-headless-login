@@ -8,8 +8,6 @@
 
 namespace WPGraphQL\Login\Auth;
 
-use WP_Error;
-use WP_User;
 use WP_User_Query;
 
 /**
@@ -30,7 +28,7 @@ class User {
 	 * @param string $key   The meta key to check.
 	 * @param string $value The value to match.
 	 *
-	 * @return WP_User|false
+	 * @return \WP_User|false
 	 */
 	public static function get_user_by( string $key, string $value ) {
 		if ( in_array( $key, [ 'id', 'ID', 'slug', 'email', 'login' ], true ) ) {
@@ -64,7 +62,7 @@ class User {
 	 * @param string $provider the Provider slug.
 	 * @param string $subject_identity The ResourceOwner ID.
 	 *
-	 * @return WP_User|false
+	 * @return \WP_User|false
 	 */
 	public static function get_user_by_identity( string $provider, string $subject_identity ) {
 		return self::get_user_by( self::get_identity_meta_key( $provider ), $subject_identity );
@@ -77,7 +75,7 @@ class User {
 	 * @param string  $provider The Provider slug.
 	 * @param string  $subject_identity The ResourceOwner ID.
 	 *
-	 * @return WP_User|false
+	 * @return \WP_User|false
 	 */
 	public static function link_user_identity( int $user_id, string $provider, string $subject_identity ) {
 		update_user_meta( $user_id, self::get_identity_meta_key( $provider ), $subject_identity );
@@ -98,10 +96,10 @@ class User {
 	/**
 	 * If the proper options are enabled, tries first to link an existing WP_User to the ResourceOwner, then creates a new WP_User.
 	 *
-	 * @param Client $client    The Auth client.
-	 * @param array  $user_data The user data.
+	 * @param \WPGraphQL\Login\Auth\Client $client The Auth client.
+	 * @param array                        $user_data The user data.
 	 *
-	 * @return WP_User|WP_Error|false
+	 * @return \WP_User|\WP_Error|false
 	 */
 	public static function maybe_create_user( Client $client, array $user_data ) {
 		$config = $client->get_config();

@@ -139,7 +139,7 @@ class AccessControlSettings {
 							'properties' => $config,
 						],
 					],
-					'sanitize_callback' => [ __CLASS__, 'sanitize_callback' ],
+					'sanitize_callback' => [ self::class, 'sanitize_callback' ],
 				],
 			];
 		}
@@ -173,7 +173,7 @@ class AccessControlSettings {
 			}
 
 			$value['additionalAuthorizedDomains'] = is_array( $value['additionalAuthorizedDomains'] ) ? array_map(
-				function ( $domain ) {
+				static function ( $domain ) {
 					if ( '*' === $domain ) {
 						return $domain;
 					}
@@ -186,7 +186,7 @@ class AccessControlSettings {
 
 		if ( isset( $value['customHeaders'] ) ) {
 			$value['customHeaders'] = array_map(
-				function ( $header ) {
+				static function ( $header ) {
 					return sanitize_text_field( $header );
 				},
 				$value['customHeaders']

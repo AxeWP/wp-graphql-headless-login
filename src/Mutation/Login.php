@@ -15,7 +15,7 @@ use WPGraphQL\Login\Auth\Auth;
 use WPGraphQL\Login\Type\Enum\ProviderEnum;
 use WPGraphQL\Login\Type\Input\OAuthProviderResponseInput;
 use WPGraphQL\Login\Type\Input\PasswordProviderResponseInput;
-use \WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationType;
+use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationType;
 
 /**
  * Class - Login

@@ -21,12 +21,12 @@ class UserProfile {
 	 * {@inheritDoc}
 	 */
 	public static function init() : void {
-		add_action( 'show_user_profile', [ __CLASS__, 'user_identity_fields' ] );
-		add_action( 'edit_user_profile', [ __CLASS__, 'user_identity_fields' ] );
+		add_action( 'show_user_profile', [ self::class, 'user_identity_fields' ] );
+		add_action( 'edit_user_profile', [ self::class, 'user_identity_fields' ] );
 		// Add admin ajax for unlinking user identities.
-		add_action( 'wp_ajax_graphql_login_unlink_identity', [ __CLASS__, 'unlink_identity' ] );
+		add_action( 'wp_ajax_graphql_login_unlink_identity', [ self::class, 'unlink_identity' ] );
 		// Add admin ajax for revoking user secret.
-		add_action( 'wp_ajax_graphql_login_revoke_user_secret_key', [ __CLASS__, 'revoke_secret' ] );
+		add_action( 'wp_ajax_graphql_login_revoke_user_secret_key', [ self::class, 'revoke_secret' ] );
 	}
 
 	/**

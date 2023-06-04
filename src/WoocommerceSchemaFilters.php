@@ -23,8 +23,8 @@ class WoocommerceSchemaFilters implements Registrable {
 			return;
 		}
 
-		add_filter( 'graphql_login_user_types', [ __CLASS__, 'add_customer_to_user_types' ] );
-		add_action( 'graphql_register_types', [ __CLASS__, 'add_fields' ] );
+		add_filter( 'graphql_login_user_types', [ self::class, 'add_customer_to_user_types' ] );
+		add_action( 'graphql_register_types', [ self::class, 'add_fields' ] );
 	}
 
 	/**

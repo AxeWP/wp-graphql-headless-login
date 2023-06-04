@@ -140,7 +140,7 @@ class SiteToken extends ProviderConfig {
 	 *
 	 * @return array{subject_identity: ?string}
 	 *
-	 * @throws UserError
+	 * @throws \GraphQL\Error\UserError
 	 */
 	protected function prepare_mutation_input( array $input ) : array {
 		if ( ! isset( $input['identity'] ) ) {

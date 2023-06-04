@@ -29,7 +29,7 @@ if ( ! class_exists( \WPGraphQL\Login\Main::class ) ) :
 		 * Constructor
 		 */
 		public static function instance() : self {
-			if ( ! isset( self::$instance ) || ! ( is_a( self::$instance, __CLASS__ ) ) ) {
+			if ( ! isset( self::$instance ) || ! ( is_a( self::$instance, self::class ) ) ) {
 				// You cant test a singleton.
 				// phpcs:ignore
 				// @codeCoverageIgnoreStart

@@ -7,7 +7,6 @@
 
 namespace WPGraphQL\Login\Model;
 
-use WPGraphQL\Login\Auth\Client as AuthClient;
 use WPGraphQL\Model\Model;
 
 /**
@@ -27,18 +26,18 @@ class Client extends Model {
 	/**
 	 * Stores the incoming Client to be modeled
 	 *
-	 * @var AuthClient $data
+	 * @var \WPGraphQL\Login\Auth\Client $data
 	 */
 	protected $data;
 
 	/**
 	 * Client constructor.
 	 *
-	 * @param AuthClient $client The incoming Client to be modeled.
+	 * @param \WPGraphQL\Login\Auth\Client $client The incoming Client to be modeled.
 	 *
 	 * @return void
 	 */
-	public function __construct( AuthClient $client ) {
+	public function __construct( \WPGraphQL\Login\Auth\Client $client ) {
 		$this->data = $client;
 
 		$allowed_restricted_field = [

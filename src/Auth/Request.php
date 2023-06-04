@@ -21,7 +21,7 @@ class Request {
 	/**
 	 * Authenticates the request before GraphQL is executed.
 	 *
-	 * @throws UserError If the request is from an unauthorized origin.
+	 * @throws \GraphQL\Error\UserError If the request is from an unauthorized origin.
 	 */
 	public static function authenticate_token_on_request() : void {
 		// If a token is present, validate it.
@@ -36,7 +36,7 @@ class Request {
 	/**
 	 * Authenticates the request origin when GraphQL is executed.
 	 *
-	 * @throws UserError If the request is from an unauthorized origin.
+	 * @throws \GraphQL\Error\UserError If the request is from an unauthorized origin.
 	 */
 	public static function authenticate_origin_on_request() : void {
 		// If we block unauthorized origins, check the origin.

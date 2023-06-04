@@ -37,10 +37,10 @@ class Settings {
 	 * {@inheritDoc}
 	 */
 	public static function init() : void {
-		add_action( 'init', [ __CLASS__, 'register_settings' ] );
-		add_action( 'graphql_register_settings', [ __CLASS__, 'register_settings_tab' ] );
-		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'register_admin_scripts' ] );
-		add_filter( 'rest_pre_get_setting', [ __CLASS__, 'hide_sensitive_data_from_rest' ], 10, 2 );
+		add_action( 'init', [ self::class, 'register_settings' ] );
+		add_action( 'graphql_register_settings', [ self::class, 'register_settings_tab' ] );
+		add_action( 'admin_enqueue_scripts', [ self::class, 'register_admin_scripts' ] );
+		add_filter( 'rest_pre_get_setting', [ self::class, 'hide_sensitive_data_from_rest' ], 10, 2 );
 	}
 
 	/**
@@ -85,7 +85,6 @@ class Settings {
 
 					echo wp_kses_post( '<div id="wp-graphql-headless-login-settings"></div>' );
 				},
-				'',
 			]
 		);
 	}
@@ -115,7 +114,7 @@ class Settings {
 	 * @param string $handle The asset handle.
 	 * @param string $asset_name The asset name.
 	 *
-	 * @throws Error If the asset file is not found.
+	 * @throws \Error If the asset file is not found.
 	 */
 	private static function register_asset_js( string $handle, string $asset_name ) : void {
 		$script_asset_path = WPGRAPHQL_LOGIN_PLUGIN_DIR . 'build/' . $asset_name . '.asset.php';

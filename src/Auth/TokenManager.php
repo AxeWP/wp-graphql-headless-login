@@ -10,7 +10,6 @@ namespace WPGraphQL\Login\Auth;
 
 use WP_User;
 use WP_Error;
-use WPGraphQL\Login\Admin\Settings;
 use WPGraphQL\Login\Utils\Utils;
 use WPGraphQL\Login\Vendor\Firebase\JWT\JWT;
 use WPGraphQL\Login\Vendor\Firebase\JWT\Key;
@@ -65,8 +64,8 @@ class TokenManager {
 	/**
 	 * Gets the signed auth token for the user.
 	 *
-	 * @param WP_User $user The user.
-	 * @param bool    $enforce_current_user Whether to only allow the current user to be used. Default true.
+	 * @param \WP_User $user The user.
+	 * @param bool     $enforce_current_user Whether to only allow the current user to be used. Default true.
 	 */
 	public static function get_auth_token( WP_User $user, bool $enforce_current_user = true ) : ?string {
 		// Get the token data for signing.
@@ -93,8 +92,8 @@ class TokenManager {
 	/**
 	 * Gets the signed refresh token for the user.
 	 *
-	 * @param WP_User $user The user.
-	 * @param bool    $enforce_current_user Whether to only allow the current user to be used. Default true.
+	 * @param \WP_User $user The user.
+	 * @param bool     $enforce_current_user Whether to only allow the current user to be used. Default true.
 	 */
 	public static function get_refresh_token( WP_User $user, bool $enforce_current_user = true ) : ?string {
 		// Get the token data for signing.
@@ -170,7 +169,7 @@ class TokenManager {
 		/**
 		 * Filter the user secret before returning it, allowing for individual systems to override what's returned.
 		 *
-		 * @param string|WP_Error $secret The User secret.
+		 * @param string|\WP_Error $secret The User secret.
 		 * @param int     $user_id The ID of the user the secret is associated with.
 		 */
 		$secret = apply_filters( 'graphql_login_user_secret', $secret, $user_id );
@@ -184,7 +183,7 @@ class TokenManager {
 	 * @param int  $user_id The user ID.
 	 * @param bool $enforce_current_user Whether to enforce the user secret. Default true.
 	 *
-	 * @return true|WP_Error
+	 * @return true|\WP_Error
 	 */
 	public static function revoke_user_secret( int $user_id, bool $enforce_current_user = true ) {
 		// Return an error if the user cannot revoke the secret.
@@ -206,7 +205,7 @@ class TokenManager {
 	 * @param int  $user_id The user ID.
 	 * @param bool $enforce_current_user Whether to enforce the user secret. Default true.
 	 *
-	 * @return bool|WP_Error
+	 * @return bool|\WP_Error
 	 */
 	public static function refresh_user_secret( int $user_id, bool $enforce_current_user = true ) {
 		// Return an error if the user cannot revoke the secret.
@@ -251,10 +250,10 @@ class TokenManager {
 	/**
 	 * Creates the array used to generate the token.
 	 *
-	 * @param WP_User $user The user object.
-	 * @param bool    $enforce_current_user Whether to enforce the current user.
+	 * @param \WP_User $user The user object.
+	 * @param bool     $enforce_current_user Whether to enforce the current user.
 	 *
-	 * @return array|WP_Error
+	 * @return array|\WP_Error
 	 */
 	protected static function prepare_token( WP_User $user, bool $enforce_current_user = true ) {
 		/**
@@ -384,7 +383,7 @@ class TokenManager {
 	 * @param int  $user_id The user ID.
 	 * @param bool $enforce_current_user Whether to enforce the current user. Defaults to true.
 	 *
-	 * @return string|WP_Error
+	 * @return string|\WP_Error
 	 */
 	public static function issue_new_user_secret( int $user_id, bool $enforce_current_user = true ) {
 		// Bail if the current user has incorrect permissions.
@@ -409,7 +408,7 @@ class TokenManager {
 	 * @param string $token The token to validate. If null, the token will be retrieved from the request.
 	 * @param bool   $is_refresh_token Whether the token is a refresh token.
 	 *
-	 * @return object|WP_Error|null
+	 * @return object|\WP_Error|null
 	 */
 	public static function validate_token( string $token = null, bool $is_refresh_token = false ) {
 		// If no token provided, grab it from the auth header.
@@ -444,7 +443,8 @@ class TokenManager {
 
 		try {
 			$token = empty( $token ) ? null : JWT::decode( sanitize_text_field( $token ), new Key( self::get_secret_key(), 'HS256' ) );
-		} catch ( \Exception $exception ) {
+		} catch ( \Throwable $exception ) {
+			/** @var \Exception $exception */
 			$token = new WP_Error( 'invalid-secret-key', $exception->getMessage() );
 		}
 
