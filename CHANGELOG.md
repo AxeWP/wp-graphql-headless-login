@@ -5,7 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
 ## Unreleased
+
+## [0.1.2] - 2023-6-05
+
+This release implements the new WPGraphQL Coding Standards ruleset for `PHP_CodeSniffer`. While many of the addressed sniffs are cosmetic, numerous smells regarding performance, type safety, sanitization, and 3rd-party interoperability have been fixed as well.
+
 - chore: Implement `axepress/wp-graphql-cs` PHP_Codesniffer ruleset.
+- chore: Update WPGraphQL Plugin Boilerplate to v0.0.9.
+- chore: Update Composer dev-dependencies.
 
 ## [0.1.1] - 2023-5-26
 
