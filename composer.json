@@ -17,8 +17,7 @@
 	],
 	"require": {
 		"php": ">=7.4",
-		"axepress/wp-graphql-plugin-boilerplate":
-		"dev-dev/remove-type_registry-property",
+		"axepress/wp-graphql-plugin-boilerplate":"0.0.9",
 		"league/oauth2-facebook": "^2.2",
 		"league/oauth2-github": "^3.0",
 		"firebase/php-jwt": "^6.3",
@@ -46,9 +45,8 @@
 		"szepeviktor/phpstan-wordpress": "^1.1.5",
 		"php-stubs/woocommerce-stubs": "^7.3",
 		"axepress/wp-graphql-stubs": "^1.12.0",
-		"axepress/wp-graphql-cs": "dev-main",
-		"wp-cli/wp-cli-bundle": "^2.7",
-		"wp-cli/wp-cli": "dev-main",
+		"axepress/wp-graphql-cs": "^1.0.0-beta",
+		"wp-cli/wp-cli-bundle": "^2.8.1",
 		"php-coveralls/php-coveralls": "^2.5"
 	},
 	"config": {

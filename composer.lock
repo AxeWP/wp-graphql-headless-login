@@ -4,33 +4,32 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8c25e2dda06e6b23929bf2e0d4a54e08",
+    "content-hash": "fb14f494cf0d6f1203e11ff0e7a3e776",
     "packages": [
         {
             "name": "axepress/wp-graphql-plugin-boilerplate",
-            "version": "dev-dev/remove-type_registry-property",
+            "version": "0.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AxeWP/wp-graphql-plugin-boilerplate.git",
-                "reference": "689d10c9f20c046e255fc11ca53fc201e6fe47b7"
+                "reference": "5062b5b8896d14b8ee566b92fffa4d049e7abd34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AxeWP/wp-graphql-plugin-boilerplate/zipball/689d10c9f20c046e255fc11ca53fc201e6fe47b7",
-                "reference": "689d10c9f20c046e255fc11ca53fc201e6fe47b7",
+                "url": "https://api.github.com/repos/AxeWP/wp-graphql-plugin-boilerplate/zipball/5062b5b8896d14b8ee566b92fffa4d049e7abd34",
+                "reference": "5062b5b8896d14b8ee566b92fffa4d049e7abd34",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.4 || ^8.0 || ^8.1"
             },
             "require-dev": {
-                "axepress/wp-graphql-cs": "dev-main",
+                "axepress/wp-graphql-cs": "^1.0.0-beta",
                 "axepress/wp-graphql-stubs": "^1.12.2",
                 "phpstan/extension-installer": "^1.1",
                 "phpstan/phpstan": "^1.2",
                 "szepeviktor/phpstan-wordpress": "^1.0",
-                "wp-cli/wp-cli": "dev-main",
-                "wp-cli/wp-cli-bundle": "^2.7"
+                "wp-cli/wp-cli-bundle": "^2.8.1"
             },
             "type": "library",
             "autoload": {
@@ -55,7 +54,7 @@
             "description": "Boilerplate for creating WPGraphQL extensions",
             "support": {
                 "issues": "https://github.com/AxeWP/wp-graphql-plugin-boilerplate/issues",
-                "source": "https://github.com/AxeWP/wp-graphql-plugin-boilerplate/tree/dev/remove-type_registry-property"
+                "source": "https://github.com/AxeWP/wp-graphql-plugin-boilerplate/tree/0.0.9"
             },
             "funding": [
                 {
@@ -63,7 +62,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-06-04T14:10:33+00:00"
+            "time": "2023-06-05T10:47:44+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -1282,16 +1281,16 @@
         },
         {
             "name": "axepress/wp-graphql-cs",
-            "version": "dev-main",
+            "version": "1.0.0-beta.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AxeWP/WPGraphQL-Coding-Standards.git",
-                "reference": "bd1ae39aa46dfc15b081c68620afaf01e00dfbb7"
+                "reference": "03f0f3cfa997a0f32311113e146bcba8ea90b1c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AxeWP/WPGraphQL-Coding-Standards/zipball/bd1ae39aa46dfc15b081c68620afaf01e00dfbb7",
-                "reference": "bd1ae39aa46dfc15b081c68620afaf01e00dfbb7",
+                "url": "https://api.github.com/repos/AxeWP/WPGraphQL-Coding-Standards/zipball/03f0f3cfa997a0f32311113e146bcba8ea90b1c5",
+                "reference": "03f0f3cfa997a0f32311113e146bcba8ea90b1c5",
                 "shasum": ""
             },
             "require": {
@@ -1309,7 +1308,6 @@
                 "phpcsstandards/phpcsdevtools": "^1.0",
                 "phpunit/phpunit": "^4 || ^5 || ^6 || ^7"
             },
-            "default-branch": true,
             "type": "phpcodesniffer-standard",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1339,7 +1337,7 @@
                 "issues": "https://github.com/AxeWP/WPGraphQL-Coding-Standards/issues",
                 "source": "https://github.com/AxeWP/WPGraphQL-Coding-Standards"
             },
-            "time": "2023-06-04T14:01:43+00:00"
+            "time": "2023-06-05T09:07:08+00:00"
         },
         {
             "name": "axepress/wp-graphql-stubs",
@@ -3868,16 +3866,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.5.1",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
-                "reference": "e92dcc83d5a51851baf5f5591d32cb2b16e3684e"
+                "reference": "bac1765cb52bbd3364a870e920cb69cd859ee302"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mockery/mockery/zipball/e92dcc83d5a51851baf5f5591d32cb2b16e3684e",
-                "reference": "e92dcc83d5a51851baf5f5591d32cb2b16e3684e",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/bac1765cb52bbd3364a870e920cb69cd859ee302",
+                "reference": "bac1765cb52bbd3364a870e920cb69cd859ee302",
                 "shasum": ""
             },
             "require": {
@@ -3889,7 +3887,9 @@
                 "phpunit/phpunit": "<8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^8.5 || ^9.3"
+                "phpunit/phpunit": "^8.5 || ^9.3",
+                "psalm/plugin-phpunit": "^0.18",
+                "vimeo/psalm": "^5.9"
             },
             "type": "library",
             "extra": {
@@ -3898,8 +3898,12 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Mockery": "library/"
+                "files": [
+                    "library/helpers.php",
+                    "library/Mockery.php"
+                ],
+                "psr-4": {
+                    "Mockery\\": "library/Mockery"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3934,9 +3938,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mockery/mockery/issues",
-                "source": "https://github.com/mockery/mockery/tree/1.5.1"
+                "source": "https://github.com/mockery/mockery/tree/1.6.0"
             },
-            "time": "2022-09-07T15:32:08+00:00"
+            "time": "2023-05-03T12:55:29+00:00"
         },
         {
             "name": "mustache/mustache",
@@ -4864,16 +4868,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.15",
+            "version": "1.10.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "762c4dac4da6f8756eebb80e528c3a47855da9bd"
+                "reference": "352bdbb960bb523e3d71b834862589f910921c23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/762c4dac4da6f8756eebb80e528c3a47855da9bd",
-                "reference": "762c4dac4da6f8756eebb80e528c3a47855da9bd",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/352bdbb960bb523e3d71b834862589f910921c23",
+                "reference": "352bdbb960bb523e3d71b834862589f910921c23",
                 "shasum": ""
             },
             "require": {
@@ -4922,7 +4926,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-09T15:28:01+00:00"
+            "time": "2023-06-05T08:21:46+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -10898,16 +10902,16 @@
         },
         {
             "name": "wp-cli/wp-cli",
-            "version": "dev-main",
+            "version": "v2.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-cli/wp-cli.git",
-                "reference": "d38c166d3dc86d57e6d0a93fe75a6a916dcea1b9"
+                "reference": "5dd2340b9a01c3cfdbaf5e93a140759fdd190eee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-cli/wp-cli/zipball/d38c166d3dc86d57e6d0a93fe75a6a916dcea1b9",
-                "reference": "d38c166d3dc86d57e6d0a93fe75a6a916dcea1b9",
+                "url": "https://api.github.com/repos/wp-cli/wp-cli/zipball/5dd2340b9a01c3cfdbaf5e93a140759fdd190eee",
+                "reference": "5dd2340b9a01c3cfdbaf5e93a140759fdd190eee",
                 "shasum": ""
             },
             "require": {
@@ -10930,7 +10934,6 @@
                 "ext-readline": "Include for a better --prompt implementation",
                 "ext-zip": "Needed to support extraction of ZIP archives when doing downloads or updates"
             },
-            "default-branch": true,
             "bin": [
                 "bin/wp",
                 "bin/wp.bat"
@@ -10965,20 +10968,20 @@
                 "issues": "https://github.com/wp-cli/wp-cli/issues",
                 "source": "https://github.com/wp-cli/wp-cli"
             },
-            "time": "2023-06-03T08:07:34+00:00"
+            "time": "2023-06-05T06:55:55+00:00"
         },
         {
             "name": "wp-cli/wp-cli-bundle",
-            "version": "v2.8.0",
+            "version": "v2.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-cli/wp-cli-bundle.git",
-                "reference": "c6edb2afc8d9fc0727f9cb45edc3c97c16c155c0"
+                "reference": "42e9cb9c16831c31ff720ed9dd1604e0f9871695"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-cli/wp-cli-bundle/zipball/c6edb2afc8d9fc0727f9cb45edc3c97c16c155c0",
-                "reference": "c6edb2afc8d9fc0727f9cb45edc3c97c16c155c0",
+                "url": "https://api.github.com/repos/wp-cli/wp-cli-bundle/zipball/42e9cb9c16831c31ff720ed9dd1604e0f9871695",
+                "reference": "42e9cb9c16831c31ff720ed9dd1604e0f9871695",
                 "shasum": ""
             },
             "require": {
@@ -11009,7 +11012,7 @@
                 "wp-cli/shell-command": "^2",
                 "wp-cli/super-admin-command": "^2",
                 "wp-cli/widget-command": "^2",
-                "wp-cli/wp-cli": "^2.8.0"
+                "wp-cli/wp-cli": "^2.8.1"
             },
             "require-dev": {
                 "roave/security-advisories": "dev-latest",
@@ -11039,7 +11042,7 @@
                 "issues": "https://github.com/wp-cli/wp-cli-bundle/issues",
                 "source": "https://github.com/wp-cli/wp-cli-bundle"
             },
-            "time": "2023-05-31T19:28:30+00:00"
+            "time": "2023-06-05T07:33:43+00:00"
         },
         {
             "name": "wp-cli/wp-config-transformer",
@@ -11263,9 +11266,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "axepress/wp-graphql-plugin-boilerplate": 20,
-        "axepress/wp-graphql-cs": 20,
-        "wp-cli/wp-cli": 20
+        "axepress/wp-graphql-cs": 10
     },
     "prefer-stable": false,
     "prefer-lowest": false,
