@@ -17,22 +17,24 @@ class WoocommerceSchemaFilters implements Registrable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function init() : void {
+	public static function init(): void {
 		// Bail if WPGraphQL for Woocommerce doesnt exist.
 		if ( ! defined( 'WPGRAPHQL_WOOCOMMERCE_VERSION' ) ) {
 			return;
 		}
 
-		add_filter( 'graphql_login_user_types', [ __CLASS__, 'add_customer_to_user_types' ] );
-		add_action( 'graphql_register_types', [ __CLASS__, 'add_fields' ] );
+		add_filter( 'graphql_login_user_types', [ self::class, 'add_customer_to_user_types' ] );
+		add_action( 'graphql_register_types', [ self::class, 'add_fields' ] );
 	}
 
 	/**
 	 * Adds the Customer object to the list of 'User' types that get AuthenticationData.
 	 *
 	 * @param string[] $types The GraphQL type names.
+	 *
+	 * @return string[]
 	 */
-	public static function add_customer_to_user_types( array $types ) : array {
+	public static function add_customer_to_user_types( array $types ): array {
 		$types[] = 'Customer';
 
 		return $types;
@@ -41,7 +43,7 @@ class WoocommerceSchemaFilters implements Registrable {
 	/**
 	 * Adds WooGraphQL fields to the plugin GraphQL types.
 	 */
-	public static function add_fields() : void {
+	public static function add_fields(): void {
 		// Register session token to Authentication data.
 		register_graphql_field(
 			AuthenticationData::get_type_name(),

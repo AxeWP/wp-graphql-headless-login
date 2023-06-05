@@ -50,7 +50,7 @@ if ( ! class_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\Connection
 		/**
 		 * {@inheritDoc}
 		 */
-		public static function init() : void {
+		public static function init(): void {
 			add_action( 'graphql_register_types', [ static::class, 'register' ] );
 		}
 
@@ -63,7 +63,7 @@ if ( ! class_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\Connection
 		 *   defaultValue?: mixed
 		 * }>,
 		 */
-		abstract protected static function connection_args() : array;
+		abstract protected static function connection_args(): array;
 
 		/**
 		 * Gets the $config array used to register the connection to the GraphQL type.
@@ -72,7 +72,7 @@ if ( ! class_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\Connection
 		 *
 		 * @return ConnectionConfig
 		 */
-		protected static function get_connection_config( $config ) : array {
+		protected static function get_connection_config( $config ): array {
 			return array_merge(
 				[
 					'toType' => static::get_type_name(),
@@ -85,8 +85,14 @@ if ( ! class_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\Connection
 		 * Returns a filtered array of connection args.
 		 *
 		 * @param ?string[] $filter_by an array of specific connections to return.
+		 *
+		 * @return array<string, array{
+		 *   type: string|array<string, string | array<string, string>>,
+		 *   description: string,
+		 *   defaultValue?: mixed
+		 * }>
 		 */
-		final public static function get_connection_args( ?array $filter_by = null ) : array {
+		final public static function get_connection_args( ?array $filter_by = null ): array {
 			$connection_args = static::connection_args();
 
 			if ( empty( $filter_by ) ) {

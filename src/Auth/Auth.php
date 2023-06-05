@@ -9,25 +9,23 @@
 namespace WPGraphQL\Login\Auth;
 
 use GraphQL\Error\UserError;
-use WP_Error;
 use WPGraphQL\Login\Auth\Client;
 use WPGraphQL\Login\Auth\ProviderConfig\Password;
-use WPGraphQL\Type\WPEnumType;
 use WPGraphQL\Utils\Utils;
+use WP_Error;
 
 /**
  * Class - Auth
  */
 class Auth {
-
 	/**
 	 * Gets the Client instance for the provider.
 	 *
 	 * @param string $provider The provider slug.
 	 *
-	 * @throws UserError If the client is invalid.
+	 * @throws \GraphQL\Error\UserError If the client is invalid.
 	 */
-	public static function get_client( string $provider ) : Client {
+	public static function get_client( string $provider ): Client {
 		$client = new Client( $provider );
 
 		// Ensure the client is valid before returning.
@@ -39,11 +37,12 @@ class Auth {
 	/**
 	 * Validates the Authentication provider's response and logs in the user.
 	 *
-	 * @param array $input the mutation input.
+	 * @param array<string, mixed> $input The mutation input.
 	 *
-	 * @throws UserError If the user cannot be created.
+	 * @return array<string, mixed> The user data.
+	 * @throws \GraphQL\Error\UserError If the user cannot be created.
 	 */
-	public static function login( array $input ) : array {
+	public static function login( array $input ): array {
 		// If the user is already logged in, throw an error.
 		if ( is_user_logged_in() ) {
 			throw new UserError( __( 'You are already logged in.', 'wp-graphql-headless-login' ) );
@@ -100,7 +99,7 @@ class Auth {
 		 * @param array          $payload   The payload.
 		 * @param \WP_User       $user      The user.
 		 * @param array|mixed    $user_data The user data from the Provider.
-		 * @param Client         $client    The client instance.
+		 * @param \WPGraphQL\Login\Auth\Client $client The client instance.
 		 */
 		$payload = apply_filters( 'graphql_login_payload', $payload, $user, $user_data, $client );
 
@@ -109,7 +108,7 @@ class Auth {
 		 *
 		 * @param array  $payload   The payload.
 		 * @param \WP_User  $user_data The user data from the Provider.
-		 * @param Client $client    The client instance.
+		 * @param \WPGraphQL\Login\Auth\Client $client The client instance.
 		 */
 		do_action( 'graphql_login_after_successful_login', $payload, $user, $client );
 
@@ -119,11 +118,12 @@ class Auth {
 	/**
 	 * Validates the Authentication provider's response and links it to an existing user account.
 	 *
-	 * @param array $input the mutation input.
+	 * @param array<string, mixed> $input The mutation input.
 	 *
-	 * @throws UserError If the user cannot be linked.
+	 * @return array<string, mixed> The user data.
+	 * @throws \GraphQL\Error\UserError If the user cannot be linked.
 	 */
-	public static function link_user_identity( array $input ) : array {
+	public static function link_user_identity( array $input ): array {
 		if ( Password::get_slug() === $input['provider'] ) {
 			throw new UserError( __( 'You cannot link two identities from the same WordPress site. Please use a different `provider`.', 'wp-graphql-headless-login' ) );
 		}
@@ -176,7 +176,7 @@ class Auth {
 		 *
 		 * @param \WP_User|false $linked_user The linked user.
 		 * @param array         $user_data   The user data from the Provider.
-		 * @param Client        $client      The client instance.
+		 * @param \WPGraphQL\Login\Auth\Client $client The client instance.
 		 */
 		do_action( 'graphql_login_link_user_identity', $linked_user, $user_data, $client );
 
@@ -191,9 +191,9 @@ class Auth {
 	 *
 	 * @param mixed $client The client instance.
 	 *
-	 * @throws UserError If the client is invalid.
+	 * @throws \GraphQL\Error\UserError If the client is invalid.
 	 */
-	private static function validate_client( $client ) : void {
+	private static function validate_client( $client ): void {
 		if ( $client instanceof WP_Error ) {
 			throw new UserError( $client->get_error_message() );
 		}

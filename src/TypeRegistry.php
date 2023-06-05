@@ -8,29 +8,30 @@
 namespace WPGraphQL\Login;
 
 use Exception;
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\GraphQLType;
 use WPGraphQL\Login\Mutation;
 use WPGraphQL\Login\Type\Enum;
 use WPGraphQL\Login\Type\Input;
 use WPGraphQL\Login\Type\WPInterface;
 use WPGraphQL\Login\Type\WPObject;
+use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\GraphQLType;
 
 /**
  * Class - TypeRegistry
  */
 class TypeRegistry {
-
 	/**
 	 * The local registry of registered types.
 	 *
-	 * @var array
+	 * @var string[]
 	 */
 	public static array $registry = [];
 
 	/**
 	 * Gets an array of all the registered GraphQL types along with their class name.
+	 *
+	 * @return string[]
 	 */
-	public static function get_registered_types() : array {
+	public static function get_registered_types(): array {
 		if ( empty( self::$registry ) ) {
 			self::initialize_registry();
 		}
@@ -41,7 +42,7 @@ class TypeRegistry {
 	/**
 	 * Registers types, connections, unions, and mutations to GraphQL schema.
 	 */
-	public static function init() : void {
+	public static function init(): void {
 		/**
 		 * Fires before any types have been registered.
 		 */
@@ -58,7 +59,7 @@ class TypeRegistry {
 	/**
 	 * Initializes the plugin type registry.
 	 */
-	private static function initialize_registry() : void {
+	private static function initialize_registry(): void {
 		$classes_to_register = array_merge(
 			self::enums(),
 			self::inputs(),
@@ -74,8 +75,10 @@ class TypeRegistry {
 
 	/**
 	 * List of Enum classes to register.
+	 *
+	 * @return string[]
 	 */
-	private static function enums() : array {
+	private static function enums(): array {
 		// Enums to register.
 		$classes_to_register = [
 			Enum\GoogleProviderPromptTypeEnum::class,
@@ -94,8 +97,10 @@ class TypeRegistry {
 
 	/**
 	 * List of Input classes to register.
+	 *
+	 * @return string[]
 	 */
-	private static function inputs() : array {
+	private static function inputs(): array {
 		$classes_to_register = [
 			Input\OAuthProviderResponseInput::class,
 			Input\PasswordProviderResponseInput::class,
@@ -113,8 +118,10 @@ class TypeRegistry {
 
 	/**
 	 * List of Interface classes to register.
+	 *
+	 * @return string[]
 	 */
-	public static function interfaces() : array {
+	public static function interfaces(): array {
 		$classes_to_register = [
 			WPInterface\ClientOptions::class,
 			WPInterface\LoginOptions::class,
@@ -132,8 +139,10 @@ class TypeRegistry {
 
 	/**
 	 * List of Object classes to register.
+	 *
+	 * @return string[]
 	 */
-	public static function objects() : array {
+	public static function objects(): array {
 		$classes_to_register = [
 			WPObject\Client::class,
 			WPObject\ClientOptions::class,
@@ -154,8 +163,10 @@ class TypeRegistry {
 
 	/**
 	 * List of Field classes to register.
+	 *
+	 * @return string[]
 	 */
-	public static function fields() : array {
+	public static function fields(): array {
 		$classes_to_register = [
 			Fields\RootQuery::class,
 		];
@@ -172,8 +183,10 @@ class TypeRegistry {
 
 	/**
 	 * List of Connection classes to register.
+	 *
+	 * @return string[]
 	 */
-	public static function connections() : array {
+	public static function connections(): array {
 		$classes_to_register = [];
 
 		/**
@@ -188,8 +201,10 @@ class TypeRegistry {
 
 	/**
 	 * Registers mutation.
+	 *
+	 * @return string[]
 	 */
-	public static function mutations() : array {
+	public static function mutations(): array {
 		$classes_to_register = [
 			Mutation\LinkUserIdentity::class,
 			Mutation\Login::class,
@@ -217,9 +232,9 @@ class TypeRegistry {
 	 *
 	 * @param string[] $classes_to_register .
 	 *
-	 * @throws Exception .
+	 * @throws \Exception .
 	 */
-	private static function register_types( array $classes_to_register ) : void {
+	private static function register_types( array $classes_to_register ): void {
 		// Bail if there are no classes to register.
 		if ( empty( $classes_to_register ) ) {
 			return;

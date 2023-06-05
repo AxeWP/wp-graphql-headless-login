@@ -25,21 +25,21 @@ class Google extends OAuth2Config {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_name() : string {
+	public static function get_name(): string {
 		return __( 'Google', 'wp-graphql-headless-login' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_slug() : string {
+	public static function get_slug(): string {
 		return 'google';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function get_options( array $settings ) : array {
+	protected function get_options( array $settings ): array {
 		return [
 			'clientId'     => $settings['clientId'] ?? null,
 			'clientSecret' => $settings['clientSecret'] ?? null,
@@ -53,7 +53,7 @@ class Google extends OAuth2Config {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected static function client_options_schema() : array {
+	protected static function client_options_schema(): array {
 		return [
 			'hostedDomain' => [
 				'type'        => 'string',
@@ -88,7 +88,7 @@ class Google extends OAuth2Config {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected static function client_options_fields() : array {
+	protected static function client_options_fields(): array {
 		return [
 			'hostedDomain' => [
 				'type'        => 'String',
@@ -108,9 +108,11 @@ class Google extends OAuth2Config {
 	/**
 	 * Maps the provider's user data to WP_User arguments.
 	 *
-	 * @param array $owner_details The Resource Owner details returned from the OAuth2 provider.
+	 * @param array<string, mixed> $owner_details The Resource Owner details returned from the OAuth2 provider.
+	 *
+	 * @return array<string, mixed> The mapped user data.
 	 */
-	public function get_user_data( array $owner_details ) : array {
+	public function get_user_data( array $owner_details ): array {
 		$email    = $owner_details['email'];
 		$username = strstr( $email, '@', true );
 

@@ -17,21 +17,21 @@ class Password extends ProviderConfig {
 	/**
 	 * {@inheritdoc}
 	 */
-	public static function get_type() : string {
+	public static function get_type(): string {
 		return 'password';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_name() : string {
+	public static function get_name(): string {
 		return __( 'Password', 'wp-graphql-headless-login' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_slug() : string {
+	public static function get_slug(): string {
 		return 'password';
 	}
 
@@ -77,20 +77,18 @@ class Password extends ProviderConfig {
 	 *
 	 * @return array{username: ?string, password: ?string}
 	 *
-	 * @throws UserError
+	 * @throws \GraphQL\Error\UserError
 	 */
-	protected function prepare_mutation_input( array $input ) : array {
+	protected function prepare_mutation_input( array $input ): array {
 		if ( ! isset( $input['credentials'] ) ) {
 			throw new UserError(
 				__( 'The PASSWORD provider requires the use of the `credentials` input arg.', 'wp-graphql-headless-login' )
 			);
 		}
 
-		$args = [
+		return [
 			'username' => ! empty( $input['credentials']['username'] ) ? sanitize_text_field( $input['credentials']['username'] ) : null,
 			'password' => ! empty( $input['credentials']['password'] ) ? trim( $input['credentials']['password'] ) : null,
 		];
-
-		return $args;
 	}
 }

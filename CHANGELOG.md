@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
 ## Unreleased
-
+- chore: Implement `axepress/wp-graphql-cs` PHP_Codesniffer ruleset.
 
 ## [0.1.1] - 2023-5-26
 

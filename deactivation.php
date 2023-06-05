@@ -14,8 +14,8 @@ if ( ! function_exists( 'graphql_login_deactivation_callback' ) ) {
 	 *
 	 * @since 0.0.1
 	 */
-	function graphql_login_deactivation_callback() : callable {
-		return static function () : void {
+	function graphql_login_deactivation_callback(): callable {
+		return static function (): void {
 			// Fire an action when WPGraphQL is de-activating.
 			do_action( 'graphql_login_deactivate' );
 
@@ -31,7 +31,7 @@ if ( ! function_exists( 'graphql_login_delete_data' ) ) {
 	 *
 	 * @since 0.0.1
 	 */
-	function graphql_login_delete_data() : void {
+	function graphql_login_delete_data(): void {
 
 		// Check if the plugin is set to delete data or not.
 		$delete_data = graphql_login_get_setting( 'delete_data_on_deactivate' );

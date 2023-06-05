@@ -24,21 +24,21 @@ class Facebook extends OAuth2Config {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_name() : string {
+	public static function get_name(): string {
 		return __( 'Facebook', 'wp-graphql-headless-login' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_slug() : string {
+	public static function get_slug(): string {
 		return 'facebook';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function get_options( array $settings ) : array {
+	protected function get_options( array $settings ): array {
 		return [
 			'clientId'        => $settings['clientId'] ?? null,
 			'clientSecret'    => $settings['clientSecret'] ?? null,
@@ -51,7 +51,7 @@ class Facebook extends OAuth2Config {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected static function client_options_schema() : array {
+	protected static function client_options_schema(): array {
 		return [
 			'graphAPIVersion' => [
 				'type'        => 'string',
@@ -82,19 +82,19 @@ class Facebook extends OAuth2Config {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected static function client_options_fields() : array {
+	protected static function client_options_fields(): array {
 		return [
 			'graphApiVersion' => [
 				'type'        => 'String',
 				'description' => __( 'The Facebook Graph API version.', 'wp-graphql-headless-login' ),
-				'resolve'     => static function( array $settings ) : ?string {
+				'resolve'     => static function ( array $settings ): ?string {
 					return $settings['graphAPIVersion'] ?? null;
 				},
 			],
 			'enableBetaTier'  => [
 				'type'        => 'Boolean',
 				'description' => __( 'Enable the Facebook Beta Tier.', 'wp-graphql-headless-login' ),
-				'resolve'     => static fn ( $value ) : bool => $value['enableBetaTier'] ?? false,
+				'resolve'     => static fn ( $value ): bool => $value['enableBetaTier'] ?? false,
 			],
 			'scope'           => [
 				'type'        => [ 'list_of' => 'String' ],
@@ -106,7 +106,7 @@ class Facebook extends OAuth2Config {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_user_data( array $owner_details ) : array {
+	public function get_user_data( array $owner_details ): array {
 		$email    = $owner_details['email'];
 		$username = $owner_details['username'] ?? strstr( $email, '@', true );
 

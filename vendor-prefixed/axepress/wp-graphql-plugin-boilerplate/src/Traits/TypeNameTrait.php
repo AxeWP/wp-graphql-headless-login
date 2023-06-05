@@ -25,7 +25,7 @@ if ( ! trait_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Traits\TypeNameTrait
 		 *
 		 * @throws \Exception When the implementing class has no type name.
 		 */
-		final public static function get_type_name() : string {
+		final public static function get_type_name(): string {
 			if ( ! method_exists( static::class, 'type_name' ) ) {
 				throw new Exception(
 				// translators: the implementing class.

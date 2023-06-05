@@ -28,8 +28,8 @@ if ( ! class_exists( \WPGraphQL\Login\Main::class ) ) :
 		/**
 		 * Constructor
 		 */
-		public static function instance() : self {
-			if ( ! isset( self::$instance ) || ! ( is_a( self::$instance, __CLASS__ ) ) ) {
+		public static function instance(): self {
+			if ( ! isset( self::$instance ) || ! ( is_a( self::$instance, self::class ) ) ) {
 				// You cant test a singleton.
 				// phpcs:ignore
 				// @codeCoverageIgnoreStart
@@ -71,7 +71,7 @@ if ( ! class_exists( \WPGraphQL\Login\Main::class ) ) :
 		 *
 		 * @codeCoverageIgnore
 		 */
-		private function setup() : void {
+		private function setup(): void {
 			// Setup boilerplate hook prefix.
 			Helper::set_hook_prefix( 'graphql_login' );
 
@@ -105,7 +105,7 @@ if ( ! class_exists( \WPGraphQL\Login\Main::class ) ) :
 		 *
 		 * @codeCoverageIgnore
 		 */
-		public function __wakeup() : void {
+		public function __wakeup(): void {
 			// De-serializing instances of the class is forbidden.
 			_doing_it_wrong( __FUNCTION__, esc_html__( 'De-serializing instances of the plugin Main class is not allowed.', 'wp-graphql-headless-login' ), '0.0.1' );
 		}

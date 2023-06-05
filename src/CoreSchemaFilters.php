@@ -20,18 +20,18 @@ class CoreSchemaFilters implements Registrable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function init() : void {
+	public static function init(): void {
 		// Prefix the GraphQL type names.
-		add_filter( 'graphql_login_type_prefix', [ __CLASS__, 'get_type_prefix' ] );
+		add_filter( 'graphql_login_type_prefix', [ self::class, 'get_type_prefix' ] );
 
 		// Filter how WordPress determines the current user.
-		add_filter( 'determine_current_user', [ __CLASS__, 'determine_current_user' ], 99 );
+		add_filter( 'determine_current_user', [ self::class, 'determine_current_user' ], 99 );
 
 		// Extend the User model to hold authentication data.
 		add_filter( 'graphql_model_prepare_fields', [ User::class, 'get_fields' ], 10, 3 );
 
 		// Filter the signed token, preventing it from returning if the user has had their JWT Secret revoked.
-		add_filter( 'graphql_login_signed_token', [ __CLASS__, 'check_if_secret_is_revoked' ], 10, 2 );
+		add_filter( 'graphql_login_signed_token', [ self::class, 'check_if_secret_is_revoked' ], 10, 2 );
 
 		// Filter the GraphQL response headers.
 		add_filter( 'graphql_response_headers_to_send', [ Request::class, 'response_headers_to_send' ] );
@@ -47,7 +47,7 @@ class CoreSchemaFilters implements Registrable {
 	/**
 	 * Don't prefix type names.
 	 */
-	public static function get_type_prefix() : string {
+	public static function get_type_prefix(): string {
 		return '';
 	}
 
@@ -57,9 +57,9 @@ class CoreSchemaFilters implements Registrable {
 	 * @param string  $token the token to return.
 	 * @param integer $user_id the user ID.
 	 *
-	 * @throws UserError If the user has had their JWT Secret revoked.
+	 * @throws \GraphQL\Error\UserError If the user has had their JWT Secret revoked.
 	 */
-	public static function check_if_secret_is_revoked( string $token, int $user_id ) : string {
+	public static function check_if_secret_is_revoked( string $token, int $user_id ): string {
 		$is_revoked = TokenManager::is_user_secret_revoked( $user_id );
 
 		if ( $is_revoked ) {
@@ -74,7 +74,7 @@ class CoreSchemaFilters implements Registrable {
 	 *
 	 * @param int $user_id The user ID.
 	 */
-	public static function determine_current_user( int $user_id ) : int {
+	public static function determine_current_user( int $user_id ): int {
 		// Validate the token.
 		$token = TokenManager::validate_token();
 
@@ -88,5 +88,4 @@ class CoreSchemaFilters implements Registrable {
 
 		return absint( $user_id );
 	}
-
 }

@@ -7,7 +7,6 @@
 
 namespace WPGraphQL\Login\Model;
 
-use WPGraphQL\Login\Auth\Client as AuthClient;
 use WPGraphQL\Model\Model;
 
 /**
@@ -23,22 +22,21 @@ use WPGraphQL\Model\Model;
  * @property string  $provider
  */
 class Client extends Model {
-
 	/**
 	 * Stores the incoming Client to be modeled
 	 *
-	 * @var AuthClient $data
+	 * @var \WPGraphQL\Login\Auth\Client $data
 	 */
 	protected $data;
 
 	/**
 	 * Client constructor.
 	 *
-	 * @param AuthClient $client The incoming Client to be modeled.
+	 * @param \WPGraphQL\Login\Auth\Client $client The incoming Client to be modeled.
 	 *
 	 * @return void
 	 */
-	public function __construct( AuthClient $client ) {
+	public function __construct( \WPGraphQL\Login\Auth\Client $client ) {
 		$this->data = $client;
 
 		$allowed_restricted_field = [
@@ -66,14 +64,14 @@ class Client extends Model {
 			$slug = $this->data->get_provider_slug();
 
 			$this->fields = [
-				'authorizationUrl' => fn() => $this->data->get_authorization_url(),
-				'clientOptions'    => static fn() => $config['clientOptions'] + [ '__typename' => $slug ],
-				'clientId'         => static fn() => $config['clientOptions']['clientId'] ?? null,
-				'isEnabled'        => static fn() => ! empty( $config['isEnabled'] ),
-				'loginOptions'     => static fn() => $config['loginOptions'] + [ '__typename' => $slug ],
-				'name'             => static fn() => $config['name'] ?? null,
-				'order'            => static fn() => $config['order'] ?? null,
-				'provider'         => static fn() => $slug,
+				'authorizationUrl' => fn () => $this->data->get_authorization_url(),
+				'clientOptions'    => static fn () => $config['clientOptions'] + [ '__typename' => $slug ],
+				'clientId'         => static fn () => $config['clientOptions']['clientId'] ?? null,
+				'isEnabled'        => static fn () => ! empty( $config['isEnabled'] ),
+				'loginOptions'     => static fn () => $config['loginOptions'] + [ '__typename' => $slug ],
+				'name'             => static fn () => $config['name'] ?? null,
+				'order'            => static fn () => $config['order'] ?? null,
+				'provider'         => static fn () => $slug,
 			];
 		}
 	}

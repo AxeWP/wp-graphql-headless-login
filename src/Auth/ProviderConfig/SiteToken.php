@@ -19,7 +19,7 @@ class SiteToken extends ProviderConfig {
 	/**
 	 * The provider options as stored in the database.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected array $options;
 
@@ -35,21 +35,21 @@ class SiteToken extends ProviderConfig {
 	/**
 	 * {@inheritdoc}
 	 */
-	public static function get_type() : string {
+	public static function get_type(): string {
 		return 'siteToken';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_name() : string {
+	public static function get_name(): string {
 		return __( 'Site Token', 'wp-graphql-headless-login' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_slug() : string {
+	public static function get_slug(): string {
 		return 'siteToken';
 	}
 
@@ -85,7 +85,7 @@ class SiteToken extends ProviderConfig {
 			);
 		}
 
-		$secret = $_SERVER[ 'HTTP_' . $header_key ] ?? '';
+		$secret = isset( $_SERVER[ 'HTTP_' . $header_key ] ) ? sanitize_text_field( $_SERVER[ 'HTTP_' . $header_key ] ) : '';
 
 		if ( empty( $secret ) ) {
 			return new \WP_Error(
@@ -140,26 +140,24 @@ class SiteToken extends ProviderConfig {
 	 *
 	 * @return array{subject_identity: ?string}
 	 *
-	 * @throws UserError
+	 * @throws \GraphQL\Error\UserError
 	 */
-	protected function prepare_mutation_input( array $input ) : array {
+	protected function prepare_mutation_input( array $input ): array {
 		if ( ! isset( $input['identity'] ) ) {
 			throw new UserError(
 				__( 'The SITE_TOKEN provider requires the use of the `identity` input arg.', 'wp-graphql-headless-login' )
 			);
 		}
 
-		$args = [
+		return [
 			'subject_identity' => ! empty( $input['identity'] ) ? sanitize_text_field( $input['identity'] ) : null,
 		];
-
-		return $args;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected static function client_options_schema() : array {
+	protected static function client_options_schema(): array {
 		return [
 			'headerKey' => [
 				'type'        => 'string',

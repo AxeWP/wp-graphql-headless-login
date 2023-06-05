@@ -19,14 +19,14 @@ class Utils {
 	/**
 	 * The plugin settings.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected static array $settings = [];
 
 	/**
 	 * The providers config
 	 *
-	 * @var array
+	 * @var array<string, array<string, mixed>>
 	 */
 	protected static array $providers = [];
 
@@ -72,7 +72,7 @@ class Utils {
 	 * @param string $option_name The name of the setting.
 	 * @param mixed  $value The value of the setting.
 	 */
-	public static function update_plugin_setting( string $option_name, $value ) : bool {
+	public static function update_plugin_setting( string $option_name, $value ): bool {
 		$option_name = PluginSettings::$settings_prefix . $option_name;
 
 		$success = update_option( $option_name, $value );
@@ -83,7 +83,6 @@ class Utils {
 
 		return $success;
 	}
-
 
 	/**
 	 * Gets a single access control setting.
@@ -118,7 +117,7 @@ class Utils {
 	 *
 	 * @param string $slug The provider slug.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public static function get_provider_settings( string $slug ) {
 		if ( ! isset( self::$providers[ $slug ] ) ) {
@@ -139,9 +138,9 @@ class Utils {
 	/**
 	 * Gets all provider settings from the database.
 	 *
-	 * @return array
+	 * @return array<string, array<string, mixed>>
 	 */
-	public static function get_all_provider_settings() : array {
+	public static function get_all_provider_settings(): array {
 		$providers = ProviderRegistry::get_instance()->get_registered_providers();
 
 		foreach ( array_keys( $providers ) as $slug ) {
@@ -158,7 +157,7 @@ class Utils {
 	 *
 	 * @param int|\WP_User $user The user or user ID.
 	 */
-	public static function is_current_user( $user ) : bool {
+	public static function is_current_user( $user ): bool {
 		$user_id = $user instanceof \WP_User ? $user->ID : $user;
 
 		if ( empty( $user_id ) ) {

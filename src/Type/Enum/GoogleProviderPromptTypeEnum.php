@@ -17,22 +17,22 @@ class GoogleProviderPromptTypeEnum extends EnumType {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function type_name() : string {
+	public static function type_name(): string {
 		return 'GoogleProviderPromptTypeEnum';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_description() : string {
+	public static function get_description(): string {
 		return __( 'The Google OAuth2 Provider prompt type.', 'wp-graphql-headless-login' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_values() : array {
-		$values = [
+	public static function get_values(): array {
+		return [
 			'NONE'           => [
 				'value'       => 'none',
 				'description' => __( 'The authorization server does not display any authentication or user consent screens; it will return an error if the user is not already authenticated and has not pre-configured consent for the requested scopes. You can use none to check for existing authentication and/or consent.', 'wp-graphql-headless-login' ),
@@ -46,7 +46,5 @@ class GoogleProviderPromptTypeEnum extends EnumType {
 				'description' => __( 'The authorization server prompts the user to select a user account. This allows a user who has multiple accounts at the authorization server to select amongst the multiple accounts that they may have current sessions for.', 'wp-graphql-headless-login' ),
 			],
 		];
-
-		return $values;
 	}
 }

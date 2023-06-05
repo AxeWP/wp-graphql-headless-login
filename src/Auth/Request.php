@@ -17,13 +17,12 @@ use WPGraphQL\Login\Utils\Utils;
  * Class - Request
  */
 class Request {
-
 	/**
 	 * Authenticates the request before GraphQL is executed.
 	 *
-	 * @throws UserError If the request is from an unauthorized origin.
+	 * @throws \GraphQL\Error\UserError If the request is from an unauthorized origin.
 	 */
-	public static function authenticate_token_on_request() : void {
+	public static function authenticate_token_on_request(): void {
 		// If a token is present, validate it.
 		$token = TokenManager::validate_token();
 
@@ -36,9 +35,9 @@ class Request {
 	/**
 	 * Authenticates the request origin when GraphQL is executed.
 	 *
-	 * @throws UserError If the request is from an unauthorized origin.
+	 * @throws \GraphQL\Error\UserError If the request is from an unauthorized origin.
 	 */
-	public static function authenticate_origin_on_request() : void {
+	public static function authenticate_origin_on_request(): void {
 		// If we block unauthorized origins, check the origin.
 		if ( Utils::get_access_control_setting( 'shouldBlockUnauthorizedDomains' ) ) {
 			$allowed_origins = self::get_allowed_origins();
@@ -50,7 +49,7 @@ class Request {
 				// Set WP GraphQL status to 403.
 				add_filter(
 					'graphql_response_status_code',
-					static fn() => 403
+					static fn () => 403
 				);
 
 				throw new UserError( __( 'Unauthorized request origin.', 'wp-graphql-headless-login' ) );
@@ -58,13 +57,14 @@ class Request {
 		}
 	}
 
-
 	/**
 	 * Filters the GraphQL response headers.
 	 *
-	 * @param array $headers The headers to send.
+	 * @param array<string, string> $headers The headers to send.
+	 *
+	 * @return array<string, string|null> The filtered headers.
 	 */
-	public static function response_headers_to_send( array $headers ) : array {
+	public static function response_headers_to_send( array $headers ): array {
 		$allowed_origins = self::get_allowed_origins( $headers );
 		$origin          = self::get_origin_for_request( $allowed_origins );
 
@@ -126,11 +126,11 @@ class Request {
 	/**
 	 * Returns the headers with the Access-Control-Allow-Orgin set.
 	 *
-	 * @param array   $headers         The headers to send.
-	 * @param array   $allowed_origins The allowed origins.
-	 * @param ?string $origin          The origin to use.
+	 * @param array<string, string> $headers         The headers to send.
+	 * @param string[]              $allowed_origins The allowed origins.
+	 * @param ?string               $origin          The origin to use.
 	 */
-	protected static function get_acao_header( array $headers, array $allowed_origins, ?string $origin ) : string {
+	protected static function get_acao_header( array $headers, array $allowed_origins, ?string $origin ): string {
 		// If we matched, return the origin.
 		if ( ! empty( $origin ) ) {
 			return $origin;
@@ -148,7 +148,9 @@ class Request {
 	/**
 	 * Gets the allowed origin domains.
 	 *
-	 * @param array $headers The headers to send. Optional.
+	 * @param array<string, string> $headers The headers to send. Optional.
+	 *
+	 * @return string[] The allowed origin domains.
 	 */
 	protected static function get_allowed_origins( $headers = [] ): array {
 		$origins = [
@@ -180,8 +182,11 @@ class Request {
 	 *
 	 * @param string[] $origins The allowed origins.
 	 */
-	protected static function get_origin_for_request( array $origins ) : ?string {
-		$current_origin = get_http_origin() ?: ( $_SERVER['HTTP_REFERER'] ?? null );
+	protected static function get_origin_for_request( array $origins ): ?string {
+		$current_origin = get_http_origin();
+		if ( empty( $current_origin ) ) {
+			$current_origin = ! empty( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( $_SERVER['HTTP_REFERER'] ) : null;
+		}
 
 		// Unslash the origin.
 		$current_host = ! empty( $current_origin ) ? wp_unslash( $current_origin ) : null;
@@ -213,10 +218,10 @@ class Request {
 	/**
 	 * Gets the Vary header.
 	 *
-	 * @param array $headers The headers to send.
-	 * @param array $allowed_origins The allowed origins.
+	 * @param array<string, string> $headers         The headers to send.
+	 * @param string[]              $allowed_origins The allowed origins.
 	 */
-	protected static function get_vary_header( array $headers, array $allowed_origins ) : string {
+	protected static function get_vary_header( array $headers, array $allowed_origins ): string {
 		// Bail early if we only have one possible origin.
 		if ( count( $allowed_origins ) === 1 && $headers['Access-Control-Allow-Origin'] === $allowed_origins[0] ) {
 			return $headers['Vary'] ?? '';
@@ -238,9 +243,9 @@ class Request {
 	/**
 	 * Gets the Access-Control-Allow-Headers header.
 	 *
-	 * @param array $header The headers to send.
+	 * @param array<string, string> $header The headers to send.
 	 */
-	protected static function get_acah_header( array $header ) : string {
+	protected static function get_acah_header( array $header ): string {
 		$headers = [
 			'Authorization',
 			'Content-Type',
@@ -279,9 +284,9 @@ class Request {
 	/**
 	 * Gets the Access-Control-Expose-Headers header.
 	 *
-	 * @param array $header The headers to send.
+	 * @param array<string, string|null> $header The headers to send.
 	 */
-	protected static function get_aceh_header( array $header ) : string {
+	protected static function get_aceh_header( array $header ): string {
 		$exposed_headers = ! empty( $header['X-WPGraphQL-Login-Refresh-Token'] ) ? [
 			'X-WPGraphQL-Login-Refresh-Token',
 		] : [];
@@ -300,17 +305,19 @@ class Request {
 	/**
 	 * Checks whether the Access-Control-Allow-Credentials header should be sent.
 	 */
-	protected static function has_acac_header() : bool {
+	protected static function has_acac_header(): bool {
 		return (bool) Utils::get_access_control_setting( 'hasAccessControlAllowCredentials' );
 	}
 
 	/**
 	 * Adds the auth tokens to the GraphQL response headers.
 	 *
-	 * @param array   $headers The headers to send.
-	 * @param ?string $origin  The origin for the current request.
+	 * @param array<string, string> $headers The headers to send.
+	 * @param ?string               $origin  The origin for the current request.
+	 *
+	 * @return array<string, string|null>
 	 */
-	protected static function add_tokens_to_headers( array $headers, ?string $origin ) : array {
+	protected static function add_tokens_to_headers( array $headers, ?string $origin ): array {
 		// Bail early if not ssl or if debugging is disabled.
 		if ( ! is_ssl() && false === WPGraphQL::debug() ) {
 			return $headers;

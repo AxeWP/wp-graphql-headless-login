@@ -13,8 +13,8 @@ if ( ! function_exists( 'graphql_login_activation_callback' ) ) {
 	 *
 	 * @since 0.0.1
 	 */
-	function graphql_login_activation_callback() : callable {
-		return static function () : void {
+	function graphql_login_activation_callback(): callable {
+		return static function (): void {
 			// Runs when the plugin is activated.
 			do_action( 'graphql_login_activate' );
 

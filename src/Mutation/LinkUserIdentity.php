@@ -10,28 +10,27 @@ namespace WPGraphQL\Login\Mutation;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use WPGraphQL\AppContext;
-use WPGraphQL\Model\User;
 use WPGraphQL\Login\Auth\Auth;
 use WPGraphQL\Login\Type\Enum\ProviderEnum;
 use WPGraphQL\Login\Type\Input\OAuthProviderResponseInput;
-use \WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationType;
+use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationType;
+use WPGraphQL\Model\User;
 
 /**
  * Class - LinkUserIdentity
  */
 class LinkUserIdentity extends MutationType {
-
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function type_name() : string {
+	public static function type_name(): string {
 		return 'LinkUserIdentity';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_input_fields() : array {
+	public static function get_input_fields(): array {
 		return [
 			'oauthResponse' => [
 				'type'        => OAuthProviderResponseInput::get_type_name(),
@@ -55,7 +54,7 @@ class LinkUserIdentity extends MutationType {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_output_fields() : array {
+	public static function get_output_fields(): array {
 		return [
 			'success' => [
 				'type'        => 'Boolean',
@@ -74,7 +73,7 @@ class LinkUserIdentity extends MutationType {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function mutate_and_get_payload() : callable {
+	public static function mutate_and_get_payload(): callable {
 		return static function ( array $input, AppContext $context, ResolveInfo $info ): array {
 			// Validate the response, login the user, and get an authToken and user in response.
 			return Auth::link_user_identity( $input );

@@ -15,11 +15,10 @@ use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\Type;
  * Class - ClientOptions
  */
 class ClientOptions extends Type {
-
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function register() : void {
+	public static function register(): void {
 		$providers = ProviderRegistry::get_instance()->get_registered_providers();
 
 		foreach ( $providers as $slug => $provider ) {
@@ -42,14 +41,14 @@ class ClientOptions extends Type {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function type_name( string $provider = null ) : string {
+	public static function type_name( string $provider = null ): string {
 		return graphql_format_type_name( ucfirst( (string) $provider ) . 'ClientOptions' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_description() : string {
+	public static function get_description(): string {
 		// translators: %s is the provider name.
 		return __( 'The Login client options for the %s provider.', 'wp-graphql-headless-login' );
 	}

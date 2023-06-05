@@ -8,7 +8,6 @@
 
 namespace WPGraphQL\Login\Auth;
 
-use WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Facebook;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Generic;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\GitHub;
@@ -16,31 +15,31 @@ use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Google;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Instagram;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\LinkedIn;
 use WPGraphQL\Login\Auth\ProviderConfig\Password;
+use WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig;
 use WPGraphQL\Login\Auth\ProviderConfig\SiteToken;
 
 /**
  * Class - ProviderRegistry
  */
 class ProviderRegistry {
-
 	/**
 	 * The one true ProviderRegistry
 	 *
-	 * @var ?ProviderRegistry
+	 * @var ?\WPGraphQL\Login\Auth\ProviderRegistry
 	 */
 	private static $instance;
 
 	/**
 	 * The registered provider classes, keyed to their slug.
 	 *
-	 * @var array<string,class-string<ProviderConfig>>
+	 * @var array<string, class-string<\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig>>
 	 */
 	private array $registered_providers = [];
 
 	/**
 	 * The enabled Authentication Providers.
 	 *
-	 * @var array<string,ProviderConfig>
+	 * @var array<string, \WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig>
 	 */
 	private array $providers = [];
 
@@ -85,7 +84,7 @@ class ProviderRegistry {
 			/**
 			 * Skip if the provider is disabled.
 			 *
-			 * @var ProviderConfig $class
+			 * @var \WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig $class
 			 */
 			if ( ! $class::is_enabled() ) {
 				continue;
@@ -106,10 +105,8 @@ class ProviderRegistry {
 
 	/**
 	 * Get the singleton instance of the registry.
-	 *
-	 * @return self
 	 */
-	public static function get_instance() : self {
+	public static function get_instance(): self {
 		if ( empty( self::$instance ) ) {
 			self::$instance = new self();
 		}
@@ -122,15 +119,15 @@ class ProviderRegistry {
 	 *
 	 * Filtered by 'graphql_login_registered_provider_configs'.
 	 *
-	 * @return array<string, class-string<ProviderConfig>>
+	 * @return array<string, class-string<\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig>>
 	 */
-	public function get_registered_providers() : array {
+	public function get_registered_providers(): array {
 		if ( empty( $this->registered_providers ) ) {
 			/**
 			 * Filters the registered providers configs.
 			 * Useful for removing a built-in provider, or for adding a custom one.
 			 *
-			 * @param array<string, class-string<ProviderConfig>> $registered_providers The registered provider config classes, keyed to their slug.
+			 * @param array<string, class-string<\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig>> $registered_providers The registered provider config classes, keyed to their slug.
 			 */
 			$registered_providers = apply_filters(
 				'graphql_login_registered_provider_configs',
@@ -162,7 +159,7 @@ class ProviderRegistry {
 	 *
 	 * @throws \Exception When provider slug is not supported.
 	 */
-	public function get_provider_config( string $provider_slug ) : ProviderConfig {
+	public function get_provider_config( string $provider_slug ): ProviderConfig {
 		if ( ! isset( $this->providers[ $provider_slug ] ) ) {
 			throw new \Exception( sprintf( 'Provider %s is not enabled.', $provider_slug ) );
 		}
@@ -173,9 +170,9 @@ class ProviderRegistry {
 	/**
 	 * Gets all the provider instances.
 	 *
-	 * @return array<string,ProviderConfig>
+	 * @return array<string, \WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig>
 	 */
-	public function get_providers() : array {
+	public function get_providers(): array {
 		return $this->providers;
 	}
 }

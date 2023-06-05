@@ -34,9 +34,11 @@ if ( ! function_exists( 'graphql_login_get_provider_settings' ) ) {
 	 *
 	 * @uses \WPGraphQL\Login\Utils\Utils::get_provider_settings()
 	 *
+	 * @return array<string,mixed>
+	 *
 	 * @since 0.0.1
 	 */
-	function graphql_login_get_provider_settings( string $slug ) : array {
+	function graphql_login_get_provider_settings( string $slug ): array {
 		return Utils::get_provider_settings( $slug );
 	}
 }

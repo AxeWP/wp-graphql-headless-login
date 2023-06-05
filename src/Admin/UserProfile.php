@@ -20,13 +20,13 @@ class UserProfile {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function init() : void {
-		add_action( 'show_user_profile', [ __CLASS__, 'user_identity_fields' ] );
-		add_action( 'edit_user_profile', [ __CLASS__, 'user_identity_fields' ] );
+	public static function init(): void {
+		add_action( 'show_user_profile', [ self::class, 'user_identity_fields' ] );
+		add_action( 'edit_user_profile', [ self::class, 'user_identity_fields' ] );
 		// Add admin ajax for unlinking user identities.
-		add_action( 'wp_ajax_graphql_login_unlink_identity', [ __CLASS__, 'unlink_identity' ] );
+		add_action( 'wp_ajax_graphql_login_unlink_identity', [ self::class, 'unlink_identity' ] );
 		// Add admin ajax for revoking user secret.
-		add_action( 'wp_ajax_graphql_login_revoke_user_secret_key', [ __CLASS__, 'revoke_secret' ] );
+		add_action( 'wp_ajax_graphql_login_revoke_user_secret_key', [ self::class, 'revoke_secret' ] );
 	}
 
 	/**
@@ -34,7 +34,7 @@ class UserProfile {
 	 *
 	 * @param \WP_User $user The WP_User object.
 	 */
-	public static function user_identity_fields( \WP_User $user ) : void {
+	public static function user_identity_fields( \WP_User $user ): void {
 		$providers = ProviderRegistry::get_instance()->get_providers();
 
 		$identities = User::get_user_identities( $user->ID );
@@ -71,11 +71,11 @@ class UserProfile {
 				outline: none
 			}
 		</style>
-		<h2 style="padding-top:1rem"><?php echo esc_attr__( 'Headless Login - JWT Secret', 'wp-graphql-headless-login' ); ?></h2>
+		<h2 style="padding-top:1rem"><?php echo esc_html__( 'Headless Login - JWT Secret', 'wp-graphql-headless-login' ); ?></h2>
 
 		<?php self::revoke_user_secret_key_field( $user->ID ); ?>
 
-		<h2><?php echo esc_attr__( 'Linked User Identities', 'wp-graphql-headless-login' ); ?></h2>
+		<h2><?php echo esc_html__( 'Linked User Identities', 'wp-graphql-headless-login' ); ?></h2>
 
 		<table class="form-table">
 			<tbody>
@@ -102,7 +102,7 @@ class UserProfile {
 	 * @param string $provider_name The provider name.
 	 * @param string $identity The identity.
 	 */
-	protected static function provider_identity_field( int $user_id, string $provider_slug, string $provider_name, string $identity ) : void {
+	protected static function provider_identity_field( int $user_id, string $provider_slug, string $provider_name, string $identity ): void {
 		$meta_key = User::get_identity_meta_key( $provider_slug );
 
 		?>
@@ -138,7 +138,7 @@ class UserProfile {
 	 * @param int    $user_id  The user ID.
 	 * @param string $provider The provider slug.
 	 */
-	protected static function unlink_identity_button( int $user_id, string $provider ) : void {
+	protected static function unlink_identity_button( int $user_id, string $provider ): void {
 		?>
 		<td>
 			<button
@@ -217,7 +217,7 @@ class UserProfile {
 	 *
 	 * @param int $user_id The user ID.
 	 */
-	protected static function revoke_user_secret_key_field( int $user_id ) : void {
+	protected static function revoke_user_secret_key_field( int $user_id ): void {
 		?>
 		<table class="form-table">
 			<tr>
@@ -298,7 +298,7 @@ class UserProfile {
 	/**
 	 * Unlinks the user from the provider.
 	 */
-	public static function unlink_identity() : void {
+	public static function unlink_identity(): void {
 		// Check the nonce.
 		check_ajax_referer( 'wp-graphql-headless-login-unlink-identity', 'nonce' );
 
@@ -331,7 +331,7 @@ class UserProfile {
 	/**
 	 * Revokes the user secret key.
 	 */
-	public static function revoke_secret() : void {
+	public static function revoke_secret(): void {
 		// Check the nonce.
 		check_ajax_referer( 'wp-graphql-headless-login-revoke-user-secret-key', 'nonce' );
 

@@ -8,18 +8,16 @@
 
 namespace WPGraphQL\Login\Auth;
 
-use WP_User;
-use WP_Error;
-use WPGraphQL\Login\Admin\Settings;
 use WPGraphQL\Login\Utils\Utils;
 use WPGraphQL\Login\Vendor\Firebase\JWT\JWT;
 use WPGraphQL\Login\Vendor\Firebase\JWT\Key;
+use WP_Error;
+use WP_User;
 
 /**
  * Class - TokenManager
  */
 class TokenManager {
-
 	/**
 	 * The token issued time.
 	 *
@@ -37,7 +35,7 @@ class TokenManager {
 	/**
 	 * This returns the secret key, using the defined constant if defined, and passing it through a filter to allow for the config to be able to be set via another method other than a defined constant, such as an admin UI that allows the key to be updated/changed/revoked at any time without touching server files.
 	 */
-	public static function get_secret_key() : string {
+	public static function get_secret_key(): string {
 		// Use the defined secret key, if it exists.
 		$secret = defined( 'GRAPHQL_LOGIN_JWT_SECRET_KEY' ) && ! empty( GRAPHQL_LOGIN_JWT_SECRET_KEY ) ? GRAPHQL_LOGIN_JWT_SECRET_KEY : '';
 
@@ -65,10 +63,10 @@ class TokenManager {
 	/**
 	 * Gets the signed auth token for the user.
 	 *
-	 * @param WP_User $user The user.
-	 * @param bool    $enforce_current_user Whether to only allow the current user to be used. Default true.
+	 * @param \WP_User $user The user.
+	 * @param bool     $enforce_current_user Whether to only allow the current user to be used. Default true.
 	 */
-	public static function get_auth_token( WP_User $user, bool $enforce_current_user = true ) : ?string {
+	public static function get_auth_token( WP_User $user, bool $enforce_current_user = true ): ?string {
 		// Get the token data for signing.
 		$token = self::prepare_token( $user, $enforce_current_user );
 
@@ -93,10 +91,10 @@ class TokenManager {
 	/**
 	 * Gets the signed refresh token for the user.
 	 *
-	 * @param WP_User $user The user.
-	 * @param bool    $enforce_current_user Whether to only allow the current user to be used. Default true.
+	 * @param \WP_User $user The user.
+	 * @param bool     $enforce_current_user Whether to only allow the current user to be used. Default true.
 	 */
-	public static function get_refresh_token( WP_User $user, bool $enforce_current_user = true ) : ?string {
+	public static function get_refresh_token( WP_User $user, bool $enforce_current_user = true ): ?string {
 		// Get the token data for signing.
 		$token = self::prepare_token( $user, $enforce_current_user );
 
@@ -154,7 +152,7 @@ class TokenManager {
 	 * @param int  $user_id The user ID.
 	 * @param bool $enforce_current_user Whether to enforce the user secret. Default true.
 	 */
-	public static function get_user_secret( int $user_id, bool $enforce_current_user = true ) : ?string {
+	public static function get_user_secret( int $user_id, bool $enforce_current_user = true ): ?string {
 		if ( $enforce_current_user && ! self::current_user_can( $user_id, $enforce_current_user ) ) {
 			return null;
 		}
@@ -170,7 +168,7 @@ class TokenManager {
 		/**
 		 * Filter the user secret before returning it, allowing for individual systems to override what's returned.
 		 *
-		 * @param string|WP_Error $secret The User secret.
+		 * @param string|\WP_Error $secret The User secret.
 		 * @param int     $user_id The ID of the user the secret is associated with.
 		 */
 		$secret = apply_filters( 'graphql_login_user_secret', $secret, $user_id );
@@ -184,7 +182,7 @@ class TokenManager {
 	 * @param int  $user_id The user ID.
 	 * @param bool $enforce_current_user Whether to enforce the user secret. Default true.
 	 *
-	 * @return true|WP_Error
+	 * @return true|\WP_Error
 	 */
 	public static function revoke_user_secret( int $user_id, bool $enforce_current_user = true ) {
 		// Return an error if the user cannot revoke the secret.
@@ -206,7 +204,7 @@ class TokenManager {
 	 * @param int  $user_id The user ID.
 	 * @param bool $enforce_current_user Whether to enforce the user secret. Default true.
 	 *
-	 * @return bool|WP_Error
+	 * @return bool|\WP_Error
 	 */
 	public static function refresh_user_secret( int $user_id, bool $enforce_current_user = true ) {
 		// Return an error if the user cannot revoke the secret.
@@ -223,8 +221,10 @@ class TokenManager {
 
 	/**
 	 * Gets the allowed domains for the token.
+	 *
+	 * @return string[]
 	 */
-	public static function get_token_allowed_domains() : array {
+	public static function get_token_allowed_domains(): array {
 		$allowed_domains = [ get_bloginfo( 'url' ) ];
 
 		/**
@@ -239,7 +239,7 @@ class TokenManager {
 	/**
 	 * Returns the user capability necessary for editing/viewing other user's authentication info.
 	 */
-	public static function get_auth_cap() : string {
+	public static function get_auth_cap(): string {
 		/**
 		 * Filter the capability that is tied to editing/viewing user authentication info.
 		 *
@@ -251,10 +251,10 @@ class TokenManager {
 	/**
 	 * Creates the array used to generate the token.
 	 *
-	 * @param WP_User $user The user object.
-	 * @param bool    $enforce_current_user Whether to enforce the current user.
+	 * @param \WP_User $user The user object.
+	 * @param bool     $enforce_current_user Whether to enforce the current user.
 	 *
-	 * @return array|WP_Error
+	 * @return array<string, mixed>|\WP_Error
 	 */
 	protected static function prepare_token( WP_User $user, bool $enforce_current_user = true ) {
 		/**
@@ -306,10 +306,10 @@ class TokenManager {
 	/**
 	 * Gets the signed JWT token.
 	 *
-	 * @param array $token The token data.
-	 * @param int   $user_id The user ID.
+	 * @param array<string, mixed> $token The token data.
+	 * @param int                  $user_id The user ID.
 	 */
-	protected static function sign_token( array $token, int $user_id ) : ?string {
+	protected static function sign_token( array $token, int $user_id ): ?string {
 		JWT::$leeway  = 60;
 		$signed_token = JWT::encode( $token, self::get_secret_key(), 'HS256' );
 
@@ -332,17 +332,17 @@ class TokenManager {
 	 *
 	 * @param int $status_code The status code to set.
 	 */
-	protected static function set_status( int $status_code ) : void {
+	protected static function set_status( int $status_code ): void {
 		add_filter(
 			'graphql_response_status_code',
-			static fn() => $status_code
+			static fn () => $status_code
 		);
 	}
 
 	/**
 	 * Gets the time the token was issued.
 	 */
-	protected static function get_issued_at() : int {
+	protected static function get_issued_at(): int {
 		if ( ! isset( self::$issued_at ) ) {
 			self::$issued_at = time();
 		}
@@ -353,7 +353,7 @@ class TokenManager {
 	/**
 	 * Gets the time the token will expire.
 	 */
-	protected static function get_expiration() : int {
+	protected static function get_expiration(): int {
 		if ( ! isset( self::$expiration ) ) {
 			/**
 			 * Filter the expiration time for the token.
@@ -374,7 +374,7 @@ class TokenManager {
 	 *
 	 * @param int $user_id The user ID.
 	 */
-	public static function is_user_secret_revoked( int $user_id ) : bool {
+	public static function is_user_secret_revoked( int $user_id ): bool {
 		return User::get_is_secret_revoked( $user_id );
 	}
 
@@ -384,7 +384,7 @@ class TokenManager {
 	 * @param int  $user_id The user ID.
 	 * @param bool $enforce_current_user Whether to enforce the current user. Defaults to true.
 	 *
-	 * @return string|WP_Error
+	 * @return string|\WP_Error
 	 */
 	public static function issue_new_user_secret( int $user_id, bool $enforce_current_user = true ) {
 		// Bail if the current user has incorrect permissions.
@@ -409,7 +409,7 @@ class TokenManager {
 	 * @param string $token The token to validate. If null, the token will be retrieved from the request.
 	 * @param bool   $is_refresh_token Whether the token is a refresh token.
 	 *
-	 * @return object|WP_Error|null
+	 * @return object|\WP_Error|null
 	 */
 	public static function validate_token( string $token = null, bool $is_refresh_token = false ) {
 		// If no token provided, grab it from the auth header.
@@ -444,7 +444,8 @@ class TokenManager {
 
 		try {
 			$token = empty( $token ) ? null : JWT::decode( sanitize_text_field( $token ), new Key( self::get_secret_key(), 'HS256' ) );
-		} catch ( \Exception $exception ) {
+		} catch ( \Throwable $exception ) {
+			/** @var \Exception $exception */
 			$token = new WP_Error( 'invalid-secret-key', $exception->getMessage() );
 		}
 
@@ -501,17 +502,17 @@ class TokenManager {
 	/**
 	 * Gets the HTTP Authorization header.
 	 */
-	public static function get_auth_header() : string {
+	public static function get_auth_header(): string {
 		/**
 		 * Looking for the HTTP_AUTHORIZATION header.
 		 */
-		$auth_header = isset( $_SERVER['HTTP_AUTHORIZATION'] ) ? $_SERVER['HTTP_AUTHORIZATION'] : false;
+		$auth_header = isset( $_SERVER['HTTP_AUTHORIZATION'] ) ? sanitize_text_field( $_SERVER['HTTP_AUTHORIZATION'] ) : false;
 
 		if ( false === $auth_header ) {
 			/**
 			 * Looking for the REDIRECT_HTTP_AUTHORIZATION header.
 			 */
-			$auth_header = isset( $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ) ? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] : false;
+			$auth_header = isset( $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ) ? sanitize_text_field( $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ) : false;
 		}
 
 		// Ensure the auth header is a string.
@@ -528,7 +529,7 @@ class TokenManager {
 	/**
 	 * Gets the Refrresh-Authorization-header header.
 	 */
-	public static function get_refresh_header() : string {
+	public static function get_refresh_header(): string {
 		$refresh_header = isset( $_SERVER['HTTP_REFRESH_AUTHORIZATION'] ) ? sanitize_text_field( $_SERVER['HTTP_REFRESH_AUTHORIZATION'] ) : '';
 
 		/**
@@ -546,7 +547,7 @@ class TokenManager {
 	 * @param bool $enforce_current_user Whether to enforce the current user. Defaults to true.
 	 * @param bool $enforce_auth_cap     Whether to enforce the auth cap. Defaults to true.
 	 */
-	public static function current_user_can( int $user_id, bool $enforce_current_user = true, bool $enforce_auth_cap = true ) : bool {
+	public static function current_user_can( int $user_id, bool $enforce_current_user = true, bool $enforce_auth_cap = true ): bool {
 		// Allow if we're not enforcing anything.
 		if ( ! $enforce_current_user && ! $enforce_auth_cap ) {
 			return true;
@@ -564,5 +565,4 @@ class TokenManager {
 
 		return false;
 	}
-
 }

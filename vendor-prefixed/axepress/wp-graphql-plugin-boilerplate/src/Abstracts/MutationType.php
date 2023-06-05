@@ -26,7 +26,7 @@ if ( ! class_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationTy
 		 *   defaultValue?: string
 		 * }>
 		 */
-		abstract public static function get_input_fields() : array;
+		abstract public static function get_input_fields(): array;
 
 		/**
 		 * Gets the fields for the type.
@@ -43,17 +43,17 @@ if ( ! class_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationTy
 		 *   deprecationReason?: string,
 		 * }>
 		 */
-		abstract public static function get_output_fields() : array;
+		abstract public static function get_output_fields(): array;
 
 		/**
 		 * Defines the mutation data modification closure.
 		 */
-		abstract public static function mutate_and_get_payload() : callable;
+		abstract public static function mutate_and_get_payload(): callable;
 
 		/**
 		 * Register mutations to the GraphQL Schema.
 		 */
-		public static function register() : void {
+		public static function register(): void {
 			register_graphql_mutation( static::get_type_name(), static::get_type_config() );
 		}
 
@@ -67,7 +67,7 @@ if ( ! class_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationTy
 		/**
 		 * {@inheritDoc}
 		 */
-		protected static function get_type_config() : array {
+		protected static function get_type_config(): array {
 			$config = parent::get_type_config();
 
 			$config['inputFields']         = static::get_input_fields();
