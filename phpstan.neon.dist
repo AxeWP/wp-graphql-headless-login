@@ -1,7 +1,7 @@
 parameters:
 		level: 8
-		inferPrivatePropertyTypeFromConstructor: true
 		checkMissingIterableValueType: false
+		treatPhpDocTypesAsCertain: false
 		bootstrapFiles:
 			- phpstan/constants.php
 		paths:
@@ -17,6 +17,6 @@ parameters:
 				- ../wp-graphql/tests
 		scanFiles:
 			- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+			- vendor/axepress/wp-graphql-stubs/wp-graphql-stubs.php
 		scanDirectories:
-			- ../wp-graphql
 			- ../wp-graphql-woocommerce/includes

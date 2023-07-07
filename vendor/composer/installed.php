@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'axepress/wp-graphql-headless-login',
-        'pretty_version' => 'dev-develop',
-        'version' => 'dev-develop',
-        'reference' => '1e26d5967be0dc76e5d2161eb73772c9af7a7690',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => 'ec1069f141c5ce68db0a5c36b6d24432ddb4fbef',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'axepress/wp-graphql-headless-login' => array(
-            'pretty_version' => 'dev-develop',
-            'version' => 'dev-develop',
-            'reference' => '1e26d5967be0dc76e5d2161eb73772c9af7a7690',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => 'ec1069f141c5ce68db0a5c36b6d24432ddb4fbef',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -29,9 +29,9 @@
             'dev_requirement' => false,
         ),
         'firebase/php-jwt' => array(
-            'pretty_version' => 'v6.5.0',
-            'version' => '6.5.0.0',
-            'reference' => 'e94e7353302b0c11ec3cfff7180cd0b1743975d2',
+            'pretty_version' => 'v6.8.0',
+            'version' => '6.8.0.0',
+            'reference' => '48b0210c51718d682e53210c24d25c5a10a2299b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../firebase/php-jwt',
             'aliases' => array(),

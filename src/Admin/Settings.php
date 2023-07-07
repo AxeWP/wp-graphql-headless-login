@@ -123,7 +123,7 @@ class Settings {
 			throw new Error( __( 'You need to run `npm start` or `npm run build` for Headless Login for WPGraphQL to work.', 'wp-graphql-headless-login' ) );
 		}
 
-		$script_asset = require_once $script_asset_path;
+		$script_asset = require_once $script_asset_path; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
 		$js           = 'build/' . $asset_name . '.js';
 
 		wp_register_script(

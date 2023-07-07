@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
 ## Unreleased
+- chore: Update Composer deps.
+- chore: Cleanup PHPCS and PHPStan configurations.
+- ci: Set MariaDB to v10.x in GitHub Actions.
 
 ## [0.1.2] - 2023-6-05
 
