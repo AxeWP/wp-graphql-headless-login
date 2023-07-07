@@ -270,7 +270,7 @@ abstract class OAuth2Config extends ProviderConfig {
 	}
 
 	/**
-	 * R{@inheritDoc}
+	 * {@inheritDoc}
 	 */
 	protected static function login_options_schema(): array {
 		return [

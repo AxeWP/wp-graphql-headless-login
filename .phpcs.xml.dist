@@ -22,8 +22,12 @@
 	<!-- Strip the file paths down to the relevant bit -->
 	<arg name="colors"/>
 	<arg name="extensions" value="php"/>
+	<!-- Whenever possible, cache the scan results and re-use those for unchanged files on the next scan. -->
+	<arg name="cache" value="tests/_output/cache.json" />
 	<!-- Enables parallel processing when available for faster results. -->
 	<arg name="parallel" value="20"/>
+<!-- Set severity to 1 to see everything that isn't effectively turned off. -->
+	<arg name="severity" value="1" />
 
 	<!-- Ruleset Config: set these to match your project constraints-->
 
