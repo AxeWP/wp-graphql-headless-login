@@ -43,7 +43,7 @@ class Instagram extends OAuth2Config {
 			'clientId'     => $settings['clientId'] ?? null,
 			'clientSecret' => $settings['clientSecret'] ?? null,
 			'redirectUri'  => $settings['redirectUri'] ?? null,
-			'scope'        => ! empty( $settings['scope'] ) ? implode( ', ', $settings['scope'] ) : [],
+			'scope'        => ! empty( $settings['scope'] ) ? $settings['scope'] : [],
 		];
 	}
 

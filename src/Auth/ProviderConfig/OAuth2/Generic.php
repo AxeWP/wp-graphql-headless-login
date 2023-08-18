@@ -47,6 +47,7 @@ class Generic extends OAuth2Config {
 			'urlAccessToken'          => ! empty( $settings['urlAccessToken'] ) ? $settings['urlAccessToken'] : null,
 			'urlResourceOwnerDetails' => ! empty( $settings['urlResourceOwnerDetails'] ) ? $settings['urlResourceOwnerDetails'] : null,
 			'scope'                   => ! empty( $settings['scope'] ) ? $settings['scope'] : [],
+			'scopeSeparator'          => $settings['scopeSeparator'] ?? ',',
 		];
 	}
 
@@ -83,6 +84,11 @@ class Generic extends OAuth2Config {
 					'type' => 'string',
 				],
 			],
+			'scopeSeparator'          => [
+				'type'        => 'string',
+				'description' => __( 'Scope Separator', 'wp-graphql-headless-login' ),
+				'help'        => __( 'The scope separator to use when building the authorization URL. Defaults to `,`.', 'wp-graphql-headless-login' ),
+			],
 		];
 	}
 
@@ -109,6 +115,10 @@ class Generic extends OAuth2Config {
 			'scope'            => [
 				'type'        => [ 'list_of' => 'String' ],
 				'description' => __( 'The fields to request from the Generic Graph API. See https://developers.facebook.com/docs/graph-api/reference/user for a list of available fields.', 'wp-graphql-headless-login' ),
+			],
+			'scopeSeparator'   => [
+				'type'        => 'String',
+				'description' => __( 'The scope separator to use when building the authorization URL. Defaults to `,`.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}
