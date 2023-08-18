@@ -1,7 +1,6 @@
 {
 	"compilerOptions": {
 		"baseUrl": ".",
-		"exactOptionalPropertyTypes": true,
 		"outDir": "./build",
 		"rootDir": ".",
 		"sourceMap": true,

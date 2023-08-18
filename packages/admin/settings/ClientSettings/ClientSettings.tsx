@@ -6,11 +6,6 @@ import { Button, Icon, PanelBody, PanelRow } from '@wordpress/components';
 import { sprintf, __ } from '@wordpress/i18n';
 import { store as coreStore, useEntityProp } from '@wordpress/core-data';
 import { useDispatch, dispatch, useSelect } from '@wordpress/data';
-
-/**
- * Internal Dependencies.
- */
-import type { wpGraphQLLogin } from '../..';
 import { ClientOptionList } from './ClientOptionList';
 import { OptionList } from '../../components';
 import type { AccessControlEntityProps } from '../AccessControlSettings';
@@ -28,7 +23,7 @@ const clientDefaults: ClientType = {
 export type ClientType = {
 	id: string;
 	name: string;
-	order: int;
+	order: number;
 	isEnabled: boolean;
 	clientOptions: object;
 	loginOptions: LoginOptionSetttingsType;
@@ -53,7 +48,7 @@ export function ClientSettings({ clientSlug }) {
 	);
 
 	const updateClient = useCallback(
-		(key: string, value: string) => {
+		(key: string, value: unknown) => {
 			const newClient = {
 				...client,
 				[key]: value,
@@ -148,7 +143,7 @@ export function ClientSettings({ clientSlug }) {
 			<></>,
 			clientSlug,
 			client
-		);
+		) as JSX.Element;
 	};
 
 	return (

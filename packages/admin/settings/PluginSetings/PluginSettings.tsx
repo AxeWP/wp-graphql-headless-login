@@ -3,7 +3,6 @@ import { __ } from '@wordpress/i18n';
 import { JwtSecretControl } from './JwtSecretControl';
 import { PluginOptionList } from './PluginOptionList';
 import { useAppContext } from '../../contexts/AppProvider';
-import type { wpGraphQLLogin } from '../..';
 
 const CustomOptions = (): JSX.Element => {
 	return wpGraphQLLogin.hooks.applyFilters(

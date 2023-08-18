@@ -9,7 +9,6 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useEntityProp } from '@wordpress/core-data';
-import type { wpGraphQLLogin } from '..';
 
 export function StatusBadge({ provider }) {
 	const [providerConfig] = useEntityProp('root', 'site', provider);

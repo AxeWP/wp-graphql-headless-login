@@ -1,4 +1,3 @@
-/* eslint-disable @wordpress/no-unsafe-wp-apis */
 import { useState } from '@wordpress/element';
 import {
 	Flex,
@@ -10,10 +9,6 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { AppProvider } from './contexts/AppProvider';
-/**
- * Internal dependencies.
- */
-import type { wpGraphQLLogin } from '.';
 import { ReactComponent as Logo } from './assets/logo.svg';
 import { Header, Notices, ClientMenu } from './components';
 import { AccessControlSettings, PluginSettings } from './settings';
