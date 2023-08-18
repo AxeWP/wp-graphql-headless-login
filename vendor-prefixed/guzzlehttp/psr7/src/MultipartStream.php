@@ -66,7 +66,7 @@ final class MultipartStream implements StreamInterface
             $str .= "{$key}: {$value}\r\n";
         }
 
-        return "--{$this->boundary}\r\n" . trim($str) . "\r\n\r\n";
+        return "--{$this->boundary}\r\n".trim($str)."\r\n\r\n";
     }
 
     /**
@@ -78,7 +78,7 @@ final class MultipartStream implements StreamInterface
 
         foreach ($elements as $element) {
             if (!is_array($element)) {
-                throw new \UnexpectedValueException("An array is expected");
+                throw new \UnexpectedValueException('An array is expected');
             }
             $this->addElement($stream, $element);
         }
@@ -143,9 +143,7 @@ final class MultipartStream implements StreamInterface
         // Set a default Content-Type if one was not supplied
         $type = $this->getHeader($headers, 'content-type');
         if (!$type && ($filename === '0' || $filename)) {
-            if ($type = MimeType::fromFilename($filename)) {
-                $headers['Content-Type'] = $type;
-            }
+            $headers['Content-Type'] = MimeType::fromFilename($filename) ?? 'application/octet-stream';
         }
 
         return [$stream, $headers];
