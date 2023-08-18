@@ -1,6 +1,6 @@
 import { Icon, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { ReactComponent as Logo } from '../../../../../assets/logo.svg';
+import { ReactComponent as Logo } from '../assets/logo.svg';
 import { store } from '@wordpress/core-data';
 import { useDispatch } from '@wordpress/data';
 

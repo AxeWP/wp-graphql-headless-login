@@ -31,8 +31,6 @@ export function Option({
 		return null;
 	}
 
-	// console.warn({ option, optionsSchema: optionsSchema[option] });
-
 	return (
 		<PanelRow>
 			<OptionControl

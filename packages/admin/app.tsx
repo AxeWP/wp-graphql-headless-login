@@ -18,7 +18,7 @@ import { useEntityProp } from '@wordpress/core-data';
  * Internal dependencies.
  */
 import type { wpGraphQLLogin } from '.';
-import { ReactComponent as Logo } from '../../../../assets/logo.svg';
+import { ReactComponent as Logo } from './assets/logo.svg';
 import { Header, Notices, ClientMenu } from './components';
 import { AccessControlSettings, PluginSettings } from './settings';
 import { ClientSettings } from './settings/ClientSettings/ClientSettings';

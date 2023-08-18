@@ -1,8 +1,8 @@
 {
 	"extends": "./tsconfig.base.json",
-	"include": ["src/assets/**/*"],
-	"exclude": ["src/assets/js/admin/data"],
+	"include": ["packages/admin"],
+	"exclude": ["packages/admin/data"],
 	"compilerOptions": {
-		"baseUrl": "./",
+		"baseUrl": "./"
 	}
 }
