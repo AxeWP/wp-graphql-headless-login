@@ -107,9 +107,9 @@ class Auth {
 		 * Fires after the user is successfully logged in.
 		 *
 		 * @param array  $payload   The payload.
-		 * @param \WP_User  $user_data The user data from the Provider.
-		 * @param array|mixed    $user_data The user data from the Provider.
+		 * @param \WP_User  $user The user.
 		 * @param \WPGraphQL\Login\Auth\Client $client The client instance.
+		 * @param array|mixed    $user_data The user data from the Provider.
 		 */
 		do_action( 'graphql_login_after_successful_login', $payload, $user, $client, $user_data );
 
