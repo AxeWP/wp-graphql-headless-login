@@ -49,7 +49,6 @@
 		]
 	},
 	"dependencies": {
-		"@wordpress/i18n": "^4.40.0",
 		"uuid": "^9.0.0"
 	},
 	"devDependencies": {
@@ -70,6 +69,7 @@
 		"@wordpress/env": "^8.6.0",
 		"@wordpress/eslint-plugin": "^15.0.0",
 		"@wordpress/hooks": "^3.40.0",
+		"@wordpress/i18n": "^4.40.0",
 		"@wordpress/postcss-plugins-preset": "^4.24.0",
 		"@wordpress/prettier-config": "^2.23.0",
 		"@wordpress/readable-js-assets-webpack-plugin": "^2.23.0",

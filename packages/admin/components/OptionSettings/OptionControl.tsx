@@ -3,30 +3,13 @@ import {
 	TextControl,
 	ToggleControl,
 	SelectControl,
-	BaseControl,
-	useBaseControlProps,
 } from '@wordpress/components';
-
-const FormTokenControl = ({
-	help,
-	...props
-}: typeof FormTokenField & {
-	help?: string;
-}) => {
-	const { baseControlProps, controlProps } = useBaseControlProps(props);
-
-	return (
-		<BaseControl help={help || null} {...baseControlProps}>
-			<FormTokenField {...controlProps} {...props} />
-		</BaseControl>
-	);
-};
 
 const controls = {
 	string: TextControl,
 	select: SelectControl,
 	boolean: ToggleControl,
-	array: FormTokenControl,
+	array: FormTokenField,
 };
 
 export function OptionControl({
