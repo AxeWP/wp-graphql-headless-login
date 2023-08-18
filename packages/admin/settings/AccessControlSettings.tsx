@@ -52,7 +52,7 @@ export function AccessControlSettings() {
 			isSaving: select(coreStore).isSavingEntityRecord('root', 'site'),
 			hasEdits: select(coreStore).hasEditsForEntityRecord('root', 'site'),
 		}),
-		[accessControlSettings]
+		[]
 	);
 
 	const excludedProperties = [];

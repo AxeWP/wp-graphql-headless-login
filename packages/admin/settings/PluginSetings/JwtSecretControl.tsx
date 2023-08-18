@@ -22,7 +22,7 @@ export function JwtSecretControl() {
 			isSaving: select(coreStore).isSavingEntityRecord('root', 'site'),
 			hasEdits: select(coreStore).hasEditsForEntityRecord('root', 'site'),
 		}),
-		[jwtSecret]
+		[]
 	);
 
 	useEffect(() => {

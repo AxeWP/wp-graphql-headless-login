@@ -44,7 +44,7 @@ export function ClientSettings({ clientSlug }) {
 			isSaving: select(coreStore).isSavingEntityRecord('root', 'site'),
 			hasEdits: select(coreStore).hasEditsForEntityRecord('root', 'site'),
 		}),
-		[client]
+		[]
 	);
 
 	const updateClient = useCallback(
