@@ -8,7 +8,6 @@ export function ClientOptionList({
 	optionsKey,
 	options,
 	setOption,
-	showAdvancedSettings,
 }) {
 	const excludedProperties = ['id', 'order'];
 
@@ -21,7 +20,6 @@ export function ClientOptionList({
 			optionsSchema={optionsSchema}
 			options={options}
 			setOption={setOption}
-			showAdvancedSettings={showAdvancedSettings}
 			excludedProperties={excludedProperties}
 		/>
 	);

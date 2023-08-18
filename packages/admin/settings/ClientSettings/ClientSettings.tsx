@@ -34,7 +34,7 @@ export type ClientType = {
 	loginOptions: LoginOptionSetttingsType;
 };
 
-export function ClientSettings({ clientSlug, showAdvancedSettings }) {
+export function ClientSettings({ clientSlug }) {
 	const { saveEditedEntityRecord } = useDispatch(coreStore);
 	const [client, setClient] = useEntityProp('root', 'site', clientSlug);
 	const [accessControlSettings]: AccessControlEntityProps = useEntityProp(
@@ -180,14 +180,12 @@ export function ClientSettings({ clientSlug, showAdvancedSettings }) {
 							...value,
 						});
 					}}
-					showAdvancedSettings={showAdvancedSettings}
 				/>
 				<ClientOptionList
 					clientSlug={clientSlug}
 					optionsKey="clientOptions"
 					options={client?.clientOptions}
 					setOption={setClientOption}
-					showAdvancedSettings={showAdvancedSettings}
 				/>
 			</PanelBody>
 			<PanelBody>
@@ -207,7 +205,6 @@ export function ClientSettings({ clientSlug, showAdvancedSettings }) {
 					optionsKey="loginOptions"
 					options={client?.loginOptions}
 					setOption={setLoginOption}
-					showAdvancedSettings={showAdvancedSettings}
 				/>
 			</PanelBody>
 

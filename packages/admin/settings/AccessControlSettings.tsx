@@ -28,11 +28,7 @@ const accessControlDefaults: AccessControlSettings = {
 	customHeaders: [],
 };
 
-export function AccessControlSettings({
-	showAdvancedSettings,
-}: {
-	showAdvancedSettings: boolean;
-}) {
+export function AccessControlSettings() {
 	const { saveEditedEntityRecord } = useDispatch(coreStore);
 
 	const [accessControlSettings, setAccessControlSettings] = useEntityProp(
@@ -117,7 +113,6 @@ export function AccessControlSettings({
 					optionsSchema={optionsSchema}
 					options={accessControlSettings}
 					setOption={updateSettings}
-					showAdvancedSettings={showAdvancedSettings}
 					excludedProperties={excludedProperties}
 				/>
 			</PanelBody>

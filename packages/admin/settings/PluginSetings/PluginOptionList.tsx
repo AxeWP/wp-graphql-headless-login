@@ -8,7 +8,7 @@ import { useEntityProp } from '@wordpress/core-data';
  */
 import { Option } from '../../components';
 
-export function PluginOptionList({ optionKey, showAdvancedSettings }) {
+export function PluginOptionList({ optionKey }) {
 	const [value, setValue] = useEntityProp('root', 'site', optionKey);
 	const schema = wpGraphQLLogin?.settings?.plugin?.[optionKey] || {};
 
@@ -19,7 +19,6 @@ export function PluginOptionList({ optionKey, showAdvancedSettings }) {
 			schema={schema}
 			currentValue={value}
 			onChange={setValue}
-			showAdvancedSettings={showAdvancedSettings}
 		/>
 	);
 }

@@ -1,17 +1,10 @@
 import { Icon, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { ReactComponent as Logo } from '../assets/logo.svg';
-import { store } from '@wordpress/core-data';
-import { useDispatch } from '@wordpress/data';
+import { useAppContext } from '../contexts/AppProvider';
 
-function Header({
-	showAdvancedSettings,
-	setShowAdvancedSettings,
-}: {
-	showAdvancedSettings?: boolean;
-	setShowAdvancedSettings: (value: boolean) => void;
-}): JSX.Element {
-	const { saveEditedEntityRecord } = useDispatch(store);
+function Header(): JSX.Element {
+	const { showAdvancedSettings, setShowAdvancedSettings } = useAppContext();
 
 	return (
 		<div className="wp-graphql-headless-login__header">
@@ -30,13 +23,7 @@ function Header({
 						'wp-graphql-headless-login'
 					)}
 					checked={showAdvancedSettings}
-					onChange={(value: boolean) => {
-						setShowAdvancedSettings(!!value);
-						saveEditedEntityRecord('root', 'site', undefined, {
-							wpgraphql_login_settings_show_advanced_settings:
-								value,
-						});
-					}}
+					onChange={(value) => setShowAdvancedSettings(value)}
 				/>
 			)}
 			{/* Add button link to documentation */}

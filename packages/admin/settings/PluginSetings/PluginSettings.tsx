@@ -1,24 +1,20 @@
-/**
- * External dependencies.
- */
 import { Icon, PanelBody, PanelRow } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-
-/**
- * Internal dependencies.
- */
-import type { wpGraphQLLogin } from '../..';
 import { JwtSecretControl } from './JwtSecretControl';
 import { PluginOptionList } from './PluginOptionList';
+import { useAppContext } from '../../contexts/AppProvider';
+import type { wpGraphQLLogin } from '../..';
 
-const CustomOptions = () => {
+const CustomOptions = (): JSX.Element => {
 	return wpGraphQLLogin.hooks.applyFilters(
 		'graphql_login_custom_plugin_options',
 		<></>
-	);
+	) as JSX.Element;
 };
 
-export function PluginSettings({ showAdvancedSettings }) {
+export function PluginSettings() {
+	const { showAdvancedSettings } = useAppContext();
+
 	const optionsSchema = wpGraphQLLogin?.settings?.plugin || {};
 
 	// Sort ascending client option schema by order property key.
@@ -44,11 +40,7 @@ export function PluginSettings({ showAdvancedSettings }) {
 			{showAdvancedSettings && <JwtSecretControl />}
 
 			{sortedOptionsSchema.map((option) => (
-				<PluginOptionList
-					optionKey={option}
-					key={option}
-					showAdvancedSettings={showAdvancedSettings}
-				/>
+				<PluginOptionList optionKey={option} key={option} />
 			))}
 
 			<CustomOptions />

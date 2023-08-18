@@ -1,8 +1,5 @@
 /* eslint-disable @wordpress/no-unsafe-wp-apis */
-/**
- * External dependencies.
- */
-import { Fragment, useState } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 import {
 	Flex,
 	FlexItem,
@@ -12,8 +9,7 @@ import {
 	Placeholder,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { useEntityProp } from '@wordpress/core-data';
-
+import { AppProvider } from './contexts/AppProvider';
 /**
  * Internal dependencies.
  */
@@ -25,22 +21,13 @@ import { ClientSettings } from './settings/ClientSettings/ClientSettings';
 import './admin.scss';
 
 function App() {
-	const [showAdvancedSettings, setShowAdvancedSettings] = useEntityProp(
-		'root',
-		'site',
-		'wpgraphql_login_settings_show_advanced_settings'
-	);
-
 	const [activeClient, setActiveClient] = useState(
 		Object.keys(wpGraphQLLogin?.settings.providers)?.[0] || null
 	);
 
 	return (
-		<Fragment>
-			<Header
-				showAdvancedSettings={showAdvancedSettings}
-				setShowAdvancedSettings={setShowAdvancedSettings}
-			/>
+		<AppProvider>
+			<Header />
 			<Flex
 				className="wp-graphql-headless-login__main"
 				align="flex-start"
@@ -76,18 +63,16 @@ function App() {
 			</Flex>
 
 			<Panel className="wp-graphql-headless-login__plugin-settings">
-				<PluginSettings showAdvancedSettings={showAdvancedSettings} />
+				<PluginSettings />
 			</Panel>
 			<Panel className="wp-graphql-headless-login__ac-settings">
-				<AccessControlSettings
-					showAdvancedSettings={showAdvancedSettings}
-				/>
+				<AccessControlSettings />
 			</Panel>
 
 			<div className="wp-graphql-headless-login__notices">
 				<Notices />
 			</div>
-		</Fragment>
+		</AppProvider>
 	);
 }
 

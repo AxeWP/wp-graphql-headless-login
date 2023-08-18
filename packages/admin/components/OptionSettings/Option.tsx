@@ -1,19 +1,20 @@
 import { PanelRow } from '@wordpress/components';
 import { OptionControl } from './OptionControl';
+import { useAppContext } from '../../contexts/AppProvider';
 
 export function Option({
 	optionKey,
 	schema,
 	currentValue,
 	setValue,
-	showAdvancedSettings,
 }: {
 	optionKey: string;
 	schema: Record<string, any>;
 	currentValue: any;
 	setValue: (options: Record<string, any>) => void;
-	showAdvancedSettings?: boolean;
 }) {
+	const { showAdvancedSettings } = useAppContext();
+
 	if (!!schema?.hidden) {
 		return null;
 	}

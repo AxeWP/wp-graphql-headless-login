@@ -5,13 +5,11 @@ export function OptionList({
 	options,
 	optionsSchema,
 	setOption,
-	showAdvancedSettings,
 }: {
 	excludedProperties?: string[];
 	options: Record<string, any>;
 	optionsSchema: Record<string, any>;
 	setOption: (options: Record<string, any>) => void;
-	showAdvancedSettings?: boolean;
 }): JSX.Element {
 	const excluded = excludedProperties || ['id', 'order'];
 
@@ -36,7 +34,6 @@ export function OptionList({
 						schema={optionsSchema[option]}
 						currentValue={options?.[option]}
 						setValue={setOption}
-						showAdvancedSettings={showAdvancedSettings}
 					/>
 				);
 			})}
