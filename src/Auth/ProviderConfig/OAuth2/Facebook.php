@@ -44,7 +44,7 @@ class Facebook extends OAuth2Config {
 			'clientSecret'    => $settings['clientSecret'] ?? null,
 			'redirectUri'     => $settings['redirectUri'] ?? null,
 			'graphApiVersion' => $settings['graphAPIVersion'] ?? 'v15.0',
-			'scope'           => ! empty( $settings['scope'] ) ? implode( ', ', $settings['scope'] ) : [],
+			'scope'           => ! empty( $settings['scope'] ) ? $settings['scope'] : [],
 		];
 	}
 
