@@ -43,7 +43,7 @@
 		"phpstan/phpstan": "^1.2",
 		"phpstan/extension-installer": "^1.1",
 		"szepeviktor/phpstan-wordpress": "^1.1.5",
-		"php-stubs/woocommerce-stubs": "^7.3",
+		"php-stubs/woocommerce-stubs": "^8.0",
 		"axepress/wp-graphql-stubs": "^1.12.0",
 		"axepress/wp-graphql-cs": "^1.0.0-beta",
 		"wp-cli/wp-cli-bundle": "^2.8.1",
