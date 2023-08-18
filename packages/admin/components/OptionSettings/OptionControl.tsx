@@ -1,8 +1,3 @@
-/**
- * External Dependencies
- */
-import { Fragment } from '@wordpress/element';
-
 import {
 	FormTokenField,
 	TextControl,
@@ -12,11 +7,16 @@ import {
 	useBaseControlProps,
 } from '@wordpress/components';
 
-const FormTokenControl = (props) => {
-	const { controlProps } = useBaseControlProps(props);
+const FormTokenControl = ({
+	help,
+	...props
+}: typeof FormTokenField & {
+	help?: string;
+}) => {
+	const { baseControlProps, controlProps } = useBaseControlProps(props);
 
 	return (
-		<BaseControl help={props?.help || null}>
+		<BaseControl help={help || null} {...baseControlProps}>
 			<FormTokenField {...controlProps} {...props} />
 		</BaseControl>
 	);
@@ -29,24 +29,22 @@ const controls = {
 	array: FormTokenControl,
 };
 
-export function OptionControl(props) {
-	const {
-		type,
-		description,
-		value,
-		required,
-		label,
-		onChange,
-		help,
-		...rest
-	} = props;
-
+export function OptionControl({
+	type,
+	description,
+	value,
+	required,
+	label,
+	onChange,
+	help,
+	...rest
+}) {
 	const componentProps = {
 		label: label || description,
 		required: required ?? false,
 		help: help || null,
 	};
-	let control = Fragment;
+	let control;
 
 	switch (type) {
 		case 'string':

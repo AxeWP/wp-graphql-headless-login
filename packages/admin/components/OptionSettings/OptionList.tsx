@@ -1,15 +1,4 @@
-/**
- * Internal dependencies.
- */
 import { Option } from './Option';
-
-interface OptionListProps {
-	excludedProperties?: string[];
-	options: Record<string, any>;
-	optionsSchema: Record<string, any>;
-	setOption: (options: Record<string, any>) => void;
-	showAdvancedSettings?: boolean;
-}
 
 export function OptionList({
 	excludedProperties,
@@ -17,7 +6,13 @@ export function OptionList({
 	optionsSchema,
 	setOption,
 	showAdvancedSettings,
-}: OptionListProps): JSX.Element {
+}: {
+	excludedProperties?: string[];
+	options: Record<string, any>;
+	optionsSchema: Record<string, any>;
+	setOption: (options: Record<string, any>) => void;
+	showAdvancedSettings?: boolean;
+}): JSX.Element {
 	const excluded = excludedProperties || ['id', 'order'];
 
 	// Sort ascending client option schema by order property key.

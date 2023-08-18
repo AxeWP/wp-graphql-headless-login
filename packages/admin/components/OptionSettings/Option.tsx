@@ -1,20 +1,5 @@
-/**
- * External dependencies.
- */
 import { PanelRow } from '@wordpress/components';
-
-/**
- * Internal dependencies.
- */
 import { OptionControl } from './OptionControl';
-
-interface OptionProps {
-	optionKey: string;
-	currentValue: any;
-	schemachema: Record<string, any>;
-	setOption: (options: Record<string, any>) => void;
-	showAdvancedSettings?: boolean;
-}
 
 export function Option({
 	optionKey,
@@ -22,7 +7,13 @@ export function Option({
 	currentValue,
 	setValue,
 	showAdvancedSettings,
-}: OptionProps): JSX.Element {
+}: {
+	optionKey: string;
+	schema: Record<string, any>;
+	currentValue: any;
+	setValue: (options: Record<string, any>) => void;
+	showAdvancedSettings?: boolean;
+}) {
 	if (!!schema?.hidden) {
 		return null;
 	}

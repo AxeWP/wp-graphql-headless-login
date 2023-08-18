@@ -142,7 +142,7 @@ export function ClientSettings({ clientSlug, showAdvancedSettings }) {
 		}
 	};
 
-	const CustomPanel = () => {
+	const CustomPanel = (): JSX.Element => {
 		return wpGraphQLLogin.hooks.applyFilters(
 			'graphql_login_custom_client_settings',
 			<></>,

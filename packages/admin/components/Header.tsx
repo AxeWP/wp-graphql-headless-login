@@ -7,6 +7,9 @@ import { useDispatch } from '@wordpress/data';
 function Header({
 	showAdvancedSettings,
 	setShowAdvancedSettings,
+}: {
+	showAdvancedSettings?: boolean;
+	setShowAdvancedSettings: (value: boolean) => void;
 }): JSX.Element {
 	const { saveEditedEntityRecord } = useDispatch(store);
 
@@ -28,7 +31,7 @@ function Header({
 					)}
 					checked={showAdvancedSettings}
 					onChange={(value: boolean) => {
-						setShowAdvancedSettings(value);
+						setShowAdvancedSettings(!!value);
 						saveEditedEntityRecord('root', 'site', undefined, {
 							wpgraphql_login_settings_show_advanced_settings:
 								value,
