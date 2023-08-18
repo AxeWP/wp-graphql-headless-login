@@ -8,6 +8,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - chore: Update Composer deps.
 - chore: Cleanup PHPCS and PHPStan configurations.
 - ci: Set MariaDB to v10.x in GitHub Actions.
+- ci: Test against PHP 8.2 and WordPress 6.3.
 
 ## [0.1.2] - 2023-6-05
 
