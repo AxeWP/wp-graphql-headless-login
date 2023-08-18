@@ -108,9 +108,10 @@ class Auth {
 		 *
 		 * @param array  $payload   The payload.
 		 * @param \WP_User  $user_data The user data from the Provider.
+		 * @param array|mixed    $user_data The user data from the Provider.
 		 * @param \WPGraphQL\Login\Auth\Client $client The client instance.
 		 */
-		do_action( 'graphql_login_after_successful_login', $payload, $user, $client );
+		do_action( 'graphql_login_after_successful_login', $payload, $user, $client, $user_data );
 
 		return $payload ?: [];
 	}
