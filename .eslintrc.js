@@ -113,13 +113,13 @@ module.exports = {
 				],
 			},
 		},
-		{
-			files: ['./assets/js/mapped-types.ts'],
-			rules: {
-				'@typescript-eslint/no-explicit-any': 'off',
-				'@typescript-eslint/no-shadow': 'off',
-				'no-shadow': 'off',
-			},
-		},
+		// {
+		// 	files: ['./packages/admin/mapped-types.ts'],
+		// 	rules: {
+		// 		'@typescript-eslint/no-explicit-any': 'off',
+		// 		'@typescript-eslint/no-shadow': 'off',
+		// 		'no-shadow': 'off',
+		// 	},
+		// },
 	],
 };

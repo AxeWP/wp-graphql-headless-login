@@ -25,6 +25,6 @@ module.exports = {
 		],
 	},
 	entry: {
-		admin: path.resolve(process.cwd(), 'src/assets/js/admin', 'index.tsx'),
+		admin: path.resolve(process.cwd(), 'packages/admin', 'index.tsx'),
 	},
 };

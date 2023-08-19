@@ -42,7 +42,7 @@ class GitHub extends OAuth2Config {
 		return [
 			'scope' => [
 				'type'        => 'array',
-				'description' => __( 'The scope to request from the provider.', 'wp-graphql-headless-login' ),
+				'description' => __( 'Scope', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The scope to request from the provider. See https://docs.github.com/en/developers/apps/building-headless-login-apps/scope-for-headless-login-apps for a list of available scope.', 'wp-graphql-headless-login' ),
 				'order'       => 10,
 				'advanced'    => true,
