@@ -17,35 +17,35 @@ export function PluginSettings() {
 
 	const optionsSchema =
 		wpGraphQLLogin?.settings?.plugin ||
-		({} satisfies Record<keyof PluginSettingsType, SettingSchema>);
+		( {} satisfies Record< keyof PluginSettingsType, SettingSchema > );
 
 	// Sort ascending client option schema by order property key.
-	const sortedOptionsSchema = Object.keys(optionsSchema)
-		?.sort((a, b) => {
-			const aOrder = optionsSchema[a]?.order || 0;
-			const bOrder = optionsSchema[b]?.order || 0;
+	const sortedOptionsSchema = Object.keys( optionsSchema )
+		?.sort( ( a, b ) => {
+			const aOrder = optionsSchema[ a ]?.order || 0;
+			const bOrder = optionsSchema[ b ]?.order || 0;
 			return aOrder > bOrder ? 1 : -1;
-		})
-		.filter((option) => !optionsSchema[option]?.hidden);
+		} )
+		.filter( ( option ) => ! optionsSchema[ option ]?.hidden );
 
 	return (
 		<PanelBody>
 			<PanelRow>
 				<h2 className="components-panel__body-title">
-					{__('Plugin Settings', 'wp-graphql-headless-login')}
+					{ __( 'Plugin Settings', 'wp-graphql-headless-login' ) }
 					<Icon
 						icon="admin-tools"
 						className="components-panel__icon"
-						size={20}
+						size={ 20 }
 					/>
 				</h2>
 			</PanelRow>
 
-			{showAdvancedSettings && <JwtSecretControl />}
+			{ showAdvancedSettings && <JwtSecretControl /> }
 
-			{sortedOptionsSchema.map((option) => (
-				<PluginOptionList optionKey={option} key={option} />
-			))}
+			{ sortedOptionsSchema.map( ( option ) => (
+				<PluginOptionList optionKey={ option } key={ option } />
+			) ) }
 
 			<CustomOptions />
 		</PanelBody>

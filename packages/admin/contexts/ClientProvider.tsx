@@ -23,15 +23,15 @@ const clientDefaults: ProviderSettingType = {
 	} satisfies LoginOptionsType,
 };
 
-export const ClientProviderContext = createContext<{
+export const ClientProviderContext = createContext< {
 	activeClient: string;
 	clientConfig?: ProviderSettingType;
-	setClientConfig: (value: ProviderSettingType) => void;
-	updateClient: (key: string, value: unknown) => void;
-	setClientOption: (value: ClientOptionsType) => void;
-	setLoginOption: (value: LoginOptionsType) => void;
-	setActiveClient: (value: string) => void;
-}>({
+	setClientConfig: ( value: ProviderSettingType ) => void;
+	updateClient: ( key: string, value: unknown ) => void;
+	setClientOption: ( value: ClientOptionsType ) => void;
+	setLoginOption: ( value: LoginOptionsType ) => void;
+	setActiveClient: ( value: string ) => void;
+} >( {
 	activeClient: '',
 	setActiveClient: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
 	clientConfig: undefined,
@@ -39,66 +39,66 @@ export const ClientProviderContext = createContext<{
 	updateClient: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
 	setClientOption: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
 	setLoginOption: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-});
+} );
 
-export const ClientProvider = ({ children }: PropsWithChildren) => {
-	const [activeClient, setActiveClient] = useState(
-		Object.keys(wpGraphQLLogin?.settings.providers)?.[0] || ''
+export const ClientProvider = ( { children }: PropsWithChildren ) => {
+	const [ activeClient, setActiveClient ] = useState(
+		Object.keys( wpGraphQLLogin?.settings.providers )?.[ 0 ] || ''
 	);
 
-	const [clientConfig, setClientConfig] = useEntityProp(
+	const [ clientConfig, setClientConfig ] = useEntityProp(
 		'root',
 		'site',
 		activeClient
 	);
 
 	const updateClient = useCallback(
-		(key: string, value: unknown) => {
+		( key: string, value: unknown ) => {
 			const newConfig = {
 				...clientConfig,
-				[key]: value,
+				[ key ]: value,
 			};
-			setClientConfig(newConfig);
+			setClientConfig( newConfig );
 		},
-		[clientConfig, setClientConfig]
+		[ clientConfig, setClientConfig ]
 	);
 
 	const setClientOption = useCallback(
-		(clientOption: object) => {
-			updateClient('clientOptions', {
+		( clientOption: object ) => {
+			updateClient( 'clientOptions', {
 				...clientConfig?.clientOptions,
 				...clientOption,
-			});
+			} );
 		},
-		[clientConfig, updateClient]
+		[ clientConfig, updateClient ]
 	);
 
 	const setLoginOption = useCallback(
-		(loginOption: object) => {
-			updateClient('loginOptions', {
+		( loginOption: object ) => {
+			updateClient( 'loginOptions', {
 				...clientConfig?.loginOptions,
 				...loginOption,
-			});
+			} );
 		},
-		[clientConfig, updateClient]
+		[ clientConfig, updateClient ]
 	);
 
-	useEffect(() => {
+	useEffect( () => {
 		if (
 			undefined !== activeClient &&
 			undefined !== clientConfig &&
-			Object.keys(clientConfig || {})?.length === 0
+			Object.keys( clientConfig || {} )?.length === 0
 		) {
-			setClientConfig({
+			setClientConfig( {
 				...clientDefaults,
-				slug: activeClient.replace('wpgraphql_login_provider_', ''),
-			});
+				slug: activeClient.replace( 'wpgraphql_login_provider_', '' ),
+			} );
 		}
-	}, [clientConfig, setClientConfig, activeClient]);
+	}, [ clientConfig, setClientConfig, activeClient ] );
 
 	return (
 		<ClientProviderContext.Provider
-			value={{
+			value={ {
 				activeClient,
 				setActiveClient,
 				clientConfig,
@@ -108,11 +108,11 @@ export const ClientProvider = ({ children }: PropsWithChildren) => {
 				updateClient,
 				setClientOption,
 				setLoginOption,
-			}}
+			} }
 		>
-			{children}
+			{ children }
 		</ClientProviderContext.Provider>
 	);
 };
 
-export const useClientContext = () => useContext(ClientProviderContext);
+export const useClientContext = () => useContext( ClientProviderContext );

@@ -6,6 +6,8 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 - feat: Add support for setting a custom `scopeSeparator` for Generic OAuth2 providers. H/t @martinowren for bringing this up!
+- feat: Relocate Admin JS to `packages/admin` directory, and refactor for backwards-compatibility.
+- fix: Correctly set the minimum supported WP version to 5.7. This should have been bumped in v0.0.7, but was missed.
 - fix: Let the OAuth2 Provider library handle imploding the `scope`.
 - fix: Use the correct label for the `scope` setting in the GitHub and LinkedIn provider settings.
 - chore: Update Composer deps.

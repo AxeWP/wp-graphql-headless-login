@@ -5,29 +5,35 @@ import { useDispatch, dispatch, useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
 export function JwtSecretControl() {
-	const [jwtSecret, setJwtSecret] = useEntityProp(
+	const [ jwtSecret, setJwtSecret ] = useEntityProp(
 		'root',
 		'site',
 		'wpgraphql_login_settings_jwt_secret_key'
 	);
-	const { saveEditedEntityRecord } = useDispatch(coreStore);
+	const { saveEditedEntityRecord } = useDispatch( coreStore );
 
 	const { lastError, isSaving } = useSelect(
-		(select) => ({
-			// @ts-expect-error this isnt typed.
-			lastError: select(coreStore).getLastEntitySaveError('root', 'site'),
-			// @ts-expect-error this isnt typed.
-			isSaving: select(coreStore).isSavingEntityRecord('root', 'site'),
-			// @ts-expect-error this isnt typed.
-			hasEdits: select(coreStore).hasEditsForEntityRecord('root', 'site'),
-		}),
+		( select ) => ( {
+			lastError: select( coreStore )?.getLastEntitySaveError(
+				'root',
+				'site'
+			),
+			isSaving: select( coreStore )?.isSavingEntityRecord(
+				'root',
+				'site'
+			),
+			hasEdits: select( coreStore )?.hasEditsForEntityRecord(
+				'root',
+				'site'
+			),
+		} ),
 		[]
 	);
 
-	useEffect(() => {
-		if (lastError) {
+	useEffect( () => {
+		if ( lastError ) {
 			// @ts-expect-error this isnt typed.
-			dispatch('core/notices').createErrorNotice(
+			dispatch( 'core/notices' ).createErrorNotice(
 				__(
 					'The JWT secret could not be regenerated. Please try again later.',
 					'wp-graphql-headless-login'
@@ -38,16 +44,16 @@ export function JwtSecretControl() {
 				}
 			);
 		}
-	}, [lastError, jwtSecret]);
+	}, [ lastError, jwtSecret ] );
 
 	const regenerateJwtSecret = async () => {
-		const saved = await saveEditedEntityRecord('root', 'site', undefined, {
+		const saved = await saveEditedEntityRecord( 'root', 'site', undefined, {
 			wpgraphql_login_settings_jwt_secret_key: jwtSecret,
-		});
+		} );
 
-		if (saved) {
+		if ( saved ) {
 			// @ts-expect-error this isnt typed.
-			dispatch('core/notices').createNotice(
+			dispatch( 'core/notices' ).createNotice(
 				'success',
 				__(
 					'The old JWT secret has been invalidated.',
@@ -68,38 +74,39 @@ export function JwtSecretControl() {
 			<BaseControl
 				className="wp-graphql-headless-login__secret"
 				id="wp-graphql-headless-login__secret--control"
-				help={__(
+				help={ __(
 					'The JWT Secret is used to sign the JWT tokens that are used to authenticate requests to the GraphQL API. Changing this secret will invalidate all previously-authenticated requests.',
 					'wp-graphql-headless-login'
-				)}
+				) }
 			>
 				<Button
-					text={__(
+					isTertiary
+					text={ __(
 						'Regenerate JWT secret',
 						'wp-graphql-headless-login'
-					)}
+					) }
 					icon="admin-network"
-					disabled={!!secret?.isConstant}
+					disabled={ !! secret?.isConstant }
 					isDestructive
-					isBusy={isSaving}
-					iconSize={16}
+					isBusy={ isSaving }
+					iconSize={ 16 }
 					variant="tertiary"
-					onClick={() => {
+					onClick={ () => {
 						// By setting the secret to empty, the server will generate a new one.
-						setJwtSecret('');
+						setJwtSecret( '' );
 						regenerateJwtSecret();
-					}}
+					} }
 				/>
-				{!!secret?.isConstant && (
+				{ !! secret?.isConstant && (
 					<p>
 						<strong>
-							{__(
+							{ __(
 								'The JWT secret is set in wp-config.php and cannot be changed on the backend.',
 								'wp-graphql-headless-login'
-							)}
+							) }
 						</strong>
 					</p>
-				)}
+				) }
 			</BaseControl>
 		</>
 	);

@@ -17,71 +17,71 @@ const accessControlDefaults = {
 	customHeaders: [],
 } satisfies AccessControlSettingsType;
 
-export const AppProviderContext = createContext<{
+export const AppProviderContext = createContext< {
 	showAdvancedSettings: boolean;
-	setShowAdvancedSettings: (value: boolean) => void;
+	setShowAdvancedSettings: ( value: boolean ) => void;
 	accessControlSettings: AccessControlSettingsType;
-	updateAccessControlSettings: (value: AccessControlSettingsType) => void;
-}>({
+	updateAccessControlSettings: ( value: AccessControlSettingsType ) => void;
+} >( {
 	showAdvancedSettings: false,
 	setShowAdvancedSettings: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
 	accessControlSettings: {},
 	updateAccessControlSettings: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-});
+} );
 
-export const AppProvider = ({ children }: PropsWithChildren) => {
-	const { saveEditedEntityRecord } = useDispatch(store);
+export const AppProvider = ( { children }: PropsWithChildren ) => {
+	const { saveEditedEntityRecord } = useDispatch( store );
 
-	const [shouldShow, setShouldShow] = useEntityProp(
+	const [ shouldShow, setShouldShow ] = useEntityProp(
 		'root',
 		'site',
 		'wpgraphql_login_settings_show_advanced_settings'
 	);
 
-	const setShowAdvancedSettings = (value: boolean) => {
-		setShouldShow(!!value);
-		saveEditedEntityRecord('root', 'site', undefined, {
-			wpgraphql_login_settings_show_advanced_settings: !!value,
-		});
+	const setShowAdvancedSettings = ( value: boolean ) => {
+		setShouldShow( !! value );
+		saveEditedEntityRecord( 'root', 'site', undefined, {
+			wpgraphql_login_settings_show_advanced_settings: !! value,
+		} );
 	};
 
-	const [accessControlSettings, setAccessControlSettings] = useEntityProp(
+	const [ accessControlSettings, setAccessControlSettings ] = useEntityProp(
 		'root',
 		'site',
 		'wpgraphql_login_access_control'
 	);
 
 	const updateAccessControlSettings = useCallback(
-		(value: AccessControlSettingsType) => {
-			setAccessControlSettings({
+		( value: AccessControlSettingsType ) => {
+			setAccessControlSettings( {
 				...accessControlSettings,
 				...value,
-			});
+			} );
 		},
-		[setAccessControlSettings, accessControlSettings]
+		[ setAccessControlSettings, accessControlSettings ]
 	);
 
-	useEffect(() => {
+	useEffect( () => {
 		if (
 			undefined !== accessControlSettings &&
-			Object.keys(accessControlSettings || {})?.length === 0
+			Object.keys( accessControlSettings || {} )?.length === 0
 		) {
-			setAccessControlSettings(accessControlDefaults);
+			setAccessControlSettings( accessControlDefaults );
 		}
-	}, [accessControlSettings, setAccessControlSettings]);
+	}, [ accessControlSettings, setAccessControlSettings ] );
 
 	return (
 		<AppProviderContext.Provider
-			value={{
-				showAdvancedSettings: !!shouldShow,
+			value={ {
+				showAdvancedSettings: !! shouldShow,
 				setShowAdvancedSettings,
 				accessControlSettings,
 				updateAccessControlSettings,
-			}}
+			} }
 		>
-			{children}
+			{ children }
 		</AppProviderContext.Provider>
 	);
 };
 
-export const useAppContext = () => useContext(AppProviderContext);
+export const useAppContext = () => useContext( AppProviderContext );

@@ -15,11 +15,11 @@ export type OptionControlType = (
 	| BaseControlProps
 	| SelectControlProps
 	| ToggleControlProps
-) &
+ ) &
 	SettingSchema & {
 		value: unknown;
 		options?: { label: string; value: string }[];
-		onChange: (value: unknown) => void;
+		onChange: ( value: unknown ) => void;
 	};
 
 const controls = {
@@ -29,7 +29,7 @@ const controls = {
 	array: FormTokenField,
 };
 
-export function OptionControl({
+export function OptionControl( {
 	type,
 	description,
 	value,
@@ -38,7 +38,7 @@ export function OptionControl({
 	onChange,
 	help,
 	...rest
-}: SettingSchema & OptionControlType) {
+}: SettingSchema & OptionControlType ) {
 	const componentProps = {
 		label: label || description,
 		required: required || false,
@@ -47,38 +47,41 @@ export function OptionControl({
 
 	let control;
 
-	switch (type) {
+	switch ( type ) {
 		case 'string':
 			control = rest?.enum?.length ? controls.select : controls.string;
 
 			componentProps.value = value || '';
-			componentProps.onChange = (selected: unknown) => onChange(selected);
+			componentProps.onChange = ( selected: unknown ) =>
+				onChange( selected );
 
-			if (rest?.enum?.length) {
-				componentProps.options = rest.enum.map((v: string) => ({
-					label: v.charAt(0).toUpperCase() + v.slice(1),
+			if ( rest?.enum?.length ) {
+				componentProps.options = rest.enum.map( ( v: string ) => ( {
+					label: v.charAt( 0 ).toUpperCase() + v.slice( 1 ),
 					value: v,
-				}));
+				} ) );
 			}
 			break;
 		case 'integer':
 			control = controls.string;
 
-			componentProps.value = value ? parseInt(value as string) : '';
-			componentProps.onChange = (selected: unknown) =>
-				onChange(parseInt(selected as string));
+			componentProps.value = value ? parseInt( value as string ) : '';
+			componentProps.onChange = ( selected: unknown ) =>
+				onChange( parseInt( selected as string ) );
 			componentProps.type = 'number';
 			break;
 		case 'boolean':
 			control = controls.boolean;
 
 			componentProps.checked = value || false;
-			componentProps.onChange = (selected: unknown) => onChange(selected);
+			componentProps.onChange = ( selected: unknown ) =>
+				onChange( selected );
 			break;
 		case 'array':
 			control = controls.array;
 
-			componentProps.onChange = (selected: unknown) => onChange(selected);
+			componentProps.onChange = ( selected: unknown ) =>
+				onChange( selected );
 			componentProps.tokenizeOnSpace = true;
 			componentProps.value = value || [];
 			break;
@@ -86,5 +89,5 @@ export function OptionControl({
 
 	const Component = control;
 
-	return <Component {...componentProps} />;
+	return <Component { ...componentProps } />;
 }

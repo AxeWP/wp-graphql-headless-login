@@ -10,17 +10,26 @@ export function AccessControlSettings() {
 	const { accessControlSettings, updateAccessControlSettings } =
 		useAppContext();
 
-	const { saveEditedEntityRecord } = useDispatch(coreStore);
+	const { saveEditedEntityRecord } = useDispatch( coreStore );
 
 	const { lastError, isSaving, hasEdits } = useSelect(
-		(select) => ({
+		( select ) => ( {
 			// @ts-expect-error this isnt typed.
-			lastError: select(coreStore).getLastEntitySaveError('root', 'site'),
+			lastError: select( coreStore )?.getLastEntitySaveError(
+				'root',
+				'site'
+			),
 			// @ts-expect-error this isnt typed.
-			isSaving: select(coreStore).isSavingEntityRecord('root', 'site'),
+			isSaving: select( coreStore )?.isSavingEntityRecord(
+				'root',
+				'site'
+			),
 			// @ts-expect-error this isnt typed.
-			hasEdits: select(coreStore).hasEditsForEntityRecord('root', 'site'),
-		}),
+			hasEdits: select( coreStore )?.hasEditsForEntityRecord(
+				'root',
+				'site'
+			),
+		} ),
 		[]
 	);
 
@@ -28,10 +37,10 @@ export function AccessControlSettings() {
 
 	const optionsSchema = wpGraphQLLogin?.settings?.accessControl || {};
 
-	useEffect(() => {
-		if (lastError) {
+	useEffect( () => {
+		if ( lastError ) {
 			// @ts-expect-error this isnt typed.
-			dispatch('core/notices').createErrorNotice(
+			dispatch( 'core/notices' ).createErrorNotice(
 				sprintf(
 					// translators: %s: Error message.
 					__(
@@ -46,20 +55,20 @@ export function AccessControlSettings() {
 				}
 			);
 		}
-	}, [lastError]);
+	}, [ lastError ] );
 
 	const saveRecord = async () => {
-		const saved = await saveEditedEntityRecord('root', 'site', undefined, {
+		const saved = await saveEditedEntityRecord( 'root', 'site', undefined, {
 			wpgraphql_login_access_control: accessControlSettings,
-		});
+		} );
 
-		if (saved) {
-			dispatch('core/notices')
+		if ( saved ) {
+			dispatch( 'core/notices' )
 				// @ts-expect-error this isnt typed.
-				.createNotice('success', 'Settings saved', {
+				.createNotice( 'success', 'Settings saved', {
 					type: 'snackbar',
 					isDismissible: true,
-				});
+				} );
 		}
 	};
 
@@ -68,32 +77,33 @@ export function AccessControlSettings() {
 			<PanelBody>
 				<PanelRow>
 					<h2 className="components-panel__body-title">
-						{__(
+						{ __(
 							'Access Control Settings',
 							'wp-graphql-headless-login'
-						)}
+						) }
 					</h2>
 				</PanelRow>
 				<OptionList
-					optionsSchema={optionsSchema}
-					options={accessControlSettings}
-					setOption={updateAccessControlSettings}
-					excludedProperties={excludedProperties}
+					optionsSchema={ optionsSchema }
+					options={ accessControlSettings }
+					setOption={ updateAccessControlSettings }
+					excludedProperties={ excludedProperties }
 				/>
 			</PanelBody>
 			<Button
 				variant="primary"
-				disabled={!hasEdits}
-				isBusy={isSaving}
-				onClick={() => {
+				isPrimary
+				disabled={ ! hasEdits }
+				isBusy={ isSaving }
+				onClick={ () => {
 					saveRecord();
-				}}
+				} }
 			>
-				{__(
+				{ __(
 					'Save Access Control Settings',
 					'wp-graphql-headless-login'
-				)}
-				{isSaving && <Spinner />}
+				) }
+				{ isSaving && <Spinner /> }
 			</Button>
 		</>
 	);

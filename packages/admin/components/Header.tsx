@@ -9,31 +9,31 @@ function Header(): JSX.Element {
 	return (
 		<div className="wp-graphql-headless-login__header">
 			<h1 className="wp-graphql-headless-login__title">
-				<Icon icon={<Logo />} />
-				{__(
+				<Icon icon={ <Logo /> } />
+				{ __(
 					'Headless Login Settings',
 					'wp-graphql-headless-login'
-				)}{' '}
+				) }{ ' ' }
 			</h1>
-			{showAdvancedSettings !== undefined && (
+			{ showAdvancedSettings !== undefined && (
 				<ToggleControl
 					className="wp-graphql-headless-login__advanced-settings-toggle"
-					label={__(
+					label={ __(
 						'Show advanced settings',
 						'wp-graphql-headless-login'
-					)}
-					checked={showAdvancedSettings}
-					onChange={(value) => setShowAdvancedSettings(value)}
+					) }
+					checked={ showAdvancedSettings }
+					onChange={ ( value ) => setShowAdvancedSettings( value ) }
 				/>
-			)}
-			{/* Add button link to documentation */}
+			) }
+			{ /* Add button link to documentation */ }
 			<div className="wp-graphql-headless-login__documentation-link">
 				<a
 					href="https://github.com/AxeWP/wp-graphql-headless-login-beta/blob/main/docs/settings.md"
 					target="_blank"
 					rel="noreferrer"
 				>
-					{__('Documentation (WIP)', 'wp-graphql-headless-login')}
+					{ __( 'Documentation (WIP)', 'wp-graphql-headless-login' ) }
 					<Icon
 						icon="external"
 						className="wp-graphql-headless-login__documentation-link-icon"
