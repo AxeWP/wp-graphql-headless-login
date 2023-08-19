@@ -1,8 +1,4 @@
-/**
- * External dependencies.
- */
 import { useEffect } from '@wordpress/element';
-
 import { BaseControl, Button } from '@wordpress/components';
 import { store as coreStore, useEntityProp } from '@wordpress/core-data';
 import { useDispatch, dispatch, useSelect } from '@wordpress/data';
@@ -18,8 +14,11 @@ export function JwtSecretControl() {
 
 	const { lastError, isSaving } = useSelect(
 		(select) => ({
+			// @ts-expect-error this isnt typed.
 			lastError: select(coreStore).getLastEntitySaveError('root', 'site'),
+			// @ts-expect-error this isnt typed.
 			isSaving: select(coreStore).isSavingEntityRecord('root', 'site'),
+			// @ts-expect-error this isnt typed.
 			hasEdits: select(coreStore).hasEditsForEntityRecord('root', 'site'),
 		}),
 		[]
@@ -27,6 +26,7 @@ export function JwtSecretControl() {
 
 	useEffect(() => {
 		if (lastError) {
+			// @ts-expect-error this isnt typed.
 			dispatch('core/notices').createErrorNotice(
 				__(
 					'The JWT secret could not be regenerated. Please try again later.',
@@ -46,6 +46,7 @@ export function JwtSecretControl() {
 		});
 
 		if (saved) {
+			// @ts-expect-error this isnt typed.
 			dispatch('core/notices').createNotice(
 				'success',
 				__(

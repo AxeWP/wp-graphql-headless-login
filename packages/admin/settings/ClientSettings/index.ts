@@ -1,1 +1,1 @@
-export * from './ClientSettings';
+export * from './ClientPanel';

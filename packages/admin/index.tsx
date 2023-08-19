@@ -1,12 +1,5 @@
-/**
- * External dependencies.
- */
 import { render } from '@wordpress/element';
 import { createHooks } from '@wordpress/hooks';
-
-/**
- * Internal dependencies.
- */
 import App from './app';
 
 export const hooks = createHooks();

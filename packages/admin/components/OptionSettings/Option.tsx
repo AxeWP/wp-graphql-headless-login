@@ -3,15 +3,13 @@ import { OptionControl } from './OptionControl';
 import { useAppContext } from '../../contexts/AppProvider';
 
 export function Option({
-	optionKey,
 	schema,
 	currentValue,
 	setValue,
 }: {
-	optionKey: string;
 	schema: Record<string, any>;
 	currentValue: any;
-	setValue: (options: Record<string, any>) => void;
+	setValue: (value: unknown) => void;
 }) {
 	const { showAdvancedSettings } = useAppContext();
 
@@ -28,11 +26,7 @@ export function Option({
 			<OptionControl
 				{...schema}
 				value={currentValue}
-				onChange={(value) => {
-					setValue({
-						[optionKey]: value,
-					});
-				}}
+				onChange={setValue}
 			/>
 		</PanelRow>
 	);

@@ -1,13 +1,16 @@
-/**
- * Internal dependencies.
- */
 import { OptionList } from '../../components';
+import type { ClientOptionsType, LoginOptionsType } from '../../types';
 
 export function ClientOptionList({
 	clientSlug,
 	optionsKey,
 	options,
 	setOption,
+}: {
+	clientSlug: string;
+	optionsKey: string;
+	options: ClientOptionsType | LoginOptionsType;
+	setOption: (value: ClientOptionsType | LoginOptionsType) => void;
 }) {
 	const excludedProperties = ['id', 'order'];
 

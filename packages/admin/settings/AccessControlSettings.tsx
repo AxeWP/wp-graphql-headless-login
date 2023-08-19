@@ -1,65 +1,36 @@
-/**
- * External Dependencies
- */
 import { useEffect } from '@wordpress/element';
-import { Button, PanelBody, PanelRow } from '@wordpress/components';
+import { Button, PanelBody, PanelRow, Spinner } from '@wordpress/components';
 import { sprintf, __ } from '@wordpress/i18n';
-import { store as coreStore, useEntityProp } from '@wordpress/core-data';
+import { store as coreStore } from '@wordpress/core-data';
 import { useDispatch, dispatch, useSelect } from '@wordpress/data';
-
-/**
- * Internal Dependencies.
- */
 import { OptionList } from '../components';
-
-interface AccessControlSettings {
-	hasAccessControlAllowCredentials: boolean;
-	hasSiteAddressInOrigin: boolean;
-	additionalAuthorizedDomains: string[];
-	shouldBlockUnauthorizedDomains: boolean;
-	customHeaders: string[];
-}
-
-const accessControlDefaults: AccessControlSettings = {
-	hasAccessControlAllowCredentials: false,
-	hasSiteAddressInOrigin: false,
-	additionalAuthorizedDomains: [],
-	shouldBlockUnauthorizedDomains: false,
-	customHeaders: [],
-};
+import { useAppContext } from '../contexts/AppProvider';
 
 export function AccessControlSettings() {
+	const { accessControlSettings, updateAccessControlSettings } =
+		useAppContext();
+
 	const { saveEditedEntityRecord } = useDispatch(coreStore);
 
-	const [accessControlSettings, setAccessControlSettings] = useEntityProp(
-		'root',
-		'site',
-		'wpgraphql_login_access_control'
-	);
-
-	useEffect(() => {
-		if (
-			undefined !== accessControlSettings &&
-			Object.keys(accessControlSettings || {})?.length === 0
-		) {
-			setAccessControlSettings(accessControlDefaults);
-		}
-	}, [accessControlSettings, setAccessControlSettings]);
-
-	const { lastError } = useSelect(
+	const { lastError, isSaving, hasEdits } = useSelect(
 		(select) => ({
+			// @ts-expect-error this isnt typed.
 			lastError: select(coreStore).getLastEntitySaveError('root', 'site'),
+			// @ts-expect-error this isnt typed.
 			isSaving: select(coreStore).isSavingEntityRecord('root', 'site'),
+			// @ts-expect-error this isnt typed.
 			hasEdits: select(coreStore).hasEditsForEntityRecord('root', 'site'),
 		}),
 		[]
 	);
 
-	const excludedProperties = [];
+	const excludedProperties = [] satisfies string[];
+
 	const optionsSchema = wpGraphQLLogin?.settings?.accessControl || {};
 
 	useEffect(() => {
 		if (lastError) {
+			// @ts-expect-error this isnt typed.
 			dispatch('core/notices').createErrorNotice(
 				sprintf(
 					// translators: %s: Error message.
@@ -77,24 +48,18 @@ export function AccessControlSettings() {
 		}
 	}, [lastError]);
 
-	const updateSettings = (value) => {
-		const newAccessControlSettings = {
-			...accessControlSettings,
-			...value,
-		};
-		setAccessControlSettings(newAccessControlSettings);
-	};
-
 	const saveRecord = async () => {
 		const saved = await saveEditedEntityRecord('root', 'site', undefined, {
 			wpgraphql_login_access_control: accessControlSettings,
 		});
 
 		if (saved) {
-			dispatch('core/notices').createNotice('success', 'Settings saved', {
-				type: 'snackbar',
-				isDismissible: true,
-			});
+			dispatch('core/notices')
+				// @ts-expect-error this isnt typed.
+				.createNotice('success', 'Settings saved', {
+					type: 'snackbar',
+					isDismissible: true,
+				});
 		}
 	};
 
@@ -112,12 +77,14 @@ export function AccessControlSettings() {
 				<OptionList
 					optionsSchema={optionsSchema}
 					options={accessControlSettings}
-					setOption={updateSettings}
+					setOption={updateAccessControlSettings}
 					excludedProperties={excludedProperties}
 				/>
 			</PanelBody>
 			<Button
-				isPrimary
+				variant="primary"
+				disabled={!hasEdits}
+				isBusy={isSaving}
 				onClick={() => {
 					saveRecord();
 				}}
@@ -126,6 +93,7 @@ export function AccessControlSettings() {
 					'Save Access Control Settings',
 					'wp-graphql-headless-login'
 				)}
+				{isSaving && <Spinner />}
 			</Button>
 		</>
 	);

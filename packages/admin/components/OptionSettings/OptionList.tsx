@@ -1,4 +1,5 @@
 import { Option } from './Option';
+import type { SettingSchema } from '../../types';
 
 export function OptionList({
 	excludedProperties,
@@ -7,16 +8,16 @@ export function OptionList({
 	setOption,
 }: {
 	excludedProperties?: string[];
-	options: Record<string, any>;
-	optionsSchema: Record<string, any>;
-	setOption: (options: Record<string, any>) => void;
+	options: Record<string, unknown>;
+	optionsSchema: SettingSchema;
+	setOption: (options: Record<string, unknown>) => void;
 }): JSX.Element {
 	const excluded = excludedProperties || ['id', 'order'];
 
 	// Sort ascending client option schema by order property key.
 	const sortedOptionsSchema = Object.keys(optionsSchema)?.sort((a, b) => {
-		const aOrder = optionsSchema[a]?.order;
-		const bOrder = optionsSchema[b]?.order;
+		const aOrder = optionsSchema[a]?.order || 0;
+		const bOrder = optionsSchema[b]?.order || 0;
 		return aOrder > bOrder ? 1 : -1;
 	});
 
@@ -30,10 +31,13 @@ export function OptionList({
 				return (
 					<Option
 						key={option}
-						optionKey={option}
 						schema={optionsSchema[option]}
 						currentValue={options?.[option]}
-						setValue={setOption}
+						setValue={(value) => {
+							setOption({
+								[option]: value,
+							});
+						}}
 					/>
 				);
 			})}

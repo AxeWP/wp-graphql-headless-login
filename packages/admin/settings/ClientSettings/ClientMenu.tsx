@@ -1,7 +1,4 @@
 /* eslint-disable @wordpress/no-unsafe-wp-apis */
-/**
- * External dependencies.
- */
 import {
 	__experimentalNavigation as Navigation,
 	__experimentalNavigationItem as NavigationItem,
@@ -9,8 +6,9 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useEntityProp } from '@wordpress/core-data';
+import { useClientContext } from '../../contexts/ClientProvider';
 
-export function StatusBadge({ provider }) {
+export function StatusBadge({ provider }: { provider: string }) {
 	const [providerConfig] = useEntityProp('root', 'site', provider);
 
 	const isEnabled = providerConfig?.isEnabled ?? false;
@@ -32,8 +30,9 @@ export function StatusBadge({ provider }) {
 	);
 }
 
-function ClientMenu({ activeClient, setActiveClient }) {
+export function ClientMenu() {
 	const providers = Object.keys(wpGraphQLLogin?.settings?.providers || {});
+	const { activeClient, setActiveClient } = useClientContext();
 
 	return (
 		<Navigation activeItem={activeClient}>
@@ -48,7 +47,7 @@ function ClientMenu({ activeClient, setActiveClient }) {
 							item={provider}
 							title={
 								wpGraphQLLogin?.settings?.providers?.[provider]
-									?.name?.default
+									?.name?.default as string
 							}
 							icon={<StatusBadge provider={provider} />}
 							onClick={() => setActiveClient(provider)}
@@ -58,5 +57,3 @@ function ClientMenu({ activeClient, setActiveClient }) {
 		</Navigation>
 	);
 }
-
-export default ClientMenu;
