@@ -7,6 +7,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 ## Unreleased
 - feat: Add support for setting a custom `scopeSeparator` for Generic OAuth2 providers. H/t @martinowren for bringing this up!
 - fix: Let the OAuth2 Provider library handle imploding the `scope`.
+- fix: Use the correct label for the `scope` setting in the GitHub and LinkedIn provider settings.
 - chore: Update Composer deps.
 - chore: Cleanup PHPCS and PHPStan configurations.
 - ci: Set MariaDB to v10.x in GitHub Actions.
