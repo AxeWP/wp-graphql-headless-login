@@ -135,26 +135,82 @@ class Client {
 		/**
 		 * Fires before the user is authenticated.
 		 *
-		 * @param string         $slug            The provider slug.
-		 * @param array          $input           The mutation input data.
-		 * @param array          $settings        The client settings.
+		 * @param string                                              $slug            The provider slug.
+		 * @param array                                               $input           The mutation input data.
+		 * @param array                                               $settings        The client settings.
 		 * @param \WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig $provider_config The provider config.
-		 * @param \WPGraphQL\Login\Auth\Client $client The Client instance.
+		 * @param \WPGraphQL\Login\Auth\Client                        $client          The Client instance.
 		 */
 		do_action( 'graphql_login_before_authenticate', $this->slug, $input, $this->config, $this->provider_configurator, $this );
 
-		return $this->provider_configurator->authenticate_and_get_user_data( $input );
+		$user_data = $this->provider_configurator->authenticate_and_get_user_data( $input );
+
+		/**
+		 * Filters the user data returned from the Authentication provider.
+		 *
+		 * @param array<string,mixed>|\WP_User|\WP_Error|false        $user_data       The user data.
+		 * @param string                                              $slug            The provider slug.
+		 * @param array                                               $input           The mutation input data.
+		 * @param array                                               $settings        The client settings.
+		 * @param \WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig $provider_config The provider config.
+		 * @param \WPGraphQL\Login\Auth\Client                        $client          The Client instance.
+		 */
+		$user_data = apply_filters( 'graphql_login_authenticated_user_data', $user_data, $this->slug, $input, $this->config, $this->provider_configurator, $this );
+
+		/**
+		 * Fires when the user is authenticated.
+		 *
+		 * @param array<string,mixed>|\WP_User|\WP_Error|false        $user_data       The user data.
+		 * @param string                                              $slug            The provider slug.
+		 * @param array                                               $input           The mutation input data.
+		 * @param array                                               $settings        The client settings.
+		 * @param \WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig $provider_config The provider config.
+		 * @param \WPGraphQL\Login\Auth\Client                        $client          The Client instance.
+		 */
+		do_action( 'graphql_login_after_authenticate', $user_data, $this->slug, $input, $this->config, $this->provider_configurator, $this );
+
+		return $user_data;
 	}
 
 	/**
 	 * Uses the authenticated user data to return the user.
 	 *
-	 * @param array<string,mixed>|\WP_User $data the user data data.
+	 * @param array<string,mixed>|\WP_User $data the user data.
 	 *
 	 * @return \WP_User|\WP_Error|false
 	 */
 	public function get_user_from_data( $data ) {
-		return $this->provider_configurator->get_user_from_data( $data );
+		/**
+		 * Shortcircuits the user matching logic, allowing you to provide your own logic for matching the user from the provider user data.
+		 * If null is returned, the default matching logic will be used.
+		 *
+		 * @param \WP_User|\WP_Error|false|null                       $pre_get_user    The user matched from the data. If null, the default matching logic will be used.
+		 * @param array<string,mixed>|\WP_User                        $data            The user data from the provider.
+		 * @param string                                              $slug            The provider slug.
+		 * @param array                                               $settings        The client settings.
+		 * @param \WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig $provider_config The provider config.
+		 * @param \WPGraphQL\Login\Auth\Client                        $client          The Client instance.
+		 */
+		$user = apply_filters( 'graphql_login_pre_get_user_from_data', null, $data, $this->slug, $this->config, $this->provider_configurator, $this );
+
+		if ( null === $user ) {
+			$user = $this->provider_configurator->get_user_from_data( $data );
+		}
+
+		/**
+		 * Fires when the user is matched from the data.
+		 * Useful for updating custom meta fields from the provider.
+		 *
+		 * @param \WP_User|\WP_Error|false                            $user            The user matched from the data.
+		 * @param array<string,mixed>|\WP_User                        $data            The user data from the provider.
+		 * @param string                                              $slug            The provider slug.
+		 * @param array                                               $settings        The client settings.
+		 * @param \WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig $provider_config The provider config.
+		 * @param \WPGraphQL\Login\Auth\Client                        $client          The Client instance.
+		 */
+		do_action( 'graphql_login_get_user_from_data', $user, $data, $this->slug, $this->config, $this->provider_configurator, $this );
+
+		return $user;
 	}
 
 	/**
@@ -166,15 +222,31 @@ class Client {
 	 */
 	public function maybe_create_user( $user_data ) {
 		/**
+		 * Deprecated filter. Use `graphql_login_create_user_data` instead.
+		 *
+		 * @param array $user_data       The WordPress user data.
+		 * @param self  $provider_config An instance of the provider configuration.
+		 * 
+		 * @since 0.0.1
+		 * @deprecated @todo
+		 */
+		$user_data = apply_filters_deprecated(
+			'graphql_login_mapped_user_data',
+			[ $user_data, $this ],
+			'@todo',
+			'graphql_login_create_user_data'
+		);
+
+		/**
 		 * Filters the user data mapped from the Authentication provider before creating the user.
 		 * Useful for mapping custom fields from the Authentication provider to the WP_User.
 		 *
-		 * @param array $user_data      The WordPress user data.
-		 * @param self $provider_config An instance of the provider configuration.
+		 * @param array $user_data       The WordPress user data.
+		 * @param self  $provider_config An instance of the provider configuration.
 		 *
-		 * @since 0.0.1
+		 * @since @todo
 		 */
-		$user_data = apply_filters( 'graphql_login_mapped_user_data', $user_data, $this );
+		$user_data = apply_filters( 'graphql_login_create_user_data', $user_data, $this );
 
 		if ( ! is_array( $user_data ) ) {
 			return false;
