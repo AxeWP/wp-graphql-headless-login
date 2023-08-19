@@ -12,8 +12,10 @@
 	* [`graphql_login_after_provider_init`](#graphql_login_after_provider_init)
 	* [`graphql_login_client_init`](#graphql_login_client_init)
 	* [`graphql_login_before_authenticate`](#graphql_login_before_authenticate)
+	* [`graphql_login_after_authenticate`](#graphql_login_after_authenticate)
+	* [`graphql_login_get_user_from_data`](#graphql_login_get_user_from_data)
 	* [`graphql_login_validate_client`](#graphql_login_validate_client)
-	* [`graphql_login_after_sucessful_login`](#graphql_login_after_sucessful_login)
+	* [`graphql_login_after_sucecssful_login`](#graphql_login_after_successful_login)
 	* [`graphql_login_link_user_identity`](#graphql_login_link_user_identity)
 
 ## Activation / Deactivation
@@ -100,7 +102,7 @@ do_action( 'graphql_login_client_init', $slug, $settings, $provider_config, $cli
 
 ### `graphql_login_before_authenticate`
 
-Fires before the user is authenticated.
+Fires before the user is authenticated with the provider.
 
 ```php
 do_action( 'graphql_login_before_authenticate', $slug, $input, $settings, $provider_config, $client );
@@ -110,6 +112,42 @@ do_action( 'graphql_login_before_authenticate', $slug, $input, $settings, $provi
 
 * **`$slug`** _(string)_ : The provider slug.
 * **`$input`** _(array)_ : The mutation input data.
+* **`$settings`** _(array)_ : The client settings.
+* **`$provider_config`** _(WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig)_ : The instance of the ProviderConfig.
+* **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The instance of the Client.
+
+### `graphql_login_after_authenticate`
+
+Fires after the user is authenticated with the provider.
+
+```php
+do_action( 'graphql_login_after_authenticate', $user_data, $slug, $input, $settings, $provider_config, $client );
+```
+
+#### Parameters
+
+
+* **`$user_data`** _(array<string,mixed>|\WP_User|\WP_Error|false)_ : The user data from the Authentication provider.
+* **`$slug`** _(string)_ : The provider slug.
+* **`$input`** _(array)_ : The mutation input data.
+* **`$settings`** _(array)_ : The client settings.
+* **`$provider_config`** _(WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig)_ : The instance of the ProviderConfig.
+* **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The instance of the Client.
+
+### `graphql_login_get_user_from_data`
+
+Fires when the user is matched from the data.
+Useful for updating custom meta fields from the provider.
+
+```php
+do_action( 'graphql_login_get_user_from_data', $user, $user_data, $slug, $settings, $provider_config, $client );
+```
+
+#### Parameters
+
+* **`$user`** _( \WP_User|\WP_Error|false) : The user object matched from the data.
+* **`$user_data`** _(array<string,mixed>|\WP_User)_ : The user data from the Authentication provider.
+* **`$slug`** _(string)_ : The provider slug.
 * **`$settings`** _(array)_ : The client settings.
 * **`$provider_config`** _(WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig)_ : The instance of the ProviderConfig.
 * **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The instance of the Client.
@@ -131,7 +169,7 @@ do_action( 'graphql_login_validate_client', $client );
 Fires after the user is successfully logged in.
 
 ```php
-do_action( 'graphql_login_after_successful_login', $payload, $user_data, $client );
+do_action( 'graphql_login_after_successful_login', $payload, $user, $user_data, $client );
 ```
 
 #### Parameters
@@ -142,6 +180,8 @@ do_action( 'graphql_login_after_successful_login', $payload, $user_data, $client
   * **`$payload['refreshToken']`** _(string)_ : The user's Refresh Token.
   * **`$payload['refreshTokenExpiration']`** _(int)_ : The expiration timestamp of the Refresh Token.
   * **`$payload['user']`** _(WP_User)_ : The user object.
+* **`$user_data`** _(array<string,mixed>|\WP_User|false)_ : The user data from the Authentication provider.
+* **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The instance of the Client.
 
 ### `graphql_login_link_user_identity`
 

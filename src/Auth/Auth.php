@@ -96,21 +96,21 @@ class Auth {
 		/**
 		 * Filters the Login mutation payload before returning.
 		 *
-		 * @param array          $payload   The payload.
-		 * @param \WP_User       $user      The user.
-		 * @param array|mixed    $user_data The user data from the Provider.
-		 * @param \WPGraphQL\Login\Auth\Client $client The client instance.
+		 * @param array                        $payload   The payload.
+		 * @param \WP_User                     $user      The user.
+		 * @param array|\WP_User|false         $user_data The user data from the Provider.
+		 * @param \WPGraphQL\Login\Auth\Client $client    The client instance.
 		 */
 		$payload = apply_filters( 'graphql_login_payload', $payload, $user, $user_data, $client );
 
 		/**
 		 * Fires after the user is successfully logged in.
 		 *
-		 * @param array  $payload   The payload.
-		 * @param \WP_User  $user_data The user data from the Provider.
-		 * @param \WPGraphQL\Login\Auth\Client $client The client instance.
+		 * @param array                              $payload   The payload.
+		 * @param array<string,mixed>|\WP_User|false $user_data The user data from the Provider.
+		 * @param \WPGraphQL\Login\Auth\Client       $client    The client instance.
 		 */
-		do_action( 'graphql_login_after_successful_login', $payload, $user, $client );
+		do_action( 'graphql_login_after_successful_login', $payload, $user_data, $client );
 
 		return $payload ?: [];
 	}

@@ -5,7 +5,9 @@
 * [GraphQL Type Registration](#graphql-type-registration)
 	* [`graphql_login_registered_{type}_classes`](#graphql_login_registered_type_classes)
 * [Authentication](#authentication)
-	* [`graphql_login_auth_get_user`](#graphql_login_auth_get_user)
+	* [`graphql_login_authenticated_user_data`](#graphql_login_authenticated_user_data)
+	* [`graphql_login_pre_get_user_from_data`](#graphql_login_pre_get_user_from_data)
+	* [`graphql_login_create_user_data`](#graphql_login_create_user_data)
 	* [`graphql_login_payload`](#graphql_login_payload)
 * [Secrets & Tokens](#secrets--tokens)
 	* [`graphql_login_jwt_secret_key`](#graphql_login_jwt_secret_key)
@@ -20,7 +22,7 @@
 	* [`graphql_login_signed_token`](#graphql_login_signed_token)
 	* [`graphql_login_token_validity`](#graphql_login_token_validity)
 * [Authorization Headers](#authorization-headers)
-	* [`graphql_login_get_auth_header`](#graphql_login_get_auth_header)
+	* [`graphql_login_auth_header`](#graphql_login_auth_header)
 	* [`graphql_login_refresh_header`](#graphql_login_refresh_header)
 * [Client & Provider Configuration](#client--provider-configuration)
 	* [`graphql_login_registered_provider_configs`](#graphql_login_registered_provider_configs)
@@ -34,7 +36,6 @@
 	* [`graphql_login_login_options_schema`](#graphql_login_login_options_schema)
 	* [`graphql_login_client_options`](#graphql_login_client_options)
 	* [`graphql_login_user_types](#graphql_login_user_types)
-	* [`graphql_login_mapped_user_data`](#graphql_login_mapped_user_data)
 
 ## GraphQL Type Registration
 
@@ -60,20 +61,53 @@ apply_filters( 'graphql_login_registered_object_classes', $classes );
 
 ## Authentication
 
-### `graphql_login_auth_get_user`
+### `graphql_login_authenticated_user_data`
 
-Filter to transform the user data returned from `ProviderConfig::authenticate_and_get_user_data()` to a `WP_User` object.
-
-Useful for adding support for custom authentication provider types.
+Filters the user data returned from the Authentication provider.
 
 ```php
-apply_filters( 'graphql_login_auth_get_user', $provider_type, $user_data, $client );
+apply_filters( 'graphql_login_authenticated_user_data', $user_data, $slug, $input, $settings, $provider_config, $client );
 ```
 
 #### Parameters
 
-* **`$provider_type`** _(_string)_ : The provider type.
-* **`$user_data`** _(array)_ : The user data returned from the authentication provider.
+* **`$user_data`** _(array|\WP_User|\WP_Error|false)_ : The user data returned from the Authentication provider.
+* **`$slug`** _(string)_ : The provider slug.
+* **`$input`** _(array)_ : The mutation input data.
+* **`$settings`** _(array)_ : The client settings.
+* **`$provider_config`** _(\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig)_ : The instance of the ProviderConfig.
+* **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The authentication client.
+
+### `graphql_login_pre_get_user_from_data`
+
+Shortcircuits the user matching logic, allowing you to provide your own logic for matching the user from the provider user data.
+If null is returned, the default matching logic will be used.
+
+```php
+apply_filters( 'graphql_login_pre_get_user_from_data', null, $user_data, $slug, $settings, $provider_config, $client );
+```
+
+#### Parameters
+
+* **`$user`** _(WP_User|null)_ : The user that was matched from the provider user data. If null, the default matching logic will be used.
+* **`$user_data`** _(array|\WP_User|\WP_Error|false)_ : The user data returned from the Authentication provider.
+* **`$slug`** _(string)_ : The provider slug.
+* **`$settings`** _(array)_ : The client settings.
+* **`$provider_config`** _(\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig)_ : The instance of the ProviderConfig.
+* **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The authentication client.
+
+### `graphql_login_create_user_data`
+
+Filters the user data mapped from the Authentication provider before creating the user.
+Useful for mapping custom fields from the Authentication provider to the WP_User.
+
+```php
+apply_filters( 'graphql_login_create_user_data', $user_data, $client );
+```
+
+#### Parameters
+
+* **`$user_data`** _(array)_ : The user data returned from the Authentication provider.
 * **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The authentication client.
 
 ### `graphql_login_payload`
@@ -233,7 +267,7 @@ apply_filters( 'graphql_login_token_validity', $validity );
 
 ## Authorization Headers
 
-### `graphql_login_get_auth_header`
+### `graphql_login_auth_header`
 
 Filters the Authorization header before it is used to authenticate the user's HTTP request.
 
@@ -404,21 +438,6 @@ apply_filters( 'graphql_login_user_types', $type_names);
 #### Parameters
 
 * **`$type_names`** _(string[])_ : The names of the GraphQL 'user' types. Defaults to 'User'
-
-
-### `graphql_login_mapped_user_data`
-
-Filters the user data mapped from the authentication rovider before creating the user.
-Useful for mapping custom fields from the provider to the WP_User.
-
-```php
-apply_filters( 'graphql_login_mapped_user_data', $user_data, $client );
-```
-
-#### Parameters
-
-* **`$user_data`** _(array)_ : The WP User data.
-* **`$client`** _(\WPGraphQL\Login\Auth\ProviderConfig/ProviderConfig)_ : The ProviderConfig instance.
 
 ## Reference
 

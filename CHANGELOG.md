@@ -10,10 +10,16 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - fix: Correctly set the minimum supported WP version to 5.7. This should have been bumped in v0.0.7, but was missed.
 - fix: Let the OAuth2 Provider library handle imploding the `scope`.
 - fix: Use the correct label for the `scope` setting in the GitHub and LinkedIn provider settings.
+- fix: Correctly pass the provider `$user_data` to the `graphql_login_after_successful_login` filter. Props @martinowren.
+- dev: New actions: `graphql_login_after_authenticate`, `graphql_login_get_user_from_data`.
+- dev: New filters: `graphql_login_authenticated_user_data`, `graphql_login_pre_get_user_from_data`,
+`graphql_login_create_user_data`.
+- dev: Deprecated the `graphql_login_mapped_user_data` filter in favor of `graphql_login_authenticated_user_data`.
 - chore: Update Composer deps.
 - chore: Cleanup PHPCS and PHPStan configurations.
 - ci: Set MariaDB to v10.x in GitHub Actions.
 - ci: Test against PHP 8.2 and WordPress 6.3.
+- docs: Cleanup Action and Filter references.
 
 ## [0.1.2] - 2023-6-05
 
