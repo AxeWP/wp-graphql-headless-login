@@ -202,7 +202,7 @@ class Client {
 		 * Useful for updating custom meta fields from the provider.
 		 *
 		 * @param \WP_User|\WP_Error|false                            $user            The user matched from the data.
-		 * @param array<string,mixed>|\WP_User                        $data            The user data from the provider.
+		 * @param array<string,mixed>|\WP_User                        $user_data            The user data from the provider.
 		 * @param string                                              $slug            The provider slug.
 		 * @param array                                               $settings        The client settings.
 		 * @param \WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig $provider_config The provider config.

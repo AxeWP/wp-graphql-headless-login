@@ -169,7 +169,7 @@ do_action( 'graphql_login_validate_client', $client );
 Fires after the user is successfully logged in.
 
 ```php
-do_action( 'graphql_login_after_successful_login', $payload, $user_data, $client );
+do_action( 'graphql_login_after_successful_login', $payload, $user, $user_data, $client );
 ```
 
 #### Parameters
@@ -180,6 +180,8 @@ do_action( 'graphql_login_after_successful_login', $payload, $user_data, $client
   * **`$payload['refreshToken']`** _(string)_ : The user's Refresh Token.
   * **`$payload['refreshTokenExpiration']`** _(int)_ : The expiration timestamp of the Refresh Token.
   * **`$payload['user']`** _(WP_User)_ : The user object.
+* **`$user_data`** _(array<string,mixed>|\WP_User|false)_ : The user data from the Authentication provider.
+* **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The instance of the Client.
 
 ### `graphql_login_link_user_identity`
 
