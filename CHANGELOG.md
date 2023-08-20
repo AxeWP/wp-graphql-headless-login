@@ -4,7 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
-## Unreleased
+## [0.1.3] - 2023-8-20
+
+This release includes a refactored Admin JS package for backwards-compatibility and stability, new features and developer hooks extend and customize the authentication lifecycle, and a handful of bug fixes.
+
 - feat: Add support for setting a custom `scopeSeparator` for Generic OAuth2 providers. H/t @martinowren for bringing this up!
 - feat: Relocate Admin JS to `packages/admin` directory, and refactor for backwards-compatibility.
 - fix: Correctly set the minimum supported WP version to 5.7. This should have been bumped in v0.0.7, but was missed.
@@ -23,7 +26,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## [0.1.2] - 2023-6-05
 
-This release implements the new WPGraphQL Coding Standards ruleset for `PHP_CodeSniffer`. While many of the addressed sniffs are cosmetic, numerous smells regarding performance, type safety, sanitization, and 3rd-party interoperability have been fixed as well.
+This minor release implements the new WPGraphQL Coding Standards ruleset for `PHP_CodeSniffer`. While many of the addressed sniffs are cosmetic, numerous smells regarding performance, type safety, sanitization, and 3rd-party interoperability have been fixed as well.
 
 - chore: Implement `axepress/wp-graphql-cs` PHP_Codesniffer ruleset.
 - chore: Update WPGraphQL Plugin Boilerplate to v0.0.9.
@@ -31,7 +34,7 @@ This release implements the new WPGraphQL Coding Standards ruleset for `PHP_Code
 
 ## [0.1.1] - 2023-5-26
 
-This release adds support for setting the `Access-Control-Allow-Credentials` header via the Headless Login settings panel. We also updated the Server-side Auth example based on the feedback and issues discovered during the [WPE Builders session](https://youtu.be/RnJZ8VRjtBk).
+This minor release adds support for setting the `Access-Control-Allow-Credentials` header via the Headless Login settings panel. We also updated the Server-side Auth example based on the feedback and issues discovered during the [WPE Builders session](https://youtu.be/RnJZ8VRjtBk).
 
 ### What's changed
 
@@ -43,7 +46,7 @@ This release adds support for setting the `Access-Control-Allow-Credentials` hea
 
 ## [0.1.0] - 2023-4-27
 
-This release bumps the version of the plugin to v0.1.0 to reflect the fact that it is now in a stable state. This means future releases will be SemVer compliant.
+This minor release bumps the version of the plugin to v0.1.0 to reflect the fact that it is now in a stable state. This means future releases will be SemVer compliant.
 
 We also squashed a few bugs
 
