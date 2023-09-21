@@ -44,22 +44,22 @@ class Utils {
 	 *
 	 * @see https://developer.wordpress.org/reference/functions/get_option/#return
 	 *
-	 * @param string      $option_name The name of the setting.
-	 * @param mixed|false $default The default value. Optional. Default false.
+	 * @param string      $option_name   The name of the setting.
+	 * @param mixed|false $default_value The default value. Optional. Default false.
 	 *
 	 * @return mixed
 	 */
-	public static function get_setting( string $option_name, $default = false ) {
+	public static function get_setting( string $option_name, $default_value = false ) {
 		if ( ! isset( self::$settings[ $option_name ] ) ) {
-			$value = get_option( PluginSettings::$settings_prefix . $option_name, $default );
+			$value = get_option( PluginSettings::$settings_prefix . $option_name, $default_value );
 			/**
 			 * Filter the value before returning it
 			 *
-			 * @param mixed  $value          The value of the field
-			 * @param string $option_name    The name of the option
-			 * @param mixed  $default        The default value if there is no value set
+			 * @param mixed  $value         The value of the field
+			 * @param string $option_name   The name of the option
+			 * @param mixed  $default_value The default value if there is no value set
 			 */
-			self::$settings[ $option_name ] = apply_filters( 'graphql_login_setting', $value, $option_name, $default );
+			self::$settings[ $option_name ] = apply_filters( 'graphql_login_setting', $value, $option_name, $default_value );
 		}
 
 		return self::$settings[ $option_name ];
@@ -91,12 +91,12 @@ class Utils {
 	 *
 	 * @see https://developer.wordpress.org/reference/functions/get_option/#return
 	 *
-	 * @param string      $option_name The name of the setting.
-	 * @param mixed|false $default The default value. Optional. Default false.
+	 * @param string      $option_name   The name of the setting.
+	 * @param mixed|false $default_value The default value. Optional. Default false.
 	 *
 	 * @return mixed
 	 */
-	public static function get_access_control_setting( string $option_name, $default = false ) {
+	public static function get_access_control_setting( string $option_name, $default_value = false ) {
 		if ( ! isset( self::$access_control ) ) {
 			$access_control = get_option( AccessControlSettings::$settings_prefix . 'access_control' );
 
@@ -106,10 +106,10 @@ class Utils {
 			 * @param mixed  $value          The value of the field
 			 * @param mixed  $default        The default value if there is no value set
 			 */
-			self::$access_control = apply_filters( 'graphql_login_access_control_settings', $access_control, $default );
+			self::$access_control = apply_filters( 'graphql_login_access_control_settings', $access_control, $default_value );
 		}
 
-		return isset( self::$access_control[ $option_name ] ) ? self::$access_control[ $option_name ] : $default;
+		return isset( self::$access_control[ $option_name ] ) ? self::$access_control[ $option_name ] : $default_value;
 	}
 
 	/**

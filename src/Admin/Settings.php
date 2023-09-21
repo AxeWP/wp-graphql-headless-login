@@ -120,7 +120,7 @@ class Settings {
 	private static function register_asset_js( string $handle, string $asset_name ): void {
 		$script_asset_path = WPGRAPHQL_LOGIN_PLUGIN_DIR . 'build/' . $asset_name . '.asset.php';
 		if ( ! file_exists( $script_asset_path ) ) {
-			throw new Error( __( 'You need to run `npm start` or `npm run build` for Headless Login for WPGraphQL to work.', 'wp-graphql-headless-login' ) );
+			throw new Error( esc_html__( 'You need to run `npm start` or `npm run build` for Headless Login for WPGraphQL to work.', 'wp-graphql-headless-login' ) );
 		}
 
 		$script_asset = require_once $script_asset_path; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable

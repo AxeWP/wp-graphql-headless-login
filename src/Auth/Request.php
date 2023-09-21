@@ -52,7 +52,7 @@ class Request {
 					static fn () => 403
 				);
 
-				throw new UserError( __( 'Unauthorized request origin.', 'wp-graphql-headless-login' ) );
+				throw new UserError( esc_html__( 'Unauthorized request origin.', 'wp-graphql-headless-login' ) );
 			}
 		}
 	}

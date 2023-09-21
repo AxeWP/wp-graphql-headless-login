@@ -208,7 +208,7 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
      *
      * @deprecated Client::getConfig will be removed in guzzlehttp/guzzle:8.0.
      */
-    public function getConfig(?string $option = null)
+    public function getConfig(string $option = null)
     {
         return $option === null
             ? $this->config

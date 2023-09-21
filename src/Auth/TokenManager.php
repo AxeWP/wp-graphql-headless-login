@@ -559,7 +559,7 @@ class TokenManager {
 		}
 
 		// Allow if the current user has the correct permissions.
-		if ( ! $enforce_current_user && current_user_can( self::get_auth_cap() ) ) {
+		if ( ! $enforce_current_user && current_user_can( self::get_auth_cap() ) ) { // phpcs:ignore WordPress.WP.Capabilities.Undetermined
 			return true;
 		}
 

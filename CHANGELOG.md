@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
+## Unreleased
+
+- chore: Update Composer dependencies.
+- chore: Update WPGraphQL Coding Standards to v2.0.0-beta and lint.
+
 ## [0.1.3] - 2023-8-20
 
 This release includes a refactored Admin JS package for backwards-compatibility and stability, new features and developer hooks extend and customize the authentication lifecycle, and a handful of bug fixes.

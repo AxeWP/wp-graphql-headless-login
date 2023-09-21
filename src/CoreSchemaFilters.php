@@ -63,7 +63,7 @@ class CoreSchemaFilters implements Registrable {
 		$is_revoked = TokenManager::is_user_secret_revoked( $user_id );
 
 		if ( $is_revoked ) {
-			throw new UserError( __( 'A JWT token cannot be issued for this user.', 'wp-graphql-headless-login' ) );
+			throw new UserError( esc_html__( 'A JWT token cannot be issued for this user.', 'wp-graphql-headless-login' ) );
 		}
 
 		return $token;
