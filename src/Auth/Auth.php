@@ -45,7 +45,7 @@ class Auth {
 	public static function login( array $input ): array {
 		// If the user is already logged in, throw an error.
 		if ( is_user_logged_in() ) {
-			throw new UserError( __( 'You are already logged in.', 'wp-graphql-headless-login' ) );
+			throw new UserError( esc_html__( 'You are already logged in.', 'wp-graphql-headless-login' ) );
 		}
 
 		// Get the client from the provider config.
@@ -55,7 +55,7 @@ class Auth {
 		$user_data = $client->authenticate_and_get_user_data( $input );
 
 		if ( is_wp_error( $user_data ) ) {
-			throw new UserError( wp_strip_all_tags( $user_data->get_error_message() ) );
+			throw new UserError( esc_html( $user_data->get_error_message() ) );
 		}
 
 		$user = ! empty( $user_data ) ? $client->get_user_from_data( $user_data ) : false;
@@ -66,11 +66,11 @@ class Auth {
 		}
 
 		if ( is_wp_error( $user ) ) {
-			throw new UserError( wp_strip_all_tags( $user->get_error_message() ) );
+			throw new UserError( esc_html( $user->get_error_message() ) );
 		}
 
 		if ( ! $user instanceof \WP_User ) {
-			throw new UserError( __( 'The user could not be logged in.', 'wp-graphql-headless-login' ) );
+			throw new UserError( esc_html__( 'The user could not be logged in.', 'wp-graphql-headless-login' ) );
 		}
 
 		// Login and generate the tokens.
@@ -125,11 +125,11 @@ class Auth {
 	 */
 	public static function link_user_identity( array $input ): array {
 		if ( Password::get_slug() === $input['provider'] ) {
-			throw new UserError( __( 'You cannot link two identities from the same WordPress site. Please use a different `provider`.', 'wp-graphql-headless-login' ) );
+			throw new UserError( esc_html__( 'You cannot link two identities from the same WordPress site. Please use a different `provider`.', 'wp-graphql-headless-login' ) );
 		}
 
 		if ( ! is_user_logged_in() ) {
-			throw new UserError( __( 'You must be logged in to link your identity.', 'wp-graphql-headless-login' ) );
+			throw new UserError( esc_html__( 'You must be logged in to link your identity.', 'wp-graphql-headless-login' ) );
 		}
 
 		$user_id  = Utils::get_database_id_from_id( $input['userId'] );
@@ -139,7 +139,7 @@ class Auth {
 		 * Only allow the currently signed in user to link their identity.
 		 */
 		if ( empty( $user_obj ) || get_current_user_id() !== $user_obj->ID ) {
-			throw new UserError( __( 'You must be logged in as the user to link your identity.', 'wp-graphql-headless-login' ) );
+			throw new UserError( esc_html__( 'You must be logged in as the user to link your identity.', 'wp-graphql-headless-login' ) );
 		}
 
 		// Get the client from the provider config.
@@ -149,24 +149,24 @@ class Auth {
 		$user_data = $client->authenticate_and_get_user_data( $input );
 
 		if ( is_wp_error( $user_data ) ) {
-			throw new UserError( wp_strip_all_tags( $user_data->get_error_message() ) );
+			throw new UserError( esc_html( $user_data->get_error_message() ) );
 		}
 
 		if ( empty( $user_data ) || ! is_array( $user_data ) ) {
-			throw new UserError( __( 'Unable to get user data.', 'wp-graphql-headless-login' ) );
+			throw new UserError( esc_html__( 'Unable to get user data.', 'wp-graphql-headless-login' ) );
 		}
 
 		$user = $client->get_user_from_data( $user_data );
 
 		if ( is_wp_error( $user ) ) {
-			throw new UserError( wp_strip_all_tags( $user->get_error_message() ) );
+			throw new UserError( esc_html( $user->get_error_message() ) );
 		}
 
 		if ( false !== $user ) {
 			if ( $user->ID === $user_obj->ID ) {
-				throw new UserError( __( 'This identity is already linked to your account.', 'wp-graphql-headless-login' ) );
+				throw new UserError( esc_html__( 'This identity is already linked to your account.', 'wp-graphql-headless-login' ) );
 			}
-			throw new UserError( __( 'This identity is already linked to another account.', 'wp-graphql-headless-login' ) );
+			throw new UserError( esc_html__( 'This identity is already linked to another account.', 'wp-graphql-headless-login' ) );
 		}
 
 		$linked_user = User::link_user_identity( $user_obj->ID, $client->get_provider_slug(), $user_data['subject_identity'] );
@@ -195,11 +195,11 @@ class Auth {
 	 */
 	private static function validate_client( $client ): void {
 		if ( $client instanceof WP_Error ) {
-			throw new UserError( $client->get_error_message() );
+			throw new UserError( esc_html( $client->get_error_message() ) );
 		}
 
 		if ( ! $client instanceof Client ) {
-			throw new UserError( __( 'Invalid Authentication client.', 'wp-graphql-headless-login' ) );
+			throw new UserError( esc_html__( 'Invalid Authentication client.', 'wp-graphql-headless-login' ) );
 		}
 
 		/**

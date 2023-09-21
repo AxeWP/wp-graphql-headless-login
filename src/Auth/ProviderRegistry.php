@@ -161,7 +161,13 @@ class ProviderRegistry {
 	 */
 	public function get_provider_config( string $provider_slug ): ProviderConfig {
 		if ( ! isset( $this->providers[ $provider_slug ] ) ) {
-			throw new \Exception( sprintf( 'Provider %s is not enabled.', $provider_slug ) );
+			throw new \Exception(
+				sprintf(
+				// translators: %s is the provider slug.
+					esc_html__( 'Provider %s is not enabled.', 'wp-graphql-headless-login' ),
+					esc_html( $provider_slug )
+				) 
+			);
 		}
 
 		return $this->providers[ $provider_slug ];

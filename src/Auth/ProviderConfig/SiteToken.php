@@ -145,7 +145,7 @@ class SiteToken extends ProviderConfig {
 	protected function prepare_mutation_input( array $input ): array {
 		if ( ! isset( $input['identity'] ) ) {
 			throw new UserError(
-				__( 'The SITE_TOKEN provider requires the use of the `identity` input arg.', 'wp-graphql-headless-login' )
+				esc_html__( 'The SITE_TOKEN provider requires the use of the `identity` input arg.', 'wp-graphql-headless-login' )
 			);
 		}
 

@@ -12,16 +12,16 @@ if ( ! function_exists( 'graphql_login_get_setting' ) ) {
 	/**
 	 * Get an option value from the plugin settings.
 	 *
-	 * @param string      $option_name The key of the option to return.
-	 * @param mixed|false $default The default value the setting should return if no value is set.
+	 * @param string      $option_name   The key of the option to return.
+	 * @param mixed|false $default_value The default value the setting should return if no value is set.
 	 *
 	 * @uses \WPGraphQL\Login\Utils\Utils::get_setting()
 	 *
 	 * @return mixed
 	 * @since 0.0.1
 	 */
-	function graphql_login_get_setting( string $option_name, $default = '' ) {
-		return Utils::get_setting( $option_name, $default );
+	function graphql_login_get_setting( string $option_name, $default_value = '' ) {
+		return Utils::get_setting( $option_name, $default_value );
 	}
 }
 

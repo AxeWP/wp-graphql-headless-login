@@ -183,8 +183,8 @@ abstract class OAuth2Config extends ProviderConfig {
 			throw new UserError(
 				sprintf(
 					// translators: the provider name.
-					__( 'The %s provider requires the use of the `oauthResponse` input arg.', 'wp-graphql-headless-login' ),
-					$input['provider'] ?: 'OAuth2'
+					esc_html__( 'The %s provider requires the use of the `oauthResponse` input arg.', 'wp-graphql-headless-login' ),
+					esc_html( ! empty( $input['provider'] ) ? $input['provider'] : 'OAuth2' )
 				)
 			);
 		}

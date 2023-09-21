@@ -82,7 +82,7 @@ class Password extends ProviderConfig {
 	protected function prepare_mutation_input( array $input ): array {
 		if ( ! isset( $input['credentials'] ) ) {
 			throw new UserError(
-				__( 'The PASSWORD provider requires the use of the `credentials` input arg.', 'wp-graphql-headless-login' )
+				esc_html__( 'The PASSWORD provider requires the use of the `credentials` input arg.', 'wp-graphql-headless-login' )
 			);
 		}
 

@@ -243,7 +243,7 @@ class TypeRegistry {
 		foreach ( $classes_to_register as $class ) {
 			if ( ! is_a( $class, GraphQLType::class, true ) ) {
 				// translators: PHP class.
-				throw new Exception( sprintf( __( 'To be registered to the WPGraphQL schema, %s needs to implement \WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\GraphQLType.', 'wp-graphql-headless-login' ), $class ) );
+				throw new Exception( sprintf( esc_html__( 'To be registered to the WPGraphQL schema, %s needs to implement \WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\GraphQLType.', 'wp-graphql-headless-login' ), esc_html( $class ) ) );
 			}
 
 			// Register the type to the GraphQL schema.
