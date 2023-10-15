@@ -434,7 +434,9 @@ class TokenManager {
 		/**
 		 * If there's no secret key, throw an error as there needs to be a secret key for Auth to work properly
 		 */
-		if ( empty( self::get_secret_key() ) ) {
+		$secret_key = self::get_secret_key();
+
+		if ( empty( $secret_key ) ) {
 			self::set_status( 403 );
 			return new WP_Error( 'invalid-secret-key', __( 'The JWT secret key is not set.', 'wp-graphql-headless-login' ) );
 		}
@@ -443,7 +445,7 @@ class TokenManager {
 		JWT::$leeway = 60;
 
 		try {
-			$token = empty( $token ) ? null : JWT::decode( sanitize_text_field( $token ), new Key( self::get_secret_key(), 'HS256' ) );
+			$token = empty( $token ) ? null : JWT::decode( sanitize_text_field( $token ), new Key( $secret_key, 'HS256' ) );
 		} catch ( \Throwable $exception ) {
 			/** @var \Exception $exception */
 			$token = new WP_Error( 'invalid-secret-key', $exception->getMessage() );

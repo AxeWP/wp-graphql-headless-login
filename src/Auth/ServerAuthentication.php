@@ -72,6 +72,7 @@ class ServerAuthentication implements Registrable {
 		// Validate the token.
 		try {
 			$token = TokenManager::validate_token();
+
 			// If the token is invalid, return the existing user.
 			if ( empty( $token ) || is_wp_error( $token ) ) {
 				return $user_id;
