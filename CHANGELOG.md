@@ -6,6 +6,10 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
+## [0.1.4] - 2023-10-15
+
+This minor release fixes a bug where the `determine_current_user` filter was being applied too late in the lifecycle for some plugins. It also better integrates with WPGraphQL for WooCommerce upcoming release which adds built-in support for the plugin. We've also upgraded our coding standards and fixed all the resulting issues.
+
 - fix: Apply the `determine_current_user` filter before the plugin is initialized. H/t @kidunot89 for reporting.
 - dev: Refactor autoload handling to `WPGraphQL\Login\Autoloader` class. Note: this does *not* remove the `vendor/` or `vendor-prefixed/` directories from the repository.
 - dev: Remove local registration of `LoginPayload.customer` for WooGraphQL 0.18.2+. Props @kidunot89.
