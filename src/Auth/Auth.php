@@ -91,7 +91,7 @@ class Auth {
 			'refreshToken'           => TokenManager::get_refresh_token( $user ),
 			'refreshTokenExpiration' => User::get_refresh_token_expiration( $user->ID ),
 			'user'                   => $user,
-			'id'                     => $user->ID
+			'id'                     => $user->ID,
 		];
 
 		/**
