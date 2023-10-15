@@ -75,31 +75,4 @@ class CoreSchemaFiltersTest extends \Codeception\TestCase\WPTestCase {
 
 		$this->assertEquals( $expected, $actual );
 	}
-
-	public function testDetermineCurrentUser(): void {
-		$user_id = $this->factory()->user->create();
-
-		// Test without token.
-		$actual = CoreSchemaFilters::determine_current_user( $this->admin );
-
-		$this->assertEquals( $this->admin, $actual );
-
-		// Test with valid secret.
-		$tokens = $this->tester->generate_user_tokens( $user_id );
-
-		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $tokens['auth_token'];
-
-		$actual = CoreSchemaFilters::determine_current_user( $this->admin );
-
-		$this->assertEquals( $user_id, $actual );
-
-		// Test user returns same user.
-		$actual = CoreSchemaFilters::determine_current_user( $user_id );
-
-		$this->assertEquals( $user_id, $actual );
-
-		// cleanup.
-		unset( $_SERVER['HTTP_AUTHORIZATION'] );
-		wp_delete_user( $user_id );
-	}
 }

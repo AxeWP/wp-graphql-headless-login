@@ -38,7 +38,6 @@ if ( ! class_exists( \WPGraphQL\Login\Main::class ) ) :
 				}
 
 				self::$instance = new self();
-				self::$instance->includes();
 				self::$instance->setup();
 				// @codeCoverageIgnoreEnd
 			}
@@ -51,19 +50,6 @@ if ( ! class_exists( \WPGraphQL\Login\Main::class ) ) :
 			do_action( 'graphql_login_init', self::$instance );
 
 			return self::$instance;
-		}
-
-		/**
-		 * Includes the required files with Composer's autoload.
-		 *
-		 * @codeCoverageIgnore
-		 */
-		private function includes(): void {
-			if ( defined( 'WPGRAPHQL_LOGIN_AUTOLOAD' ) && false !== WPGRAPHQL_LOGIN_AUTOLOAD && defined( 'WPGRAPHQL_LOGIN_PLUGIN_DIR' ) ) {
-				require_once WPGRAPHQL_LOGIN_PLUGIN_DIR . 'vendor/autoload.php';
-			}
-
-			require_once WPGRAPHQL_LOGIN_PLUGIN_DIR . 'vendor/autoload.php';
 		}
 
 		/**

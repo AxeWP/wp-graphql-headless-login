@@ -24,9 +24,6 @@ class CoreSchemaFilters implements Registrable {
 		// Prefix the GraphQL type names.
 		add_filter( 'graphql_login_type_prefix', [ self::class, 'get_type_prefix' ] );
 
-		// Filter how WordPress determines the current user.
-		add_filter( 'determine_current_user', [ self::class, 'determine_current_user' ], 99 );
-
 		// Extend the User model to hold authentication data.
 		add_filter( 'graphql_model_prepare_fields', [ User::class, 'get_fields' ], 10, 3 );
 
@@ -67,25 +64,5 @@ class CoreSchemaFilters implements Registrable {
 		}
 
 		return $token;
-	}
-
-	/**
-	 * Filters the current user for the request.
-	 *
-	 * @param int $user_id The user ID.
-	 */
-	public static function determine_current_user( int $user_id ): int {
-		// Validate the token.
-		$token = TokenManager::validate_token();
-
-		// If the token is invalid, return the existing user.
-		if ( empty( $token ) || is_wp_error( $token ) ) {
-			return $user_id;
-		}
-
-		// Get the user from the token.
-		$user_id = empty( $token->data->user->id ) ? $user_id : $token->data->user->id;
-
-		return absint( $user_id );
 	}
 }
