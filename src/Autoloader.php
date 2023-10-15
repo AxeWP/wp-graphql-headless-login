@@ -18,8 +18,9 @@ class Autoloader {
 	 * @return false|mixed Whether the autoloader was loaded.
 	 */
 	public static function autoload() {
+		// If we're not *supposed* to autoload anything, then return true.
 		if ( defined( 'WPGRAPHQL_LOGIN_AUTOLOAD' ) && false === WPGRAPHQL_LOGIN_AUTOLOAD ) {
-			return false;
+			return true;
 		}
 
 		$autoloader = dirname( __DIR__ ) . '/vendor/autoload.php';
