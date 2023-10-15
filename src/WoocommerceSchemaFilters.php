@@ -68,40 +68,5 @@ class WoocommerceSchemaFilters implements Registrable {
 				},
 			]
 		);
-
-		// Register the customer and session token to the Login payloads.
-		register_graphql_fields(
-			'LoginPayload',
-			[
-				'customer'        => [
-					'type'        => 'Customer',
-					'description' => __( 'The customer object for the logged in user', 'wp-graphql-headless-login' ),
-					'resolve'     => static function ( $payload ) {
-						$user_id = isset( $payload['user']->ID ) ? $payload['user']->ID : null;
-
-						if ( ! $user_id ) {
-							return null;
-						}
-
-						return new \WPGraphQL\WooCommerce\Model\Customer( $user_id );
-					},
-				],
-				'wooSessionToken' => [
-					'type'        => 'String',
-					'description' => __( 'A JWT token used to identify the current WooCommerce session', 'wp-graphql-headless-login' ),
-					'resolve'     => static function () {
-						if ( ! function_exists( 'WC' ) ) {
-							return null;
-						}
-
-						/** @var \WPGraphQL\WooCommerce\Utils\QL_Session_Handler $session */
-						$session = \WC()->session;
-
-						/** \WooCommerce::$session */
-						return apply_filters( 'graphql_customer_session_token', $session->build_token() ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-					},
-				],
-			]
-		);
 	}
 }
