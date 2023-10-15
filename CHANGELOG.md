@@ -8,6 +8,8 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 - fix: Apply the `determine_current_user` filter before the plugin is initialized. H/t @kidunot89 for reporting.
 - dev: Refactor autoload handling to `WPGraphQL\Login\Autoloader` class. Note: this does *not* remove the `vendor/` or `vendor-prefixed/` directories from the repository.
+- dev: Remove local registration of `LoginPayload.customer` for WooGraphQL 0.18.2+. Props @kidunot89.
+- dev: Deprecate `LoginPayload.wooSessionToken` in favor of `loginPayload.sessionToken` (added in WooGraphQL 0.18.2+).
 - chore: Update Composer dependencies.
 - chore: Update WPGraphQL Coding Standards to v2.0.0-beta and lint.
 
