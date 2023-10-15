@@ -285,6 +285,7 @@ class ComposerStaticInite3dd5adcad35e0c0a990ad87f09c52a0
         'WPGraphQL\\Login\\Auth\\ProviderConfig\\SiteToken' => __DIR__ . '/../..' . '/src/Auth/ProviderConfig/SiteToken.php',
         'WPGraphQL\\Login\\Auth\\ProviderRegistry' => __DIR__ . '/../..' . '/src/Auth/ProviderRegistry.php',
         'WPGraphQL\\Login\\Auth\\Request' => __DIR__ . '/../..' . '/src/Auth/Request.php',
+        'WPGraphQL\\Login\\Auth\\ServerAuthentication' => __DIR__ . '/../..' . '/src/Auth/ServerAuthentication.php',
         'WPGraphQL\\Login\\Auth\\TokenManager' => __DIR__ . '/../..' . '/src/Auth/TokenManager.php',
         'WPGraphQL\\Login\\Auth\\User' => __DIR__ . '/../..' . '/src/Auth/User.php',
         'WPGraphQL\\Login\\CoreSchemaFilters' => __DIR__ . '/../..' . '/src/CoreSchemaFilters.php',

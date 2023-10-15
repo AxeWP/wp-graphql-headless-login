@@ -6,6 +6,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
+- fix: Apply the `determine_current_user` filter before the plugin is initialized. H/t @kidunot89 for reporting.
 - chore: Update Composer dependencies.
 - chore: Update WPGraphQL Coding Standards to v2.0.0-beta and lint.
 

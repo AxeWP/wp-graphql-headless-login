@@ -201,6 +201,7 @@ return array(
     'WPGraphQL\\Login\\Auth\\ProviderConfig\\SiteToken' => $baseDir . '/src/Auth/ProviderConfig/SiteToken.php',
     'WPGraphQL\\Login\\Auth\\ProviderRegistry' => $baseDir . '/src/Auth/ProviderRegistry.php',
     'WPGraphQL\\Login\\Auth\\Request' => $baseDir . '/src/Auth/Request.php',
+    'WPGraphQL\\Login\\Auth\\ServerAuthentication' => $baseDir . '/src/Auth/ServerAuthentication.php',
     'WPGraphQL\\Login\\Auth\\TokenManager' => $baseDir . '/src/Auth/TokenManager.php',
     'WPGraphQL\\Login\\Auth\\User' => $baseDir . '/src/Auth/User.php',
     'WPGraphQL\\Login\\CoreSchemaFilters' => $baseDir . '/src/CoreSchemaFilters.php',

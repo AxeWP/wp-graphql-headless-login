@@ -194,3 +194,8 @@ if ( ! function_exists( 'graphql_login_init' ) ) {
 }
 // Initialize the plugin.
 add_action( 'graphql_init', 'graphql_login_init' );
+
+// Some plugins may rely on authentication even before our plugin is initialized.
+if ( class_exists( 'WPGraphQL\Login\Auth\ServerAuthentication' ) ) {
+	\WPGraphQL\Login\Auth\ServerAuthentication::init();
+}
