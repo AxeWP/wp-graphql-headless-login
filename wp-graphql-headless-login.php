@@ -29,6 +29,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Load the autoloader.
+require_once __DIR__ . '/src/Autoloader.php';
+if ( ! \WPGraphQL\Login\Autoloader::autoload() ) {
+	return;
+}
+
 // If the codeception remote coverage file exists, require it.
 // This file should only exist locally or when CI bootstraps the environment for testing.
 if ( file_exists( __DIR__ . '/c3.php' ) ) {
@@ -46,6 +52,7 @@ if ( file_exists( __DIR__ . '/deactivation.php' ) ) {
 	require_once __DIR__ . '/deactivation.php';
 	register_activation_hook( __FILE__, 'graphql_login_deactivation_callback' );
 }
+
 
 if ( ! function_exists( 'graphql_login_constants' ) ) {
 	/**

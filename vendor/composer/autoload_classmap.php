@@ -204,6 +204,7 @@ return array(
     'WPGraphQL\\Login\\Auth\\ServerAuthentication' => $baseDir . '/src/Auth/ServerAuthentication.php',
     'WPGraphQL\\Login\\Auth\\TokenManager' => $baseDir . '/src/Auth/TokenManager.php',
     'WPGraphQL\\Login\\Auth\\User' => $baseDir . '/src/Auth/User.php',
+    'WPGraphQL\\Login\\Autoloader' => $baseDir . '/src/Autoloader.php',
     'WPGraphQL\\Login\\CoreSchemaFilters' => $baseDir . '/src/CoreSchemaFilters.php',
     'WPGraphQL\\Login\\Fields\\RootQuery' => $baseDir . '/src/Fields/RootQuery.php',
     'WPGraphQL\\Login\\Main' => $baseDir . '/src/Main.php',

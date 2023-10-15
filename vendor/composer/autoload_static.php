@@ -288,6 +288,7 @@ class ComposerStaticInite3dd5adcad35e0c0a990ad87f09c52a0
         'WPGraphQL\\Login\\Auth\\ServerAuthentication' => __DIR__ . '/../..' . '/src/Auth/ServerAuthentication.php',
         'WPGraphQL\\Login\\Auth\\TokenManager' => __DIR__ . '/../..' . '/src/Auth/TokenManager.php',
         'WPGraphQL\\Login\\Auth\\User' => __DIR__ . '/../..' . '/src/Auth/User.php',
+        'WPGraphQL\\Login\\Autoloader' => __DIR__ . '/../..' . '/src/Autoloader.php',
         'WPGraphQL\\Login\\CoreSchemaFilters' => __DIR__ . '/../..' . '/src/CoreSchemaFilters.php',
         'WPGraphQL\\Login\\Fields\\RootQuery' => __DIR__ . '/../..' . '/src/Fields/RootQuery.php',
         'WPGraphQL\\Login\\Main' => __DIR__ . '/../..' . '/src/Main.php',

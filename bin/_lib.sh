@@ -154,7 +154,6 @@ post_setup() {
 	wp rewrite structure '/%year%/%monthnum%/%postname%/'
 	wp rewrite flush --allow-root
 
-	wp config set GRAPHQL_LOGIN_JWT_SECRET_KEY 'mysecretkey' --allow-root
 	wp config set WP_DEBUG true --raw --allow-root
 	wp config set WP_DEBUG_LOG true --raw --allow-root
 	wp config set GRAPHQL_DEBUG true --raw --allow-root
