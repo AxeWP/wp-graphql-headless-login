@@ -51,8 +51,8 @@ class CoreSchemaFilters implements Registrable {
 	/**
 	 * Checks if the user has had their JWT Secret revoked, before returning the token.
 	 *
-	 * @param string  $token the token to return.
-	 * @param integer $user_id the user ID.
+	 * @param string $token the token to return.
+	 * @param int    $user_id the user ID.
 	 *
 	 * @throws \GraphQL\Error\UserError If the user has had their JWT Secret revoked.
 	 */

@@ -70,9 +70,9 @@ class User {
 	/**
 	 * Links the WP User to the ResourceOwner.
 	 *
-	 * @param integer $user_id The WP User ID.
-	 * @param string  $provider The Provider slug.
-	 * @param string  $subject_identity The ResourceOwner ID.
+	 * @param int    $user_id The WP User ID.
+	 * @param string $provider The Provider slug.
+	 * @param string $subject_identity The ResourceOwner ID.
 	 *
 	 * @return \WP_User|false
 	 */
@@ -85,8 +85,8 @@ class User {
 	/**
 	 * Unlinks the WP User from the ResourceOwner.
 	 *
-	 * @param integer $user_id The WP User ID.
-	 * @param string  $provider The Provider slug.
+	 * @param int    $user_id The WP User ID.
+	 * @param string $provider The Provider slug.
 	 */
 	public static function unlink_user_identity( int $user_id, string $provider ): bool {
 		return delete_user_meta( $user_id, self::get_identity_meta_key( $provider ) );
@@ -140,7 +140,7 @@ class User {
 	/**
 	 * Gets all the identities for a user, keyed to the provider slug.
 	 *
-	 * @param integer $user_id The WP User ID.
+	 * @param int $user_id The WP User ID.
 	 *
 	 * @return array<string, string>
 	 */
