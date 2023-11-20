@@ -11,7 +11,7 @@
  * Text Domain: wp-graphql-headless-login
  * Domain Path: /languages
  * Requires at least: 5.7
- * Tested up to: 6.3.2
+ * Tested up to: 6.4.1
  * Requires PHP: 7.4
  * Requires Plugins: wp-graphql
  * WPGraphQL requires at least: 1.12.0
