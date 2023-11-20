@@ -24,8 +24,8 @@ This plugin is inspired by and aims to replace <a href="https://github.com/wp-gr
 ## System Requirements
 
 * PHP 7.4-8.2+
-* WordPress 5.7+
-* WPGraphQL 1.12.0+
+* WordPress 6.0+
+* WPGraphQL 1.14.0+
 
 ## Quick Install
 

@@ -7,8 +7,8 @@ export function Option( {
 	currentValue,
 	setValue,
 }: {
-	schema: Record< string, any >;
-	currentValue: any;
+	schema: Record< string, unknown >;
+	currentValue: unknown;
 	setValue: ( value: unknown ) => void;
 } ) {
 	const { showAdvancedSettings } = useAppContext();

@@ -1,5 +1,5 @@
-const defaultConfig = require('@wordpress/scripts/config/webpack.config');
-const path = require('path');
+const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
+const path = require( 'path' );
 
 // Define JavaScript entry points
 
@@ -20,11 +20,11 @@ module.exports = {
 			...defaultConfig.module.rules,
 			{
 				test: /\.svg$/,
-				use: ['@svgr/webpack', 'url-loader'],
+				use: [ '@svgr/webpack', 'url-loader' ],
 			},
 		],
 	},
 	entry: {
-		admin: path.resolve(process.cwd(), 'packages/admin', 'index.tsx'),
+		admin: path.resolve( process.cwd(), 'packages/admin', 'index.tsx' ),
 	},
 };
