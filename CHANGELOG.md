@@ -8,6 +8,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 - chore: Update `WPGraphQL Coding Standards` to latest version and lint.
 - chore: Update Composer dependencies to latest.
+- ci: Test against WordPress 6.4.1
 
 ## [0.1.4] - 2023-10-15
 
