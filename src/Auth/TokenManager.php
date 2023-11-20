@@ -411,7 +411,7 @@ class TokenManager {
 	 *
 	 * @return object|\WP_Error|null
 	 */
-	public static function validate_token( string $token = null, bool $is_refresh_token = false ) {
+	public static function validate_token( ?string $token = null, bool $is_refresh_token = false ) {
 		// If no token provided, grab it from the auth header.
 		if ( empty( $token ) && ! $is_refresh_token ) {
 			$auth_header = self::get_auth_header();

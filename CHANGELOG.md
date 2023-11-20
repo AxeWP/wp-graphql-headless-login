@@ -6,6 +6,9 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
+- chore: Update `WPGraphQL Coding Standards` to latest version and lint.
+- chore: Update Composer dependencies to latest.
+
 ## [0.1.4] - 2023-10-15
 
 This minor release fixes a bug where the `determine_current_user` filter was being applied too late in the lifecycle for some plugins. It also better integrates with WPGraphQL for WooCommerce upcoming release which adds built-in support for the plugin. We've also upgraded our coding standards and fixed all the resulting issues.

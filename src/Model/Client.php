@@ -15,7 +15,7 @@ use WPGraphQL\Model\Model;
  * @property ?string $authorizationUrl
  * @property array   $clientOptions
  * @property ?string $id
- * @property boolean $isEnabled
+ * @property bool    $isEnabled
  * @property array   $loginOptions
  * @property ?string $name
  * @property ?int    $order

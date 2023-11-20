@@ -41,7 +41,7 @@ class LoginOptions extends Type {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function type_name( string $provider = null ): string {
+	public static function type_name( ?string $provider = null ): string {
 		return graphql_format_type_name( ucfirst( (string) $provider ) . 'LoginOptions' );
 	}
 
