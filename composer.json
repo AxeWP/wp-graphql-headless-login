@@ -69,17 +69,8 @@
 			"classmap_prefix": "GraphQL_Login_",
 			"constant_prefix": "GRAPHQL_LOGIN_",
 			"delete_vendor_files": true,
+			"delete_vendor_packages": true,
 			"include_modified_date": false,
-			"packages": [
-				"axepress/wp-graphql-plugin-boilerplate",
-				"firebase/php-jwt",
-				"league/oauth2-client",
-				"league/oauth2-facebook",
-				"league/oauth2-github",
-				"league/oauth2-google",
-				"league/oauth2-instagram",
-				"league/oauth2-linkedin"
-			],
 			"exclude_from_prefix": {
 				"namespaces": [],
 				"file_patterns": []
