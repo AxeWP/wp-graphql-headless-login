@@ -2,6 +2,7 @@
 /bin export-ignore
 /docker export-ignore
 /docs export-ignore
+/node_modules export-ignore
 /phpstan export-ignore
 /plugin-build export-ignore
 /tests export-ignore

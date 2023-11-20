@@ -68,7 +68,7 @@
 			"namespace_prefix": "WPGraphQL\\Login\\Vendor\\",
 			"classmap_prefix": "GraphQL_Login_",
 			"constant_prefix": "GRAPHQL_LOGIN_",
-			"delete_vendor_files": false,
+			"delete_vendor_files": true,
 			"include_modified_date": false,
 			"packages": [
 				"axepress/wp-graphql-plugin-boilerplate",
@@ -147,6 +147,7 @@
 			"bin",
 			"docker",
 			"docs",
+			"node_modules",
 			"phpstan",
 			"plugin-build",
 			"tests",
