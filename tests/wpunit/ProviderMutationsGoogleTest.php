@@ -21,14 +21,14 @@ class FooGoogleProviderConfig extends OAuth2Google {
 		OAuth2Config::__construct( FooGoogleProvider::class );
 
 		// Mock and set the http client on the provider.
-		$response = m::mock( 'Psr\Http\Message\ResponseInterface' );
+		$response = m::mock( 'WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface' );
 		$response->shouldReceive( 'getHeader' )
 			->times( 1 )
 			->andReturn( [ 'Content-Type' => 'application/json' ] );
 		$response->shouldReceive( 'getBody' )
 			->times( 1 )
 			->andReturn(
-				\GuzzleHttp\Psr7\Utils::streamFor( '{"access_token":"mock_access_token","token_type":"bearer","expires_in":3600}' )
+				\WPGraphQL\Login\Vendor\GuzzleHttp\Psr7\Utils::streamFor( '{"access_token":"mock_access_token","token_type":"bearer","expires_in":3600}' )
 			);
 
 		$http_client = m::mock( 'WPGraphQL\Login\Vendor\GuzzleHttp\ClientInterface' );

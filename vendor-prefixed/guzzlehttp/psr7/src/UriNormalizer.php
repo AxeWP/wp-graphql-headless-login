@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Psr7;
 
-use Psr\Http\Message\UriInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\UriInterface;
 
 /**
  * Provides methods to normalize and compare URIs.

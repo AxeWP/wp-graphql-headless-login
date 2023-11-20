@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Psr7;
 
 use InvalidArgumentException;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\UriInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\StreamInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\UriInterface;
 
 /**
  * PSR-7 request implementation.

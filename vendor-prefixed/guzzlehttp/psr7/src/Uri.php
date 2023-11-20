@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Psr7;
 
 use WPGraphQL\Login\Vendor\GuzzleHttp\Psr7\Exception\MalformedUriException;
-use Psr\Http\Message\UriInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\UriInterface;
 
 /**
  * PSR-7 URI implementation.

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a8a370721329e14b3fe72cfc6f0207dc",
+    "content-hash": "a8b3173050e59b2e56e4117f48b7c098",
     "packages": [
         {
             "name": "axepress/wp-graphql-plugin-boilerplate",

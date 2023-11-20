@@ -8,7 +8,7 @@
 
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Handler;
 
-use Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
 
 interface CurlFactoryInterface
 {

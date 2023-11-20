@@ -13,14 +13,14 @@ use WPGraphQL\Login\Vendor\GuzzleHttp\Exception\GuzzleException;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Exception\InvalidArgumentException;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Promise as P;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\UriInterface;
 
 /**
  * @final
  */
-class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
+class Client implements ClientInterface, \WPGraphQL\Login\Vendor\Psr\Http\Client\ClientInterface
 {
     use ClientTrait;
 

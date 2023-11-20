@@ -8,9 +8,9 @@
 
 namespace WPGraphQL\Login\Vendor\GuzzleHttp;
 
-use Psr\Http\Message\MessageInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\MessageInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * Formats log messages using variable substitutions for requests, responses,

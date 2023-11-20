@@ -10,10 +10,10 @@ namespace WPGraphQL\Login\Vendor\GuzzleHttp\Exception;
 
 use WPGraphQL\Login\Vendor\GuzzleHttp\BodySummarizer;
 use WPGraphQL\Login\Vendor\GuzzleHttp\BodySummarizerInterface;
-use Psr\Http\Client\RequestExceptionInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Client\RequestExceptionInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\UriInterface;
 
 /**
  * HTTP Request exception

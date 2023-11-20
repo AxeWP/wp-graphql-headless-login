@@ -16,7 +16,7 @@ use WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Psr7\LazyOpenStream;
 use WPGraphQL\Login\Vendor\GuzzleHttp\TransferStats;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Utils;
-use Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Creates curl resources from a request

@@ -1,6 +1,12 @@
 <?php
+/**
+ * @license MIT
+ *
+ * Modified by AxePress Development using Strauss.
+ * @see https://github.com/BrianHenryIE/strauss
+ */
 
-namespace Psr\Http\Message;
+namespace WPGraphQL\Login\Vendor\Psr\Http\Message;
 
 interface StreamFactoryInterface
 {

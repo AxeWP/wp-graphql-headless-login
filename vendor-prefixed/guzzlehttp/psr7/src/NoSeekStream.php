@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Psr7;
 
-use Psr\Http\Message\StreamInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\StreamInterface;
 
 /**
  * Stream decorator that prevents a stream from being seeked.

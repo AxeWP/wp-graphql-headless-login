@@ -23,7 +23,8 @@ class Autoloader {
 			return true;
 		}
 
-		$autoloader = dirname( __DIR__ ) . '/vendor/autoload.php';
+		// We use strauss to prefix our production dependencies.
+		$autoloader = dirname( __DIR__ ) . '/vendor-prefixed/autoload.php';
 
 		if ( ! is_readable( $autoloader ) ) {
 			self::missing_autoloader_notice();
@@ -31,6 +32,18 @@ class Autoloader {
 		}
 
 		$loaded = require_once $autoloader; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
+
+		// Then we load our regular dependencies.
+		if ( $loaded ) {
+			$autoloader = dirname( __DIR__ ) . '/vendor/autoload.php';
+
+			if ( ! is_readable( $autoloader ) ) {
+				self::missing_autoloader_notice();
+				return false;
+			}
+
+			$loaded = require_once $autoloader; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
+		}
 
 		if ( ! $loaded ) {
 			return false;

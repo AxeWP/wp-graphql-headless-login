@@ -1,6 +1,12 @@
 <?php
+/**
+ * @license MIT
+ *
+ * Modified by AxePress Development using Strauss.
+ * @see https://github.com/BrianHenryIE/strauss
+ */
 
-namespace Psr\Http\Client;
+namespace WPGraphQL\Login\Vendor\Psr\Http\Client;
 
 /**
  * Every HTTP client related exception MUST implement this interface.

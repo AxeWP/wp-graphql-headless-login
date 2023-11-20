@@ -3,6 +3,7 @@
 /docker export-ignore
 /docs export-ignore
 /phpstan export-ignore
+/plugin-build export-ignore
 /tests export-ignore
 /.coveralls.yml export-ignore
 /.distignore export-ignore
@@ -20,12 +21,11 @@
 /composer.lock export-ignore
 /docker-compose.yml export-ignore
 /global.d.ts export-ignore
+/package.json export-ignore
+/package-lock.json export-ignore
 /phpstan.neon.dist export-ignore
 /phpunit.xml.dist export-ignore
 /postcss.config.js export-ignore
-/package.json export-ignore
-/package-lock.json export-ignore
 /tsconfig.base.json export-ignore
 /tsconfig.json export-ignore
-/strauss.phar export-ignore
 /webpack.config.js export-ignore

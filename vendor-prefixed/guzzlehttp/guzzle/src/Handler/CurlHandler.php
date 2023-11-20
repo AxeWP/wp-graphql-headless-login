@@ -9,7 +9,7 @@
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Handler;
 
 use WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface;
-use Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
 
 /**
  * HTTP handler that uses cURL easy handles as a transport layer.

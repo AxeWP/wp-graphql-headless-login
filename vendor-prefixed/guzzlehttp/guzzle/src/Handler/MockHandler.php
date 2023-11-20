@@ -14,9 +14,9 @@ use WPGraphQL\Login\Vendor\GuzzleHttp\Promise as P;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface;
 use WPGraphQL\Login\Vendor\GuzzleHttp\TransferStats;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Utils;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\StreamInterface;
 
 /**
  * Handler that returns responses or throw exceptions from a queue.

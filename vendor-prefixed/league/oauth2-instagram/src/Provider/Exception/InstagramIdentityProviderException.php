@@ -8,7 +8,7 @@
 
 namespace WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\Exception;
 
-use Psr\Http\Message\ResponseInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
 
 class InstagramIdentityProviderException extends IdentityProviderException
 {

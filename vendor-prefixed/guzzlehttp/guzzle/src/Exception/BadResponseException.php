@@ -8,8 +8,8 @@
 
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Exception;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * Exception when an HTTP error occurs (4xx or 5xx error)

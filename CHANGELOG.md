@@ -6,6 +6,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
+- dev!: Use Strauss autoloader for namespaced dependencies. **Note** As a result of this change, the `Psr` namespace is now prefixed as `WPGraphQL\Login\Vendor\Psr`.
 - chore: Update `WPGraphQL Coding Standards` to latest version and lint.
 - chore: Update Composer dependencies to latest.
 - ci: Test against WordPress 6.4.1
