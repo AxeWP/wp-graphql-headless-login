@@ -44,16 +44,16 @@ module.exports = {
 				config: 'webpack.config.js',
 			},
 		},
-		'import/ignore': ['node_modules'],
+		'import/ignore': [ 'node_modules' ],
 	},
 	rules: {
 		'react-hooks/exhaustive-deps': 'error',
-		'react/jsx-fragments': ['error', 'syntax'],
+		'react/jsx-fragments': [ 'error', 'syntax' ],
 		'@wordpress/no-global-active-element': 'warn',
 		'@wordpress/i18n-text-domain': [
 			'error',
 			{
-				allowedTextDomain: ['wp-graphql-headless-login'],
+				allowedTextDomain: [ 'wp-graphql-headless-login' ],
 			},
 		],
 		camelcase: [
@@ -66,13 +66,13 @@ module.exports = {
 	},
 	overrides: [
 		{
-			files: ['**/bin/**.js'],
+			files: [ '**/bin/**.js' ],
 			rules: {
 				'you-dont-need-lodash-underscore/omit': 'off',
 			},
 		},
 		{
-			files: ['*.ts', '*.tsx'],
+			files: [ '*.ts', '*.tsx' ],
 			parser: '@typescript-eslint/parser',
 			extends: [
 				'plugin:you-dont-need-lodash-underscore/compatible',
@@ -82,10 +82,10 @@ module.exports = {
 				'prefer-rest-params': 'off',
 				'@typescript-eslint/no-explicit-any': 'error',
 				'no-use-before-define': 'off',
-				'@typescript-eslint/no-use-before-define': ['error'],
+				'@typescript-eslint/no-use-before-define': [ 'error' ],
 				'jsdoc/require-param': 'off',
 				'no-shadow': 'off',
-				'@typescript-eslint/no-shadow': ['error'],
+				'@typescript-eslint/no-shadow': [ 'error' ],
 				'@typescript-eslint/no-unused-vars': [
 					'error',
 					{ ignoreRestSiblings: true },
@@ -94,8 +94,8 @@ module.exports = {
 				'@typescript-eslint/naming-convention': [
 					'error',
 					{
-						selector: ['method', 'variableLike'],
-						format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+						selector: [ 'method', 'variableLike' ],
+						format: [ 'camelCase', 'PascalCase', 'UPPER_CASE' ],
 						leadingUnderscore: 'allowSingleOrDouble',
 						filter: {
 							regex: 'webpack_public_path__',
@@ -104,7 +104,7 @@ module.exports = {
 					},
 					{
 						selector: 'typeProperty',
-						format: ['camelCase', 'snake_case'],
+						format: [ 'camelCase', 'snake_case' ],
 						filter: {
 							regex: 'API_FETCH_WITH_HEADERS|Block',
 							match: false,

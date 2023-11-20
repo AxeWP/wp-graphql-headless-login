@@ -7,7 +7,6 @@
 		"strictNullChecks": true,
 		"incremental": true,
 		"noErrorTruncation": true,
-
 		"allowJs": true,
 		"checkJs": true,
 		"allowSyntheticDefaultImports": true,

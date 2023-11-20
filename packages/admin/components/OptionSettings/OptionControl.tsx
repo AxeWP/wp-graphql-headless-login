@@ -15,7 +15,7 @@ export type OptionControlType = (
 	| BaseControlProps
 	| SelectControlProps
 	| ToggleControlProps
- ) &
+) &
 	SettingSchema & {
 		value: unknown;
 		options?: { label: string; value: string }[];
