@@ -10,8 +10,8 @@ namespace WPGraphQL\Login\Vendor\GuzzleHttp;
 
 use WPGraphQL\Login\Vendor\GuzzleHttp\Promise as P;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * Middleware that retries requests based on the boolean result of

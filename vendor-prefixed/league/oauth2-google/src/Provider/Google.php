@@ -12,7 +12,7 @@ use WPGraphQL\Login\Vendor\League\OAuth2\Client\Exception\HostedDomainException;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Token\AccessToken;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Tool\BearerAuthorizationTrait;
-use Psr\Http\Message\ResponseInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
 
 class Google extends AbstractProvider
 {

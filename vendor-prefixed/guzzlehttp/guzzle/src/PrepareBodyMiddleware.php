@@ -9,7 +9,7 @@
 namespace WPGraphQL\Login\Vendor\GuzzleHttp;
 
 use WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface;
-use Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Prepares requests that contain a body, adding the Content-Length,

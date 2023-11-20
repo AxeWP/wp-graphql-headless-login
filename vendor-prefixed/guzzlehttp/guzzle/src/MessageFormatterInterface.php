@@ -8,8 +8,8 @@
 
 namespace WPGraphQL\Login\Vendor\GuzzleHttp;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
 
 interface MessageFormatterInterface
 {

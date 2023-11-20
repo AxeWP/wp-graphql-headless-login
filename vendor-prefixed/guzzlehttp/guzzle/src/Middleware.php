@@ -12,8 +12,8 @@ use WPGraphQL\Login\Vendor\GuzzleHttp\Cookie\CookieJarInterface;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Exception\RequestException;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Promise as P;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 /**

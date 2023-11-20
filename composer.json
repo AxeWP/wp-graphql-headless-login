@@ -80,9 +80,7 @@
 				"league/oauth2-linkedin"
 			],
 			"exclude_from_prefix": {
-				"namespaces": [
-					"Psr"
-				],
+				"namespaces": [],
 				"file_patterns": []
 			}
 		}
@@ -93,10 +91,7 @@
 		],
 		"psr-4": {
 			"WPGraphQL\\Login\\": "src/"
-		},
-		"classmap": [
-			"vendor-prefixed/"
-		]
+		}
 	},
 	"autoload-dev": {
 		"psr-4": {
@@ -155,14 +150,21 @@
 			"plugin-build",
 			"tests",
 			"!vendor",
+			"!vendor-prefixed",
+			"/babel.config.js",
 			"/codeception.dist.yml",
-			"/codeception.yml",
 			"/composer.json",
 			"/composer.lock",
 			"/docker-compose.yml",
+			"/global.d.ts",
+			"/package-lock.json",
+			"/package.json",
 			"/phpstan.neon.dist",
 			"/phpunit.xml.dist",
-			"/README.md"
+			"/postcss.config.js",
+			"/tsconfig.base.json",
+			"/tsconfig.json",
+			"/webpack.config.js"
 		]
 	}
 }
