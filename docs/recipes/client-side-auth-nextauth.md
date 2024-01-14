@@ -10,7 +10,7 @@ While the example below uses [NextAuth.js](https://next-auth.js.org/), the same 
 	- [Table of Contents](#table-of-contents)
 	- [🐲 Warning: Dragons Ahead](#-warning-dragons-ahead)
 	- [1. Configure the Password and SiteToken providers](#1-configure-the-password-and-sitetoken-providers)
-	- [2. Create the \[..nextauth\].js API Route](#2-create-the-nextauthjs-api-route)
+	- [2. Create the \[...nextauth\].js API Route](#2-create-the-nextauthjs-api-route)
 	- [3. Configure the NextAuth provider(s) and the `signIn` callback.](#3-configure-the-nextauth-providers-and-the-signin-callback)
 	- [4. Configure the `jwt` callback.](#4-configure-the-jwt-callback)
 	- [5. Configure the `session` callback](#5-configure-the-session-callback)
@@ -34,11 +34,11 @@ For more information on configuring the providers, see the [Settings Guide](../r
 
 > Note: Due to the [potential for abuse](#🐲-warning-dragons-ahead), the Site Token provider can only be used when GraphQL requests are restricted to authenticated domains. You will need to enable the `Block Unauthorized Domains` setting in the [Access Control settings](../reference/settings.md).
 
-## 2. Create the [..nextauth].js API Route
+## 2. Create the [...nextauth].js API Route
 
 (This step assumes you have already set up NextAuth.js. If not, see the [NextAuth.js Getting Started Guide](https://next-auth.js.org/getting-started/example). )
 
-In your headless app, you will need to create the [the `[..nextauth].js` API route](https://next-auth.js.org/getting-started/example#add-api-route) used by NextAuth to configure the providers and callbacks used by the authentication flow.
+In your headless app, you will need to create the [the `[...nextauth].js` API route](https://next-auth.js.org/getting-started/example#add-api-route) used by NextAuth to configure the providers and callbacks used by the authentication flow.
 
 We scaffold this file now, and fill in the logic in the next step.
 
@@ -68,7 +68,7 @@ Now we need to configure the provider(s) we want to use with NextAuth.js.
 
 NextAuth.js supports a number of [authentication providers](https://next-auth.js.org/configuration/providers), which we can support seamlessly with Headless Login for WPGraphQL.
 
-Providers are configured by adding them to the `providers` array in the `[..nextauth].js` that we scaffolded in the previous step.
+Providers are configured by adding them to the `providers` array in the `[...nextauth].js` that we scaffolded in the previous step.
 
 ```jsx
 // pages/api/auth/[...nextauth].js
