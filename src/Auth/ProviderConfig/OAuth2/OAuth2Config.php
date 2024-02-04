@@ -14,6 +14,7 @@ use GraphQL\Error\UserError;
 use WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig;
 use WPGraphQL\Login\Auth\User;
 use WPGraphQL\Login\Utils\Utils;
+use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\AbstractProvider;
 use WP_Error;
 
 /**
@@ -58,8 +59,8 @@ abstract class OAuth2Config extends ProviderConfig {
 	public function __construct( string $provider_class ) {
 		$this->client_options = $this->prepare_client_options();
 
-		if ( ! str_ends_with( $provider_class, 'League\OAuth2\Client\Provider\AbstractProvider' ) ) { // This way we can use namespaced/non-namespaced classes.
-			throw new \InvalidArgumentException( 'The provider class must extend AbstractProvider.' );
+		if ( ! is_a( $provider_class, AbstractProvider::class, true ) && ! is_a( $provider_class, 'League\OAuth2\Client\Provider\AbstractProvider', true ) ) { // Check for the prefixed and unprefixed class names.
+			throw new \InvalidArgumentException( 'The provider class must extend AbstractProvider. %s does not' );
 		}
 
 		/** @var class-string<\WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\AbstractProvider> $provider_class */
