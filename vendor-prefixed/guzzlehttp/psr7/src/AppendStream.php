@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Psr7;
 
-use Psr\Http\Message\StreamInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\StreamInterface;
 
 /**
  * Reads from multiple streams, one after the other.

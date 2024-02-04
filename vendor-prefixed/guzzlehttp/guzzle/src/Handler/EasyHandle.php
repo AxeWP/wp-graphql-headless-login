@@ -9,9 +9,9 @@ namespace WPGraphQL\Login\Vendor\GuzzleHttp\Handler;
 
 use WPGraphQL\Login\Vendor\GuzzleHttp\Psr7\Response;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Utils;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\StreamInterface;
 
 /**
  * Represents a cURL easy handle and the data it populates.

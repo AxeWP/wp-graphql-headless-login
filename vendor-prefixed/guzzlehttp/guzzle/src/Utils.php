@@ -12,7 +12,7 @@ use WPGraphQL\Login\Vendor\GuzzleHttp\Handler\CurlHandler;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Handler\CurlMultiHandler;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Handler\Proxy;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Handler\StreamHandler;
-use Psr\Http\Message\UriInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\UriInterface;
 
 final class Utils
 {
@@ -84,7 +84,7 @@ final class Utils
      *
      * The returned handler is not wrapped by any default middlewares.
      *
-     * @return callable(\Psr\Http\Message\RequestInterface, array): \WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface Returns the best handler for the given system.
+     * @return callable(\WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface, array): \WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface Returns the best handler for the given system.
      *
      * @throws \RuntimeException if no viable Handler is available.
      */

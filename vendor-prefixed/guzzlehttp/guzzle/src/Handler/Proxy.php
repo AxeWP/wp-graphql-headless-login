@@ -9,7 +9,7 @@ namespace WPGraphQL\Login\Vendor\GuzzleHttp\Handler;
 
 use WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface;
 use WPGraphQL\Login\Vendor\GuzzleHttp\RequestOptions;
-use Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Provides basic proxies for handlers.
@@ -22,10 +22,10 @@ class Proxy
      * Sends synchronous requests to a specific handler while sending all other
      * requests to another handler.
      *
-     * @param callable(\Psr\Http\Message\RequestInterface, array): \WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface $default Handler used for normal responses
-     * @param callable(\Psr\Http\Message\RequestInterface, array): \WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface $sync    Handler used for synchronous responses.
+     * @param callable(\WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface, array): \WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface $default Handler used for normal responses
+     * @param callable(\WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface, array): \WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface $sync    Handler used for synchronous responses.
      *
-     * @return callable(\Psr\Http\Message\RequestInterface, array): \WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface Returns the composed handler.
+     * @return callable(\WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface, array): \WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface Returns the composed handler.
      */
     public static function wrapSync(callable $default, callable $sync): callable
     {
@@ -42,10 +42,10 @@ class Proxy
      * performance benefits of curl while still supporting true streaming
      * through the StreamHandler.
      *
-     * @param callable(\Psr\Http\Message\RequestInterface, array): \WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface $default   Handler used for non-streaming responses
-     * @param callable(\Psr\Http\Message\RequestInterface, array): \WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface $streaming Handler used for streaming responses
+     * @param callable(\WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface, array): \WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface $default   Handler used for non-streaming responses
+     * @param callable(\WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface, array): \WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface $streaming Handler used for streaming responses
      *
-     * @return callable(\Psr\Http\Message\RequestInterface, array): \WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface Returns the composed handler.
+     * @return callable(\WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface, array): \WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface Returns the composed handler.
      */
     public static function wrapStreaming(callable $default, callable $streaming): callable
     {

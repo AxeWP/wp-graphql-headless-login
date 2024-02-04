@@ -55,7 +55,7 @@ function debug_resource($value = null)
  *
  * The returned handler is not wrapped by any default middlewares.
  *
- * @return callable(\Psr\Http\Message\RequestInterface, array): \WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface Returns the best handler for the given system.
+ * @return callable(\WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface, array): \WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface Returns the best handler for the given system.
  *
  * @throws \RuntimeException if no viable Handler is available.
  *

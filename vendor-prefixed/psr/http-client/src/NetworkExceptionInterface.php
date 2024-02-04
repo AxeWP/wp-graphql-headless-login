@@ -1,8 +1,13 @@
 <?php
+/**
+ * @license MIT
+ *
+ * Modified by AxePress Development using {@see https://github.com/BrianHenryIE/strauss}.
+ */
 
-namespace Psr\Http\Client;
+namespace WPGraphQL\Login\Vendor\Psr\Http\Client;
 
-use Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Thrown when the request cannot be completed because of network issues.

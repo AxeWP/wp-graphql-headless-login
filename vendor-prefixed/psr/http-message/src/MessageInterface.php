@@ -1,6 +1,11 @@
 <?php
+/**
+ * @license MIT
+ *
+ * Modified by AxePress Development using {@see https://github.com/BrianHenryIE/strauss}.
+ */
 
-namespace Psr\Http\Message;
+namespace WPGraphQL\Login\Vendor\Psr\Http\Message;
 
 /**
  * HTTP messages consist of requests from a client to a server and responses

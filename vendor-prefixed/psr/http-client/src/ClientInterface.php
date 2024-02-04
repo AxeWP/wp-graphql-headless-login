@@ -1,9 +1,14 @@
 <?php
+/**
+ * @license MIT
+ *
+ * Modified by AxePress Development using {@see https://github.com/BrianHenryIE/strauss}.
+ */
 
-namespace Psr\Http\Client;
+namespace WPGraphQL\Login\Vendor\Psr\Http\Client;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
 
 interface ClientInterface
 {
@@ -14,7 +19,7 @@ interface ClientInterface
      *
      * @return ResponseInterface
      *
-     * @throws \Psr\Http\Client\ClientExceptionInterface If an error happens while processing the request.
+     * @throws \WPGraphQL\Login\Vendor\Psr\Http\Client\ClientExceptionInterface If an error happens while processing the request.
      */
     public function sendRequest(RequestInterface $request): ResponseInterface;
 }
