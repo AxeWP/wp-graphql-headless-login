@@ -7,11 +7,11 @@
  * Author: AxePress
  * Author URI: https://github.com/AxeWP
  * Update URI: https://github.com/AxeWP/wp-graphql-headless-login
- * Version: 0.1.4
+ * Version: 0.2.0
  * Text Domain: wp-graphql-headless-login
  * Domain Path: /languages
  * Requires at least: 6.0
- * Tested up to: 6.4.1
+ * Tested up to: 6.4.3
  * Requires PHP: 7.4
  * Requires Plugins: wp-graphql
  * WPGraphQL requires at least: 1.14.0
@@ -21,7 +21,7 @@
  * @package WPGraphQL\Login
  * @author axepress
  * @license GPL-3
- * @version 0.1.4
+ * @version 0.2.0
  */
 
 // Exit if accessed directly.
@@ -63,7 +63,7 @@ if ( ! function_exists( 'graphql_login_constants' ) ) {
 	function graphql_login_constants(): void {
 		// Plugin version.
 		if ( ! defined( 'WPGRAPHQL_LOGIN_VERSION' ) ) {
-			define( 'WPGRAPHQL_LOGIN_VERSION', '0.1.4' );
+			define( 'WPGRAPHQL_LOGIN_VERSION', '0.2.0' );
 		}
 
 		// Plugin Folder Path.

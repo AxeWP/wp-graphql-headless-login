@@ -2,10 +2,10 @@
 Contributors: axepress, justlevine
 Tags: GraphQL, Gatsby, Headless, WPGraphQL, React, Rest, SSO, Social Login, OAuth, OAuth2, SAML, Authentication, JWT, Login, OpenID
 Requires at least: 6.0
-Tested up to: 6.4.1
+Tested up to: 6.4.3
 Requires PHP: 7.4
 Requires WPGraphQL: 1.14.0
-Stable tag: 0.1.4
+Stable tag: 0.2.0
 Maintained at: https://github.com/axewp/wp-graphql-headless-login
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
