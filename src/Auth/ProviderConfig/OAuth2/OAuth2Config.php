@@ -60,7 +60,13 @@ abstract class OAuth2Config extends ProviderConfig {
 		$this->client_options = $this->prepare_client_options();
 
 		if ( ! is_a( $provider_class, AbstractProvider::class, true ) && ! is_a( $provider_class, 'League\OAuth2\Client\Provider\AbstractProvider', true ) ) { // Check for the prefixed and unprefixed class names.
-			throw new \InvalidArgumentException( 'The provider class must extend AbstractProvider. %s does not' );
+			throw new \InvalidArgumentException(
+				sprintf(
+					// translators: the provider class name.
+					esc_html__( 'The provider class must extend AbstractProvider. %s does not', 'wp-graphql-headless-login' ),
+					esc_html( $provider_class )
+				)
+			);
 		}
 
 		/** @var class-string<\WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\AbstractProvider> $provider_class */
