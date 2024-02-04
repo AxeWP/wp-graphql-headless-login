@@ -133,7 +133,7 @@
 			"vendor/bin/phpstan analyze --ansi --memory-limit=1G"
 		],
 		"strauss": [
-			"test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.14.0/strauss.phar",
+			"test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.15.0/strauss.phar",
 			"@php bin/strauss.phar",
 			"composer dump-autoload --optimize"
 		],
@@ -156,6 +156,7 @@
 			"plugin-build",
 			"tests",
 			"!vendor",
+			"!vendor-prefixed",
 			"/babel.config.js",
 			"/codeception.dist.yml",
 			"/composer.json",

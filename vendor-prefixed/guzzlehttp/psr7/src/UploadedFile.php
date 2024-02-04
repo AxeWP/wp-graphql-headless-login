@@ -2,8 +2,7 @@
 /**
  * @license MIT
  *
- * Modified by AxePress Development using Strauss.
- * @see https://github.com/BrianHenryIE/strauss
+ * Modified by AxePress Development using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 declare(strict_types=1);
@@ -119,7 +118,7 @@ class UploadedFile implements UploadedFileInterface
         $this->error = $error;
     }
 
-    private function isStringNotEmpty($param): bool
+    private static function isStringNotEmpty($param): bool
     {
         return is_string($param) && false === empty($param);
     }
@@ -169,7 +168,7 @@ class UploadedFile implements UploadedFileInterface
     {
         $this->validateActive();
 
-        if (false === $this->isStringNotEmpty($targetPath)) {
+        if (false === self::isStringNotEmpty($targetPath)) {
             throw new InvalidArgumentException(
                 'Invalid path provided for move operation; must be a non-empty string'
             );

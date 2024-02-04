@@ -2,8 +2,7 @@
 /**
  * @license MIT
  *
- * Modified by AxePress Development using Strauss.
- * @see https://github.com/BrianHenryIE/strauss
+ * Modified by AxePress Development using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 declare(strict_types=1);
@@ -57,7 +56,7 @@ final class MultipartStream implements StreamInterface
     /**
      * Get the headers needed before transferring the content of a POST file
      *
-     * @param array<string, string> $headers
+     * @param string[] $headers
      */
     private function getHeaders(array $headers): string
     {
@@ -118,10 +117,15 @@ final class MultipartStream implements StreamInterface
         $stream->addStream(Utils::streamFor("\r\n"));
     }
 
+    /**
+     * @param string[] $headers
+     *
+     * @return array{0: StreamInterface, 1: string[]}
+     */
     private function createElement(string $name, StreamInterface $stream, ?string $filename, array $headers): array
     {
         // Set a default content-disposition header if one was no provided
-        $disposition = $this->getHeader($headers, 'content-disposition');
+        $disposition = self::getHeader($headers, 'content-disposition');
         if (!$disposition) {
             $headers['Content-Disposition'] = ($filename === '0' || $filename)
                 ? sprintf(
@@ -133,7 +137,7 @@ final class MultipartStream implements StreamInterface
         }
 
         // Set a default content-length header if one was no provided
-        $length = $this->getHeader($headers, 'content-length');
+        $length = self::getHeader($headers, 'content-length');
         if (!$length) {
             if ($length = $stream->getSize()) {
                 $headers['Content-Length'] = (string) $length;
@@ -141,7 +145,7 @@ final class MultipartStream implements StreamInterface
         }
 
         // Set a default Content-Type if one was not supplied
-        $type = $this->getHeader($headers, 'content-type');
+        $type = self::getHeader($headers, 'content-type');
         if (!$type && ($filename === '0' || $filename)) {
             $headers['Content-Type'] = MimeType::fromFilename($filename) ?? 'application/octet-stream';
         }
@@ -149,11 +153,14 @@ final class MultipartStream implements StreamInterface
         return [$stream, $headers];
     }
 
-    private function getHeader(array $headers, string $key)
+    /**
+     * @param string[] $headers
+     */
+    private static function getHeader(array $headers, string $key): ?string
     {
         $lowercaseHeader = strtolower($key);
         foreach ($headers as $k => $v) {
-            if (strtolower($k) === $lowercaseHeader) {
+            if (strtolower((string) $k) === $lowercaseHeader) {
                 return $v;
             }
         }
