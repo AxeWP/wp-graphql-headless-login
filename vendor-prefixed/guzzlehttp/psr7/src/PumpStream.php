@@ -2,8 +2,7 @@
 /**
  * @license MIT
  *
- * Modified by AxePress Development using Strauss.
- * @see https://github.com/BrianHenryIE/strauss
+ * Modified by AxePress Development using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 declare(strict_types=1);
@@ -24,7 +23,7 @@ use Psr\Http\Message\StreamInterface;
  */
 final class PumpStream implements StreamInterface
 {
-    /** @var callable|null */
+    /** @var callable(int): (string|false|null)|null */
     private $source;
 
     /** @var int|null */
@@ -169,9 +168,9 @@ final class PumpStream implements StreamInterface
 
     private function pump(int $length): void
     {
-        if ($this->source) {
+        if ($this->source !== null) {
             do {
-                $data = call_user_func($this->source, $length);
+                $data = ($this->source)($length);
                 if ($data === false || $data === null) {
                     $this->source = null;
 
