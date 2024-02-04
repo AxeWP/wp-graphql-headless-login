@@ -152,6 +152,7 @@
 			"bin",
 			"docker",
 			"docs",
+			"node_modules",
 			"phpstan",
 			"plugin-build",
 			"tests",

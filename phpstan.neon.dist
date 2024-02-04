@@ -12,7 +12,7 @@ parameters:
 			- src/
 		excludePaths:
 			analyse:
-				- vendor-prefixed
+				- vendor-prefixed/
 			analyseAndScan:
 				- ../wp-graphql/tests
 		scanFiles:
