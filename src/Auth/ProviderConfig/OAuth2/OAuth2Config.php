@@ -40,7 +40,7 @@ abstract class OAuth2Config extends ProviderConfig {
 	 *
 	 * @var \WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\AbstractProvider
 	 */
-	protected AbstractProvider $provider;
+	protected $provider;
 
 	/**
 	 * The authorization URL.
@@ -52,17 +52,24 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @param class-string $provider_class The OAuth2 provider class.
+	 * @param string $provider_class The OAuth2 provider class.
 	 *
 	 * @throws \InvalidArgumentException If the provider class is not a subclass of AbstractProvider.
 	 */
 	public function __construct( string $provider_class ) {
 		$this->client_options = $this->prepare_client_options();
 
-		if ( ! is_a( $provider_class, AbstractProvider::class, true ) ) {
-			throw new \InvalidArgumentException( 'The provider class must extend AbstractProvider.' );
+		if ( ! is_a( $provider_class, AbstractProvider::class, true ) && ! is_a( $provider_class, 'League\OAuth2\Client\Provider\AbstractProvider', true ) ) { // Check for the prefixed and unprefixed class names.
+			throw new \InvalidArgumentException(
+				sprintf(
+					// translators: the provider class name.
+					esc_html__( 'The provider class must extend AbstractProvider. %s does not', 'wp-graphql-headless-login' ),
+					esc_html( $provider_class )
+				)
+			);
 		}
 
+		/** @var class-string<\WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\AbstractProvider> $provider_class */
 		$this->provider = new $provider_class( $this->client_options );
 
 		$this->authorization_url = $this->prepare_authorization_url( $this->client_options );
