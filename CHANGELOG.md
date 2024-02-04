@@ -6,16 +6,22 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
+## [0.2.0] - 2024-02-04
+
+This _major_ release bumps the minimum supported WordPress version to 6.0, and the minimum supported WPGraphQL version to 1.14.0. It also fixes a bug when extending the `OAuth2Config` class`.
+
+Note: This release is a breaking change, as the `Psr` dependencies are now prefixed with `\WPGraphQL\Login\Vendor`. This class should only be used internally, but if for some reason you're relying on the bundled `Psr` classes in your own code, you'll need to update your references.
+
 - fix: Avoid strict-typing `League\OAuth2\Client\Provider\AbstractProvider` to the `\WPGraphQL\Login\Vendor` namespace. H/t @pat-flew .
 - chore!: Use Strauss to prefix `Psr` dependencies. This is a breaking change, as the `Psr` dependencies are now prefixed with `\WPGraphQL\Login\Vendor`.
 - chore!: Bump minimum supported WordPress version to 6.0.
 - chore!: Bump minimum supported WPGraphQL version to 1.14.0.
-- chore: Update `WPGraphQL Coding Standards` to latest version and lint.
+- chore: Refactor `Autoloader` class for DRYness.
+- chore: Update `axepress/wp-graphql-cs` to latest version and lint.
 - chore: Update Composer dependencies to latest.
 - chore: Update NPM dependencies for WordPress 6.0+.
 - chore: Cleanup CI configuration files.
-- chore: Refactor `Autoloader` class for DRYness.
-- ci: Test against WordPress 6.4.1
+- ci: Test plugin against WordPress 6.4.3.
 
 ## [0.1.4] - 2023-10-15
 
