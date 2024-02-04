@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Psr7;
 
-use WPGraphQL\Login\Vendor\Psr\Http\Message\MessageInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 final class Message
 {

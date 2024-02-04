@@ -8,7 +8,7 @@
 
 namespace WPGraphQL\Login\Vendor\GuzzleHttp;
 
-use WPGraphQL\Login\Vendor\Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\MessageInterface;
 
 final class BodySummarizer implements BodySummarizerInterface
 {

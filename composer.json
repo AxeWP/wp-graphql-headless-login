@@ -81,7 +81,9 @@
 				"league/oauth2-linkedin"
 			],
 			"exclude_from_prefix": {
-				"namespaces": [],
+				"namespaces": [
+					"Psr"
+				],
 				"file_patterns": []
 			}
 		}
@@ -92,7 +94,10 @@
 		],
 		"psr-4": {
 			"WPGraphQL\\Login\\": "src/"
-		}
+		},
+		"classmap": [
+			"vendor-prefixed/"
+		]
 	},
 	"autoload-dev": {
 		"psr-4": {
@@ -151,7 +156,6 @@
 			"plugin-build",
 			"tests",
 			"!vendor",
-			"!vendor-prefixed",
 			"/babel.config.js",
 			"/codeception.dist.yml",
 			"/composer.json",

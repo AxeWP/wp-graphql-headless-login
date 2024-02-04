@@ -25,10 +25,10 @@ class FooLinkedInProviderConfig extends OAuth2LinkedIn {
 		OAuth2Config::__construct( FooLinkedInProvider::class );
 
 		// Mock and set the http client on the provider.
-		$response = m::mock( 'WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface' );
+		$response = m::mock( 'Psr\Http\Message\ResponseInterface' );
 		$response->shouldReceive( 'getBody' )
 			->andReturn(
-				\WPGraphQL\Login\Vendor\GuzzleHttp\Psr7\Utils::streamFor( '{"access_token":"mock_access_token", "scope":"repo,gist", "token_type":"bearer"}' )
+				\GuzzleHttp\Psr7\Utils::streamFor( '{"access_token":"mock_access_token", "scope":"repo,gist", "token_type":"bearer"}' )
 			);
 		$response->shouldReceive( 'getHeader' )
 			->andReturn( [ 'Content-Type' => 'application/json' ] );

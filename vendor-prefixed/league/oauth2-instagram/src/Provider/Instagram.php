@@ -11,7 +11,7 @@ namespace WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\Exception\InstagramIdentityProviderException;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Token\AccessToken;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Token\AccessTokenInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class Instagram extends AbstractProvider
 {
@@ -128,7 +128,7 @@ class Instagram extends AbstractProvider
      * @param  AccessToken|string $token
      * @param  array $options Any of "headers", "body", and "protocolVersion".
      *
-     * @return \WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface
+     * @return \Psr\Http\Message\RequestInterface
      */
     public function getAuthenticatedRequest($method, $url, $token, array $options = [])
     {

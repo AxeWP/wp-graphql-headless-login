@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Psr7;
 
 use InvalidArgumentException;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\StreamInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\UploadedFileInterface;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
 
 class UploadedFile implements UploadedFileInterface

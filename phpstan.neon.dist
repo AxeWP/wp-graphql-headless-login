@@ -4,7 +4,6 @@ parameters:
 		treatPhpDocTypesAsCertain: false
 		bootstrapFiles:
 			- phpstan/constants.php
-			- vendor-prefixed/autoload.php
 		paths:
 			- wp-graphql-headless-login.php
 			- access-functions.php
@@ -13,7 +12,7 @@ parameters:
 			- src/
 		excludePaths:
 			analyse:
-				- vendor-prefixed/
+				- vendor-prefixed
 			analyseAndScan:
 				- ../wp-graphql/tests
 		scanFiles:

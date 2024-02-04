@@ -11,8 +11,8 @@ namespace WPGraphQL\Login\Vendor\League\OAuth2\Client\Tool;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Exception\BadResponseException;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Psr7\Uri;
 use InvalidArgumentException;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 trait ProviderRedirectTrait
 {

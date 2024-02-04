@@ -11,7 +11,7 @@ namespace WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\Exception\GithubIdentityProviderException;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Token\AccessToken;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Tool\BearerAuthorizationTrait;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class Github extends AbstractProvider
 {

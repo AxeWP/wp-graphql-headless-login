@@ -1,14 +1,8 @@
 <?php
-/**
- * @license MIT
- *
- * Modified by AxePress Development using Strauss.
- * @see https://github.com/BrianHenryIE/strauss
- */
 
-namespace WPGraphQL\Login\Vendor\Psr\Http\Client;
+namespace Psr\Http\Client;
 
-use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Exception for when a request failed.

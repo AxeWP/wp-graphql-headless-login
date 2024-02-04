@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Psr7;
 
-use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\ServerRequestInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\StreamInterface;
-use WPGraphQL\Login\Vendor\Psr\Http\Message\UriInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 
 final class Utils
 {
