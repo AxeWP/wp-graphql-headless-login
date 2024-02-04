@@ -6,6 +6,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
+- fix: Avoid strict-typing `League\OAuth2\Client\Provider\AbstractProvider` to the `\WPGraphQL\Login\Vendor` namespace. H/t @pat-flew .
 - chore!: Bump minimum supported WordPress version to 6.0.
 - chore!: Bump minimum supported WPGraphQL version to 1.14.0.
 - chore: Update `WPGraphQL Coding Standards` to latest version and lint.
