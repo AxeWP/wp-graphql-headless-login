@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Psr7;
 
-use Psr\Http\Message\UriInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\UriInterface;
 
 /**
  * Provides methods to determine if a modified URL should be considered cross-origin.

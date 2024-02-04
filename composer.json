@@ -69,6 +69,8 @@
 			"classmap_prefix": "GraphQL_Login_",
 			"constant_prefix": "GRAPHQL_LOGIN_",
 			"delete_vendor_files": false,
+			"delete_vendor_packages": false,
+			"update_call_sites": false,
 			"include_modified_date": false,
 			"packages": [
 				"axepress/wp-graphql-plugin-boilerplate",
@@ -81,9 +83,7 @@
 				"league/oauth2-linkedin"
 			],
 			"exclude_from_prefix": {
-				"namespaces": [
-					"Psr"
-				],
+				"namespaces": [],
 				"file_patterns": []
 			}
 		}

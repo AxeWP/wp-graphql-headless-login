@@ -11,7 +11,7 @@ use WPGraphQL\Login\Vendor\GuzzleHttp\Promise as P;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Promise\Promise;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Utils;
-use Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Returns an asynchronous response using curl_multi_* functions.

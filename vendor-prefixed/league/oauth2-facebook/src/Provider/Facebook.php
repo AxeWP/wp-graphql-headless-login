@@ -11,7 +11,7 @@ use WPGraphQL\Login\Vendor\League\OAuth2\Client\Token\AccessToken;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\Exception\FacebookProviderException;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Token\AccessTokenInterface;
-use Psr\Http\Message\ResponseInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * @method FacebookUser getResourceOwner(AccessToken $token)

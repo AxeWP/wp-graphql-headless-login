@@ -9,8 +9,8 @@ namespace WPGraphQL\Login\Vendor\GuzzleHttp;
 
 use WPGraphQL\Login\Vendor\GuzzleHttp\Exception\GuzzleException;
 use WPGraphQL\Login\Vendor\GuzzleHttp\Promise\PromiseInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\UriInterface;
 
 /**
  * Client interface for sending HTTP requests.

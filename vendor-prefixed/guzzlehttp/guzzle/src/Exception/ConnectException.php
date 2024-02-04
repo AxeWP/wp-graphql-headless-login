@@ -7,8 +7,8 @@
 
 namespace WPGraphQL\Login\Vendor\GuzzleHttp\Exception;
 
-use Psr\Http\Client\NetworkExceptionInterface;
-use Psr\Http\Message\RequestInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Client\NetworkExceptionInterface;
+use WPGraphQL\Login\Vendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Exception thrown when a connection cannot be established.
