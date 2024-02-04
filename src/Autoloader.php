@@ -13,51 +13,49 @@ namespace WPGraphQL\Login;
  */
 class Autoloader {
 	/**
-	 * Attempts to load the autoloader, if it exists.
-	 *
-	 * @return false|mixed Whether the autoloader was loaded.
+	 * Attempts to autoload the Composer dependencies.
 	 */
-	public static function autoload() {
+	public static function autoload(): bool {
 		// If we're not *supposed* to autoload anything, then return true.
 		if ( defined( 'WPGRAPHQL_LOGIN_AUTOLOAD' ) && false === WPGRAPHQL_LOGIN_AUTOLOAD ) {
 			return true;
 		}
 
 		$autoloader = dirname( __DIR__ ) . '/vendor/autoload.php';
+		return self::require_autoloader( $autoloader );
+	}
 
-		if ( ! is_readable( $autoloader ) ) {
-			self::missing_autoloader_notice();
-			return false;
+	/**
+	 * Attempts to load the autoloader file, if it exists.
+	 *
+	 * @param string $autoloader_file The path to the autoloader file.
+	 */
+	protected static function require_autoloader( string $autoloader_file ): bool {
+		if ( ! is_readable( $autoloader_file ) ) {
+				self::missing_autoloader_notice();
+				return false;
 		}
 
-		$loaded = require_once $autoloader; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
-
-		if ( ! $loaded ) {
-			return false;
-		}
-
-		return $loaded;
+		return (bool) require_once $autoloader_file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
 	}
 
 	/**
 	 * Displays a notice if the autoloader is missing.
 	 */
 	protected static function missing_autoloader_notice(): void {
+		$error_message = __( 'Headless Login for WPGraphQL: The Composer autoloader was not found. If you installed the plugin from the GitHub source, make sure to run `composer install`.', 'wp-graphql-headless-login' );
+
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			error_log( // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-				esc_html__( 'Headless Login for WPGraphQL: The Composer autoloader was not found. If you installed the plugin from the GitHub source, make sure to run `composer install`.', 'wp-graphql-headless-login' )
-			);
+			error_log( esc_html( $error_message ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		}
 
 		add_action(
 			'admin_notices',
-			static function () {
+			static function () use ( $error_message ) {
 				?>
 				<div class="error notice">
 					<p>
-						<?php
-							esc_html__( 'Headless Login for WPGraphQL: The Composer autoloader was not found. If you installed the plugin from the GitHub source, make sure to run `composer install`.', 'wp-graphql-headless-login' )
-						?>
+						<?php echo esc_html( $error_message ); ?>
 					</p>
 				</div>
 				<?php
