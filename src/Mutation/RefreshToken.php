@@ -55,7 +55,7 @@ class RefreshToken extends MutationType {
 	 * {@inheritDoc}
 	 */
 	public static function mutate_and_get_payload(): callable {
-		return static function ( array $input, AppContext $context, ResolveInfo $info ): array {
+		return static function ( array $input, AppContext $context, ResolveInfo $info ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 			// Sanitize the refresh token.
 			$sanitized_token = sanitize_text_field( $input['refreshToken'] );
 
