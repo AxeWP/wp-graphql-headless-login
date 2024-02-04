@@ -28,14 +28,14 @@ class FooGenericProviderConfig extends Generic {
 		OAuth2Config::__construct( FooGenericProvider::class );
 
 		// Mock and set the http client on the provider.
-		$response = m::mock( 'WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface' );
+		$response = m::mock( 'Psr\Http\Message\ResponseInterface' );
 		$response->shouldReceive( 'getHeader' )
 			->times( 1 )
 			->andReturn( [ 'Content-Type' => 'application/json' ] );
 		$response->shouldReceive( 'getBody' )
 			->times( 1 )
 			->andReturn(
-				\WPGraphQL\Login\Vendor\GuzzleHttp\Psr7\Utils::streamFor( '{"access_token":"mock_access_token","token_type":"bearer","expires_in":3600}' )
+				\GuzzleHttp\Psr7\Utils::streamFor( '{"access_token":"mock_access_token","token_type":"bearer","expires_in":3600}' )
 			);
 
 		$http_client = m::mock( 'WPGraphQL\Login\Vendor\GuzzleHttp\ClientInterface' );

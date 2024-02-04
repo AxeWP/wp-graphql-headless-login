@@ -20,7 +20,6 @@ coverage:
         - access-functions.php
     exclude:
         - vendor/*
-        - vendor-prefixed/*
         - src/vendor/*
     show_only_summary: false
 extensions:
