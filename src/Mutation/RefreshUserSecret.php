@@ -70,7 +70,7 @@ class RefreshUserSecret extends MutationType {
 	 * {@inheritDoc}
 	 */
 	public static function mutate_and_get_payload(): callable {
-		return static function ( array $input, AppContext $context, ResolveInfo $info ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUse
+		return static function ( array $input, AppContext $context, ResolveInfo $info ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 			$user_id = WPGraphQL_Utils::get_database_id_from_id( esc_attr( $input['userId'] ) );
 
 			$user = ! empty( $user_id ) ? get_user_by( 'id', $user_id ) : false;
