@@ -63,6 +63,7 @@ class RefreshTokenMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCa
 			mutation RefreshToken( $refreshToken: String! ) {
 				refreshToken( input: { refreshToken: $refreshToken } ) {
 					authToken
+					authTokenExpiration
 					success
 				}
 			}
@@ -82,6 +83,7 @@ class RefreshTokenMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCa
 		$this->assertArrayNotHasKey( 'errors', $actual );
 		$this->assertFalse( $actual['data']['refreshToken']['success'] );
 		$this->assertNull( $actual['data']['refreshToken']['authToken'] );
+		$this->assertNull( $actual['data']['refreshToken']['authTokenExpiration'] );
 		$this->assertEquals( 'Wrong number of segments', $actual['extensions']['debug'][0]['message'] );
 	}
 
@@ -122,6 +124,7 @@ class RefreshTokenMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCa
 		$this->assertArrayNotHasKey( 'errors', $actual );
 		$this->assertFalse( $actual['data']['refreshToken']['success'] );
 		$this->assertNull( $actual['data']['refreshToken']['authToken'] );
+		$this->assertNull( $actual['data']['refreshToken']['authTokenExpiration'] );
 		$this->assertEquals( 'Signature verification failed', $actual['extensions']['debug'][0]['message'] );
 
 		// Test different user as admin
@@ -141,6 +144,7 @@ class RefreshTokenMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCa
 		$this->assertArrayNotHasKey( 'errors', $actual );
 		$this->assertFalse( $actual['data']['refreshToken']['success'] );
 		$this->assertNull( $actual['data']['refreshToken']['authToken'] );
+		$this->assertNull( $actual['data']['refreshToken']['authTokenExpiration'] );
 		$this->assertEquals( 'Signature verification failed', $actual['extensions']['debug'][0]['message'] );
 	}
 
@@ -157,7 +161,7 @@ class RefreshTokenMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCa
 		$this->assertArrayNotHasKey( 'errors', $actual );
 		$this->assertFalse( $actual['data']['refreshToken']['success'] );
 		$this->assertNull( $actual['data']['refreshToken']['authToken'] );
-
+		$this->assertNull( $actual['data']['refreshToken']['authTokenExpiration'] );
 		$this->assertEquals( 'User secret not found in the token.', $actual['extensions']['debug'][0]['message'] );
 
 		// Test auth token as test user
@@ -168,7 +172,7 @@ class RefreshTokenMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCa
 		$this->assertArrayNotHasKey( 'errors', $actual );
 		$this->assertFalse( $actual['data']['refreshToken']['success'] );
 		$this->assertNull( $actual['data']['refreshToken']['authToken'] );
-
+		$this->assertNull( $actual['data']['refreshToken']['authTokenExpiration'] );
 		$this->assertEquals( 'User secret not found in the token.', $actual['extensions']['debug'][0]['message'] );
 	}
 
@@ -190,6 +194,7 @@ class RefreshTokenMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCa
 		$this->assertArrayNotHasKey( 'errors', $actual );
 		$this->assertFalse( $actual['data']['refreshToken']['success'] );
 		$this->assertNull( $actual['data']['refreshToken']['authToken'] );
+		$this->assertNull( $actual['data']['refreshToken']['authTokenExpiration'] );
 		$this->assertEquals( 'User secret is revoked.', $actual['extensions']['debug'][0]['message'] );
 	}
 
@@ -212,6 +217,7 @@ class RefreshTokenMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCa
 		$this->assertArrayNotHasKey( 'errors', $actual );
 		$this->assertFalse( $actual['data']['refreshToken']['success'] );
 		$this->assertNull( $actual['data']['refreshToken']['authToken'] );
+		$this->assertNull( $actual['data']['refreshToken']['authTokenExpiration'] );
 		$this->assertEquals( 'User secret does not match.', $actual['extensions']['debug'][0]['message'] );
 
 		// Test as admin
@@ -222,6 +228,7 @@ class RefreshTokenMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCa
 		$this->assertArrayNotHasKey( 'errors', $actual );
 		$this->assertFalse( $actual['data']['refreshToken']['success'] );
 		$this->assertNull( $actual['data']['refreshToken']['authToken'] );
+		$this->assertNull( $actual['data']['refreshToken']['authTokenExpiration'] );
 		$this->assertEquals( 'User secret does not match.', $actual['extensions']['debug'][0]['message'] );
 	}
 
@@ -237,7 +244,8 @@ class RefreshTokenMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCa
 		$this->assertArrayNotHasKey( 'errors', $actual );
 		$this->assertTrue( $actual['data']['refreshToken']['success'] );
 		$this->assertNotNull( $actual['data']['refreshToken']['authToken'] );
+
+		$expected_expiration = User::get_auth_token_expiration( $this->test_user );
+		$this->assertEquals( $expected_expiration, $actual['data']['refreshToken']['authTokenExpiration'] );
 	}
-
-
 }

@@ -6,6 +6,8 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## Unreleased
 
+- feat: Add the `authTokenExpiration` field to the `refreshToken` mutation response. H/t @richardaubin.
+
 ## [0.2.0] - 2024-02-04
 
 This _major_ release bumps the minimum supported WordPress version to 6.0, and the minimum supported WPGraphQL version to 1.14.0. It also fixes a bug when extending the `OAuth2Config` class`.
