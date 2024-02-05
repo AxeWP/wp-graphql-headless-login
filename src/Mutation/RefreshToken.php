@@ -11,6 +11,7 @@ namespace WPGraphQL\Login\Mutation;
 use GraphQL\Type\Definition\ResolveInfo;
 use WPGraphQL\AppContext;
 use WPGraphQL\Login\Auth\TokenManager;
+use WPGraphQL\Login\Auth\User;
 use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationType;
 /**
  * Class - RefreshToken
@@ -30,7 +31,7 @@ class RefreshToken extends MutationType {
 		return [
 			'refreshToken' => [
 				'type'        => [ 'non_null' => 'String' ],
-				'description' => __( 'A valid, previously issued JWT refresh token. If valid a new Auth token will be provided. If invalid, expired, revoked or otherwise invalid, a new AuthToken will not be provided.', 'wp-graphql-headless-login' ),
+				'description' => __( 'A valid, previously issued JWT refresh token. If valid, a new JWT authentication token will be provided. If invalid, expired, revoked or otherwise invalid, the `authToken` will return null, and the `success` field will return `false`.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}
@@ -40,11 +41,15 @@ class RefreshToken extends MutationType {
 	 */
 	public static function get_output_fields(): array {
 		return [
-			'authToken' => [
+			'authToken'           => [
 				'type'        => 'String',
 				'description' => __( 'JWT Token that can be used in future requests for Authentication.', 'wp-graphql-headless-login' ),
 			],
-			'success'   => [
+			'authTokenExpiration' => [
+				'type'        => 'String',
+				'description' => __( 'The authentication token expiration timestamp.', 'wp-graphql-headless-login' ),
+			],
+			'success'             => [
 				'type'        => 'Boolean',
 				'description' => __( 'Whether the auth token was successfully refreshed.', 'wp-graphql-headless-login' ),
 			],
@@ -86,10 +91,12 @@ class RefreshToken extends MutationType {
 
 			$user       = new \WP_User( $user_id );
 			$auth_token = TokenManager::get_auth_token( $user, false );
+			$expiration = User::get_auth_token_expiration( $user->ID );
 
 			return [
-				'authToken' => $auth_token,
-				'success'   => ! empty( $auth_token ),
+				'authToken'           => $auth_token,
+				'authTokenExpiration' => $expiration,
+				'success'             => ! empty( $auth_token ),
 			];
 		};
 	}
