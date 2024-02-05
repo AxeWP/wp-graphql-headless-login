@@ -102,11 +102,11 @@ mutation refreshToken(
 ) {
   refreshToken( input: {refreshToken: $token} ) {
     authToken # The new auth token for the user.
+    authTokenExpiration # The expiration time of the new auth token.
     success
   }
 }
 ```
-
 
 ## Manually link the WordPress user to a Provider's Resource Owner
 
