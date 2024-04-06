@@ -226,7 +226,7 @@ class Client {
 		 *
 		 * @param array $user_data       The WordPress user data.
 		 * @param self  $provider_config An instance of the provider configuration.
-		 * 
+		 *
 		 * @since 0.0.1
 		 * @deprecated @todo
 		 */
