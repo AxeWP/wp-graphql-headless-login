@@ -9,6 +9,8 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - feat: Add the `authTokenExpiration` field to the `refreshToken` mutation response. H/t @richardaubin.
 - chore: Update Composer dev-deps and fix newly-surfaced PHPCS smells.
 - chore: Lock WPBrowser to v3.5.x to prevent conflicts with Codeception.
+- ci: Update GitHub Actions to latest versions.
+- ci: Test plugin compatibility with WordPress 6.5.0.
 
 ## [0.2.0] - 2024-02-04
 
