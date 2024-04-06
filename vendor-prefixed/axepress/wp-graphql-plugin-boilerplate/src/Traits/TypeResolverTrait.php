@@ -8,6 +8,8 @@
  * Modified by AxePress Development using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
+declare( strict_types=1 );
+
 namespace WPGraphQL\Login\Vendor\AxeWP\GraphQL\Traits;
 
 use Closure;
@@ -33,7 +35,7 @@ if ( ! trait_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Traits\TypeResolverT
 				if ( empty( $type_name ) ) {
 					throw new Error(
 					// translators: the GraphQL interface type name.
-						sprintf( __( 'The value passed to %s failed to resolve to a valid GraphQL type', 'wp-graphql-plugin-name' ), static::class )
+						sprintf( esc_html__( 'The value passed to %s failed to resolve to a valid GraphQL type', 'wp-graphql-plugin-name' ), static::class )
 					);
 				}
 

@@ -8,6 +8,8 @@
  * Modified by AxePress Development using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
+declare( strict_types=1 );
+
 namespace WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts;
 
 if ( ! class_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\EnumType' ) ) {
@@ -19,11 +21,7 @@ if ( ! class_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\EnumType' 
 		/**
 		 * Gets the Enum values configuration array.
 		 *
-		 * @return array<string, array{
-		 *   description: string,
-		 *   value: mixed,
-		 *   deprecationReason?: string
-		 * }>
+		 * @return array<string,array{description:string,value:mixed,deprecationReason?:string}>
 		 */
 		abstract public static function get_values(): array;
 

@@ -8,6 +8,8 @@
  * Modified by AxePress Development using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
+declare( strict_types=1 );
+
 namespace WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts;
 
 use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\GraphQLType;
@@ -19,22 +21,21 @@ if ( ! class_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\Connection
 	/**
 	 * Class - ConnectionType
 	 *
-	 * @phpstan-type ConnectionConfig array{
-	 *   fromType: string,
+	 * @phpstan-type ConnectionConfig array{fromType:string,
 	 *   fromFieldName: string,
 	 *   resolve: callable,
 	 *   oneToOne?: bool,
 	 *   toType?: string,
-	 *   connectionArgs?: array<string, array{
-	 *     type: string|array<string, string | array<string, string>>,
+	 *   connectionArgs?: array<string,array{
+	 *     type: string|array<string,string | array<string,string>>,
 	 *     description: string,
 	 *     defaultValue?: mixed
 	 *   }>,
-	 *   connectionFields?: array<string, array{
-	 *     type: string|array<string, string | array<string, string>>,
+	 *   connectionFields?: array<string,array{
+	 *     type: string|array<string,string | array<string,string>>,
 	 *     description: string,
-	 *     args?: array<string, array{
-	 *       type: string|array<string, string | array<string, string>>,
+	 *     args?: array<string,array{
+	 *       type: string|array<string,string | array<string,string>>,
 	 *       description: string,
 	 *       defaultValue?: mixed,
 	 *     }>,
@@ -56,11 +57,7 @@ if ( ! class_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\Connection
 		/**
 		 * Defines all possible connection args for the GraphQL type.
 		 *
-		 * @return array<string, array{
-		 *   type: string|array<string, string | array<string, string>>,
-		 *   description: string,
-		 *   defaultValue?: mixed
-		 * }>,
+		 * @return array<string,array{type:string|array<string,string|array<string,string>>,description:string,defaultValue?:mixed}>
 		 */
 		abstract protected static function connection_args(): array;
 
@@ -85,11 +82,7 @@ if ( ! class_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\Connection
 		 *
 		 * @param ?string[] $filter_by an array of specific connections to return.
 		 *
-		 * @return array<string, array{
-		 *   type: string|array<string, string | array<string, string>>,
-		 *   description: string,
-		 *   defaultValue?: mixed
-		 * }>
+		 * @return array<string,array{type:string|array<string,string|array<string,string>>,description:string,defaultValue?:mixed}>
 		 */
 		final public static function get_connection_args( ?array $filter_by = null ): array {
 			$connection_args = static::connection_args();

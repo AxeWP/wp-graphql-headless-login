@@ -8,6 +8,8 @@
  * Modified by AxePress Development using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
+declare( strict_types=1 );
+
 namespace WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces;
 
 if ( ! interface_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\TypeWithInterfaces' ) ) {
