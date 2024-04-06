@@ -60,7 +60,8 @@
 		},
 		"preferred-install": "dist",
 		"process-timeout": 0,
-		"optimize-autoloader": true
+		"optimize-autoloader": true,
+		"sort-packages": true
 	},
 	"extra": {
 		"strauss": {
@@ -132,8 +133,11 @@
 		"phpstan": [
 			"vendor/bin/phpstan analyze --ansi --memory-limit=1G"
 		],
+	"strauss-install": [
+			"test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.17.0/strauss.phar"
+		],
 		"strauss": [
-			"test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.15.0/strauss.phar",
+			"@strauss-install",
 			"@php bin/strauss.phar",
 			"composer dump-autoload --optimize"
 		],

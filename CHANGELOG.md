@@ -12,6 +12,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - chore: Implement PHPStan strict rules and fix type errors.
 - ci: Update GitHub Actions to latest versions.
 - ci: Test plugin compatibility with WordPress 6.5.0.
+- ci: Update Strauss to v0.17.0
 
 ## [0.2.0] - 2024-02-04
 
