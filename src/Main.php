@@ -29,13 +29,9 @@ if ( ! class_exists( \WPGraphQL\Login\Main::class ) ) :
 		 * Constructor
 		 */
 		public static function instance(): self {
-			if ( ! isset( self::$instance ) || ! ( is_a( self::$instance, self::class ) ) ) {
+			if ( ! isset( self::$instance ) ) {
 				// You cant test a singleton.
-				// phpcs:ignore
-				// @codeCoverageIgnoreStart
-				if ( ! function_exists( 'is_plugin_active' ) ) {
-					require_once ABSPATH . 'wp-admin/includes/plugin.php';
-				}
+				// @codeCoverageIgnoreStart .
 
 				self::$instance = new self();
 				self::$instance->setup();

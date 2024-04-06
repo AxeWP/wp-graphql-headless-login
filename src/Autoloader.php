@@ -3,15 +3,24 @@
  * Includes the composer Autoloader used for packages and classes in the src/ directory.
  *
  * @package WPGraphQL\Login
- * @since @todo
+ * @since 0.1.4
  */
 
 namespace WPGraphQL\Login;
 
 /**
  * Class - Autoloader
+ *
+ * @internal
  */
 class Autoloader {
+	/**
+	 * Whether the autoloader has been loaded.
+	 *
+	 * @var bool
+	 */
+	protected static bool $is_loaded = false;
+
 	/**
 	 * Attempts to autoload the Composer dependencies.
 	 */
@@ -21,8 +30,14 @@ class Autoloader {
 			return true;
 		}
 
-		$autoloader = dirname( __DIR__ ) . '/vendor/autoload.php';
-		return self::require_autoloader( $autoloader );
+		if ( self::$is_loaded ) {
+			return self::$is_loaded;
+		}
+
+		$autoloader      = dirname( __DIR__ ) . '/vendor/autoload.php';
+		self::$is_loaded = self::require_autoloader( $autoloader );
+
+		return self::$is_loaded;
 	}
 
 	/**
@@ -36,7 +51,7 @@ class Autoloader {
 				return false;
 		}
 
-		return (bool) require_once $autoloader_file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
+		return (bool) require_once $autoloader_file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable -- Autoloader is a Composer file.
 	}
 
 	/**
@@ -46,20 +61,27 @@ class Autoloader {
 		$error_message = __( 'Headless Login for WPGraphQL: The Composer autoloader was not found. If you installed the plugin from the GitHub source, make sure to run `composer install`.', 'wp-graphql-headless-login' );
 
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			error_log( esc_html( $error_message ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( esc_html( $error_message ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- This is a development notice.
 		}
 
-		add_action(
+		$hooks = [
 			'admin_notices',
-			static function () use ( $error_message ) {
-				?>
-				<div class="error notice">
-					<p>
-						<?php echo esc_html( $error_message ); ?>
-					</p>
-				</div>
-				<?php
-			}
-		);
+			'network_admin_notices',
+		];
+
+		foreach ( $hooks as $hook ) {
+			add_action(
+				$hook,
+				static function () use ( $error_message ) {
+					?>
+					<div class="error notice">
+						<p>
+							<?php echo esc_html( $error_message ); ?>
+						</p>
+					</div>
+					<?php
+				}
+			);
+		}
 	}
 }
