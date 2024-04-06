@@ -4,7 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
-## Unreleased
+## [Unreleased]
+
+## [0.3.0] - 2024-04-06
+
+This _major_ release refactors the root files to use the `WPGraphQL\Login` namespace. It also exposes the `authTokenExpiration` field in the `refreshToken` mutation response, improves code quality, adds explicit support for WordPress 6.5.0, and more.
+
+> [!NOTE]
+> Although this release technically contains breaking changes, these changes are limited to developers directly extending the `wp-graphql-headless-login.php`, `wp-graphql-activation.php`, `wp-graphql-deactivation.php` files, and the `WPGraphQL\Login\Main` class.
+> If you are using the plugin as intended, you should not experience any issues when upgrading.
 
 - feat: Add the `authTokenExpiration` field to the `refreshToken` mutation response. H/t @richardaubin.
 - chore!: Add `WPGraphQL/RankMath` namespace to root-level files ( `activation.php`, `deactivation.php`, `wp-graphql-rank-math.php` ).

@@ -8,7 +8,7 @@ A WordPress plugin that provides headless login and authentication for <a href="
 
 -----
 
-![Packagist License](https://img.shields.io/packagist/l/axepress/wp-graphql-headless-login?color=green) ![Packagist Version](https://img.shields.io/packagist/v/axepress/wp-graphql-headless-login?label=stable) ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/AxeWP/wp-graphql-headless-login/0.2.0) ![GitHub forks](https://img.shields.io/github/forks/AxeWP/wp-graphql-headless-login?style=social) ![GitHub Repo stars](https://img.shields.io/github/stars/AxeWP/wp-graphql-headless-login?style=social)<br />
+![Packagist License](https://img.shields.io/packagist/l/axepress/wp-graphql-headless-login?color=green) ![Packagist Version](https://img.shields.io/packagist/v/axepress/wp-graphql-headless-login?label=stable) ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/AxeWP/wp-graphql-headless-login/0.3.0) ![GitHub forks](https://img.shields.io/github/forks/AxeWP/wp-graphql-headless-login?style=social) ![GitHub Repo stars](https://img.shields.io/github/stars/AxeWP/wp-graphql-headless-login?style=social)<br />
 ![CodeQuality](https://img.shields.io/github/actions/workflow/status/axewp/wp-graphql-headless-login/code-quality.yml?branch=develop&label=Code%20Quality)
 ![Integration](https://img.shields.io/github/actions/workflow/status/axewp/wp-graphql-headless-login/integration-testing.yml?branch=develop&label=Integration%20Testing)
 ![Coding Standards](https://img.shields.io/github/actions/workflow/status/axewp/wp-graphql-headless-login/code-standard.yml?branch=develop&label=WordPress%20Coding%20Standards)

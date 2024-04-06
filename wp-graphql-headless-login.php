@@ -7,7 +7,7 @@
  * Author: AxePress
  * Author URI: https://github.com/AxeWP
  * Update URI: https://github.com/AxeWP/wp-graphql-headless-login
- * Version: 0.2.0
+ * Version: 0.3.0
  * Text Domain: wp-graphql-headless-login
  * Domain Path: /languages
  * Requires at least: 6.0
@@ -21,7 +21,7 @@
  * @package WPGraphQL\Login
  * @author axepress
  * @license GPL-3
- * @version 0.2.0
+ * @version 0.3.0
  */
 
 declare( strict_types = 1 );
@@ -66,7 +66,7 @@ if ( file_exists( __DIR__ . '/deactivation.php' ) ) {
 function constants(): void {
 	// Plugin version.
 	if ( ! defined( 'WPGRAPHQL_LOGIN_VERSION' ) ) {
-		define( 'WPGRAPHQL_LOGIN_VERSION', '0.2.0' );
+		define( 'WPGRAPHQL_LOGIN_VERSION', '0.3.0' );
 	}
 
 	// Plugin Folder Path.
