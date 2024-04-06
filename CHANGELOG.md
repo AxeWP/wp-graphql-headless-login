@@ -7,6 +7,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 ## Unreleased
 
 - feat: Add the `authTokenExpiration` field to the `refreshToken` mutation response. H/t @richardaubin.
+- chore!: Add `WPGraphQL/RankMath` namespace to root-level files ( `activation.php`, `deactivation.php`, `wp-graphql-rank-math.php` ).
 - chore: Update Composer dev-deps and fix newly-surfaced PHPCS smells.
 - chore: Lock WPBrowser to v3.5.x to prevent conflicts with Codeception.
 - chore: Implement PHPStan strict rules and fix type errors.
