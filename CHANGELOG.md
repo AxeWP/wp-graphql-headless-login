@@ -12,6 +12,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - chore: Update Composer dev-deps and fix newly-surfaced PHPCS smells.
 - chore: Lock WPBrowser to v3.5.x to prevent conflicts with Codeception.
 - chore: Implement PHPStan strict rules and fix type errors.
+- chore: Update WPGraphQL Plugin Boilerplate to v0.1.0.
 - ci: Update GitHub Actions to latest versions.
 - ci: Test plugin compatibility with WordPress 6.5.0.
 - ci: Update Strauss to v0.17.0

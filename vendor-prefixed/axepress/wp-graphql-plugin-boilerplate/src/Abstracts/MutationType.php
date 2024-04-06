@@ -8,6 +8,8 @@
  * Modified by AxePress Development using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
+declare( strict_types=1 );
+
 namespace WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts;
 
 if ( ! class_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationType' ) ) {
@@ -19,28 +21,14 @@ if ( ! class_exists( '\WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationTy
 		/**
 		 * Gets the input fields for the mutation.
 		 *
-		 * @return array<string, array{
-		 *   type: string|array<string, string | array<string, string>>,
-		 *   description: string,
-		 *   defaultValue?: string
-		 * }>
+		 * @return array<string,array{type:string|array<string,string|array<string,string>>,description:string,defaultValue?:string}>
 		 */
 		abstract public static function get_input_fields(): array;
 
 		/**
 		 * Gets the fields for the type.
 		 *
-		 * @return array<string, array{
-		 *   type: string|array<string, string | array<string, string>>,
-		 *   description: string,
-		 *   args?: array<string, array{
-		 *     type: string|array<string, string | array<string, string>>,
-		 *     description: string,
-		 *     defaultValue?: mixed
-		 *   }>,
-		 *   resolve?: callable,
-		 *   deprecationReason?: string,
-		 * }>
+		 * @return array<string,array{type:string|array<string,string|array<string,string>>,description:string,args?:array<string,array{type:string|array<string,string|array<string,string>>,description:string,defaultValue?:mixed}>,resolve?:callable,deprecationReason?:string}>
 		 */
 		abstract public static function get_output_fields(): array;
 
