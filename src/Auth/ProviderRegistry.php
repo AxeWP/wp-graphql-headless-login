@@ -166,7 +166,7 @@ class ProviderRegistry {
 				// translators: %s is the provider slug.
 					esc_html__( 'Provider %s is not enabled.', 'wp-graphql-headless-login' ),
 					esc_html( $provider_slug )
-				) 
+				)
 			);
 		}
 

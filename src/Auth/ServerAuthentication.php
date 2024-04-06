@@ -68,7 +68,7 @@ class ServerAuthentication implements Registrable {
 
 		// Set the flag to true.
 		$this->is_determine_current_user_filter = true;
-	
+
 		// Validate the token.
 		try {
 			$token = TokenManager::validate_token();
