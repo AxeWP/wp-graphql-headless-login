@@ -6,5 +6,5 @@
  */
 
 define( 'WPGRAPHQL_LOGIN_PLUGIN_FILE', 'wp-graphql-headless-login.php' );
-define( 'WPGRAPHQL_LOGIN_VERSION', '0.2.0' );
+define( 'WPGRAPHQL_LOGIN_VERSION', '0.3.0' );
 define( 'WPGRAPHQL_LOGIN_PLUGIN_DIR', '' );
