@@ -19,21 +19,21 @@ class Utils {
 	/**
 	 * The plugin settings.
 	 *
-	 * @var array<string, mixed>
+	 * @var array<string,mixed>
 	 */
 	protected static array $settings = [];
 
 	/**
 	 * The providers config
 	 *
-	 * @var array<string, array<string, mixed>>
+	 * @var array<string,array<string,mixed>>
 	 */
 	protected static array $providers = [];
 
 	/**
 	 * The Access Control Settings
 	 *
-	 * @var ?array
+	 * @var ?array<string,mixed>
 	 */
 	protected static $access_control;
 
@@ -117,7 +117,7 @@ class Utils {
 	 *
 	 * @param string $slug The provider slug.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string,mixed>
 	 */
 	public static function get_provider_settings( string $slug ) {
 		if ( ! isset( self::$providers[ $slug ] ) ) {
@@ -138,7 +138,7 @@ class Utils {
 	/**
 	 * Gets all provider settings from the database.
 	 *
-	 * @return array<string, array<string, mixed>>
+	 * @return array<string,array<string,mixed>>
 	 */
 	public static function get_all_provider_settings(): array {
 		$providers = ProviderRegistry::get_instance()->get_registered_providers();

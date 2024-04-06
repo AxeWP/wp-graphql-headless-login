@@ -96,7 +96,7 @@ class User {
 	 * If the proper options are enabled, tries first to link an existing WP_User to the ResourceOwner, then creates a new WP_User.
 	 *
 	 * @param \WPGraphQL\Login\Auth\Client $client The Auth client.
-	 * @param array<string, mixed>         $user_data The user data.
+	 * @param array<string,mixed>          $user_data The user data.
 	 *
 	 * @return \WP_User|\WP_Error|false
 	 */
@@ -142,7 +142,7 @@ class User {
 	 *
 	 * @param int $user_id The WP User ID.
 	 *
-	 * @return array<string, string>
+	 * @return array<string,string>
 	 */
 	public static function get_user_identities( int $user_id ): array {
 		$providers = ProviderRegistry::get_instance()->get_providers();
@@ -201,7 +201,7 @@ class User {
 
 		$value = get_user_meta( $user_id, 'graphql_login_secret', true );
 
-		return ! empty( $value ) ? $value : null;
+		return ! empty( $value ) ? (string) $value : null;
 	}
 
 	/**

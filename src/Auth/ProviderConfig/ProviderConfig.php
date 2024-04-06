@@ -64,7 +64,7 @@ abstract class ProviderConfig {
 	 *
 	 * @param array<string,mixed>|\WP_User $data The data returned by the provider.
 	 *
-	 * @return \WP_User|\WP_Error|false
+	 * @return \WP_User|false
 	 */
 	abstract public function get_user_from_data( $data );
 

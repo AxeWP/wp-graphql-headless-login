@@ -45,7 +45,7 @@ class Settings {
 	/**
 	 * Store and get the registered settings.
 	 *
-	 * @return array<string, array<string, mixed>>
+	 * @return array<string,array<string,mixed>>
 	 */
 	public static function get_all_settings(): array {
 		return [
@@ -143,7 +143,7 @@ class Settings {
 	/**
 	 * Gets the plugin setting data to pass to the JS.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string,mixed>
 	 */
 	private static function get_settings_data(): array {
 		// Add meta about the secret without exposing it.

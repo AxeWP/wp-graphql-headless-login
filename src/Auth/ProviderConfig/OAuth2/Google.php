@@ -108,9 +108,9 @@ class Google extends OAuth2Config {
 	/**
 	 * Maps the provider's user data to WP_User arguments.
 	 *
-	 * @param array<string, mixed> $owner_details The Resource Owner details returned from the OAuth2 provider.
+	 * @param array<string,mixed> $owner_details The Resource Owner details returned from the OAuth2 provider.
 	 *
-	 * @return array<string, mixed> The mapped user data.
+	 * @return array<string,mixed> The mapped user data.
 	 */
 	public function get_user_data( array $owner_details ): array {
 		$email    = $owner_details['email'];

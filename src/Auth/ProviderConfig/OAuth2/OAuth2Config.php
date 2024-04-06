@@ -87,25 +87,25 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * Gets the configuration array for the provider from the saved client options.
 	 *
-	 * @param array<string, mixed> $settings The settings stored in the database, keyed to the expected client option property.
+	 * @param array<string,mixed> $settings The settings stored in the database, keyed to the expected client option property.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string,mixed>
 	 */
 	abstract protected function get_options( array $settings ): array;
 
 	/**
 	 * Maps the provider's user data to WP_User arguments.
 	 *
-	 * @param array<string, mixed> $owner_details The Resource Owner details returned from the Authentication provider.
+	 * @param array<string,mixed> $owner_details The Resource Owner details returned from the Authentication provider.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string,mixed>
 	 */
 	abstract public function get_user_data( array $owner_details ): array;
 
 	/**
 	 * Prepares the client options.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<string,mixed>
 	 */
 	protected function prepare_client_options(): array {
 		if ( ! isset( $this->client_options ) ) {
@@ -137,7 +137,7 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @return array|\WP_Error
+	 * @return array<string,mixed>|\WP_Error
 	 */
 	public function authenticate_and_get_user_data( array $input ) {
 		// Start the session.
@@ -170,11 +170,15 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @param array $user_data The user data.
+	 * @param array<string,mixed> $user_data The user data.
 	 *
 	 * @return \WP_User|false
 	 */
 	public function get_user_from_data( $user_data ) {
+		if ( empty( $user_data['subject_identity'] ) ) {
+			return false;
+		}
+
 		return User::get_user_by_identity( $this->get_slug(), $user_data['subject_identity'] );
 	}
 
@@ -299,7 +303,7 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * Prepares the authorization url from the provider.
 	 *
-	 * @param array<string, mixed> $options The options used to configure the provider.
+	 * @param array<string,mixed> $options The options used to configure the provider.
 	 */
 	protected function prepare_authorization_url( array $options = [] ): string {
 
@@ -328,9 +332,9 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * Gets the Resource Owner (User) data from the Provider.
 	 *
-	 * @param array<string, mixed> $args The arguments.
+	 * @param array<string,mixed> $args The arguments.
 	 *
-	 * @return array<string, mixed> The resource owner data.
+	 * @return array<string,mixed> The resource owner data.
 	 */
 	public function get_resource_owner( array $args ): array {
 		/**

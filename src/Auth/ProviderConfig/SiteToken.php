@@ -19,7 +19,7 @@ class SiteToken extends ProviderConfig {
 	/**
 	 * The provider options as stored in the database.
 	 *
-	 * @var array<string, mixed>
+	 * @var array<string,mixed>
 	 */
 	protected array $options;
 
@@ -69,7 +69,7 @@ class SiteToken extends ProviderConfig {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @return array|\WP_Error
+	 * @return array<string,mixed>|\WP_Error
 	 */
 	public function authenticate_and_get_user_data( array $input ) {
 		// Get the args from the input.
@@ -107,7 +107,7 @@ class SiteToken extends ProviderConfig {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @param array $user_data The user data.
+	 * @param array<string,mixed> $user_data The user data.
 	 *
 	 * @return \WP_User|false
 	 */

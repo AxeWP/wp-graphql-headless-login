@@ -32,14 +32,14 @@ class ProviderRegistry {
 	/**
 	 * The registered provider classes, keyed to their slug.
 	 *
-	 * @var array<string, class-string<\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig>>
+	 * @var array<string,class-string<\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig>>
 	 */
 	private array $registered_providers = [];
 
 	/**
 	 * The enabled Authentication Providers.
 	 *
-	 * @var array<string, \WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig>
+	 * @var array<string,\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig>
 	 */
 	private array $providers = [];
 
@@ -119,7 +119,7 @@ class ProviderRegistry {
 	 *
 	 * Filtered by 'graphql_login_registered_provider_configs'.
 	 *
-	 * @return array<string, class-string<\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig>>
+	 * @return array<string,class-string<\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig>>
 	 */
 	public function get_registered_providers(): array {
 		if ( empty( $this->registered_providers ) ) {
@@ -127,7 +127,7 @@ class ProviderRegistry {
 			 * Filters the registered providers configs.
 			 * Useful for removing a built-in provider, or for adding a custom one.
 			 *
-			 * @param array<string, class-string<\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig>> $registered_providers The registered provider config classes, keyed to their slug.
+			 * @param array<string,class-string<\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig>> $registered_providers The registered provider config classes, keyed to their slug.
 			 */
 			$registered_providers = apply_filters(
 				'graphql_login_registered_provider_configs',
@@ -176,7 +176,7 @@ class ProviderRegistry {
 	/**
 	 * Gets all the provider instances.
 	 *
-	 * @return array<string, \WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig>
+	 * @return array<string,\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig>
 	 */
 	public function get_providers(): array {
 		return $this->providers;

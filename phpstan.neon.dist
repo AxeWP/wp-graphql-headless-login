@@ -1,7 +1,20 @@
 parameters:
 		level: 8
-		checkMissingIterableValueType: false
 		treatPhpDocTypesAsCertain: false
+		inferPrivatePropertyTypeFromConstructor: true
+		checkAlwaysTrueCheckTypeFunctionCall: true
+		checkAlwaysTrueInstanceof: true
+		checkAlwaysTrueStrictComparison: true
+		checkExplicitMixedMissingReturn: true
+		checkFunctionNameCase: true
+		checkInternalClassCaseSensitivity: true
+		checkMissingIterableValueType: true
+		checkTooWideReturnTypesInProtectedAndPublicMethods: true
+		polluteScopeWithAlwaysIterableForeach: false
+		polluteScopeWithLoopInitialAssignments: false
+		reportAlwaysTrueInLastCondition: true
+		reportStaticMethodSignatures: true
+		reportWrongPhpDocTypeInVarTag: true
 		bootstrapFiles:
 			- phpstan/constants.php
 		paths:
