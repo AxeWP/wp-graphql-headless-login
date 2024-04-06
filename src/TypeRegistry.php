@@ -5,6 +5,8 @@
  * @package WPGraphQL\Login
  */
 
+declare( strict_types = 1 );
+
 namespace WPGraphQL\Login;
 
 use Exception;

@@ -6,6 +6,8 @@
  * @since @todo
  */
 
+declare( strict_types = 1 );
+
 namespace WPGraphQL\Login\Auth;
 
 use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\Registrable;

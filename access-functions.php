@@ -6,6 +6,8 @@
  * @since 0.0.1
  */
 
+declare( strict_types = 1 );
+
 use WPGraphQL\Login\Utils\Utils;
 
 if ( ! function_exists( 'graphql_login_get_setting' ) ) {

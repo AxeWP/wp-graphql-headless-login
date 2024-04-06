@@ -5,6 +5,8 @@
  * @package WPGraphQL/Login/Utils
  */
 
+declare( strict_types = 1 );
+
 namespace WPGraphQL\Login\Utils;
 
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;

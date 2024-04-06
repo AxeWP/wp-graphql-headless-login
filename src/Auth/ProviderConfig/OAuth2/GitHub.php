@@ -6,6 +6,8 @@
  * @since 0.0.1
  */
 
+declare( strict_types = 1 );
+
 namespace WPGraphQL\Login\Auth\ProviderConfig\OAuth2;
 
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\Github as GithubProvider;

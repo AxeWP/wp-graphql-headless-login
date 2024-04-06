@@ -24,6 +24,8 @@
  * @version 0.2.0
  */
 
+declare( strict_types = 1 );
+
 namespace WPGraphQL\Login;
 
 // Exit if accessed directly.

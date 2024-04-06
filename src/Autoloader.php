@@ -6,6 +6,8 @@
  * @since 0.1.4
  */
 
+declare( strict_types = 1 );
+
 namespace WPGraphQL\Login;
 
 /**

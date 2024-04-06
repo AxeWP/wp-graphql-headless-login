@@ -5,6 +5,8 @@
  * @package WPGraphQL\Login\Type\WPInterface
  */
 
+declare( strict_types = 1 );
+
 namespace WPGraphQL\Login\Type\WPInterface;
 
 use WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig;

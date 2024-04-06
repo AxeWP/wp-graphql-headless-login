@@ -5,6 +5,8 @@
  * @package WPGraphQL\Login\Model
  */
 
+declare( strict_types = 1 );
+
 namespace WPGraphQL\Login\Model;
 
 use WPGraphQL\Login\Auth\TokenManager;

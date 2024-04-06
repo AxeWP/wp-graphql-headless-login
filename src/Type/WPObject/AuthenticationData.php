@@ -5,6 +5,8 @@
  * @package WPGraphQL\Login\Type\WPObject
  */
 
+declare( strict_types = 1 );
+
 namespace WPGraphQL\Login\Type\WPObject;
 
 use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\ObjectType;

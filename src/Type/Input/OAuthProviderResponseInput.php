@@ -5,6 +5,8 @@
  * @package WPGraphQL\Login\Type\Input
  */
 
+declare( strict_types = 1 );
+
 namespace WPGraphQL\Login\Type\Input;
 
 use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\InputType;

@@ -6,6 +6,8 @@
  * @since 0.0.6
  */
 
+declare( strict_types = 1 );
+
 namespace WPGraphQL\Login\Auth;
 
 use GraphQL\Error\UserError;
