@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP w/ Composer & WP-CLI
         uses: shivammathur/setup-php@v2
@@ -43,7 +43,7 @@ jobs:
           wp graphql generate-static-schema
 
       - name: Upload schema as release artifact
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: /tmp/schema.graphql
         env:
