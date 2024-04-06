@@ -37,9 +37,9 @@ class Auth {
 	/**
 	 * Validates the Authentication provider's response and logs in the user.
 	 *
-	 * @param array<string, mixed> $input The mutation input.
+	 * @param array<string,mixed> $input The mutation input.
 	 *
-	 * @return array<string, mixed> The user data.
+	 * @return array<string,mixed> The user data.
 	 * @throws \GraphQL\Error\UserError If the user cannot be created.
 	 */
 	public static function login( array $input ): array {
@@ -54,7 +54,7 @@ class Auth {
 		// Authenticate and get the user data.
 		$user_data = $client->authenticate_and_get_user_data( $input );
 
-		if ( is_wp_error( $user_data ) ) {
+		if ( $user_data instanceof \WP_Error ) {
 			throw new UserError( esc_html( $user_data->get_error_message() ) );
 		}
 
@@ -65,7 +65,7 @@ class Auth {
 			$user = $client->maybe_create_user( $user_data );
 		}
 
-		if ( is_wp_error( $user ) ) {
+		if ( $user instanceof \WP_Error ) {
 			throw new UserError( esc_html( $user->get_error_message() ) );
 		}
 
@@ -119,9 +119,9 @@ class Auth {
 	/**
 	 * Validates the Authentication provider's response and links it to an existing user account.
 	 *
-	 * @param array<string, mixed> $input The mutation input.
+	 * @param array<string,mixed> $input The mutation input.
 	 *
-	 * @return array<string, mixed> The user data.
+	 * @return array<string,mixed> The user data.
 	 * @throws \GraphQL\Error\UserError If the user cannot be linked.
 	 */
 	public static function link_user_identity( array $input ): array {
@@ -149,7 +149,7 @@ class Auth {
 		// Try to authenticate the user.
 		$user_data = $client->authenticate_and_get_user_data( $input );
 
-		if ( is_wp_error( $user_data ) ) {
+		if ( $user_data instanceof \WP_Error ) {
 			throw new UserError( esc_html( $user_data->get_error_message() ) );
 		}
 
@@ -158,10 +158,6 @@ class Auth {
 		}
 
 		$user = $client->get_user_from_data( $user_data );
-
-		if ( is_wp_error( $user ) ) {
-			throw new UserError( esc_html( $user->get_error_message() ) );
-		}
 
 		if ( false !== $user ) {
 			if ( $user->ID === $user_obj->ID ) {

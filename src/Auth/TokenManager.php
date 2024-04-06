@@ -109,7 +109,7 @@ class TokenManager {
 		$secret = self::get_user_secret( $user->ID, $enforce_current_user );
 
 		// Bail early if no/invalid secret.
-		if ( empty( $secret ) || ! is_string( $secret ) ) {
+		if ( empty( $secret ) ) {
 			graphql_debug( __( 'No secret found for user.', 'wp-graphql-headless-login' ) );
 			return null;
 		}
@@ -161,7 +161,7 @@ class TokenManager {
 		$secret = User::get_secret( $user_id );
 
 		// If the secret is empty or a bad value, issue a new one.
-		if ( empty( $secret ) || ! is_string( $secret ) ) {
+		if ( empty( $secret ) ) {
 			$secret = self::issue_new_user_secret( $user_id, $enforce_current_user );
 		}
 
@@ -173,7 +173,7 @@ class TokenManager {
 		 */
 		$secret = apply_filters( 'graphql_login_user_secret', $secret, $user_id );
 
-		return is_wp_error( $secret ) ? null : $secret;
+		return $secret instanceof \WP_Error ? null : (string) $secret;
 	}
 
 	/**
@@ -254,7 +254,7 @@ class TokenManager {
 	 * @param \WP_User $user The user object.
 	 * @param bool     $enforce_current_user Whether to enforce the current user.
 	 *
-	 * @return array<string, mixed>|\WP_Error
+	 * @return array<string,mixed>|\WP_Error
 	 */
 	protected static function prepare_token( WP_User $user, bool $enforce_current_user = true ) {
 		/**
@@ -306,8 +306,8 @@ class TokenManager {
 	/**
 	 * Gets the signed JWT token.
 	 *
-	 * @param array<string, mixed> $token The token data.
-	 * @param int                  $user_id The user ID.
+	 * @param array<string,mixed> $token The token data.
+	 * @param int                 $user_id The user ID.
 	 */
 	protected static function sign_token( array $token, int $user_id ): ?string {
 		JWT::$leeway  = 60;

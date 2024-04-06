@@ -177,14 +177,14 @@ class Client {
 	 *
 	 * @param array<string,mixed>|\WP_User $data the user data.
 	 *
-	 * @return \WP_User|\WP_Error|false
+	 * @return \WP_User|false
 	 */
 	public function get_user_from_data( $data ) {
 		/**
 		 * Shortcircuits the user matching logic, allowing you to provide your own logic for matching the user from the provider user data.
 		 * If null is returned, the default matching logic will be used.
 		 *
-		 * @param \WP_User|\WP_Error|false|null                       $pre_get_user    The user matched from the data. If null, the default matching logic will be used.
+		 * @param \WP_User|false|null                                 $pre_get_user    The user matched from the data. If null, the default matching logic will be used.
 		 * @param array<string,mixed>|\WP_User                        $data            The user data from the provider.
 		 * @param string                                              $slug            The provider slug.
 		 * @param array                                               $settings        The client settings.
@@ -201,7 +201,7 @@ class Client {
 		 * Fires when the user is matched from the data.
 		 * Useful for updating custom meta fields from the provider.
 		 *
-		 * @param \WP_User|\WP_Error|false                            $user            The user matched from the data.
+		 * @param \WP_User|false                                      $user            The user matched from the data.
 		 * @param array<string,mixed>|\WP_User                        $user_data            The user data from the provider.
 		 * @param string                                              $slug            The provider slug.
 		 * @param array                                               $settings        The client settings.

@@ -114,11 +114,11 @@ trait ProviderConfigStaticTrait {
 	/**
 	 * Gets the default WPGraphQL fields config for the provider client options.
 	 *
-	 * @return array<string, array{
-	 *   type: string|array<string, string | array<string, string>>,
+	 * @return array<string,array{
+	 *   type: string|array<string,string | array<string,string>>,
 	 *   description: string,
-	 *   args?: array<string, array{
-	 *     type: string|array<string, string | array<string, string>>,
+	 *   args?: array<string,array{
+	 *     type: string|array<string,string | array<string,string>>,
 	 *     description: string,
 	 *     defaultValue?: mixed
 	 *   }>,
@@ -138,11 +138,11 @@ trait ProviderConfigStaticTrait {
 	/**
 	 * Gets the default WPGraphQL fields config for the provider client options.
 	 *
-	 * @return array<string, array{
-	 *   type: string|array<string, string | array<string, string>>,
+	 * @return array<string,array{
+	 *   type: string|array<string,string | array<string,string>>,
 	 *   description: string,
-	 *   args?: array<string, array{
-	 *     type: string|array<string, string | array<string, string>>,
+	 *   args?: array<string,array{
+	 *     type: string|array<string,string | array<string,string>>,
 	 *     description: string,
 	 *     defaultValue?: mixed
 	 *   }>,

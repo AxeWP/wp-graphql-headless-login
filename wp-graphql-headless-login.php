@@ -94,7 +94,7 @@ if ( ! function_exists( 'graphql_login_dependencies_not_ready' ) ) {
 	 *
 	 * @since 0.0.1
 	 *
-	 * @return array<string, string>
+	 * @return array<string,string>
 	 */
 	function graphql_login_dependencies_not_ready(): array {
 		$wpgraphql_version = '1.14.0';

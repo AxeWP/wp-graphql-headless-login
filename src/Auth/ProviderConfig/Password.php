@@ -54,7 +54,7 @@ class Password extends ProviderConfig {
 		$user = wp_authenticate( $args['username'], $args['password'] );
 
 		// Obsfucate any authentication errors.
-		if ( is_wp_error( $user ) ) {
+		if ( $user instanceof \WP_Error ) {
 			graphql_debug( wp_strip_all_tags( $user->get_error_message() ) );
 
 			return false;
@@ -65,11 +65,13 @@ class Password extends ProviderConfig {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * @param \WP_User|false $user The user object.
 	 */
 	public function get_user_from_data( $user ) {
-		return $user instanceof \WP_User ? $user : false;
+		if ( $user instanceof \WP_Error || $user instanceof \WP_User ) {
+			return $user;
+		}
+
+		return false;
 	}
 
 	/**

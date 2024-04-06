@@ -22,21 +22,21 @@ class AccessControlSettings {
 	/**
 	 * The setting configuration.
 	 *
-	 * @var array<string, array<string, mixed>>
+	 * @var array<string,array<string,mixed>>
 	 */
 	private static array $config = [];
 
 	/**
 	 * The args used to register the settings.
 	 *
-	 * @var array<string, mixed>
+	 * @var array<string,mixed>
 	 */
 	private static array $args = [];
 
 	/**
 	 * Gets the setting configuration.
 	 *
-	 * @return array<string, array<string, mixed>>
+	 * @return array<string,array<string,mixed>>
 	 */
 	public static function get_config(): array {
 		if ( empty( self::$config ) ) {
