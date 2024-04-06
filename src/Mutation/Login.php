@@ -6,6 +6,8 @@
  * @since 0.0.1
  */
 
+declare( strict_types = 1 );
+
 namespace WPGraphQL\Login\Mutation;
 
 use GraphQL\Type\Definition\ResolveInfo;

@@ -5,6 +5,8 @@
  * @package WPGraphQL\Login\Fields
  */
 
+declare( strict_types = 1 );
+
 namespace WPGraphQL\Login\Fields;
 
 use WPGraphQL\Login\Auth\Client as AuthClient;
