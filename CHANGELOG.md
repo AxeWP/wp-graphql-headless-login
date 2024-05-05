@@ -6,6 +6,8 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## [Unreleased]
 
+- chore: update Composer deps
+
 ## [0.3.0] - 2024-04-06
 
 This _major_ release refactors the root files to use the `WPGraphQL\Login` namespace. It also exposes the `authTokenExpiration` field in the `refreshToken` mutation response, improves code quality, adds explicit support for WordPress 6.5.0, and more.
