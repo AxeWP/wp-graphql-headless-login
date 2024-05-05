@@ -6,7 +6,8 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## [Unreleased]
 
-- chore: update Composer deps
+- chore: Update Composer deps.
+- tests: Update Codeception for WPBrowser 3.5+ compatibility.
 
 ## [0.3.0] - 2024-04-06
 
