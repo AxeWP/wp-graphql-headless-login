@@ -37,9 +37,8 @@
 		"codeception/module-webdriver": "^1.0",
 		"codeception/phpunit-wrapper": "^9.0",
 		"codeception/util-universalframework": "^1.0",
-		"phpunit/phpunit": "^9.0",
 		"mockery/mockery": "^1.5",
-		"wp-graphql/wp-graphql-testcase": "^2.3",
+		"wp-graphql/wp-graphql-testcase": "^3.0.1",
 		"phpstan/phpstan": "^1.2",
 		"phpstan/extension-installer": "^1.1",
 		"szepeviktor/phpstan-wordpress": "^1.1.5",
@@ -134,7 +133,7 @@
 			"vendor/bin/phpstan analyze --ansi --memory-limit=1G"
 		],
 	"strauss-install": [
-			"test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.17.0/strauss.phar"
+			"test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.19.1/strauss.phar"
 		],
 		"strauss": [
 			"@strauss-install",
