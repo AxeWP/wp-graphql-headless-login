@@ -188,6 +188,7 @@ return array(
     'WPGraphQL\\Login\\Admin\\Settings\\ProviderSettings' => $baseDir . '/src/Admin/Settings/ProviderSettings.php',
     'WPGraphQL\\Login\\Admin\\UserProfile' => $baseDir . '/src/Admin/UserProfile.php',
     'WPGraphQL\\Login\\Auth\\Auth' => $baseDir . '/src/Auth/Auth.php',
+    'WPGraphQL\\Login\\Auth\\AuthCookie' => $baseDir . '/src/Auth/AuthCookie.php',
     'WPGraphQL\\Login\\Auth\\Client' => $baseDir . '/src/Auth/Client.php',
     'WPGraphQL\\Login\\Auth\\ProviderConfig\\OAuth2\\Facebook' => $baseDir . '/src/Auth/ProviderConfig/OAuth2/Facebook.php',
     'WPGraphQL\\Login\\Auth\\ProviderConfig\\OAuth2\\Generic' => $baseDir . '/src/Auth/ProviderConfig/OAuth2/Generic.php',

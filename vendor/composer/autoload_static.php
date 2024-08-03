@@ -272,6 +272,7 @@ class ComposerStaticInitf09a61d3ab5b17b31289d8071edb69f4
         'WPGraphQL\\Login\\Admin\\Settings\\ProviderSettings' => __DIR__ . '/../..' . '/src/Admin/Settings/ProviderSettings.php',
         'WPGraphQL\\Login\\Admin\\UserProfile' => __DIR__ . '/../..' . '/src/Admin/UserProfile.php',
         'WPGraphQL\\Login\\Auth\\Auth' => __DIR__ . '/../..' . '/src/Auth/Auth.php',
+        'WPGraphQL\\Login\\Auth\\AuthCookie' => __DIR__ . '/../..' . '/src/Auth/AuthCookie.php',
         'WPGraphQL\\Login\\Auth\\Client' => __DIR__ . '/../..' . '/src/Auth/Client.php',
         'WPGraphQL\\Login\\Auth\\ProviderConfig\\OAuth2\\Facebook' => __DIR__ . '/../..' . '/src/Auth/ProviderConfig/OAuth2/Facebook.php',
         'WPGraphQL\\Login\\Auth\\ProviderConfig\\OAuth2\\Generic' => __DIR__ . '/../..' . '/src/Auth/ProviderConfig/OAuth2/Generic.php',
