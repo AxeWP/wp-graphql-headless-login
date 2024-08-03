@@ -26,13 +26,8 @@ class AuthCookie {
 	 * @param bool $remember Whether to remember the user.
 	 */
 	public static function set_auth_cookie( int $user_id, bool $remember = false ): void {
-		if ( $remember ) {
-			$expiration = time() + apply_filters( 'auth_cookie_expiration', 14 * DAY_IN_SECONDS, $user_id, $remember );
-			$expire     = $expiration + ( 12 * HOUR_IN_SECONDS );
-		} else {
-			$expiration = time() + apply_filters( 'auth_cookie_expiration', 2 * DAY_IN_SECONDS, $user_id, $remember );
-			$expire     = 0;
-		}
+		$expiration = self::get_auth_cookie_expiration( $user_id, $remember );
+		$expire     = $remember ? $expiration + ( 12 * HOUR_IN_SECONDS ) : 0;
 
 		$secure                  = is_ssl();
 		$secure_logged_in_cookie = $secure && 'https' === wp_parse_url( get_option( 'home' ), PHP_URL_SCHEME );
@@ -66,6 +61,19 @@ class AuthCookie {
 		if ( COOKIEPATH !== SITECOOKIEPATH ) {
 			self::set_custom_cookie( LOGGED_IN_COOKIE, $logged_in_cookie, $expire, SITECOOKIEPATH, $cookie_domain, $secure_logged_in_cookie, $samesite );
 		}
+	}
+
+	/**
+	 * Get the expiration time for the authentication cookie.
+	 *
+	 * @param int  $user_id  The ID of the user.
+	 * @param bool $remember Whether to remember the user.
+	 *
+	 * @return int The expiration time in seconds.
+	 */
+	private static function get_auth_cookie_expiration( int $user_id, bool $remember ): int {
+		$default_expiration = ( $remember ? 14 : 2 ) * DAY_IN_SECONDS;
+		return time() + apply_filters( 'auth_cookie_expiration', $default_expiration, $user_id, $remember );
 	}
 
 	/**
