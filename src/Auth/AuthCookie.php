@@ -6,8 +6,6 @@
  * @since @todo
  */
 
- // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-
 declare(strict_types=1);
 
 namespace WPGraphQL\Login\Auth;
@@ -32,8 +30,8 @@ class AuthCookie {
 		$secure                  = is_ssl();
 		$secure_logged_in_cookie = $secure && 'https' === wp_parse_url( get_option( 'home' ), PHP_URL_SCHEME );
 
-		$secure                  = apply_filters( 'secure_auth_cookie', $secure, $user_id );
-		$secure_logged_in_cookie = apply_filters( 'secure_logged_in_cookie', $secure_logged_in_cookie, $user_id, $secure );
+		$secure                  = apply_filters( 'secure_auth_cookie', $secure, $user_id ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		$secure_logged_in_cookie = apply_filters( 'secure_logged_in_cookie', $secure_logged_in_cookie, $user_id, $secure ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		$auth_cookie_name = $secure ? SECURE_AUTH_COOKIE : AUTH_COOKIE;
 		$scheme           = $secure ? 'secure_auth' : 'auth';
@@ -44,10 +42,10 @@ class AuthCookie {
 		$auth_cookie      = wp_generate_auth_cookie( $user_id, $expiration, $scheme, $token );
 		$logged_in_cookie = wp_generate_auth_cookie( $user_id, $expiration, 'logged_in', $token );
 
-		do_action( 'set_auth_cookie', $auth_cookie, $expire, $expiration, $user_id, $scheme, $token );
-		do_action( 'set_logged_in_cookie', $logged_in_cookie, $expire, $expiration, $user_id, 'logged_in', $token );
+		do_action( 'set_auth_cookie', $auth_cookie, $expire, $expiration, $user_id, $scheme, $token ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		do_action( 'set_logged_in_cookie', $logged_in_cookie, $expire, $expiration, $user_id, 'logged_in', $token ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
-		if ( ! apply_filters( 'send_auth_cookies', true ) ) {
+		if ( ! apply_filters( 'send_auth_cookies', true ) ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 			return;
 		}
 
@@ -73,7 +71,7 @@ class AuthCookie {
 	 */
 	private static function get_auth_cookie_expiration( int $user_id, bool $remember ): int {
 		$default_expiration = ( $remember ? 14 : 2 ) * DAY_IN_SECONDS;
-		return time() + apply_filters( 'auth_cookie_expiration', $default_expiration, $user_id, $remember );
+		return time() + apply_filters( 'auth_cookie_expiration', $default_expiration, $user_id, $remember ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 	}
 
 	/**
@@ -103,5 +101,3 @@ class AuthCookie {
 		);
 	}
 }
-
-// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
