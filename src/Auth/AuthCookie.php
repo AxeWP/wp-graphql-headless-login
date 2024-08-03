@@ -70,7 +70,7 @@ class AuthCookie {
     }
 
     /**
-     * Wrapper for `setCustomCookie` that includes SameSite attribute.
+     * Wrapper for `set_custom_cookie` that includes SameSite attribute.
      *
      * @param string $name     The name of the cookie.
      * @param string $value    The value of the cookie.
