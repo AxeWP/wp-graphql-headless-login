@@ -3,7 +3,7 @@
  * Authentication Cookie.
  *
  * @package WPGraphQL\Login\Auth
- * @since 0.0.1
+ * @since @todo
  */
 
  // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
