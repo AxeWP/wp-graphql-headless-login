@@ -25,7 +25,7 @@ class AuthCookie {
 	 * @param int  $user_id  User ID.
 	 * @param bool $remember Whether to remember the user.
 	 */
-	public static function wp_custom_auth_cookie( int $user_id, bool $remember = false ): void {
+	public static function set_auth_cookie( int $user_id, bool $remember = false ): void {
 		if ( $remember ) {
 			$expiration = time() + apply_filters( 'auth_cookie_expiration', 14 * DAY_IN_SECONDS, $user_id, $remember );
 			$expire     = $expiration + ( 12 * HOUR_IN_SECONDS );
