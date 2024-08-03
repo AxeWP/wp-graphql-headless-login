@@ -81,7 +81,7 @@ class Auth {
 		// Set the auth cookie if the provider is configured to use it.
 		$config = $client->get_config();
 		if ( ! empty( $config['loginOptions']['useAuthenticationCookie'] ) ) {
-			AuthCookie::custom_wp_auth_cookie( $user->ID, false );
+			AuthCookie::set_auth_cookie( $user->ID, false );
 		}
 
 		// Trigger the login action.
