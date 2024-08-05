@@ -127,6 +127,22 @@ class AccessControlSettings extends AbstractSettings {
 					);
 				},
 			],
+			'loginCookieSameSiteOption'        => [
+				'description' => __( 'Login Cookie same-site option (None, Lax, Strict)', 'wp-graphql-headless-login' ),
+				'label'       => __( 'Authentication Cookie - Samesite cookie mode', 'wp-graphql-headless-login' ),
+				'type'        => 'string',
+				'default'     => 'Lax',
+				'help'        => __( 'If the "Set authentication cookie" option is enabled, you can choose the SameSite attribute for authentication. Choose "None" if cross-site access is required, "Lax" for moderate protection, or "Strict" for maximum protection.', 'wp-graphql-headless-login' ),
+				'isAdvanced'    => true,
+				'order'       => 6,
+				'required'    => false,
+				'enum'        => [
+					'Lax',
+					'None',
+					'Strict',
+				],
+				'sanitize_callback' => 'sanitize_text_field',
+			],
 		];
 	}
 }

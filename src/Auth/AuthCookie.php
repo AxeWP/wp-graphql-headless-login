@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace WPGraphQL\Login\Auth;
 
+use WPGraphQL\Login\Utils\Utils;
+
 /**
  * Class AuthCookie
  *
@@ -49,7 +51,7 @@ class AuthCookie {
 			return;
 		}
 
-		$samesite      = 'None';
+		$samesite      = Utils::get_access_control_setting( 'loginCookieSameSiteOption', 'Lax' );
 		$cookie_domain = '';
 
 		self::set_custom_cookie( $auth_cookie_name, $auth_cookie, $expire, PLUGINS_COOKIE_PATH, $cookie_domain, $secure, $samesite );
