@@ -47,6 +47,7 @@ export function OptionControl( {
 		help: help || undefined,
 	} as OptionControlType;
 
+	value = rest?.default || value;
 	let control;
 
 	switch ( type ) {
