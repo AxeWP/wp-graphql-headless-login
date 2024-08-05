@@ -127,6 +127,7 @@ class AccessControlSettings extends AbstractSettings {
 					);
 				},
 			],
+			// Login Cookie Same Site Option.
 			'loginCookieSameSiteOption'        => [
 				'description' => __( 'Login Cookie same-site option (None, Lax, Strict)', 'wp-graphql-headless-login' ),
 				'label'       => __( 'Authentication Cookie - Samesite cookie mode', 'wp-graphql-headless-login' ),
@@ -141,6 +142,18 @@ class AccessControlSettings extends AbstractSettings {
 					'None',
 					'Strict',
 				],
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			// Login Cookie Domain.
+			'loginCookieDomain'                => [
+				'description' => __( 'Login Cookie Domain', 'wp-graphql-headless-login' ),
+				'label'       => __( 'Authentication Cookie - Cookie Domain', 'wp-graphql-headless-login' ),
+				'type'        => 'string',
+				'default'     => '',
+				'help'        => __( 'If the "Set authentication cookie" option is enabled, choose the domain for the cookie. Leave blank by default. To share across subdomains, use your root domain prefixed with a period (e.g., .mydomain.com).', 'wp-graphql-headless-login' ),
+				'isAdvanced'    => true,
+				'order'       => 7,
+				'required'    => false,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
 		];
