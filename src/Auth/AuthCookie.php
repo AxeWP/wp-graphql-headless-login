@@ -52,7 +52,7 @@ class AuthCookie {
 		}
 
 		$samesite      = Utils::get_access_control_setting( 'loginCookieSameSiteOption', 'Lax' );
-		$cookie_domain = '';
+		$cookie_domain = Utils::get_access_control_setting( 'loginCookieDomain', '' );
 
 		self::set_custom_cookie( $auth_cookie_name, $auth_cookie, $expire, PLUGINS_COOKIE_PATH, $cookie_domain, $secure, $samesite );
 		self::set_custom_cookie( $auth_cookie_name, $auth_cookie, $expire, ADMIN_COOKIE_PATH, $cookie_domain, $secure, $samesite );

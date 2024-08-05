@@ -41,7 +41,8 @@ type AccessControlSettingsType = {
 	additionalAuthorizedDomains?: string[];
 	shouldBlockUnauthorizedDomains?: boolean;
 	customHeaders?: string[];
-	loginCookieSameSiteOption: 'None' | 'Lax' | 'Strict',
+	loginCookieSameSiteOption?: 'None' | 'Lax' | 'Strict',
+	loginCookieDomain?: '',
 	[key: string]: any;
 };
 

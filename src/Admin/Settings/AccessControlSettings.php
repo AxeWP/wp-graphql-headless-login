@@ -115,6 +115,16 @@ class AccessControlSettings {
 						'Strict',
 					],
 				],
+				'loginCookieDomain'                => [
+					'advanced'    => true,
+					'default'     => '',
+					'description' => __( 'Login Cookie Domain', 'wp-graphql-headless-login' ),
+					'help'        => __( 'If the "Set authentication cookie" option is enabled, choose the domain for the cookie. Leave blank by default. To share across subdomains, use your root domain prefixed with a period (e.g., .mydomain.com).', 'wp-graphql-headless-login' ),
+					'label'       => __( 'Authentication Cookie - Cookie Domain', 'wp-graphql-headless-login' ),
+					'order'       => 7,
+					'required'    => false,
+					'type'        => 'string',
+				],
 			];
 		}
 
