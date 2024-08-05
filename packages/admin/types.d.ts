@@ -43,6 +43,7 @@ type AccessControlSettingsType = {
 	customHeaders?: string[];
 	loginCookieSameSiteOption?: 'None' | 'Lax' | 'Strict',
 	loginCookieDomain?: '',
+	enableLogoutMutation?: false,
 	[key: string]: any;
 };
 

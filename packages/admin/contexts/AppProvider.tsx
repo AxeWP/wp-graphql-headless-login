@@ -17,6 +17,7 @@ const accessControlDefaults = {
 	customHeaders: [],
 	loginCookieSameSiteOption: 'Lax',
 	loginCookieDomain: '',
+	enableLogoutMutation: false,
 } satisfies AccessControlSettingsType;
 
 export const AppProviderContext = createContext< {
