@@ -100,6 +100,21 @@ class AccessControlSettings {
 					'required'    => false,
 					'type'        => 'array',
 				],
+				'loginCookieSameSiteOption'        => [
+					'advanced'    => true,
+					'default'     => 'Lax',
+					'description' => __( 'Login Cookie same-site option (None, Lax, Strict)', 'wp-graphql-headless-login' ),
+					'help'        => __( 'If the "Set authentication cookie" option is enabled, you can choose the SameSite attribute for authentication. Choose "None" if cross-site access is required, "Lax" for moderate protection, or "Strict" for maximum protection.', 'wp-graphql-headless-login' ),
+					'label'       => __( 'Authentication Cookie - Samesite cookie mode', 'wp-graphql-headless-login' ),
+					'order'       => 6,
+					'required'    => false,
+					'type'        => 'string',
+					'enum'        => [
+						'Lax',
+						'None',
+						'Strict',
+					],
+				],
 			];
 		}
 
