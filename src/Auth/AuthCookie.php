@@ -87,6 +87,7 @@ class AuthCookie {
 	 * @param bool   $secure   Indicates that the cookie should only be transmitted over a secure HTTPS connection from the client.
 	 * @param string $samesite The SameSite mode for the cookie. Defaults to 'None'.
 	 */
+	// phpcs:ignore Generic.Metrics.Functions.TooManyArguments
 	private static function set_custom_cookie( string $name, string $value, int $expires, string $path, string $domain, bool $secure, string $samesite ): void {
 		// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.cookies_setcookie
 		setcookie(
