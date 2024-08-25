@@ -298,6 +298,7 @@ class ComposerStaticInitf09a61d3ab5b17b31289d8071edb69f4
         'WPGraphQL\\Login\\Model\\User' => __DIR__ . '/../..' . '/src/Model/User.php',
         'WPGraphQL\\Login\\Mutation\\LinkUserIdentity' => __DIR__ . '/../..' . '/src/Mutation/LinkUserIdentity.php',
         'WPGraphQL\\Login\\Mutation\\Login' => __DIR__ . '/../..' . '/src/Mutation/Login.php',
+        'WPGraphQL\\Login\\Mutation\\Logout' => __DIR__ . '/../..' . '/src/Mutation/Logout.php',
         'WPGraphQL\\Login\\Mutation\\RefreshToken' => __DIR__ . '/../..' . '/src/Mutation/RefreshToken.php',
         'WPGraphQL\\Login\\Mutation\\RefreshUserSecret' => __DIR__ . '/../..' . '/src/Mutation/RefreshUserSecret.php',
         'WPGraphQL\\Login\\Mutation\\RevokeUserSecret' => __DIR__ . '/../..' . '/src/Mutation/RevokeUserSecret.php',
