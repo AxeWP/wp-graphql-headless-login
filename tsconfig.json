@@ -1,7 +1,7 @@
 {
 	"extends": "./tsconfig.base.json",
-	"include": ["packages/admin"],
-	"exclude": ["packages/admin/data"],
+	"include": [ "packages/admin", "global.d.ts" ],
+	"exclude": [ "packages/admin/data" ],
 	"compilerOptions": {
 		"baseUrl": "./"
 	}

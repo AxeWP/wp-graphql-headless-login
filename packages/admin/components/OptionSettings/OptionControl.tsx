@@ -14,7 +14,7 @@ export type OptionControlType = (
 	| FormTokenFieldProps
 	| BaseControlProps
 	| SelectControlProps
-	| ToggleControlProps
+	| Omit< ToggleControlProps, 'label' >
 ) &
 	SettingSchema & {
 		value: unknown;
@@ -42,7 +42,7 @@ export function OptionControl( {
 	const componentProps = {
 		label: label || description,
 		required: required || false,
-		help: help || null,
+		help: help || undefined,
 	} as OptionControlType;
 
 	let control;
@@ -87,7 +87,7 @@ export function OptionControl( {
 			break;
 	}
 
-	const Component = control;
+	const Component = control as React.FC< OptionControlType >;
 
 	return <Component { ...componentProps } />;
 }

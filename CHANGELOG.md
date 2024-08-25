@@ -6,8 +6,10 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## [Unreleased]
 
+- dev: Add `react-jsx-runtime` polyfill for WordPress backwards-compatibility.
 - chore: Update Strauss to v0.19.1.
 - chore: Update Composer dependencies.
+- chore: Update NPM dependencies.
 - ci: Replace `docker-compose` commands with `docker compose`.
 
 ## [0.3.0] - 2024-04-06

@@ -1,13 +1,14 @@
 import { PanelRow } from '@wordpress/components';
 import { OptionControl } from './OptionControl';
 import { useAppContext } from '../../contexts/AppProvider';
+import type { SettingSchema } from '../../types';
 
 export function Option( {
 	schema,
 	currentValue,
 	setValue,
 }: {
-	schema: Record< string, unknown >;
+	schema: SettingSchema;
 	currentValue: unknown;
 	setValue: ( value: unknown ) => void;
 } ) {
