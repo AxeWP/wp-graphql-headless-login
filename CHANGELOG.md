@@ -8,6 +8,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 - chore: Update Strauss to v0.19.1.
 - chore: Update Composer dependencies.
+- ci: Replace `docker-compose` commands with `docker compose`.
 
 ## [0.3.0] - 2024-04-06
 
