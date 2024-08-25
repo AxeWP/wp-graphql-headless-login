@@ -63,12 +63,15 @@ export function AccessControlSettings() {
 		} );
 
 		if ( saved ) {
-			dispatch( 'core/notices' )
-				// @ts-expect-error this isnt typed.
-				.createNotice( 'success', 'Settings saved', {
+			// @ts-expect-error this isnt typed.
+			dispatch( 'core/notices' ).createNotice(
+				'success',
+				'Settings saved',
+				{
 					type: 'snackbar',
 					isDismissible: true,
-				} );
+				}
+			);
 		}
 	};
 

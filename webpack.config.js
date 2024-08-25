@@ -11,7 +11,7 @@ const path = require( 'path' );
 // 	delete defaultConfig.entry[entryPoint];
 // });
 
-module.exports = {
+const mainConfig = {
 	...defaultConfig,
 	// context: path.resolve(__dirname, 'src', 'assets'),
 	module: {
@@ -27,4 +27,31 @@ module.exports = {
 	entry: {
 		admin: path.resolve( process.cwd(), 'packages/admin', 'index.tsx' ),
 	},
+	plugins: [
+		...defaultConfig.plugins.filter(
+			( plugin ) => plugin.constructor.name !== 'CleanWebpackPlugin'
+		),
+	],
 };
+
+const reactJSXRuntimePolyfill = {
+	entry: {
+		'react-jsx-runtime': {
+			import: 'react/jsx-runtime',
+		},
+	},
+	output: {
+		path: path.resolve( __dirname, 'build' ),
+		filename: 'react-jsx-runtime.js',
+		library: {
+			name: 'ReactJSXRuntime',
+			type: 'window',
+		},
+	},
+	externals: {
+		react: 'React',
+	},
+	plugins: [],
+};
+
+module.exports = [ mainConfig, reactJSXRuntimePolyfill ];

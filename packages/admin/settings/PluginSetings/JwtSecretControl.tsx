@@ -16,15 +16,18 @@ export function JwtSecretControl() {
 		( select ) => ( {
 			lastError: select( coreStore )?.getLastEntitySaveError(
 				'root',
-				'site'
+				'site',
+				''
 			),
 			isSaving: select( coreStore )?.isSavingEntityRecord(
 				'root',
-				'site'
+				'site',
+				''
 			),
 			hasEdits: select( coreStore )?.hasEditsForEntityRecord(
 				'root',
-				'site'
+				'site',
+				''
 			),
 		} ),
 		[]

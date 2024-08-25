@@ -102,6 +102,17 @@ class Settings {
 			return;
 		}
 
+		// Maybe load react-jsx-runtime polyfill.
+		if ( ! wp_script_is( 'react-jsx-runtime', 'registered' ) ) {
+			wp_register_script(
+				'react-jsx-runtime',
+				plugins_url( 'build/react-jsx-runtime.js', WPGRAPHQL_LOGIN_PLUGIN_FILE ),
+				[],
+				(string) filemtime( WPGRAPHQL_LOGIN_PLUGIN_DIR . 'build/react-jsx-runtime.js' ),
+				true
+			);
+		}
+
 		self::register_asset_js( 'wp-graphql-headless-login/admin-editor', 'admin' );
 		wp_enqueue_style(
 			'wp-graphql-headless-login/admin-styles',
