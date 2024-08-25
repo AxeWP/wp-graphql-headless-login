@@ -57,7 +57,7 @@ class Client implements ClientInterface, \WPGraphQL\Login\Vendor\Psr\Http\Client
      *
      * @param array $config Client configuration settings.
      *
-     * @see \WPGraphQL\Login\Vendor\GuzzleHttp\RequestOptions for a list of available request options.
+     * @see RequestOptions for a list of available request options.
      */
     public function __construct(array $config = [])
     {
@@ -207,7 +207,7 @@ class Client implements ClientInterface, \WPGraphQL\Login\Vendor\Psr\Http\Client
      *
      * @deprecated Client::getConfig will be removed in guzzlehttp/guzzle:8.0.
      */
-    public function getConfig(string $option = null)
+    public function getConfig(?string $option = null)
     {
         return $option === null
             ? $this->config

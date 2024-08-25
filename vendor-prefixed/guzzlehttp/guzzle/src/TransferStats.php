@@ -51,8 +51,8 @@ final class TransferStats
      */
     public function __construct(
         RequestInterface $request,
-        ResponseInterface $response = null,
-        float $transferTime = null,
+        ?ResponseInterface $response = null,
+        ?float $transferTime = null,
         $handlerErrorData = null,
         array $handlerStats = []
     ) {
