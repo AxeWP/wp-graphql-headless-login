@@ -6,6 +6,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## [Unreleased]
 
+- fix: Display missing help text to `FormTokenField` types in the settings screen. H/t alexookah.
 - dev: Add `react-jsx-runtime` polyfill for WordPress backwards-compatibility.
 - chore: Update Strauss to v0.19.1.
 - chore: Update Composer dependencies.
