@@ -1,17 +1,19 @@
 import {
-	FormTokenField,
 	TextControl,
 	ToggleControl,
 	SelectControl,
 } from '@wordpress/components';
 import { BaseControlProps } from '@wordpress/components/build-types/base-control/types';
-import { FormTokenFieldProps } from '@wordpress/components/build-types/form-token-field/types';
 import { SelectControlProps } from '@wordpress/components/build-types/select-control/types';
 import { ToggleControlProps } from '@wordpress/components/build-types/toggle-control/types';
+import {
+	FormTokenFieldControl,
+	type FormTokenFieldControlProps,
+} from '../FormTokenFieldControl/FormTokenFieldControl';
 import type { SettingSchema } from '../../types';
 
 export type OptionControlType = (
-	| FormTokenFieldProps
+	| FormTokenFieldControlProps
 	| BaseControlProps
 	| SelectControlProps
 	| Omit< ToggleControlProps, 'label' >
@@ -26,7 +28,7 @@ const controls = {
 	string: TextControl,
 	select: SelectControl,
 	boolean: ToggleControl,
-	array: FormTokenField,
+	array: FormTokenFieldControl,
 };
 
 export function OptionControl( {
@@ -79,6 +81,8 @@ export function OptionControl( {
 			break;
 		case 'array':
 			control = controls.array;
+
+			// Add a new line for ho
 
 			componentProps.onChange = ( selected: unknown ) =>
 				onChange( selected );
