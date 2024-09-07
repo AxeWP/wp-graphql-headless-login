@@ -636,17 +636,17 @@
         },
         {
             "name": "league/oauth2-github",
-            "version": "3.1.0",
-            "version_normalized": "3.1.0.0",
+            "version": "3.1.1",
+            "version_normalized": "3.1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/oauth2-github.git",
-                "reference": "97f31cd70e76f81e8f5b4e2ab6f3708e2db7ac18"
+                "reference": "84211f62b757f7266fe605a0aa874a32f52c24fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/oauth2-github/zipball/97f31cd70e76f81e8f5b4e2ab6f3708e2db7ac18",
-                "reference": "97f31cd70e76f81e8f5b4e2ab6f3708e2db7ac18",
+                "url": "https://api.github.com/repos/thephpleague/oauth2-github/zipball/84211f62b757f7266fe605a0aa874a32f52c24fd",
+                "reference": "84211f62b757f7266fe605a0aa874a32f52c24fd",
                 "shasum": ""
             },
             "require": {
@@ -659,7 +659,7 @@
                 "phpunit/phpunit": "^9.5",
                 "squizlabs/php_codesniffer": "^3.6"
             },
-            "time": "2022-11-04T14:01:49+00:00",
+            "time": "2024-09-03T10:42:10+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -699,7 +699,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/oauth2-github/issues",
-                "source": "https://github.com/thephpleague/oauth2-github/tree/3.1.0"
+                "source": "https://github.com/thephpleague/oauth2-github/tree/3.1.1"
             },
             "install-path": "../league/oauth2-github"
         },
