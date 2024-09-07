@@ -3,7 +3,7 @@
  * Handles authentication on the WordPress server, even before our plugin is loaded.
  *
  * @package WPGraphQL\Login\Auth
- * @since @todo
+ * @since 0.2.0
  */
 
 declare( strict_types = 1 );

@@ -230,12 +230,12 @@ class Client {
 		 * @param self  $provider_config An instance of the provider configuration.
 		 *
 		 * @since 0.0.1
-		 * @deprecated @todo
+		 * @deprecated 0.1.4
 		 */
 		$user_data = apply_filters_deprecated(
 			'graphql_login_mapped_user_data',
 			[ $user_data, $this ],
-			'@todo',
+			'0.1.4',
 			'graphql_login_create_user_data'
 		);
 
@@ -246,7 +246,7 @@ class Client {
 		 * @param array $user_data       The WordPress user data.
 		 * @param self  $provider_config An instance of the provider configuration.
 		 *
-		 * @since @todo
+		 * @since 0.1.4
 		 */
 		$user_data = apply_filters( 'graphql_login_create_user_data', $user_data, $this );
 

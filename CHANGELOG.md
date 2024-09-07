@@ -6,6 +6,10 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 
 ## [Unreleased]
 
+## [0.3.1] - 2024-09-07
+
+This _patch_ releases fixes a bug where descriptions were not being displayed for `FormTokenField` types in the settings screen. Additionally, we've updated our dependencies to the latest (SemVer-compatibile) versions.
+
 - fix: Display missing help text to `FormTokenField` types in the settings screen. H/t alexookah.
 - dev: Add `react-jsx-runtime` polyfill for WordPress backwards-compatibility.
 - chore: Update Strauss to v0.19.1.
