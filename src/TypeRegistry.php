@@ -216,7 +216,7 @@ class TypeRegistry {
 			Mutation\RevokeUserSecret::class,
 		];
 
-		if ( Utils::get_access_control_setting( 'enableLogoutMutation' ) ) {
+		if ( Utils::get_access_control_setting( 'hasLogoutMutation' ) ) {
 			$classes_to_register[] = Mutation\Logout::class;
 		}
 
