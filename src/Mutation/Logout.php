@@ -12,6 +12,7 @@ namespace WPGraphQL\Login\Mutation;
 
 use GraphQL\Type\Definition\ResolveInfo;
 use WPGraphQL\AppContext;
+use WPGraphQL\Login\Utils\Utils;
 use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationType;
 
 /**
@@ -27,8 +28,23 @@ class Logout extends MutationType {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * Overloaded to register the mutation conditionally.
+	 */
+	public static function register(): void {
+		// Only register the mutation if the setting is enabled.
+		if ( ! Utils::get_access_control_setting( 'hasLogoutMutation' ) ) {
+			return;
+		}
+
+		parent::register();
+	}
+
+	/**
+	 * {@inheritDoc}
 	 */
 	public static function get_input_fields(): array {
+		// @todo add option to log out all sessions.
 		return [];
 	}
 

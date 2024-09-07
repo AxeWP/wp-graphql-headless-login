@@ -15,7 +15,6 @@ use WPGraphQL\Login\Type\Enum;
 use WPGraphQL\Login\Type\Input;
 use WPGraphQL\Login\Type\WPInterface;
 use WPGraphQL\Login\Type\WPObject;
-use WPGraphQL\Login\Utils\Utils;
 use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\GraphQLType;
 
 /**
@@ -211,14 +210,11 @@ class TypeRegistry {
 		$classes_to_register = [
 			Mutation\LinkUserIdentity::class,
 			Mutation\Login::class,
+			Mutation\Logout::class,
 			Mutation\RefreshToken::class,
 			Mutation\RefreshUserSecret::class,
 			Mutation\RevokeUserSecret::class,
 		];
-
-		if ( Utils::get_access_control_setting( 'hasLogoutMutation' ) ) {
-			$classes_to_register[] = Mutation\Logout::class;
-		}
 
 		/**
 		 * Filters the list of connection classes to register.
