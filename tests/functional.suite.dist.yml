@@ -6,9 +6,9 @@
 actor: FunctionalTester
 modules:
   enabled:
-    - \Helper\Functional
-    - \Helper\Helper
-    - \Helper\GraphQL
+    - \Tests\WPGraphQL\Login\Helper\Functional
+    - \Tests\WPGraphQL\Login\Helper\Helper
+    - \Tests\WPGraphQL\Login\Helper\GraphQL
     - Asserts
     - REST
     - WPDb

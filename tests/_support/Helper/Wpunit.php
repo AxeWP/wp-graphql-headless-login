@@ -1,5 +1,5 @@
 <?php
-namespace Helper;
+namespace Tests\WPGraphQL\Login\Helper;
 
 use ReflectionClass;
 

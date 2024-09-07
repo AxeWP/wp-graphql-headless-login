@@ -101,7 +101,7 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Tests\\WPGraphQL\\Login\\": "tests/_support/"
+			"Tests\\WPGraphQL\\Login\\Helper\\": "tests/_support/Helper"
 		}
 	},
 	"scripts": {
