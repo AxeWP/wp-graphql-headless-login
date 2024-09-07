@@ -63,12 +63,12 @@ class AccessControlSettings {
 					'required'    => true,
 					'type'        => 'boolean',
 				],
-				'enableLogoutMutation'             => [
+				'hasLogoutMutation'                => [
 					'advanced'    => true,
 					'default'     => false,
 					'description' => __( 'Enable Logout Mutation', 'wp-graphql-headless-login' ),
 					'help'        => __( 'Enable this option to allow logout mutations in WP GraphQL. This is useful when using cookie authentication, as it allows logout session requests. Note: "Set authentication cookie" and `Access-Control-Allow-Credentials` must be enabled.', 'wp-graphql-headless-login' ),
-					'label'       => __( 'Enable Logout Mutation', 'wp-graphql-headless-login' ),
+					'label'       => __( 'Enable `logout` Mutation', 'wp-graphql-headless-login' ),
 					'order'       => 4,
 					'required'    => false,
 					'type'        => 'boolean',
