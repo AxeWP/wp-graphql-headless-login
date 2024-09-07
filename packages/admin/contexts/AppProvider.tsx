@@ -15,6 +15,9 @@ const accessControlDefaults = {
 	additionalAuthorizedDomains: [],
 	shouldBlockUnauthorizedDomains: false,
 	customHeaders: [],
+	loginCookieSameSiteOption: 'Lax',
+	loginCookieDomain: '',
+	hasLogoutMutation: false,
 } satisfies AccessControlSettingsType;
 
 export const AppProviderContext = createContext< {
