@@ -8,8 +8,8 @@
 actor: AcceptanceTester
 modules:
   enabled:
-    - \Helper\Helper
-    - \Helper\GraphQL
+    - \Tests\WPGraphQL\Login\Helper\Helper
+    - \Tests\WPGraphQL\Login\Helper\GraphQL
     - Asserts
     - REST
     - WPBrowser

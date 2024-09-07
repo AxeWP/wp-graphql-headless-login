@@ -5,8 +5,8 @@ actor: WpunitTester
 modules:
   enabled:
     - WPLoader
-    - \Helper\Helper
-    - \Helper\Wpunit
+    - \Tests\WPGraphQL\Login\Helper\Helper
+    - \Tests\WPGraphQL\Login\Helper\Wpunit
   disabled:
     - WPDb
     - WPBrowser
