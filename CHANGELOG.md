@@ -12,6 +12,7 @@ and this project adheres to a modified version of [Semantic Versioning](./README
 - chore: Update Composer dependencies.
 - chore: Update NPM dependencies.
 - ci: Replace `docker-compose` commands with `docker compose`.
+- ci: Test compatibility with WordPress 6.6.1.
 
 ## [0.3.0] - 2024-04-06
 
