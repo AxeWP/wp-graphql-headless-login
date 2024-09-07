@@ -2,7 +2,7 @@
 Contributors: axepress, justlevine
 Tags: GraphQL, Gatsby, Headless, WPGraphQL, React, Rest, SSO, Social Login, OAuth, OAuth2, SAML, Authentication, JWT, Login, OpenID
 Requires at least: 6.0
-Tested up to: 6.5
+Tested up to: 6.6.1
 Requires PHP: 7.4
 Requires WPGraphQL: 1.14.0
 Stable tag: 0.3.0
