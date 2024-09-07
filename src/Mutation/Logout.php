@@ -1,6 +1,6 @@
 <?php
 /**
- * Registers the Logout mutation
+ * Registers the Logout mutation.
  *
  * @package WPGraphQL\Logout\Mutation
  * @since @todo
@@ -53,11 +53,11 @@ class Logout extends MutationType {
 	 */
 	public static function get_output_fields(): array {
 		return [
-			'status' => [
-				'type'        => 'String',
-				'description' => 'Logout operation status',
+			'success' => [
+				'type'        => 'Boolean',
+				'description' => __( 'Whether the user was successfully logged out. Will return null if the user is not logged in.', 'wp-graphql-headless-login' ),
 				'resolve'     => static function ( $payload ) {
-					return $payload['status'];
+					return $payload['success'] ?? null;
 				},
 			],
 		];
@@ -68,9 +68,15 @@ class Logout extends MutationType {
 	 */
 	public static function mutate_and_get_payload(): callable {
 		return static function ( array $input, AppContext $context, ResolveInfo $info ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+
+			// Bail if the user is not logged in.
+			if ( ! is_user_logged_in() ) {
+				return [];
+			}
+
 			// Logout and destroy session.
 			wp_logout();
-			return [ 'status' => 'SUCCESS' ];
+			return [ 'success' => true ];
 		};
 	}
 }
