@@ -3,6 +3,9 @@
 	"include": [ "packages/admin", "global.d.ts" ],
 	"exclude": [ "packages/admin/data" ],
 	"compilerOptions": {
-		"baseUrl": "./"
+		"baseUrl": "./",
+		"paths": {
+			"@/admin/*": [ "packages/admin/*" ]
+		}
 	}
 }

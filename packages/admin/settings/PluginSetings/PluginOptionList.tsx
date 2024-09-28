@@ -1,5 +1,5 @@
 import { useEntityProp } from '@wordpress/core-data';
-import { Option } from '../../components';
+import { Option } from '../../components/OptionSettings';
 
 export function PluginOptionList( { optionKey }: { optionKey: string } ) {
 	const [ value, setValue ] = useEntityProp( 'root', 'site', optionKey );

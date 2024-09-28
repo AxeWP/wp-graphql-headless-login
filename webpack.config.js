@@ -1,5 +1,6 @@
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 const path = require( 'path' );
+const TsconfigPathsPlugin = require( 'tsconfig-paths-webpack-plugin' );
 
 // Define JavaScript entry points
 
@@ -26,6 +27,13 @@ const mainConfig = {
 	},
 	entry: {
 		admin: path.resolve( process.cwd(), 'packages/admin', 'index.tsx' ),
+	},
+	resolve: {
+		...defaultConfig.resolve,
+		plugins: [
+			...( defaultConfig.resolve.plugins || [] ),
+			new TsconfigPathsPlugin( { configFile: './tsconfig.json' } ),
+		],
 	},
 	plugins: [
 		...defaultConfig.plugins.filter(

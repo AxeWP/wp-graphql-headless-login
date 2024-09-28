@@ -3,7 +3,7 @@ import { Button, PanelBody, PanelRow, Spinner } from '@wordpress/components';
 import { sprintf, __ } from '@wordpress/i18n';
 import { store as coreStore } from '@wordpress/core-data';
 import { useDispatch, dispatch, useSelect } from '@wordpress/data';
-import { OptionList } from '../components';
+import { OptionList } from '../components/OptionSettings';
 import { useAppContext } from '../contexts/AppProvider';
 
 export function AccessControlSettings() {

@@ -55,7 +55,9 @@
 		"@wordpress/element": "^6.6.0",
 		"@wordpress/hooks": "^4.6.0",
 		"@wordpress/i18n": "^5.6.0",
+		"@wordpress/icons": "^10.8.0",
 		"@wordpress/notices": "^5.6.0",
+		"clsx": "^2.1.1",
 		"uuid": "^10.0.0"
 	},
 	"devDependencies": {
@@ -93,6 +95,7 @@
 		"sass": "^1.78.0",
 		"sass-loader": "^14.2.1",
 		"terser-webpack-plugin": "^5.3.10",
+		"tsconfig-paths-webpack-plugin": "^4.1.0",
 		"typescript": "^5.5.4",
 		"url-loader": "^4.1.1",
 		"webpack": "^5.94.0",
