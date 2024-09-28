@@ -2,7 +2,9 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { store } from '@wordpress/notices';
 import { SnackbarList } from '@wordpress/components';
 
-function Notices(): JSX.Element {
+import styles from './styles.module.scss';
+
+export const Notices = () => {
 	const notices = useSelect(
 		( select ) =>
 			select( store )
@@ -17,11 +19,12 @@ function Notices(): JSX.Element {
 	}
 
 	return (
-		<SnackbarList
-			className="edit-site-notices"
-			notices={ notices as any } // eslint-disable-line @typescript-eslint/no-explicit-any
-			onRemove={ removeNotice }
-		/>
+		<div className={ styles.notices }>
+			<SnackbarList
+				className="edit-site-notices"
+				notices={ notices as any } // eslint-disable-line @typescript-eslint/no-explicit-any
+				onRemove={ removeNotice }
+			/>
+		</div>
 	);
-}
-export default Notices;
+};

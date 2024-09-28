@@ -1,16 +1,27 @@
-import { render } from '@wordpress/element';
+import domReady from '@wordpress/dom-ready';
+import { createRoot } from '@wordpress/element';
 import { createHooks } from '@wordpress/hooks';
+import { StrictMode } from 'react';
+
 import App from './app';
 
 export const hooks = createHooks();
 
 // Render the app.
-document.addEventListener( 'DOMContentLoaded', () => {
-	const htmlOutput = document.getElementById( 'wpgraphql_login_settings' );
+domReady( () => {
+	const container = document.getElementById( 'wpgraphql_login_settings' );
 
-	if ( htmlOutput ) {
-		render( <App />, htmlOutput );
+	if ( ! container ) {
+		return;
 	}
+
+	const root = createRoot( container );
+
+	root.render(
+		<StrictMode>
+			<App />
+		</StrictMode>
+	);
 } );
 
 wpGraphQLLogin.hooks = hooks;

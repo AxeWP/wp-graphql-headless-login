@@ -1,0 +1,23 @@
+.menu {
+	display: flex;
+}
+
+.linkIcon {
+	transform: rotate(-45deg);
+	opacity: .85;
+}
+
+:global(.components-button) {
+	&.active {
+		border-bottom: 2px solid;
+		border-image: linear-gradient(to right, transparent 0%, var(--wp-admin-theme-color-darker-20) 100%) 1;
+		
+		&:global(.is-tertiary) {
+			color: var(--wp-admin-theme-color-darker-20);
+		}
+
+		&:focus:not(:disabled) {
+			box-shadow: none;
+		}
+	}
+}

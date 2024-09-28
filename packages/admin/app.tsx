@@ -1,30 +1,22 @@
-import { Panel } from '@wordpress/components';
 import { AppProvider } from './contexts/AppProvider';
-import { Header, Notices } from './components';
-import { AccessControlSettings, PluginSettings } from './settings';
+import { Notices } from './components/notices';
 import './admin.scss';
-import { ClientSettings } from './settings/ClientSettings/ClientSettings';
+import { Header } from './layout';
+import { ScreenProvider } from './contexts/screen-context';
+import { Screen } from './screens';
 
-function App() {
+const App = () => {
 	return (
 		<AppProvider>
-			<Header />
-
-			<ClientSettings />
-
-			<Panel className="wp-graphql-headless-login__plugin-settings">
-				<PluginSettings />
-			</Panel>
-
-			<Panel className="wp-graphql-headless-login__ac-settings">
-				<AccessControlSettings />
-			</Panel>
-
+			<ScreenProvider>
+				<Header />
+				<Screen />
+			</ScreenProvider>
 			<div className="wp-graphql-headless-login__notices">
 				<Notices />
 			</div>
 		</AppProvider>
 	);
-}
+};
 
 export default App;

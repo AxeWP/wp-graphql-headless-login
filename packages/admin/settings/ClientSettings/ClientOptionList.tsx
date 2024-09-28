@@ -1,4 +1,4 @@
-import { OptionList } from '../../components';
+import { OptionList } from '../../components/OptionSettings';
 import type { ClientOptionsType, LoginOptionsType } from '../../types';
 
 export function ClientOptionList( {
