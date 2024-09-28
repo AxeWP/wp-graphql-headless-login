@@ -9,7 +9,7 @@ import { ToggleControlProps } from '@wordpress/components/build-types/toggle-con
 import {
 	FormTokenFieldControl,
 	type FormTokenFieldControlProps,
-} from '../FormTokenFieldControl/FormTokenFieldControl';
+} from '../ui/form-token-field';
 import type { SettingSchema } from '../../types';
 
 export type OptionControlType = (

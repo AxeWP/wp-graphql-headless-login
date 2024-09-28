@@ -1,0 +1,25 @@
+.wrapper {
+	max-width: 960px;
+
+	&:global(.components-panel),
+	:global(.components-panel) {
+		background: none;
+		border: none;
+
+		& +:global(.components-panel ) {
+			margin-top: 2rem;
+		}
+	
+	&:global(.components-panel__body),
+	:global(.components-panel__body) {
+			background: #fff;
+			border: 1px solid #e2e4e7;
+			margin: 1rem 0;
+		}
+
+	&:global(.components-panel__body-title .components-button),
+	:global(.components-panel__body-title .components-button) {
+			font-size: 1.25rem;
+		}
+	}
+}

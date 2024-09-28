@@ -12,13 +12,13 @@ export const ScreenContext = createContext< {
 	currentScreen: AllowedScreens;
 	setCurrentScreen: ( screen: AllowedScreens ) => void;
 } >( {
-	currentScreen: 'dashboard',
+	currentScreen: 'providers',
 	setCurrentScreen: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
 } );
 
 export const ScreenProvider = ( { children }: PropsWithChildren ) => {
 	const [ currentScreen, setCurrentScreen ] =
-		useState< AllowedScreens >( 'dashboard' );
+		useState< AllowedScreens >( 'providers' );
 
 	// The screen is set as a query parameter in the URL.
 	useEffect( () => {

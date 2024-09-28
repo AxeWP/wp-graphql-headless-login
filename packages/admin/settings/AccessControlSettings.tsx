@@ -1,12 +1,12 @@
 import { useEffect } from '@wordpress/element';
-import { Button, PanelBody, PanelRow, Spinner } from '@wordpress/components';
+import { Button, PanelBody, Spinner } from '@wordpress/components';
 import { sprintf, __ } from '@wordpress/i18n';
 import { store as coreStore } from '@wordpress/core-data';
 import { useDispatch, dispatch, useSelect } from '@wordpress/data';
 import { OptionList } from '../components/OptionSettings';
 import { useAppContext } from '../contexts/AppProvider';
 
-export function AccessControlSettings() {
+function AccessControlSettings() {
 	const { accessControlSettings, updateAccessControlSettings } =
 		useAppContext();
 
@@ -78,14 +78,6 @@ export function AccessControlSettings() {
 	return (
 		<>
 			<PanelBody>
-				<PanelRow>
-					<h2 className="components-panel__body-title">
-						{ __(
-							'Access Control Settings',
-							'wp-graphql-headless-login'
-						) }
-					</h2>
-				</PanelRow>
 				<OptionList
 					optionsSchema={ optionsSchema }
 					options={ accessControlSettings }
@@ -111,3 +103,5 @@ export function AccessControlSettings() {
 		</>
 	);
 }
+
+export default AccessControlSettings;

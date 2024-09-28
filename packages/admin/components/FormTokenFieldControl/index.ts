@@ -1,1 +1,0 @@
-export { FormTokenFieldControl } from './FormTokenFieldControl';
