@@ -1,5 +1,4 @@
-import { Icon, PanelBody, PanelRow } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { PanelBody } from '@wordpress/components';
 import { JwtSecretControl } from './JwtSecretControl';
 import { PluginOptionList } from './PluginOptionList';
 import { useAppContext } from '../../contexts/AppProvider';
@@ -12,7 +11,7 @@ const CustomOptions = (): JSX.Element => {
 	) as JSX.Element;
 };
 
-export function PluginSettings() {
+function PluginSettings() {
 	const { showAdvancedSettings } = useAppContext();
 
 	const optionsSchema =
@@ -30,17 +29,6 @@ export function PluginSettings() {
 
 	return (
 		<PanelBody>
-			<PanelRow>
-				<h2 className="components-panel__body-title">
-					{ __( 'Plugin Settings', 'wp-graphql-headless-login' ) }
-					<Icon
-						icon="admin-tools"
-						className="components-panel__icon"
-						size={ 20 }
-					/>
-				</h2>
-			</PanelRow>
-
 			{ showAdvancedSettings && <JwtSecretControl /> }
 
 			{ sortedOptionsSchema.map( ( option ) => (
@@ -51,3 +39,5 @@ export function PluginSettings() {
 		</PanelBody>
 	);
 }
+
+export default PluginSettings;

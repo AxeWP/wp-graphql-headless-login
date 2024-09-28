@@ -3,9 +3,9 @@ import { ClientPanel } from './ClientPanel';
 import { ClientMenu } from './ClientMenu';
 import { ClientProvider } from '../../contexts/ClientProvider';
 
-export function ClientSettings() {
+function ClientSettings() {
 	return (
-		<Flex className="wp-graphql-headless-login__main" align="flex-start">
+		<Flex align="flex-start">
 			<ClientProvider>
 				<FlexItem className="wp-graphql-headless-login__sidebar">
 					<ClientMenu />
@@ -19,3 +19,5 @@ export function ClientSettings() {
 		</Flex>
 	);
 }
+
+export default ClientSettings;
