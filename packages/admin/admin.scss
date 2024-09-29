@@ -1,5 +1,4 @@
-
-#wpgraphql_login_settings { /* stylelint-disable-line */
+#wpgraphql_login_settings {
 
 	.components-placeholder {
 		background: #f1f1f1;
@@ -11,7 +10,7 @@
 
 	.components-panel__row {
 
-		> div {
+		>div {
 			flex-grow: 1;
 			margin-right: 1rem;
 
@@ -19,62 +18,5 @@
 				margin-right: 0;
 			}
 		}
-	}
-}
-
-.wp-graphql-headless-login__sidebar {
-	align-self: auto;
-	position: sticky;
-}
-
-.wp-graphql-headless-login__sidebar__add-client {
-	border: none;
-	margin-top: 2rem;
-	border-radius: 1rem;
-	background-color: #fff;
-	color: #1d2327;
-	font-size: 1.15rem;
-	align-items: center;
-	justify-content: center;
-	text-align: center;
-	height: auto;
-
-	span {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-	}
-
-	svg {
-		margin-right: 0.5rem;
-		height: 3rem;
-	}
-}
-
-.wp-graphql-headless-login__menu__item {
-	display: flex;
-	align-items: center;
-	flex-direction: row;
-}
-
-.wp-graphql-headless-login__menu__status-badge {
-	border-radius: 50%;
-	border: 1px solid rgba(213, 213, 213, 0.2);
-	background-color: rgba(213, 213, 213, 0.5);
-	padding: 3px;
-	display: inline-flex;
-	margin-left: 0.5rem;
-	align-items: center;
-	justify-content: space-between;
-
-	span {
-		height: 0.6rem;
-		width: 0.6rem;
-		display: block;
-		border-radius: 50%;
-	}
-
-	&--enabled, {
-		background-color: #46b450;
 	}
 }

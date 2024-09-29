@@ -1,8 +1,7 @@
 import { Button, Icon, NavigableMenu } from '@wordpress/components';
 import { link as LinkSVG } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
-import { useCurrentScreen } from '@/admin/contexts/screen-context';
-import { AllowedScreens } from '@/admin/screens';
+import { useCurrentScreen, AllowedScreens } from '@/admin/layout';
 
 import styles from './styles.module.scss';
 

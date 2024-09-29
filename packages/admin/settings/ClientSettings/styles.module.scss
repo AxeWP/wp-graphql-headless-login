@@ -1,0 +1,32 @@
+.sidebar {
+	align-self: auto;
+	position: sticky;
+}
+
+.menuItem {
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+}
+
+.status-badge {
+	border-radius: 50%;
+	border: 1px solid rgba(213, 213, 213, 0.2);
+	background-color: rgba(213, 213, 213, 0.5);
+	padding: 3px;
+	display: inline-flex;
+	margin-left: 0.5rem;
+	align-items: center;
+	justify-content: space-between;
+
+	span {
+		height: 0.6rem;
+		width: 0.6rem;
+		display: block;
+		border-radius: 50%;
+	}
+
+	.enabled {
+		background-color: #46b450;
+	}
+}

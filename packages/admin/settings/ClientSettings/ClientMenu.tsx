@@ -8,6 +8,8 @@ import { __ } from '@wordpress/i18n';
 import { useEntityProp } from '@wordpress/core-data';
 import { useClientContext } from '../../contexts/ClientProvider';
 
+import styles from './styles.module.scss';
+
 export function StatusBadge( { provider }: { provider: string } ) {
 	const [ providerConfig ] = useEntityProp( 'root', 'site', provider );
 
@@ -18,11 +20,9 @@ export function StatusBadge( { provider }: { provider: string } ) {
 		: __( 'Disabled', 'wp-graphql-headless-login' );
 
 	return (
-		<div className="wp-graphql-headless-login__menu__status-badge">
+		<div className={ styles[ 'status-badge' ] }>
 			<span
-				className={ `wp-graphql-headless-login__menu__status-badge--${
-					isEnabled ? 'enabled' : 'disabled'
-				}` }
+				className={ isEnabled ? styles?.enabled : undefined }
 				aria-label={ title }
 				title={ title }
 			></span>
@@ -42,7 +42,7 @@ export function ClientMenu() {
 				{ providers.length > 0 &&
 					providers.map( ( provider ) => (
 						<NavigationItem
-							className="wp-graphql-headless-login__menu__item"
+							className={ styles.menuItem }
 							key={ provider }
 							item={ provider }
 							title={
