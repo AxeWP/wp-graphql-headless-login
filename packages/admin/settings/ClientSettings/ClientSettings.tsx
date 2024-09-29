@@ -3,11 +3,13 @@ import { ClientPanel } from './ClientPanel';
 import { ClientMenu } from './ClientMenu';
 import { ClientProvider } from '../../contexts/ClientProvider';
 
+import styles from './styles.module.scss';
+
 function ClientSettings() {
 	return (
 		<Flex align="flex-start">
 			<ClientProvider>
-				<FlexItem className="wp-graphql-headless-login__sidebar">
+				<FlexItem className={ styles.sidebar }>
 					<ClientMenu />
 				</FlexItem>
 				<FlexBlock>

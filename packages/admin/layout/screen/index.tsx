@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { Panel, PanelBody, PanelRow } from '@wordpress/components';
 import { lazy, Suspense, type PropsWithChildren } from 'react';
-import { useCurrentScreen } from '@/admin/contexts/screen-context';
+import { useCurrentScreen } from './context';
 import { Loading } from '@/admin/components/ui';
 
 import styles from './styles.module.scss';
@@ -11,10 +11,10 @@ const AccessControlScreen = lazy(
 	() => import( '@/admin/settings/AccessControlSettings' )
 );
 const ClientSettingsScreen = lazy(
-	() => import( '../settings/ClientSettings/ClientSettings' )
+	() => import( '../../settings/ClientSettings/ClientSettings' )
 );
 const PluginSettingsScreen = lazy(
-	() => import( '../settings/PluginSettings/PluginSettings' )
+	() => import( '../../settings/PluginSettings/PluginSettings' )
 );
 
 export type AllowedScreens = 'access-control' | 'providers' | 'plugin-settings';

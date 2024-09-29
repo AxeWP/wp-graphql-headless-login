@@ -1,9 +1,8 @@
 import { AppProvider } from './contexts/AppProvider';
 import { Notices } from './components/notices';
+import { Header, Screen, ScreenProvider } from './layout';
+
 import './admin.scss';
-import { Header } from './layout';
-import { ScreenProvider } from './contexts/screen-context';
-import { Screen } from './screens';
 
 const App = () => {
 	return (
