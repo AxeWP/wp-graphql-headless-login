@@ -3,8 +3,8 @@ import { Button, PanelBody, Spinner } from '@wordpress/components';
 import { sprintf, __ } from '@wordpress/i18n';
 import { store as coreStore } from '@wordpress/core-data';
 import { useDispatch, dispatch, useSelect } from '@wordpress/data';
-import { OptionList } from '../components/OptionSettings';
 import { useAppContext } from '../contexts/AppProvider';
+import { Fields } from '../components/fields';
 
 function AccessControlSettings() {
 	const { accessControlSettings, updateAccessControlSettings } =
@@ -78,10 +78,10 @@ function AccessControlSettings() {
 	return (
 		<>
 			<PanelBody>
-				<OptionList
-					optionsSchema={ optionsSchema }
-					options={ accessControlSettings }
-					setOption={ updateAccessControlSettings }
+				<Fields
+					fields={ optionsSchema }
+					values={ accessControlSettings }
+					setValue={ updateAccessControlSettings }
 					excludedProperties={ excludedProperties }
 				/>
 			</PanelBody>

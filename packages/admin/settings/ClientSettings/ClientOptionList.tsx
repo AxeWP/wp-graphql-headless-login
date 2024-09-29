@@ -1,4 +1,4 @@
-import { OptionList } from '../../components/OptionSettings';
+import { Fields } from '@/admin/components/fields';
 import type { ClientOptionsType, LoginOptionsType } from '../../types';
 
 export function ClientOptionList( {
@@ -19,10 +19,10 @@ export function ClientOptionList( {
 			?.properties || {};
 
 	return (
-		<OptionList
-			optionsSchema={ optionsSchema }
-			options={ options }
-			setOption={ setOption }
+		<Fields
+			fields={ optionsSchema }
+			values={ options }
+			setValue={ setOption }
 			excludedProperties={ excludedProperties }
 		/>
 	);

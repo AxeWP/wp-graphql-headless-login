@@ -2,7 +2,6 @@ import { PanelBody } from '@wordpress/components';
 import { JwtSecretControl } from './JwtSecretControl';
 import { PluginOptionList } from './PluginOptionList';
 import { useAppContext } from '../../contexts/AppProvider';
-import type { PluginSettingsType, SettingSchema } from '../../types';
 
 const CustomOptions = (): JSX.Element => {
 	return wpGraphQLLogin.hooks.applyFilters(
@@ -14,9 +13,7 @@ const CustomOptions = (): JSX.Element => {
 function PluginSettings() {
 	const { showAdvancedSettings } = useAppContext();
 
-	const optionsSchema =
-		wpGraphQLLogin?.settings?.plugin ||
-		( {} satisfies Record< keyof PluginSettingsType, SettingSchema > );
+	const optionsSchema = wpGraphQLLogin?.settings?.plugin || {};
 
 	// Sort ascending client option schema by order property key.
 	const sortedOptionsSchema = Object.keys( optionsSchema )

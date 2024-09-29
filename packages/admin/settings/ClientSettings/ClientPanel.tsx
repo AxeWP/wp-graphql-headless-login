@@ -11,10 +11,10 @@ import { sprintf, __ } from '@wordpress/i18n';
 import { store as coreStore } from '@wordpress/core-data';
 import { useDispatch, dispatch, useSelect } from '@wordpress/data';
 import { ClientOptionList } from './ClientOptionList';
-import { OptionList } from '../../components/OptionSettings';
 import { useClientContext } from '../../contexts/ClientProvider';
 import { useAppContext } from '../../contexts/AppProvider';
 import { ReactComponent as Logo } from '../../assets/logo.svg';
+import { Fields } from '@/admin/components/fields';
 
 export function ClientPanel() {
 	const { accessControlSettings } = useAppContext();
@@ -149,17 +149,17 @@ export function ClientPanel() {
 						) }
 					</h2>
 				</PanelRow>
-				<OptionList
+				<Fields
 					excludedProperties={ [
 						'loginOptions',
 						'clientOptions',
 						'order',
 					] }
-					options={ clientConfig }
-					optionsSchema={
+					values={ clientConfig }
+					fields={
 						wpGraphQLLogin?.settings?.providers?.[ activeClient ]
 					}
-					setOption={ ( value ) => {
+					setValue={ ( value ) => {
 						setClientConfig( {
 							...clientConfig,
 							...value,
