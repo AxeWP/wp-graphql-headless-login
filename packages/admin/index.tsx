@@ -4,6 +4,7 @@ import { createHooks } from '@wordpress/hooks';
 import { StrictMode } from 'react';
 
 import App from './app';
+import { ErrorBoundary } from './layout/error-boundry/error-boundry';
 
 export const hooks = createHooks();
 
@@ -19,7 +20,9 @@ domReady( () => {
 
 	root.render(
 		<StrictMode>
-			<App />
+			<ErrorBoundary showErrorInfo>
+				<App />
+			</ErrorBoundary>
 		</StrictMode>
 	);
 } );
