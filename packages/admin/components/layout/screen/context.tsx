@@ -6,7 +6,10 @@ import {
 	useContext,
 	startTransition,
 } from 'react';
-import { SCREEN_COMPONENTS, type AllowedScreens } from '@/admin/layout';
+import {
+	SCREEN_COMPONENTS,
+	type AllowedScreens,
+} from '@/admin/components/layout';
 
 export const ScreenContext = createContext< {
 	currentScreen: AllowedScreens;

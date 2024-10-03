@@ -1,11 +1,5 @@
-/**
- * The plugin settings header.
- *
- * Logo + Title on the left, the horizontal menu (using @wordpress/components/TabPanel) in the middle, and the advanced settings toggle on the right.
- */
-
 import { __ } from '@wordpress/i18n';
-import { Logo } from '../../components/logo';
+import { Logo } from '../../logo';
 import { AdvancedSettingsToggle } from './advanced-settings-toggle';
 import { Menu } from './menu';
 

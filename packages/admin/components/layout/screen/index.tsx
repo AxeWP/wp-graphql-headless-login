@@ -1,20 +1,20 @@
 import { __ } from '@wordpress/i18n';
 import { Panel, PanelBody, PanelRow } from '@wordpress/components';
+import clsx from 'clsx';
 import { lazy, Suspense, type PropsWithChildren } from 'react';
 import { useCurrentScreen } from './context';
 import { Loading } from '@/admin/components/ui';
 
 import styles from './styles.module.scss';
-import clsx from 'clsx';
 
 const AccessControlScreen = lazy(
 	() => import( '@/admin/settings/AccessControlSettings' )
 );
 const ClientSettingsScreen = lazy(
-	() => import( '../../settings/ClientSettings/ClientSettings' )
+	() => import( '../../../settings/ClientSettings/ClientSettings' )
 );
 const PluginSettingsScreen = lazy(
-	() => import( '../../settings/PluginSettings/PluginSettings' )
+	() => import( '../../../settings/PluginSettings/PluginSettings' )
 );
 
 export type AllowedScreens = 'access-control' | 'providers' | 'plugin-settings';
