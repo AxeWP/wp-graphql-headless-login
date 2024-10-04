@@ -1,6 +1,6 @@
 import { FieldControl } from './field-control';
 import { PanelRow } from '@wordpress/components';
-import { useAppContext } from '@/admin/contexts/AppProvider';
+import { useSettings } from '@/admin/contexts/settings-context';
 import type { PropsWithChildren } from 'react';
 import type { FieldSchema } from '@/admin/types';
 
@@ -8,7 +8,7 @@ const FieldWrapper = ( {
 	isAdvanced,
 	children,
 }: PropsWithChildren< { isAdvanced: boolean } > ) => {
-	const { showAdvancedSettings } = useAppContext();
+	const { showAdvancedSettings } = useSettings();
 
 	if ( ! showAdvancedSettings && isAdvanced ) {
 		return null;
@@ -27,7 +27,7 @@ export const Field = ( {
 	setValue: ( value: unknown ) => void;
 } ) => {
 	return (
-		<FieldWrapper isAdvanced={ !! field.advanced }>
+		<FieldWrapper isAdvanced={ !! field.isAdvanced }>
 			<FieldControl
 				{ ...field }
 				value={ value }

@@ -6,10 +6,7 @@ import {
 	useContext,
 	startTransition,
 } from 'react';
-import {
-	SCREEN_COMPONENTS,
-	type AllowedScreens,
-} from '@/admin/components/layout';
+import { SCREEN_MAP, type AllowedScreens } from '@/admin/components/layout';
 
 export const ScreenContext = createContext< {
 	currentScreen: AllowedScreens;
@@ -29,7 +26,7 @@ export const ScreenProvider = ( { children }: PropsWithChildren ) => {
 			const url = new URL( window.location.href );
 			const screen = url.searchParams.get( 'screen' );
 
-			if ( screen && screen in SCREEN_COMPONENTS ) {
+			if ( screen && screen in SCREEN_MAP ) {
 				setCurrentScreen( screen as AllowedScreens );
 			}
 		} );

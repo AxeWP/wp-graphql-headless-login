@@ -64,7 +64,7 @@ class Helper extends \Codeception\Module {
 
 		$site_secret = wp_generate_password( 64, false, false );
 
-		update_option( PluginSettings::$settings_prefix . 'jwt_secret_key', $site_secret );
+		update_option( PluginSettings::SETTINGS_PREFIX . 'jwt_secret_key', $site_secret );
 		TokenManager::issue_new_user_secret( $user_id, false );
 		$this->reset_utils_properties();
 

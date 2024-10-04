@@ -27,7 +27,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 	 */
 	public function setUp(): void {
 		parent::setUp();
-		update_option( AccessControlSettings::$settings_prefix . 'access_control', $this->default_options );
+		update_option( AccessControlSettings::get_slug(), $this->default_options );
 
 		$this->tester->reset_utils_properties();
 	}
@@ -36,7 +36,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 	 * {@inheritDoc}
 	 */
 	public function tearDown(): void {
-		delete_option( AccessControlSettings::$settings_prefix . 'access_control' );
+		delete_option( AccessControlSettings::get_slug() );
 		$this->tester->reset_utils_properties();
 		parent::tearDown();
 	}
@@ -78,7 +78,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 		// Test with shouldBlockUnauthorizedDomains set to true.
 
-		update_option( AccessControlSettings::$settings_prefix . 'access_control', array_merge( $this->default_options, [ 'shouldBlockUnauthorizedDomains' => true ] ) );
+		update_option( AccessControlSettings::get_slug(), array_merge( $this->default_options, [ 'shouldBlockUnauthorizedDomains' => true ] ) );
 		$this->tester->reset_utils_properties();
 
 		// If the origin is the same as the host this should be fine.
@@ -99,7 +99,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 	public function testAuthenticateOriginOnRequestWithSiteAddress() {
 		update_option( 'home', 'https://example.com' );
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -115,7 +115,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 		// This will pass with hasSiteAddressInOrigin set to true.
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -130,7 +130,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 		// This will fail with hasSiteAddressInOrigin set to false.
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -153,7 +153,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 	public function testAuthenticateOriginOnRequestWithAdditionalDomains() {
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -181,7 +181,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 		// This will fail with additionalAuthorizedDomains set to false.
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -269,7 +269,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 		// Test with hasAccessControlAllowCredentials.
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -293,7 +293,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 		// Test with hasAccessControlAllowCredentials and shouldBlockUnauthorizedDomains.
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -322,7 +322,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		$_SERVER['HTTP_ORIGIN'] = site_url();
 
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -362,7 +362,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		);
 
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -421,7 +421,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 		// Test with custom headers.
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -452,7 +452,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		// Test with hasSiteAddressInOrigin set to true.
 		update_option( 'home', 'https://example.com' );
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -472,7 +472,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 		// Test with additionalAuthorizedDomains
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[

@@ -23,7 +23,7 @@ class SiteTokenAuthenticationCest {
 			]
 		);
 		$I->reset_utils_properties();
-		update_option( AccessControlSettings::$settings_prefix . 'access_control', [] );
+		update_option( AccessControlSettings::get_slug(), [] );
 	}
 
 	public function testLoginWithSiteToken( FunctionalTester $I ) {
@@ -81,7 +81,7 @@ class SiteTokenAuthenticationCest {
 		// The query has errors because the mutation is not allowed.
 
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			[
 				'shouldBlockUnauthorizedDomains' => true,
 				'hasSiteAddressInOrigin'         => true,

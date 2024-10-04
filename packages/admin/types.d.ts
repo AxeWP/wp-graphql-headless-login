@@ -3,24 +3,10 @@ import { _Hooks } from '@wordpress/hooks/build-types/createHooks';
 declare global {
 	const wpGraphQLLogin: {
 		hooks: _Hooks;
-		settings: {
-			accessControl: Record<
-				keyof AccessControlSettingsType,
-				FieldSchema
-			>;
-			providers: Record<
-				string,
-				Record<
-					keyof ProviderSettingType,
-					FieldSchema & {
-						properties: Record<
-							keyof ProviderSettingType,
-							FieldSchema
-						>;
-					}
-				>
-			>;
-			plugin: Record< keyof PluginSettingsType, FieldSchema >;
+		settings: SettingSchema & {
+			providers: Record< string, Record< string, FieldSchema & {
+				properties: Record< string, FieldSchema >;
+			} > >;
 		};
 		nonce: string;
 		secret: {
@@ -30,9 +16,17 @@ declare global {
 	};
 }
 
+type AllowedSettingKeys =
+	| 'providers'
+	| 'wpgraphql_login_settings'
+	| 'wpgraphql_login_access_control';
+
 type AllowedConditionalLogicOperators = '==' | '!=' | '>' | '<' | '>=' | '<=';
 
 type FieldSchema = {
+	description: string;
+	label: string;
+	type: string;
 	conditionalLogic?: [
 		{
 			slug: string;
@@ -40,35 +34,21 @@ type FieldSchema = {
 			value: string | number | boolean;
 		},
 	];
-	advanced?: boolean;
 	controlOverrides?: Record< string, unknown >;
 	controlType?: string;
 	default?: unknown;
-	description: string;
-	enum?: string[];
+	enum?: string[]; // @todo Not sure if this is the correct type
 	help?: string;
 	hidden?: boolean;
-	label: string;
+	isAdvanced?: boolean;
 	order?: number;
 	required?: boolean;
-	type: string;
 };
 
-type AccessControlSettingsType = {
-	hasAccessControlAllowCredentials?: boolean;
-	hasSiteAddressInOrigin?: boolean;
-	additionalAuthorizedDomains?: string[];
-	shouldBlockUnauthorizedDomains?: boolean;
-	customHeaders?: string[];
-	[ key: string ]: any;
-};
-
-type PluginSettingsType = {
-	wpgraphql_login_settings_show_avanced_settings?: boolean;
-	wpgraphql_login_settings_jwt_secret_key?: string;
-	wpgraphql_login_settings_delete_data_on_deactivate?: boolean;
-	[ key: string ]: any;
-};
+type SettingSchema = Record<
+	AllowedSettingKeys,
+	Record< string, FieldSchema >
+>;
 
 type ProviderSettingType = {
 	name: string;

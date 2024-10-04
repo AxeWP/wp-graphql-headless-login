@@ -1,4 +1,4 @@
-import type { FieldSchema } from '@/admin/types';
+import type { AllowedSettingKeys, SettingSchema } from '@/admin/types';
 import { Field } from './field';
 
 export const Fields = ( {
@@ -8,10 +8,14 @@ export const Fields = ( {
 	setValue,
 }: {
 	excludedProperties?: string[];
-	values: Record< string, unknown >;
-	fields: Record< string, FieldSchema >;
+	values: Record< string, unknown > | undefined;
+	fields: SettingSchema[ AllowedSettingKeys ];
 	setValue: ( values: Record< string, unknown > ) => void;
 } ) => {
+	if ( ! values ) {
+		return null;
+	}
+
 	const excluded = excludedProperties || [ 'id', 'order' ];
 
 	// Sort ascending client field schema by order property key.

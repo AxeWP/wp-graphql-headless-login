@@ -1,4 +1,3 @@
-import { AppProvider } from './contexts/AppProvider';
 import {
 	ErrorBoundary,
 	Header,
@@ -6,13 +5,14 @@ import {
 	ScreenProvider,
 } from './components/layout';
 import { Notices } from './components/notices';
+import { SettingsProvider } from './contexts/settings-context';
 
 import './admin.scss';
 
 const App = () => {
 	return (
 		<ErrorBoundary showErrorInfo>
-			<AppProvider>
+			<SettingsProvider>
 				<ScreenProvider>
 					<Header />
 					<Screen />
@@ -20,7 +20,7 @@ const App = () => {
 				<div className="wp-graphql-headless-login__notices">
 					<Notices />
 				</div>
-			</AppProvider>
+			</SettingsProvider>
 		</ErrorBoundary>
 	);
 };

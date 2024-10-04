@@ -4,6 +4,7 @@ import {
 	ToggleControl,
 } from '@wordpress/components';
 import { FormTokenFieldControl } from '@/admin/components/ui';
+import { JwtSecretControl } from './jwt-secret-control';
 import type { FieldSchema } from '@/admin/types';
 import type { ComponentType, ComponentProps } from 'react';
 
@@ -19,12 +20,14 @@ type SelectControlProps = ComponentProps< typeof SelectControl >;
 type FormTokenFieldControlProps = ComponentProps<
 	typeof FormTokenFieldControl
 >;
+type JwtSecretControlProps = ComponentProps< typeof JwtSecretControl >;
 
 type ControlComponentPropsMap = {
 	text: TextControlProps;
 	toggle: ToggleControlProps;
 	select: SelectControlProps;
 	formTokenField: FormTokenFieldControlProps;
+	jwtSecret: JwtSecretControlProps;
 };
 
 type AllowedControlTypes = keyof ControlComponentPropsMap;
@@ -44,6 +47,7 @@ const CONTROL_COMPONENTS: {
 	toggle: ToggleControl,
 	select: SelectControl,
 	formTokenField: FormTokenFieldControl,
+	jwtSecret: JwtSecretControl,
 };
 
 /**
@@ -68,7 +72,7 @@ export const FieldControl = ( {
 	controlType: originalControlType,
 	description,
 	help,
-	advanced,
+	isAdvanced,
 	label,
 	onChange,
 	required,
@@ -143,6 +147,13 @@ export const FieldControl = ( {
 				value: value || [],
 			} as FormTokenFieldControlProps;
 			break;
+		case 'jwtSecret':
+			componentProps = {
+				help: help || '',
+				label: label || '',
+			} as JwtSecretControlProps;
+			break;
 	}
+
 	return <ControlComponent { ...componentProps } />;
 };
