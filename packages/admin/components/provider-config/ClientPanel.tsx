@@ -11,8 +11,8 @@ import { sprintf, __ } from '@wordpress/i18n';
 import { store as coreStore } from '@wordpress/core-data';
 import { useDispatch, dispatch, useSelect } from '@wordpress/data';
 import { ClientOptionList } from './ClientOptionList';
-import { useClientContext } from '../../contexts/ClientProvider';
-import { ReactComponent as Logo } from '../../assets/logo.svg';
+import { useClientContext } from '@/admin/contexts/provider-config-context';
+import { ReactComponent as Logo } from '@/admin/assets/logo.svg';
 import { Fields } from '@/admin/components/fields';
 import { useSettings } from '@/admin/contexts/settings-context';
 

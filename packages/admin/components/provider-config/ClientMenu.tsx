@@ -6,7 +6,7 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useEntityProp } from '@wordpress/core-data';
-import { useClientContext } from '../../contexts/ClientProvider';
+import { useClientContext } from '@/admin/contexts/provider-config-context';
 
 import styles from './styles.module.scss';
 

@@ -1,5 +1,5 @@
 import { Fields } from '@/admin/components/fields';
-import type { ClientOptionsType, LoginOptionsType } from '../../types';
+import type { ClientOptionsType, LoginOptionsType } from '@/admin/types';
 
 export function ClientOptionList( {
 	clientSlug,

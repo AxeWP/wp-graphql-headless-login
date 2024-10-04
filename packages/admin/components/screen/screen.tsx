@@ -10,7 +10,7 @@ import type { AllowedSettingKeys } from '@/admin/types';
 import styles from './styles.module.scss';
 
 const ClientSettingsScreen = lazy(
-	() => import( '../../../settings/ClientSettings/ClientSettings' )
+	() => import( '../provider-config/ClientSettings' )
 );
 
 export type AllowedScreens = 'access-control' | 'providers' | 'plugin-settings';

@@ -14,7 +14,7 @@ type AllowedStatuses = 'saving' | 'complete' | undefined;
 
 type SettingType = Record< AllowedSettingKeys, Record< string, unknown > >;
 
-export const SettingsContext = createContext< {
+const SettingsContext = createContext< {
 	settings: SettingType | undefined;
 	updateSettings: ( args: {
 		slug: keyof SettingType;
