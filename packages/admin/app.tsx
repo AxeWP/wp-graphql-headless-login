@@ -1,11 +1,7 @@
-import {
-	ErrorBoundary,
-	Header,
-	Screen,
-	ScreenProvider,
-} from './components/layout';
-import { Notices } from './components/notices';
-import { SettingsProvider } from './contexts/settings-context';
+import { ErrorBoundary, Header } from '@/admin/components/layout';
+import { Screen, ScreenProvider } from '@/admin/components/screen';
+import { Notices } from '@/admin/components/notices';
+import { SettingsProvider } from '@/admin/contexts/settings-context';
 
 import './admin.scss';
 

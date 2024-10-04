@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { Logo } from '../../logo';
+import { Logo } from '@/admin/components/logo';
 import { AdvancedSettingsToggle } from './advanced-settings-toggle';
 import { Menu } from './menu';
 

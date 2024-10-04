@@ -11,7 +11,7 @@ import type {
 	ClientOptionsType,
 	LoginOptionsType,
 	ProviderSettingType,
-} from '../types';
+} from '@/admin/types';
 
 const clientDefaults: ProviderSettingType = {
 	name: '',
@@ -23,7 +23,7 @@ const clientDefaults: ProviderSettingType = {
 	} satisfies LoginOptionsType,
 };
 
-export const ClientProviderContext = createContext< {
+const ProviderConfigContext = createContext< {
 	activeClient: string;
 	clientConfig?: ProviderSettingType;
 	setClientConfig: ( value: ProviderSettingType ) => void;
@@ -41,7 +41,7 @@ export const ClientProviderContext = createContext< {
 	setLoginOption: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
 } );
 
-export const ClientProvider = ( { children }: PropsWithChildren ) => {
+export const ProviderConfigProvider = ( { children }: PropsWithChildren ) => {
 	const [ activeClient, setActiveClient ] = useState(
 		Object.keys( wpGraphQLLogin?.settings.providers )?.[ 0 ] || ''
 	);
@@ -97,7 +97,7 @@ export const ClientProvider = ( { children }: PropsWithChildren ) => {
 	}, [ clientConfig, setClientConfig, activeClient ] );
 
 	return (
-		<ClientProviderContext.Provider
+		<ProviderConfigContext.Provider
 			value={ {
 				activeClient,
 				setActiveClient,
@@ -111,8 +111,8 @@ export const ClientProvider = ( { children }: PropsWithChildren ) => {
 			} }
 		>
 			{ children }
-		</ClientProviderContext.Provider>
+		</ProviderConfigContext.Provider>
 	);
 };
 
-export const useClientContext = () => useContext( ClientProviderContext );
+export const useClientContext = () => useContext( ProviderConfigContext );

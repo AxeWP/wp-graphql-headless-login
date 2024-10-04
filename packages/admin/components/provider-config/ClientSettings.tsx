@@ -1,14 +1,14 @@
 import { Flex, FlexItem, FlexBlock, Panel } from '@wordpress/components';
 import { ClientPanel } from './ClientPanel';
 import { ClientMenu } from './ClientMenu';
-import { ClientProvider } from '../../contexts/ClientProvider';
+import { ProviderConfigProvider } from '@/admin/contexts/provider-config-context';
 
 import styles from './styles.module.scss';
 
 function ClientSettings() {
 	return (
 		<Flex align="flex-start">
-			<ClientProvider>
+			<ProviderConfigProvider>
 				<FlexItem className={ styles.sidebar }>
 					<ClientMenu />
 				</FlexItem>
@@ -17,7 +17,7 @@ function ClientSettings() {
 						<ClientPanel />
 					</Panel>
 				</FlexBlock>
-			</ClientProvider>
+			</ProviderConfigProvider>
 		</Flex>
 	);
 }
