@@ -142,7 +142,7 @@ class AuthenticatedQueryCest {
 		$I->haveGraphQLDebug();
 
 		$I->haveOptionInDatabase(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			[
 				'shouldBlockUnauthorizedDomains' => true,
 				'hasSiteAddressInOrigin'         => true,

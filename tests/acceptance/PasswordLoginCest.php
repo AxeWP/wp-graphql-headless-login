@@ -145,6 +145,6 @@ class PasswordLoginCest {
 		$I->assertNotEmpty( $response['data']['viewer']['auth']['wooSessionToken'] );
 
 		// Cleanup
-		delete_option( PluginSettings::$settings_prefix . 'jwt_secret_key' );
+		delete_option( PluginSettings::get_slug() );
 	}
 }

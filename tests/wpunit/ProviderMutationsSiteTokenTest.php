@@ -50,7 +50,7 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		$this->tester->set_client_config( 'siteToken', $this->provider_config );
 
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			[
 				'shouldBlockUnauthorizedDomains' => true,
 			]
@@ -66,7 +66,7 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 	 * {@inheritDoc}
 	 */
 	public function tearDown(): void {
-		delete_option( AccessControlSettings::$settings_prefix . 'access_control' );
+		delete_option( AccessControlSettings::get_slug() );
 		$this->tester->reset_utils_properties();
 		wp_delete_user( $this->test_user );
 		$this->clearSchema();
@@ -124,7 +124,7 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 	}
 
 	public function testLoginWithoutBlockedAuthorizedDomains(): void {
-		delete_option( AccessControlSettings::$settings_prefix . 'access_control' );
+		delete_option( AccessControlSettings::get_slug() );
 		$this->tester->reset_utils_properties();
 
 		$query = $this->login_query();

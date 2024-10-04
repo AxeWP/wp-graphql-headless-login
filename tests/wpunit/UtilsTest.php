@@ -42,7 +42,7 @@ class UtilsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 
 		// Test db value.
 		$expected = true;
-		update_option( PluginSettings::$settings_prefix . 'delete_data_on_deactivate', $expected );
+		update_option( PluginSettings::get_slug(), [ 'delete_data_on_deactivate' => $expected ] );
 		$this->tester->reset_utils_properties();
 
 		$actual = Utils::get_setting( 'delete_data_on_deactivate' );
@@ -60,7 +60,7 @@ class UtilsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		remove_filter( 'graphql_login_setting', [ $this, 'setting_filter_callback' ], 10 );
 
 		// cleanup db
-		delete_option( PluginSettings::$settings_prefix . 'delete_data_on_deactivate' );
+		delete_option( PluginSettings::get_slug() );
 	}
 
 	/**
@@ -79,7 +79,7 @@ class UtilsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		$this->assertEquals( $expected, $actual, 'DB value should be true' );
 
 		// cleanup db
-		delete_option( PluginSettings::$settings_prefix . 'delete_data_on_deactivate' );
+		delete_option( PluginSettings::get_slug() );
 	}
 
 	/**
@@ -97,7 +97,7 @@ class UtilsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 
 		// Test db value.
 		$expected['hasSiteAddressInOrigin'] = true;
-		update_option( AccessControlSettings::$settings_prefix . 'access_control', $expected );
+		update_option( AccessControlSettings::get_slug(), $expected );
 		$this->tester->reset_utils_properties();
 
 		$actual = Utils::get_access_control_setting( 'hasSiteAddressInOrigin' );
@@ -115,7 +115,7 @@ class UtilsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		remove_filter( 'graphql_login_access_control_settings', [ $this, 'access_control_settings_filter_callback' ], 10 );
 
 		// cleanup db
-		delete_option( AccessControlSettings::$settings_prefix . 'access_control' );
+		delete_option( AccessControlSettings::get_slug() );
 	}
 
 	/**

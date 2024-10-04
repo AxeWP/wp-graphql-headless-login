@@ -12,12 +12,12 @@ import { store as coreStore } from '@wordpress/core-data';
 import { useDispatch, dispatch, useSelect } from '@wordpress/data';
 import { ClientOptionList } from './ClientOptionList';
 import { useClientContext } from '../../contexts/ClientProvider';
-import { useAppContext } from '../../contexts/AppProvider';
 import { ReactComponent as Logo } from '../../assets/logo.svg';
 import { Fields } from '@/admin/components/fields';
+import { useSettings } from '@/admin/contexts/settings-context';
 
 export function ClientPanel() {
-	const { accessControlSettings } = useAppContext();
+	const { settings } = useSettings();
 	const {
 		activeClient,
 		clientConfig,
@@ -73,6 +73,9 @@ export function ClientPanel() {
 
 	// Disable siteToken if shouldBlockUnauthorizedDomains is false
 	useEffect( () => {
+		const accessControlSettings =
+			settings?.wpgraphql_login_access_control || {};
+
 		if (
 			! accessControlSettings?.shouldBlockUnauthorizedDomains &&
 			activeClient === 'wpgraphql_login_provider_siteToken' &&
@@ -93,7 +96,12 @@ export function ClientPanel() {
 				}
 			);
 		}
-	}, [ accessControlSettings, activeClient, clientConfig, updateClient ] );
+	}, [
+		settings?.wpgraphql_login_access_control,
+		activeClient,
+		clientConfig,
+		updateClient,
+	] );
 
 	const saveRecord = async () => {
 		const saved = await saveEditedEntityRecord( 'root', 'site', undefined, {

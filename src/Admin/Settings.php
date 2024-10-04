@@ -10,10 +10,8 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Admin;
 
-use Error;
-use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
-use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
+use WPGraphQL\Login\Admin\Settings\RestController;
 use WPGraphQL\Login\Auth\TokenManager;
 
 /**
@@ -38,39 +36,34 @@ class Settings {
 	 * {@inheritDoc}
 	 */
 	public static function init(): void {
-		add_action( 'init', [ self::class, 'register_settings' ] );
+		// Initialize the settings registry.
+		SettingsRegistry::init();
+
+		add_action( 'rest_api_init', [ self::class, 'register_rest_routes' ] );
+		add_action( 'init', [ self::class, 'register_provider_settings' ] );
 		add_action( 'graphql_register_settings', [ self::class, 'register_settings_tab' ] );
 		add_action( 'admin_enqueue_scripts', [ self::class, 'register_admin_scripts' ] );
-		add_filter( 'rest_pre_get_setting', [ self::class, 'hide_sensitive_data_from_rest' ], 10, 2 );
 	}
 
 	/**
-	 * Store and get the registered settings.
-	 *
-	 * @return array<string,array<string,mixed>>
+	 * Registers the REST API routes for the settings.
 	 */
-	public static function get_all_settings(): array {
-		return [
-			'plugin'         => PluginSettings::get_settings_args(),
-			'providers'      => ProviderSettings::get_settings_args(),
-			'access_control' => AccessControlSettings::get_settings_args(),
-		];
+	public static function register_rest_routes(): void {
+		$controller = new RestController();
+		$controller->register_routes();
 	}
 
 	/**
 	 * Register the settings to WordPress.
 	 */
-	public static function register_settings(): void {
-		$all_settings = self::get_all_settings();
-
-		foreach ( $all_settings as $settings ) {
-			foreach ( $settings as $setting_name => $args ) {
-				register_setting(
-					self::$option_group,
-					$setting_name,
-					$args
-				);
-			}
+	public static function register_provider_settings(): void {
+		$settings = ProviderSettings::get_settings_args();
+		foreach ( $settings as $setting_name => $args ) {
+			register_setting(
+				self::$option_group,
+				$setting_name,
+				$args
+			);
 		}
 	}
 
@@ -128,12 +121,12 @@ class Settings {
 	 * @param string $handle The asset handle.
 	 * @param string $asset_name The asset name.
 	 *
-	 * @throws \Error If the asset file is not found.
+	 * @throws \Exception If the asset file is not found.
 	 */
 	private static function register_asset_js( string $handle, string $asset_name ): void {
 		$script_asset_path = WPGRAPHQL_LOGIN_PLUGIN_DIR . 'build/' . $asset_name . '.asset.php';
 		if ( ! file_exists( $script_asset_path ) ) {
-			throw new Error( esc_html__( 'You need to run `npm start` or `npm run build` for Headless Login for WPGraphQL to work.', 'wp-graphql-headless-login' ) );
+			throw new \Exception( esc_html__( 'You need to run `npm start` or `npm run build` for Headless Login for WPGraphQL to work.', 'wp-graphql-headless-login' ) );
 		}
 
 		$script_asset = require_once $script_asset_path; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
@@ -165,30 +158,22 @@ class Settings {
 			'isConstant' => defined( 'WPGRAPHQL_LOGIN_JWT_SECRET_KEY' ) && ! empty( WPGRAPHQL_LOGIN_JWT_SECRET_KEY ),
 		];
 
-		return [
-			'secret'   => $secret,
-			'settings' => [
-				'plugin'        => PluginSettings::get_config(),
-				'providers'     => ProviderSettings::get_config(),
-				'accessControl' => AccessControlSettings::get_config(),
-			],
-			'nonce'    => wp_create_nonce( 'wp_graphql_settings' ),
-		];
-	}
+		$plugin_registry = SettingsRegistry::get_all();
 
-	/**
-	 * Hides the JWT secret key from the REST API.
-	 *
-	 * @param mixed  $result Value to use for the requested setting.
-	 * @param string $name   Setting name (as shown in REST API responses).
-	 *
-	 * @return mixed
-	 */
-	public static function hide_sensitive_data_from_rest( $result, $name ) {
-		if ( PluginSettings::$settings_prefix . 'jwt_secret_key' === $name ) {
-			return '********';
+		$settings = [];
+		foreach ( $plugin_registry as $setting ) {
+			$settings[ $setting::get_slug() ] = $setting->get_settings_to_display();
 		}
 
-		return $result;
+		return [
+			'secret'   => $secret,
+			'settings' => array_merge(
+				$settings,
+				[
+					'providers' => ProviderSettings::get_config(),
+				],
+			),
+			'nonce'    => wp_create_nonce( 'wp_graphql_settings' ),
+		];
 	}
 }

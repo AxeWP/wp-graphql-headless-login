@@ -2,33 +2,23 @@ import { __ } from '@wordpress/i18n';
 import { Panel, PanelBody, PanelRow } from '@wordpress/components';
 import clsx from 'clsx';
 import { lazy, Suspense, type PropsWithChildren } from 'react';
-import { useCurrentScreen } from './context';
 import { Loading } from '@/admin/components/ui';
+import { useCurrentScreen } from './context';
+import { SettingsScreen } from './setting-screen';
+import type { AllowedSettingKeys } from '@/admin/types';
 
 import styles from './styles.module.scss';
 
-const AccessControlScreen = lazy(
-	() => import( '@/admin/settings/AccessControlSettings' )
-);
 const ClientSettingsScreen = lazy(
 	() => import( '../../../settings/ClientSettings/ClientSettings' )
-);
-const PluginSettingsScreen = lazy(
-	() => import( '../../../settings/PluginSettings/PluginSettings' )
 );
 
 export type AllowedScreens = 'access-control' | 'providers' | 'plugin-settings';
 
-/**
- * The screens that are available in the admin, along with their associated React components.
- */
-export const SCREEN_COMPONENTS: Record<
-	AllowedScreens,
-	React.LazyExoticComponent< () => JSX.Element >
-> = {
-	providers: ClientSettingsScreen,
-	'access-control': AccessControlScreen,
-	'plugin-settings': PluginSettingsScreen,
+export const SCREEN_MAP: Record< AllowedScreens, AllowedSettingKeys > = {
+	'access-control': 'wpgraphql_login_access_control',
+	'plugin-settings': 'wpgraphql_login_settings',
+	providers: 'providers',
 };
 
 /**
@@ -95,14 +85,19 @@ const Wrapper = ( {
 export const Screen = () => {
 	const { currentScreen } = useCurrentScreen();
 
-	const ScreenComponent = SCREEN_COMPONENTS[ currentScreen ];
 	const title = SCREEN_TITLES[ currentScreen ];
 	const description = SCREEN_DESCRIPTIONS[ currentScreen ];
 
 	return (
 		<Suspense fallback={ <Loading /> }>
 			<Wrapper title={ title } description={ description }>
-				<ScreenComponent />
+				{ currentScreen === 'providers' ? (
+					<ClientSettingsScreen />
+				) : (
+					<SettingsScreen
+						settingKey={ SCREEN_MAP[ currentScreen ] }
+					/>
+				) }
 			</Wrapper>
 		</Suspense>
 	);

@@ -6,7 +6,7 @@
 		background: none;
 		border: none;
 
-		& + :global(.components-panel) {
+		+ :global(.components-panel) {
 			margin-top: 2rem;
 		}
 

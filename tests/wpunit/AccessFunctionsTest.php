@@ -31,14 +31,14 @@ class AccessFunctionsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	public function testGetSetting(): void {
 		$expected = true;
 
-		update_option( PluginSettings::$settings_prefix . 'delete_data_on_deactivate', $expected );
+		update_option( PluginSettings::get_slug(), [ 'delete_data_on_deactivate' => $expected ] );
 
 		$actual = graphql_login_get_setting( 'delete_data_on_deactivate' );
 
 		$this->assertEquals( $expected, $actual );
 
 		// cleanup db
-		delete_option( PluginSettings::$settings_prefix . 'delete_data_on_deactivate' );
+		delete_option( PluginSettings::get_slug() );
 	}
 
 	/**
