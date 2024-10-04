@@ -171,7 +171,6 @@
 			"/package.json",
 			"/phpstan.neon.dist",
 			"/phpunit.xml.dist",
-			"/postcss.config.js",
 			"/tsconfig.base.json",
 			"/tsconfig.json",
 			"/webpack.config.js"
