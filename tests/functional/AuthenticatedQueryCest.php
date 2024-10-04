@@ -194,7 +194,7 @@ class AuthenticatedQueryCest {
 		$user_id = $I->haveUserInDatabase( 'testuser', 'administrator', [ 'user_pass' => 'testpass' ] );
 
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			[
 				'shouldBlockUnauthorizedDomains' => true,
 				'hasSiteAddressInOrigin'         => true,

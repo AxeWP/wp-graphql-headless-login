@@ -12,6 +12,7 @@ namespace WPGraphQL\Login\Utils;
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
+use WPGraphQL\Login\Admin\SettingsRegistry;
 use WPGraphQL\Login\Auth\ProviderRegistry;
 
 /**
@@ -53,15 +54,24 @@ class Utils {
 	 */
 	public static function get_setting( string $option_name, $default_value = false ) {
 		if ( ! isset( self::$settings[ $option_name ] ) ) {
-			$value = get_option( PluginSettings::$settings_prefix . $option_name, $default_value );
+			$instance = SettingsRegistry::get( PluginSettings::get_slug() );
+
+			if ( ! $instance ) {
+				return $default_value;
+			}
+
+			$values = $instance->get_values();
+
+			$option_value = $values[ $option_name ] ?? null;
+
 			/**
-			 * Filter the value before returning it
+			 * Filter the value before returning it.
 			 *
 			 * @param mixed  $value         The value of the field
 			 * @param string $option_name   The name of the option
 			 * @param mixed  $default_value The default value if there is no value set
 			 */
-			self::$settings[ $option_name ] = apply_filters( 'graphql_login_setting', $value, $option_name, $default_value );
+			self::$settings[ $option_name ] = apply_filters( 'graphql_login_setting', $option_value, $option_name, $default_value );
 		}
 
 		return self::$settings[ $option_name ];
@@ -75,15 +85,17 @@ class Utils {
 	 * @param mixed  $value The value of the setting.
 	 */
 	public static function update_plugin_setting( string $option_name, $value ): bool {
-		$option_name = PluginSettings::$settings_prefix . $option_name;
+		$instance = SettingsRegistry::get( PluginSettings::get_slug() );
 
-		$success = update_option( $option_name, $value );
-
-		if ( $success ) {
-			self::$settings[ $option_name ] = $value;
+		if ( ! $instance ) {
+			return false;
 		}
 
-		return $success;
+		$instance->update_values( [ $option_name => $value ] );
+
+		self::$settings[ $option_name ] = $value;
+
+		return true;
 	}
 
 	/**
@@ -100,13 +112,19 @@ class Utils {
 	 */
 	public static function get_access_control_setting( string $option_name, $default_value = false ) {
 		if ( ! isset( self::$access_control ) ) {
-			$access_control = get_option( AccessControlSettings::$settings_prefix . 'access_control' );
+			$instance = SettingsRegistry::get( AccessControlSettings::get_slug() );
+
+			if ( ! $instance ) {
+				return $default_value;
+			}
+
+			$access_control = $instance->get_values();
 
 			/**
 			 * Filter the value before returning it
 			 *
-			 * @param mixed  $value          The value of the field
-			 * @param mixed  $default        The default value if there is no value set
+			 * @param array<string,mixed> $values The access control settings
+			 * @param mixed               $default     The default value if there is no value set
 			 */
 			self::$access_control = apply_filters( 'graphql_login_access_control_settings', $access_control, $default_value );
 		}

@@ -10,6 +10,8 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login;
 
+use WPGraphQL\Login\Admin\SettingsRegistry;
+
 	/**
 	 * Runs when WPGraphQL is de-activated.
 	 *
@@ -46,26 +48,14 @@ function delete_data(): void {
 	delete_option( 'wp_graphql_login_version' );
 
 	// Initialize the settings API.
-	$settings = \WPGraphQL\Login\Admin\Settings::get_all_settings();
+	$settings = SettingsRegistry::get_all();
 
 	if ( empty( $settings ) ) {
 		return;
 	}
 
-	// Get all the setting keys across various groups.
-	$settings = array_reduce(
-		$settings,
-		static function ( $carry, $item ) {
-			return array_merge( $carry, array_keys( $item ) );
-		},
-		[]
-	);
-
-	// Loop over the registered settings fields and delete the options.
-	if ( ! empty( $settings ) && is_array( $settings ) ) {
-		foreach ( array_keys( $settings ) as $option_name ) {
-			delete_option( $option_name );
-		}
+	foreach ( array_keys( $settings ) as $option_name ) {
+		delete_option( $option_name );
 	}
 
 	// Fire an action when data is deleted.

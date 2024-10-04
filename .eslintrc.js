@@ -1,8 +1,5 @@
 module.exports = {
-	extends: [
-		'plugin:@wordpress/eslint-plugin/recommended',
-		'plugin:you-dont-need-lodash-underscore/compatible',
-	],
+	extends: [ 'plugin:@wordpress/eslint-plugin/recommended' ],
 	globals: {
 		fetchMock: true,
 		IntersectionObserver: 'readonly',
@@ -66,18 +63,9 @@ module.exports = {
 	},
 	overrides: [
 		{
-			files: [ '**/bin/**.js' ],
-			rules: {
-				'you-dont-need-lodash-underscore/omit': 'off',
-			},
-		},
-		{
 			files: [ '*.ts', '*.tsx' ],
 			parser: '@typescript-eslint/parser',
-			extends: [
-				'plugin:you-dont-need-lodash-underscore/compatible',
-				'plugin:@typescript-eslint/recommended',
-			],
+			extends: [ 'plugin:@typescript-eslint/recommended' ],
 			rules: {
 				'prefer-rest-params': 'off',
 				'@typescript-eslint/no-explicit-any': 'error',

@@ -13,100 +13,69 @@ namespace WPGraphQL\Login\Admin\Settings;
 /**
  * Class PluginSettings
  */
-class PluginSettings {
+class PluginSettings extends AbstractSettings {
 	/**
-	 * The settings key used to store the Clients config.
-	 *
-	 * @var string
+	 * {@inheritDoc}
 	 */
-	public static string $settings_prefix = 'wpgraphql_login_settings_';
-
-	/**
-	 * The setting configuration.
-	 *
-	 * @var array<string,array<string,mixed>>
-	 */
-	private static array $config = [];
-
-	/**
-	 * The args used to register the settings.
-	 *
-	 * @var array<string,mixed>
-	 */
-	private static array $args = [];
-
-	/**
-	 * Gets the setting configuration.
-	 *
-	 * @return array<string,array<string,mixed>>
-	 */
-	public static function get_config(): array {
-		if ( empty( self::$config ) ) {
-			self::$config = [
-				// Admin Display Settings.
-				self::$settings_prefix . 'show_advanced_settings' => [
-					'default'           => false,
-					'description'       => __( 'Show advanced settings in the admin.', 'wp-graphql-headless-login' ),
-					'hidden'            => true,
-					'label'             => __( 'Show Advanced Settings', 'wp-graphql-headless-login' ),
-					'sanitize_callback' => 'rest_sanitize_boolean',
-					'show_in_graphql'   => false,
-					'show_in_rest'      => true,
-					'type'              => 'boolean',
-				],
-				// Delete Data on Deactivate.
-				self::$settings_prefix . 'delete_data_on_deactivate' => [
-					'advanced'          => false,
-					'default'           => false,
-					'description'       => __( 'Delete all data on plugin deactivation.', 'wp-graphql-headless-login' ),
-					'help'              => __( 'When selected, all plugin data will be deleted when the plugin is deactivated, including client configurations. Mote: No user meta will be deleted.', 'wp-graphql-headless-login' ),
-					'label'             => __( 'Delete plugin data on deactivate.', 'wp-graphql-headless-login' ),
-					'order'             => 1,
-					'required'          => false,
-					'sanitize_callback' => 'rest_sanitize_boolean',
-					'show_in_graphql'   => false,
-					'show_in_rest'      => true,
-					'type'              => 'boolean',
-				],
-				// The JWT Secret.
-				self::$settings_prefix . 'jwt_secret_key' => [
-					'default'         => false,
-					'hidden'          => true,
-					'type'            => 'string',
-					'show_in_rest'    => true,
-					'show_in_graphql' => false,
-				],
-			];
-		}
-
-		return self::$config;
+	public static function get_slug(): string {
+		return self::SETTINGS_PREFIX . 'settings';
 	}
 
 	/**
-	 * Returns the args used to register the settings.
-	 *
-	 * @return array<string,mixed>
+	 * {@inheritDoc}
 	 */
-	public static function get_settings_args(): array {
-		if ( empty( self::$args ) ) {
-			$config = self::get_config();
+	public function get_title(): string {
+		return __( 'Plugin Settings', 'wp-graphql-headless-login' );
+	}
 
-			$excluded_keys = [
-				'advanced',
-				'help',
-				'label',
-				'order',
-				'hidden',
-			];
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_description(): string {
+		return __( 'Miscellaneous settings for the plugin.', 'wp-graphql-headless-login' );
+	}
 
-			foreach ( $config as $settings_key => $args ) {
-				// Remove excluded keys from args.
-				$config[ $settings_key ] = array_diff_key( $args, array_flip( $excluded_keys ) );
-			}
-
-			self::$args = $config;
-		}
-
-		return self::$args;
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_config(): array {
+		return [
+			// Admin Display Settings.
+			'show_advanced_settings'    => [
+				'description'       => __( 'Show advanced settings in the admin.', 'wp-graphql-headless-login' ),
+				'label'             => __( 'Show Advanced Settings', 'wp-graphql-headless-login' ),
+				'type'              => 'boolean',
+				'default'           => false,
+				'hidden'            => true,
+				'required'          => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			// Delete Data on Deactivate.
+			'delete_data_on_deactivate' => [
+				'description'       => __( 'Delete all data on plugin deactivation.', 'wp-graphql-headless-login' ),
+				'label'             => __( 'Delete plugin data on deactivate.', 'wp-graphql-headless-login' ),
+				'type'              => 'boolean',
+				'isAdvanced'        => false,
+				'default'           => false,
+				'help'              => __( 'When selected, all plugin data will be deleted when the plugin is deactivated, including client configurations. Mote: No user meta will be deleted.', 'wp-graphql-headless-login' ),
+				'order'             => 1,
+				'required'          => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			// The JWT Secret.
+			'jwt_secret_key'            => [
+				'default'           => false,
+				'description'       => __( 'The JWT Secret Key.', 'wp-graphql-headless-login' ),
+				'label'             => __( 'Regenerate JWT Secret', 'wp-graphql-headless-login' ),
+				'help'              => __(
+					'The JWT Secret is used to sign the JWT tokens that are used to authenticate requests to the GraphQL API. Changing this secret will invalidate all previously-authenticated requests.',
+					'wp-graphql-headless-login'
+				),
+				'isAdvanced'        => true,
+				'type'              => 'string',
+				'controlType'       => 'jwtSecret',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+		];
 	}
 }
