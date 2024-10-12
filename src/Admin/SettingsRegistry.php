@@ -19,14 +19,18 @@ class SettingsRegistry implements Registrable {
 	/**
 	 * The instantiated settings.
 	 *
-	 * @var array<\WPGraphQL\Login\Admin\Settings\AbstractSettings>
+	 * @var ?array<string,\WPGraphQL\Login\Admin\Settings\AbstractSettings>
 	 */
-	private static array $settings;
+	protected static ?array $settings;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public static function init(): void {
+		if ( isset( self::$settings ) ) {
+			return;
+		}
+
 		$classes_to_register = [
 			Settings\AccessControlSettings::class,
 			Settings\PluginSettings::class,
@@ -37,8 +41,6 @@ class SettingsRegistry implements Registrable {
 
 			self::$settings[ $instance::get_slug() ] = $instance;
 		}
-
-		add_action( 'init', [ self::class, 'register_settings' ] );
 	}
 
 	/**
@@ -53,13 +55,14 @@ class SettingsRegistry implements Registrable {
 	/**
 	 * Get all the registered settings instances.
 	 *
-	 * @return array<\WPGraphQL\Login\Admin\Settings\AbstractSettings>
+	 * @return array<string,\WPGraphQL\Login\Admin\Settings\AbstractSettings>
 	 */
 	public static function get_all(): array {
 		if ( ! isset( self::$settings ) ) {
 			self::init();
 		}
 
+		/** @var \WPGraphQL\Login\Admin\Settings\AbstractSettings[] */
 		return self::$settings;
 	}
 
