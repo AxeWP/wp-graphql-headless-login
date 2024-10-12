@@ -37,7 +37,7 @@ class Settings {
 	 */
 	public static function init(): void {
 		// Initialize the settings registry.
-		SettingsRegistry::init();
+		add_action( 'init', [ SettingsRegistry::class, 'register_settings' ] );
 
 		add_action( 'rest_api_init', [ self::class, 'register_rest_routes' ] );
 		add_action( 'init', [ self::class, 'register_provider_settings' ] );
