@@ -2,6 +2,8 @@
 /**
  * Registers the Provider Settings
  *
+ * @todo This class should be removed when Providers are moved out of the settings.
+ *
  * @package WPGraphQL\Login\Admin\Settings
  * @since 0.0.6
  */

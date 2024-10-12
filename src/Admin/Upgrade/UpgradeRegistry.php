@@ -31,12 +31,7 @@ class UpgradeRegistry implements Registrable {
 	 * Run the upgrade process.
 	 */
 	public static function do_upgrades(): void {
-		/**
-		 * @var class-string<\WPGraphQL\Login\Admin\Upgrade\AbstractUpgrade>[]
-		 */
-		$upgrade_classes = [
-			V0_4_0::class,
-		];
+		$upgrade_classes = static::get_upgrade_classes();
 
 		// Remove all the unneeded upgrade classes.
 		$db_version = get_option( AbstractUpgrade::VERSION_OPTION_KEY, null );
@@ -92,5 +87,16 @@ class UpgradeRegistry implements Registrable {
 			</p>
 		</div>
 		<?php
+	}
+
+	/**
+	 * The upgrade classes.
+	 *
+	 * @return class-string<\WPGraphQL\Login\Admin\Upgrade\AbstractUpgrade>[]
+	 */
+	protected static function get_upgrade_classes(): array {
+		return [
+			V0_4_0::class,
+		];
 	}
 }

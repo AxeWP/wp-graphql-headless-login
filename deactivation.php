@@ -11,6 +11,7 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login;
 
 use WPGraphQL\Login\Admin\SettingsRegistry;
+use WPGraphQL\Login\Admin\Upgrade\AbstractUpgrade;
 
 	/**
 	 * Runs when WPGraphQL is de-activated.
@@ -44,18 +45,18 @@ function delete_data(): void {
 		return;
 	}
 
-	// Delete plugin version.
-	delete_option( 'wp_graphql_login_version' );
-
 	// Initialize the settings API.
-	$settings = SettingsRegistry::get_all();
+	$options = array_merge(
+		[ AbstractUpgrade::VERSION_OPTION_KEY ],
+		array_keys( SettingsRegistry::get_all() ),
+	);
 
-	if ( empty( $settings ) ) {
+	if ( empty( $options ) ) {
 		return;
 	}
 
-	foreach ( array_keys( $settings ) as $option_name ) {
-		delete_option( $option_name );
+	foreach ( $options as $option ) {
+		delete_option( $option );
 	}
 
 	// Fire an action when data is deleted.
