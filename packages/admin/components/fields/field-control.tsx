@@ -1,12 +1,12 @@
+import { FormTokenFieldControl } from '@/admin/components/ui/form-token-field';
 import {
 	SelectControl,
 	TextControl,
 	ToggleControl,
 } from '@wordpress/components';
-import { FormTokenFieldControl } from '@/admin/components/ui';
 import { JwtSecretControl } from './jwt-secret-control';
 import type { FieldSchema } from '@/admin/types';
-import type { ComponentType, ComponentProps } from 'react';
+import type { ComponentProps, ComponentType } from 'react';
 
 type FieldControlProps = FieldSchema & {
 	value: unknown;

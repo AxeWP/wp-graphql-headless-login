@@ -1,5 +1,5 @@
 import { ReactComponent as LogoSVG } from '@/admin/assets/logo.svg';
-import { SVGIcon } from '@/admin/components/ui';
+import { SVGIcon } from '@/admin/components/ui/svg-icon';
 
 /**
  * A span element containing the logo SVG.

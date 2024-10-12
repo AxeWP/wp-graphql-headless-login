@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { Panel, PanelBody, PanelRow } from '@wordpress/components';
 import clsx from 'clsx';
 import { lazy, Suspense, type PropsWithChildren } from 'react';
-import { Loading } from '@/admin/components/ui';
+import { Loading } from '@/admin/components/ui/loading';
 import { useCurrentScreen } from './context';
 import { SettingsScreen } from './setting-screen';
 import type { AllowedSettingKeys } from '@/admin/types';
