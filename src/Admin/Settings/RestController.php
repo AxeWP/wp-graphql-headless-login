@@ -90,32 +90,16 @@ class RestController extends \WP_REST_Controller {
 	 * {@inheritDoc}
 	 *
 	 * @param \WP_REST_Request<array{slug:string,values:array<string,mixed>}> $request The request object.
+	 *
+	 * @return \WP_REST_Response
 	 */
 	public function update_item( $request ) {
-		$slug   = $request->get_param( 'slug' );
+		/** @var array<string,mixed> $values */
 		$values = $request->get_param( 'values' );
+		$slug   = (string) $request->get_param( 'slug' );
 
-		if ( empty( $slug ) ) {
-			return new \WP_Error(
-				'rest_invalid_setting',
-				__( 'Invalid setting slug.', 'wp-graphql-headless-login' ),
-				[ 'status' => 400 ]
-			);
-		}
-
-		if ( empty( $values ) ) {
-			return new \WP_Error(
-				'rest_invalid_values',
-				__( 'Invalid setting values.', 'wp-graphql-headless-login' ),
-				[ 'status' => 400 ]
-			);
-		}
-
+		/** @var \WPGraphQL\Login\Admin\Settings\AbstractSettings $setting */
 		$setting = SettingsRegistry::get( $slug );
-
-		if ( ! $setting ) {
-			return self::get_invalid_setting_error( $slug );
-		}
 
 		$setting->update_values( $values );
 
@@ -134,25 +118,9 @@ class RestController extends \WP_REST_Controller {
 			'slug'   => [
 				'type'              => 'string',
 				'required'          => true,
-				'sanitize_callback' => 'sanitize_text_field',
-				'validate_callback' => static function ( $param ) {
-					$settings = SettingsRegistry::get_all();
-
-					// Bail if the setting is not found.
-					if ( ! isset( $settings[ $param ] ) ) {
-						return new \WP_Error(
-							'rest_invalid_setting',
-							sprintf(
-								// translators: %s: The setting slug.
-								__( 'Invalid setting: %s', 'wp-graphql-headless-login' ),
-								esc_html( $param )
-							),
-							[ 'status' => 400 ]
-						);
-					}
-
-					return true;
-				},
+				'enum'              => $this->get_allowed_slugs(),
+				'sanitize_callback' => 'rest_sanitize_request_arg',
+				'validate_callback' => 'rest_validate_request_arg',
 			],
 			'values' => [
 				'type'              => 'object',
@@ -160,12 +128,8 @@ class RestController extends \WP_REST_Controller {
 				'sanitize_callback' => static function ( $param, $request ) {
 					$slug = $request->get_param( 'slug' );
 
-					$setting = ! empty( $slug ) ? SettingsRegistry::get( $slug ) : null;
-
-					// Bail if the setting is not found.
-					if ( ! $setting ) {
-						return self::get_invalid_setting_error( $slug );
-					}
+					/** @var \WPGraphQL\Login\Admin\Settings\AbstractSettings $setting */
+					$setting = SettingsRegistry::get( $slug );
 
 					// Sanitize from the setting schema.
 					$config = $setting->get_config();
@@ -184,7 +148,17 @@ class RestController extends \WP_REST_Controller {
 					return $sanitized_values;
 				},
 				'validate_callback' => static function ( $param, $request ) {
-					$slug = $request->get_param( 'slug' );
+					// Bail if the values are not an array.
+					if ( ! is_array( $param ) ) {
+						return new \WP_Error(
+							'rest_invalid_values',
+							__( 'Invalid setting values.', 'wp-graphql-headless-login' ),
+							[ 'status' => 400 ]
+						);
+					}
+
+					// We cast the slug in case it hasn't been sanitized yet.
+					$slug = (string) $request->get_param( 'slug' );
 
 					$setting = ! empty( $slug ) ? SettingsRegistry::get( $slug ) : null;
 
@@ -213,6 +187,17 @@ class RestController extends \WP_REST_Controller {
 				},
 			],
 		];
+	}
+
+	/**
+	 * Gets the allowed slug values.
+	 *
+	 * @return string[]
+	 */
+	private static function get_allowed_slugs(): array {
+		$settings = SettingsRegistry::get_all();
+
+		return array_keys( $settings );
 	}
 
 	/**
