@@ -158,11 +158,11 @@ class Settings {
 			'isConstant' => defined( 'WPGRAPHQL_LOGIN_JWT_SECRET_KEY' ) && ! empty( WPGRAPHQL_LOGIN_JWT_SECRET_KEY ),
 		];
 
-		$plugin_registry = SettingsRegistry::get_all();
+		$setting_instances = SettingsRegistry::get_all();
 
 		$settings = [];
-		foreach ( $plugin_registry as $setting ) {
-			$settings[ $setting::get_slug() ] = $setting->get_settings_to_display();
+		foreach ( $setting_instances as $instance ) {
+			$settings[ $instance::get_slug() ] = $instance->get_render_config();
 		}
 
 		return [
