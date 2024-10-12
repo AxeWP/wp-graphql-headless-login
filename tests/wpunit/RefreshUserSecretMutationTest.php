@@ -1,7 +1,5 @@
 <?php
 
-use WPGraphQL\Login\Auth\TokenManager;
-use WPGraphQL\Login\Auth\User;
 
 /**
  * Tests access functons
@@ -38,10 +36,11 @@ class RefreshUserSecretMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 	public function tearDown(): void {
 		$this->tester->reset_utils_properties();
 		$this->clearSchema();
+
 		parent::tearDown();
 	}
 
-	public function query() : string {
+	public function query(): string {
 		return '
 			mutation RefreshUserSecret( $userId: ID! ) {
 				refreshUserSecret(input: {userId: $userId}) {
@@ -55,7 +54,7 @@ class RefreshUserSecretMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		';
 	}
 
-	public function testWithBadPermissions() : void {
+	public function testWithBadPermissions(): void {
 		$query = $this->query();
 
 		$variables = [
@@ -68,7 +67,7 @@ class RefreshUserSecretMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		$this->assertEquals( 'You are not allowed to refresh the user secret.', $actual['errors'][0]['message'] );
 	}
 
-	public function testWithBadId() : void {
+	public function testWithBadId(): void {
 		$query = $this->query();
 
 		$variables = [
@@ -84,7 +83,7 @@ class RefreshUserSecretMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		$this->assertEquals( 'You are not allowed to refresh the user secret.', $actual['errors'][0]['message'] );
 	}
 
-	public function testMutation() : void {
+	public function testMutation(): void {
 		$query = $this->query();
 
 		// Test as admin user
@@ -115,7 +114,4 @@ class RefreshUserSecretMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		$this->assertNotNull( $actual['data']['refreshUserSecret']['revokedUserSecret'] );
 		$this->assertNotNull( $actual['data']['refreshUserSecret']['userSecret'] );
 	}
-
-
-
 }

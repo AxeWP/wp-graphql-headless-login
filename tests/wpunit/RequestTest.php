@@ -27,7 +27,8 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 	 */
 	public function setUp(): void {
 		parent::setUp();
-		update_option( AccessControlSettings::$settings_prefix . 'access_control', $this->default_options );
+
+		update_option( AccessControlSettings::get_slug(), $this->default_options );
 
 		$this->tester->reset_utils_properties();
 	}
@@ -36,12 +37,13 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 	 * {@inheritDoc}
 	 */
 	public function tearDown(): void {
-		delete_option( AccessControlSettings::$settings_prefix . 'access_control' );
+		delete_option( AccessControlSettings::get_slug() );
 		$this->tester->reset_utils_properties();
+
 		parent::tearDown();
 	}
 
-	public function testAuthenticateTokenOnRequest() : void {
+	public function testAuthenticateTokenOnRequest(): void {
 		$debug_log = new \WPGraphQL\Utils\DebugLog();
 
 		Request::authenticate_token_on_request();
@@ -78,7 +80,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 		// Test with shouldBlockUnauthorizedDomains set to true.
 
-		update_option( AccessControlSettings::$settings_prefix . 'access_control', array_merge( $this->default_options, [ 'shouldBlockUnauthorizedDomains' => true ] ) );
+		update_option( AccessControlSettings::get_slug(), array_merge( $this->default_options, [ 'shouldBlockUnauthorizedDomains' => true ] ) );
 		$this->tester->reset_utils_properties();
 
 		// If the origin is the same as the host this should be fine.
@@ -99,7 +101,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 	public function testAuthenticateOriginOnRequestWithSiteAddress() {
 		update_option( 'home', 'https://example.com' );
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -115,7 +117,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 		// This will pass with hasSiteAddressInOrigin set to true.
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -130,7 +132,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 		// This will fail with hasSiteAddressInOrigin set to false.
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -153,7 +155,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 	public function testAuthenticateOriginOnRequestWithAdditionalDomains() {
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -181,7 +183,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 		// This will fail with additionalAuthorizedDomains set to false.
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -201,7 +203,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		unset( $_SERVER['HTTP_ORIGIN'] );
 	}
 
-	public function testResponseHeadersToSend() : void {
+	public function testResponseHeadersToSend(): void {
 		$default_client_config = [
 			'name'          => 'Site Token',
 			'slug'          => 'siteToken',
@@ -269,7 +271,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 		// Test with hasAccessControlAllowCredentials.
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -293,7 +295,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 		// Test with hasAccessControlAllowCredentials and shouldBlockUnauthorizedDomains.
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -322,7 +324,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		$_SERVER['HTTP_ORIGIN'] = site_url();
 
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -362,7 +364,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		);
 
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -399,7 +401,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertNotEmpty( $refresh_token->data->user->user_secret );
 	}
 
-	public function testGetAcaoHeader() : void {
+	public function testGetAcaoHeader(): void {
 		$default_headers = [
 			'Access-Control-Allow-Origin'   => '*',
 			'Access-Control-Allow-Headers'  => implode(
@@ -421,7 +423,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 		// Test with custom headers.
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -452,7 +454,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		// Test with hasSiteAddressInOrigin set to true.
 		update_option( 'home', 'https://example.com' );
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -472,7 +474,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 
 		// Test with additionalAuthorizedDomains
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			array_merge(
 				$this->default_options,
 				[
@@ -495,6 +497,4 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertArrayHasKey( 'Access-Control-Allow-Origin', $actual );
 		$this->assertStringContainsString( 'https://example2.com', $actual['Access-Control-Allow-Origin'] );
 	}
-
-
 }

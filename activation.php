@@ -10,6 +10,8 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login;
 
+use WPGraphQL\Login\Admin\Upgrade\UpgradeRegistry;
+
 /**
  * Runs when the plugin is activated.
  *
@@ -20,7 +22,7 @@ function activation_callback(): callable {
 		// Runs when the plugin is activated.
 		do_action( 'graphql_login_activate' );
 
-		// store the current version of the plugin.
-		update_option( 'wp_graphql_login_version', WPGRAPHQL_LOGIN_VERSION );
+		// Run any upgrade routines.
+		UpgradeRegistry::do_upgrades();
 	};
 }

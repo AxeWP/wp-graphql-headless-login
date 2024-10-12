@@ -8,7 +8,6 @@ use WPGraphQL\Login\Auth\User;
  */
 
 class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
-
 	public $tester;
 	public $admin;
 	public $test_user;
@@ -51,7 +50,7 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		$this->tester->set_client_config( 'siteToken', $this->provider_config );
 
 		update_option(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			[
 				'shouldBlockUnauthorizedDomains' => true,
 			]
@@ -67,14 +66,15 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 	 * {@inheritDoc}
 	 */
 	public function tearDown(): void {
-		delete_option( AccessControlSettings::$settings_prefix . 'access_control' );
+		delete_option( AccessControlSettings::get_slug() );
 		$this->tester->reset_utils_properties();
 		wp_delete_user( $this->test_user );
 		$this->clearSchema();
+
 		parent::tearDown();
 	}
 
-	public function login_query() : string {
+	public function login_query(): string {
 		return '
 			mutation LoginWithSiteToken( $input: LoginInput! ) {
 				login( input: $input ) {
@@ -102,7 +102,7 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		';
 	}
 
-	public function link_query() : string {
+	public function link_query(): string {
 		return '
 			mutation LinkUser( $input: LinkUserIdentityInput! ) {
 				linkUserIdentity(
@@ -123,8 +123,8 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		';
 	}
 
-	public function testLoginWithoutBlockedAuthorizedDomains() : void {
-		delete_option( AccessControlSettings::$settings_prefix . 'access_control' );
+	public function testLoginWithoutBlockedAuthorizedDomains(): void {
+		delete_option( AccessControlSettings::get_slug() );
 		$this->tester->reset_utils_properties();
 
 		$query = $this->login_query();
@@ -142,7 +142,7 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		$this->assertEquals( 'Provider siteToken is not enabled.', $actual['errors'][0]['debugMessage'] );
 	}
 
-	public function testLoginWithNoProvisioning() : void {
+	public function testLoginWithNoProvisioning(): void {
 		$query = $this->login_query();
 
 		$variables = [
@@ -247,7 +247,7 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		unset( $_SERVER['HTTP_X_MY_SECRET_AUTH_TOKEN'] );
 	}
 
-	public function testLinkUserIdentityWithConflictingIdentity() : void {
+	public function testLinkUserIdentityWithConflictingIdentity(): void {
 		$this->tester->set_client_config(
 			'siteToken',
 			[
@@ -291,7 +291,7 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		unset( $_SERVER['HTTP_X_MY_SECRET_AUTH_TOKEN'] );
 	}
 
-	public function testLinkUserIdentity() : void {
+	public function testLinkUserIdentity(): void {
 		$query = $this->link_query();
 
 		$variables = [

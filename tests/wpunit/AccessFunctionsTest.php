@@ -28,17 +28,17 @@ class AccessFunctionsTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @covers graphql_login_get_setting()
 	 */
-	public function testGetSetting() : void {
+	public function testGetSetting(): void {
 		$expected = true;
 
-		update_option( PluginSettings::$settings_prefix . 'delete_data_on_deactivate', $expected );
+		update_option( PluginSettings::get_slug(), [ 'delete_data_on_deactivate' => $expected ] );
 
 		$actual = graphql_login_get_setting( 'delete_data_on_deactivate' );
 
 		$this->assertEquals( $expected, $actual );
 
 		// cleanup db
-		delete_option( PluginSettings::$settings_prefix . 'delete_data_on_deactivate' );
+		delete_option( PluginSettings::get_slug() );
 	}
 
 	/**
@@ -46,7 +46,7 @@ class AccessFunctionsTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @covers graphql_login_get_provider_settings()
 	 */
-	public function testGetProviderSettings() : void {
+	public function testGetProviderSettings(): void {
 		$expected = [
 			'name'      => 'Facebook',
 			'isEnabled' => false,
@@ -64,5 +64,4 @@ class AccessFunctionsTest extends \Codeception\TestCase\WPTestCase {
 		// cleanup db
 		delete_option( ProviderSettings::$settings_prefix . 'facebook' );
 	}
-
 }

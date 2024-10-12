@@ -6,7 +6,6 @@ use WPGraphQL\Login\Main;
  * Tests Main.
  */
 class MainTest extends \Codeception\TestCase\WPTestCase {
-
 	public $instance;
 
 	/**
@@ -32,7 +31,7 @@ class MainTest extends \Codeception\TestCase\WPTestCase {
 	 */
 	public function testInstance() {
 		$this->instance = new Main();
-		$this->assertTrue( $this->instance instanceof Main );
+		$this->assertInstanceOf( Main::class, $this->instance );
 	}
 
 	/**
@@ -46,14 +45,27 @@ class MainTest extends \Codeception\TestCase\WPTestCase {
 	}
 
 	/**
-	 * @covers \WPGraphQL\Login\Main::__wakeup
-	 * @covers \WPGraphQL\Login\Main::__clone
+	 * Test cloning does not work.
+	 *
+	 * @covers \WPGraphQL\Login\Main
 	 */
-	public function testClone() {
-		$actual = Main::instance();
-		$rc     = new ReflectionClass( $actual );
-		$this->assertTrue( $rc->hasMethod( '__clone' ) );
-		$this->assertTrue( $rc->hasMethod( '__wakeup' ) );
+	public function testClone(): void {
+		$this->setExpectedIncorrectUsage( '__clone' );
+
+		$instance = Main::instance();
+		clone $instance;
+	}
+
+	/**
+	 * Test deserializing does not work.
+	 */
+	public function testWakeup(): void {
+		$this->setExpectedIncorrectUsage( '__wakeup' );
+
+		$instance            = Main::instance();
+		$serialized_instance = serialize( $instance );
+
+		unserialize( $serialized_instance );
 	}
 
 	/**
@@ -68,5 +80,4 @@ class MainTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertTrue( defined( 'WPGRAPHQL_LOGIN_PLUGIN_URL' ) );
 		$this->assertTrue( defined( 'WPGRAPHQL_LOGIN_PLUGIN_FILE' ) );
 	}
-
 }

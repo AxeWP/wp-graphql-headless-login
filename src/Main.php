@@ -75,8 +75,6 @@ if ( ! class_exists( \WPGraphQL\Login\Main::class ) ) :
 		 * The whole idea of the singleton design pattern is that there is a single object
 		 * therefore, we don't want the object to be cloned.
 		 *
-		 * @codeCoverageIgnore
-		 *
 		 * @return void
 		 */
 		public function __clone() {
@@ -86,8 +84,6 @@ if ( ! class_exists( \WPGraphQL\Login\Main::class ) ) :
 
 		/**
 		 * Disable unserializing of the class.
-		 *
-		 * @codeCoverageIgnore
 		 */
 		public function __wakeup(): void {
 			// De-serializing instances of the class is forbidden.

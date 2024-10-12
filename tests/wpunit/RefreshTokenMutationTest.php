@@ -55,10 +55,11 @@ class RefreshTokenMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCa
 	public function tearDown(): void {
 		$this->tester->reset_utils_properties();
 		$this->clearSchema();
+
 		parent::tearDown();
 	}
 
-	public function query() : string {
+	public function query(): string {
 		return '
 			mutation RefreshToken( $refreshToken: String! ) {
 				refreshToken( input: { refreshToken: $refreshToken } ) {
@@ -70,7 +71,7 @@ class RefreshTokenMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCa
 		';
 	}
 
-	public function testWithBadToken() : void {
+	public function testWithBadToken(): void {
 		$query = $this->query();
 
 		// Test bad token
@@ -87,7 +88,7 @@ class RefreshTokenMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCa
 		$this->assertEquals( 'Wrong number of segments', $actual['extensions']['debug'][0]['message'] );
 	}
 
-	public function testWithSpoofedToken() : void {
+	public function testWithSpoofedToken(): void {
 		$query = $this->query();
 
 		// Spoof token with bad user ID.
@@ -148,7 +149,7 @@ class RefreshTokenMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCa
 		$this->assertEquals( 'Signature verification failed', $actual['extensions']['debug'][0]['message'] );
 	}
 
-	public function testWithAuthToken() : void {
+	public function testWithAuthToken(): void {
 		$query = $this->query();
 
 		// Test auth token.
@@ -176,7 +177,7 @@ class RefreshTokenMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCa
 		$this->assertEquals( 'User secret not found in the token.', $actual['extensions']['debug'][0]['message'] );
 	}
 
-	public function testWithSecretRevoked() : void {
+	public function testWithSecretRevoked(): void {
 		$query = $this->query();
 
 		$variables = [
@@ -198,7 +199,7 @@ class RefreshTokenMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCa
 		$this->assertEquals( 'User secret is revoked.', $actual['extensions']['debug'][0]['message'] );
 	}
 
-	public function testWithOldSecret() : void {
+	public function testWithOldSecret(): void {
 		$query = $this->query();
 
 		$variables = [
@@ -232,7 +233,7 @@ class RefreshTokenMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCa
 		$this->assertEquals( 'User secret does not match.', $actual['extensions']['debug'][0]['message'] );
 	}
 
-	public function testWithValidRefreshToken() : void {
+	public function testWithValidRefreshToken(): void {
 		$query = $this->query();
 
 		$variables = [

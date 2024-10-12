@@ -1,5 +1,4 @@
-
-#wpgraphql_login_settings { /* stylelint-disable-line */
+#wpgraphql_login_settings { // stylelint-disable-line selector-id-pattern
 
 	.components-placeholder {
 		background: #f1f1f1;
@@ -11,7 +10,7 @@
 
 	.components-panel__row {
 
-		> div {
+		>div {
 			flex-grow: 1;
 			margin-right: 1rem;
 
@@ -20,135 +19,4 @@
 			}
 		}
 	}
-}
-
-.wp-graphql-headless-login__notices {
-
-	.components-snackbar {
-		bottom: 0.5rem;
-		position: fixed;
-	}
-}
-
-.wp-graphql-headless-login__header {
-	margin-left: -2em;
-	padding: 20px 10px;
-	position: relative;
-}
-
-.wp-graphql-headless-login__title {
-	align-items: center;
-	display: flex;
-	justify-content: center;
-
-	svg {
-		margin-right: 0.25rem;
-		max-height: 5.5rem;
-	}
-}
-
-.wp-graphql-headless-login__advanced-settings-toggle {
-	position: absolute;
-	right: 2rem;
-	top: calc(50% - 0.5em);
-}
-
-.wp-graphql-headless-login__main,
-.wp-graphql-headless-login__plugin-settings,
-.wp-graphql-headless-login__ac-settings {
-	margin-left: auto;
-	margin-right: auto;
-	max-width: 960px;
-	margin-top: 2rem;
-
-	&.components-panel,
-	.components-panel {
-		background: none;
-		border: none;
-
-		+ .components-panel {
-			margin-top: 2rem;
-		}
-
-		&__body {
-			background: #fff;
-			border: 1px solid #e2e4e7;
-			margin: 1rem 0;
-		}
-
-		&__body-title .components-button {
-			font-size: 1.25rem;
-		}
-	}
-}
-
-.wp-graphql-headless-login__sidebar {
-	align-self: auto;
-	position: sticky;
-}
-
-.wp-graphql-headless-login__sidebar__add-client {
-	border: none;
-	margin-top: 2rem;
-	border-radius: 1rem;
-	background-color: #fff;
-	color: #1d2327;
-	font-size: 1.15rem;
-	align-items: center;
-	justify-content: center;
-	text-align: center;
-	height: auto;
-
-	span {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-	}
-
-	svg {
-		margin-right: 0.5rem;
-		height: 3rem;
-	}
-}
-
-.wp-graphql-headless-login__menu__item {
-	display: flex;
-	align-items: center;
-	flex-direction: row;
-}
-
-.wp-graphql-headless-login__menu__status-badge {
-	border-radius: 50%;
-	border: 1px solid rgba(213, 213, 213, 0.2);
-	background-color: rgba(213, 213, 213, 0.5);
-	padding: 3px;
-	display: inline-flex;
-	margin-left: 0.5rem;
-	align-items: center;
-	justify-content: space-between;
-
-	span {
-		height: 0.6rem;
-		width: 0.6rem;
-		display: block;
-		border-radius: 50%;
-	}
-
-	&--enabled, {
-		background-color: #46b450;
-	}
-}
-
-.wp-graphql-headless-login__documentation-link {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.wp-graphql-headless-login__documentation-link-icon {
-	margin-right: 0.5rem;
-	text-decoration: none;
-	height: 1rem;
-	width: 1rem;
-	font-size: 1rem;
 }

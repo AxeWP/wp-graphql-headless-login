@@ -18,6 +18,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 	 */
 	public function setUp(): void {
 		parent::setUp();
+
 		$this->tester->reset_utils_properties();
 	}
 
@@ -33,7 +34,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @covers \WPGraphQL\Login\Utils\Utils::get_setting
 	 */
-	public function testGetSetting() : void {
+	public function testGetSetting(): void {
 		// Test default value (false)
 		$actual = Utils::get_setting( 'delete_data_on_deactivate' );
 
@@ -41,7 +42,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 
 		// Test db value.
 		$expected = true;
-		update_option( PluginSettings::$settings_prefix . 'delete_data_on_deactivate', $expected );
+		update_option( PluginSettings::get_slug(), [ 'delete_data_on_deactivate' => $expected ] );
 		$this->tester->reset_utils_properties();
 
 		$actual = Utils::get_setting( 'delete_data_on_deactivate' );
@@ -59,7 +60,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 		remove_filter( 'graphql_login_setting', [ $this, 'setting_filter_callback' ], 10 );
 
 		// cleanup db
-		delete_option( PluginSettings::$settings_prefix . 'delete_data_on_deactivate' );
+		delete_option( PluginSettings::get_slug() );
 	}
 
 	/**
@@ -67,7 +68,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @covers \WPGraphQL\Login\Utils\Utils::update_plugin_setting
 	 */
-	public function testUpdatePluginSetting() : void {
+	public function testUpdatePluginSetting(): void {
 		// Test db value.
 		$expected = true;
 		Utils::update_plugin_setting( 'delete_data_on_deactivate', $expected );
@@ -78,7 +79,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertEquals( $expected, $actual, 'DB value should be true' );
 
 		// cleanup db
-		delete_option( PluginSettings::$settings_prefix . 'delete_data_on_deactivate' );
+		delete_option( PluginSettings::get_slug() );
 	}
 
 	/**
@@ -86,7 +87,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @covers \WPGraphQL\Login\Utils\Utils::get_access_control_setting
 	 */
-	public function testGetAccessControlSetting() : void {
+	public function testGetAccessControlSetting(): void {
 		$expected = [];
 
 		// Test default value (false)
@@ -96,7 +97,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 
 		// Test db value.
 		$expected['hasSiteAddressInOrigin'] = true;
-		update_option( AccessControlSettings::$settings_prefix . 'access_control', $expected );
+		update_option( AccessControlSettings::get_slug(), $expected );
 		$this->tester->reset_utils_properties();
 
 		$actual = Utils::get_access_control_setting( 'hasSiteAddressInOrigin' );
@@ -114,7 +115,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 		remove_filter( 'graphql_login_access_control_settings', [ $this, 'access_control_settings_filter_callback' ], 10 );
 
 		// cleanup db
-		delete_option( AccessControlSettings::$settings_prefix . 'access_control' );
+		delete_option( AccessControlSettings::get_slug() );
 	}
 
 	/**
@@ -122,7 +123,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @covers \WPGraphQL\Login\Utils\Utils::get_provider_settings
 	 */
-	public function testGetProviderSettings() : void {
+	public function testGetProviderSettings(): void {
 		// Test default value ([])
 		$actual = Utils::get_provider_settings( 'facebook' );
 
@@ -206,7 +207,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @covers \WPGraphQL\Login\Utils\Utils::is_current_user
 	 */
-	public function testIsCurrentUser() : void {
+	public function testIsCurrentUser(): void {
 		$user = $this->factory()->user->create_and_get();
 
 		// Test logged out

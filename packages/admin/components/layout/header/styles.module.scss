@@ -1,0 +1,23 @@
+.header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+
+	svg {
+		flex: 0 0 auto;
+	}
+}
+
+.menu-section {
+	// Offsets to align with the menu items.
+	flex: 1 0 auto;
+
+	h1 {
+		margin-left: 12px;
+	}
+}
+
+.toggle-section {
+	margin: auto auto 16px;
+}

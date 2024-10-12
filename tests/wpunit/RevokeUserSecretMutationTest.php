@@ -36,10 +36,11 @@ class RevokeUserSecretMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 	public function tearDown(): void {
 		$this->tester->reset_utils_properties();
 		$this->clearSchema();
+
 		parent::tearDown();
 	}
 
-	public function query() : string {
+	public function query(): string {
 		return '
 			mutation RevokeUserSecret( $userId: ID! ) {
 				revokeUserSecret(input: {userId: $userId}) {
@@ -50,7 +51,7 @@ class RevokeUserSecretMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		';
 	}
 
-	public function testWithBadPermissions() : void {
+	public function testWithBadPermissions(): void {
 		$query = $this->query();
 
 		$variables = [
@@ -63,7 +64,7 @@ class RevokeUserSecretMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		$this->assertEquals( 'You are not allowed to revoke the user secret.', $actual['errors'][0]['message'] );
 	}
 
-	public function testWithBadId() : void {
+	public function testWithBadId(): void {
 		$query = $this->query();
 
 		$variables = [
@@ -79,7 +80,7 @@ class RevokeUserSecretMutationTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		$this->assertEquals( 'You are not allowed to revoke the user secret.', $actual['errors'][0]['message'] );
 	}
 
-	public function testMutation() : void {
+	public function testMutation(): void {
 		$query = $this->query();
 
 		// Test as admin user
