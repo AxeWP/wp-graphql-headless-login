@@ -208,7 +208,7 @@ abstract class AbstractSettings {
 			$validation_result = $setting['validate_callback']( $value );
 
 			if ( true !== $validation_result ) {
-				return new \WP_Error( 'invalid_setting_value', $validation_result );
+				return $validation_result instanceof \WP_Error ? $validation_result : new \WP_Error( 'invalid_setting_value', $validation_result );
 			}
 		}
 
