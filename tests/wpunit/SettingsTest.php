@@ -56,93 +56,11 @@ class SettingsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 			$this->assertNotEmpty( $actual['settings'][ $setting ] );
 		}
 
-
+		// Test Providers.
 		$this->assertArrayHasKey( 'providers', $actual['settings'] );
-	}
+		$this->assertNotEmpty( $actual['settings']['providers'] );
 
-	public function testGetAllSettings() : void {
-		$this->markTestIncomplete( 'Settings now have an abstract class with a different structure.' );
-		/**
-		 * Clear static setting variables.
-		 */
-		$reflection          = new ReflectionClass( AccessControlSettings::class );
-		$reflection_property = $reflection->getProperty( 'config' );
-		$reflection_property->setAccessible( true );
-		$reflection_property->setValue( [] );
-		$reflection_property = $reflection->getProperty( 'args' );
-		$reflection_property->setAccessible( true );
-		$reflection_property->setValue( [] );
-
-		$reflection          = new ReflectionClass( PluginSettings::class );
-		$reflection_property = $reflection->getProperty( 'config' );
-		$reflection_property->setAccessible( true );
-		$reflection_property->setValue( [] );
-		$reflection_property = $reflection->getProperty( 'args' );
-		$reflection_property->setAccessible( true );
-		$reflection_property->setValue( [] );
-
-		$reflection          = new ReflectionClass( ProviderSettings::class );
-		$reflection_property = $reflection->getProperty( 'config' );
-		$reflection_property->setAccessible( true );
-		$reflection_property->setValue( [] );
-		$reflection_property = $reflection->getProperty( 'args' );
-		$reflection_property->setAccessible( true );
-		$reflection_property->setValue( [] );
-
-		$settings = Settings::get_all_settings();
-
-		// Test Access Control.
-		codecept_debug( $settings['access_control'] );
-		$this->assertArrayHasKey( 'access_control', $settings );
-		$this->assertNotEmpty( $settings['access_control'][ AccessControlSettings::get_slug() ] );
-		$this->assertArrayNotHasKeys(
-			[
-				'advanced',
-				'default',
-				'help',
-				'label',
-				'order',
-				'required',
-			],
-			$settings['access_control'][ AccessControlSettings::get_slug() ]['show_in_rest']['schema']['properties'],
-			'Access Control settings should not have excluded keys.'
-		);
-
-		$config_keys = array_keys( AccessControlSettings::get_config() );
-
-		$this->assertEqualSets(
-			$config_keys,
-			array_keys( $settings['access_control'][ AccessControlSettings::get_slug() ]['show_in_rest']['schema']['properties'] ),
-			'Access Control settings should have the same keys as the config.'
-		);
-
-		// Test Plugin
-		codecept_debug( $settings['plugin'] );
-		$this->assertArrayHasKey( 'plugin', $settings );
-		$this->assertNotEmpty( $settings['plugin'] );
-		$this->assertArrayNotHasKeys(
-			[
-				'advanced',
-				'help',
-				'label',
-				'order',
-				'hidden',
-			],
-			$settings['plugin'],
-			'Plugin settings should not have excluded keys.'
-		);
-
-		$config_keys = array_keys( PluginSettings::get_config() );
-		$this->assertEqualSets(
-			$config_keys,
-			array_keys( $settings['plugin'] ),
-			'Plugin settings should have the same keys as the config.'
-		);
-
-		// Test Providers
-		codecept_debug( $settings['providers'] );
-		$this->assertArrayHasKey( 'providers', $settings );
-		$this->assertNotEmpty( $settings['providers'] );
+		$providers = $actual['settings']['providers'];
 
 		$provider_keys = array_map(
 			static fn ( string $key ) => ProviderSettings::$settings_prefix . $key,
@@ -151,14 +69,8 @@ class SettingsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 
 		$this->assertEqualSets(
 			$provider_keys,
-			array_keys( $settings['providers'] ),
+			array_keys( $providers ),
 			'Provider settings should have the same keys as the registered providers.'
 		);
-	}
-
-	protected function assertArrayNotHasKeys( $keys, $array, $message = '' ): void {
-		foreach ( (array) $keys as $key ) {
-			$this->assertArrayNotHasKey( $key, $array, $message );
-		}
 	}
 }
