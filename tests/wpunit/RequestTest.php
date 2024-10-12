@@ -27,6 +27,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 	 */
 	public function setUp(): void {
 		parent::setUp();
+
 		update_option( AccessControlSettings::get_slug(), $this->default_options );
 
 		$this->tester->reset_utils_properties();
@@ -38,10 +39,11 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 	public function tearDown(): void {
 		delete_option( AccessControlSettings::get_slug() );
 		$this->tester->reset_utils_properties();
+
 		parent::tearDown();
 	}
 
-	public function testAuthenticateTokenOnRequest() : void {
+	public function testAuthenticateTokenOnRequest(): void {
 		$debug_log = new \WPGraphQL\Utils\DebugLog();
 
 		Request::authenticate_token_on_request();
@@ -201,7 +203,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		unset( $_SERVER['HTTP_ORIGIN'] );
 	}
 
-	public function testResponseHeadersToSend() : void {
+	public function testResponseHeadersToSend(): void {
 		$default_client_config = [
 			'name'          => 'Site Token',
 			'slug'          => 'siteToken',
@@ -399,7 +401,7 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertNotEmpty( $refresh_token->data->user->user_secret );
 	}
 
-	public function testGetAcaoHeader() : void {
+	public function testGetAcaoHeader(): void {
 		$default_headers = [
 			'Access-Control-Allow-Origin'   => '*',
 			'Access-Control-Allow-Headers'  => implode(
@@ -495,6 +497,4 @@ class RequestTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertArrayHasKey( 'Access-Control-Allow-Origin', $actual );
 		$this->assertStringContainsString( 'https://example2.com', $actual['Access-Control-Allow-Origin'] );
 	}
-
-
 }

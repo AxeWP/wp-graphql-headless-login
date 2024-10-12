@@ -78,7 +78,7 @@ class SettingsRestControllerTest extends WPTestCase {
 	public function testGetItems(): void {
 		wp_set_current_user( $this->admin_id );
 
-		$request  = new \WP_REST_Request( 'GET', $this->endpoint );
+		$request = new \WP_REST_Request( 'GET', $this->endpoint );
 
 		$response = $this->server->dispatch( $request );
 
@@ -87,22 +87,21 @@ class SettingsRestControllerTest extends WPTestCase {
 		$values = $response->get_data();
 
 		$this->assertIsArray( $values );
-		
 
 		// Ensure the settings are returned with default values.
 		$expected = [
 			'wpgraphql_login_access_control' => [
-				'shouldBlockUnauthorizedDomains' => false,
+				'shouldBlockUnauthorizedDomains'   => false,
 				'hasAccessControlAllowCredentials' => false,
-				'hasSiteAddressInOrigin' => false,
-				'additionalAuthorizedDomains' => [],
-				'customHeaders' => [],
+				'hasSiteAddressInOrigin'           => false,
+				'additionalAuthorizedDomains'      => [],
+				'customHeaders'                    => [],
 			],
-			'wpgraphql_login_settings' => [
-				'show_advanced_settings' => false,
+			'wpgraphql_login_settings'       => [
+				'show_advanced_settings'    => false,
 				'delete_data_on_deactivate' => false,
-				'jwt_secret_key' => '********', // This is sanitized.
-			]
+				'jwt_secret_key'            => '********', // This is sanitized.
+			],
 		];
 
 		$this->assertSame( $expected, $values );
@@ -115,7 +114,7 @@ class SettingsRestControllerTest extends WPTestCase {
 		// Test as unauthenticated user.
 		wp_set_current_user( 0 );
 
-		$request  = new \WP_REST_Request( 'GET', $this->endpoint );
+		$request = new \WP_REST_Request( 'GET', $this->endpoint );
 
 		$response = $this->server->dispatch( $request );
 
@@ -124,7 +123,7 @@ class SettingsRestControllerTest extends WPTestCase {
 		// Test as subscriber.
 		wp_set_current_user( $this->subscriber_id );
 
-		$request  = new \WP_REST_Request( 'GET', $this->endpoint );
+		$request = new \WP_REST_Request( 'GET', $this->endpoint );
 
 		$response = $this->server->dispatch( $request );
 
@@ -135,14 +134,14 @@ class SettingsRestControllerTest extends WPTestCase {
 	 * Tests update_item method.
 	 */
 	public function testUpdateItem(): void {
-		$slug = 'wpgraphql_login_access_control';
+		$slug   = 'wpgraphql_login_access_control';
 		$values = [
 			'shouldBlockUnauthorizedDomains' => true,
 		];
 
 		wp_set_current_user( $this->admin_id );
 
-		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request = new \WP_REST_Request( 'POST', $this->endpoint );
 		$request->set_param( 'slug', $slug );
 		$request->set_param( 'values', $values );
 
@@ -150,20 +149,19 @@ class SettingsRestControllerTest extends WPTestCase {
 
 		$this->assertSame( 200, $response->get_status() );
 
-
 		$expected = [
 			'wpgraphql_login_access_control' => [
-				'shouldBlockUnauthorizedDomains' => true, // This is the only value that should change.
+				'shouldBlockUnauthorizedDomains'   => true, // This is the only value that should change.
 				'hasAccessControlAllowCredentials' => false,
-				'hasSiteAddressInOrigin' => false,
-				'additionalAuthorizedDomains' => [],
-				'customHeaders' => [],
+				'hasSiteAddressInOrigin'           => false,
+				'additionalAuthorizedDomains'      => [],
+				'customHeaders'                    => [],
 			],
-			'wpgraphql_login_settings' => [
-				'show_advanced_settings' => false,
+			'wpgraphql_login_settings'       => [
+				'show_advanced_settings'    => false,
 				'delete_data_on_deactivate' => false,
-				'jwt_secret_key' => '********', // This is sanitized.
-			]
+				'jwt_secret_key'            => '********', // This is sanitized.
+			],
 		];
 
 		$this->assertSame( $expected, $response->get_data() );
@@ -173,7 +171,7 @@ class SettingsRestControllerTest extends WPTestCase {
 	 * Tests update_item method with bad data.
 	 */
 	public function testUpdateItemWithBadData(): void {
-		$slug = 'wpgraphql_login_access_control';
+		$slug   = 'wpgraphql_login_access_control';
 		$values = [
 			'hasAccessControlAllowCredentials' => true,
 		];
@@ -181,14 +179,14 @@ class SettingsRestControllerTest extends WPTestCase {
 		// Test with no slug or values.
 		wp_set_current_user( $this->admin_id );
 
-		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request = new \WP_REST_Request( 'POST', $this->endpoint );
 
 		$response = $this->server->dispatch( $request );
 
 		$this->assertSame( 400, $response->get_status() );
 
 		// Test with just a slug.
-		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request = new \WP_REST_Request( 'POST', $this->endpoint );
 		$request->set_param( 'slug', $slug );
 
 		$response = $this->server->dispatch( $request );
@@ -196,7 +194,7 @@ class SettingsRestControllerTest extends WPTestCase {
 		$this->assertSame( 400, $response->get_status() );
 
 		// Test with just values.
-		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request = new \WP_REST_Request( 'POST', $this->endpoint );
 		$request->set_param( 'values', $values );
 
 		$response = $this->server->dispatch( $request );
@@ -204,7 +202,7 @@ class SettingsRestControllerTest extends WPTestCase {
 		$this->assertSame( 400, $response->get_status() );
 
 		// Test with invalid slug.
-		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request = new \WP_REST_Request( 'POST', $this->endpoint );
 		$request->set_param( 'slug', 4 );
 		$request->set_param( 'values', $values );
 
@@ -214,7 +212,7 @@ class SettingsRestControllerTest extends WPTestCase {
 		$this->assertSame( 'rest_invalid_param', $response->get_data()['code'] );
 
 		// Test with bad slug.
-		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request = new \WP_REST_Request( 'POST', $this->endpoint );
 		$request->set_param( 'slug', 'bad-slug' );
 		$request->set_param( 'values', $values );
 
@@ -224,7 +222,7 @@ class SettingsRestControllerTest extends WPTestCase {
 		$this->assertSame( 'rest_invalid_param', $response->get_data()['code'] );
 
 		// Test with empty slug.
-		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request = new \WP_REST_Request( 'POST', $this->endpoint );
 		$request->set_param( 'slug', '' );
 		$request->set_param( 'values', $values );
 
@@ -234,7 +232,7 @@ class SettingsRestControllerTest extends WPTestCase {
 		$this->assertSame( 'rest_invalid_param', $response->get_data()['code'] );
 
 		// Test with bad values.
-		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request = new \WP_REST_Request( 'POST', $this->endpoint );
 		$request->set_param( 'slug', $slug );
 		$request->set_param( 'values', 'bad-values' );
 
@@ -244,7 +242,7 @@ class SettingsRestControllerTest extends WPTestCase {
 		$this->assertSame( 'rest_invalid_param', $response->get_data()['code'] );
 
 		// Test with missing required setting.
-		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request = new \WP_REST_Request( 'POST', $this->endpoint );
 		$request->set_param( 'slug', $slug );
 		$request->set_param( 'values', [ 'shouldBlockUnauthorizedDomains' => null ] );
 
@@ -254,7 +252,7 @@ class SettingsRestControllerTest extends WPTestCase {
 		$this->assertSame( 'rest_invalid_param', $response->get_data()['code'] );
 
 		// Test with bad settings.
-		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request = new \WP_REST_Request( 'POST', $this->endpoint );
 		$request->set_param( 'slug', $slug );
 		$request->set_param( 'values', [ 'bad-setting' => 'bad-value' ] );
 
@@ -268,14 +266,14 @@ class SettingsRestControllerTest extends WPTestCase {
 	 * Tests update_item method with bad permissions.
 	 */
 	public function testUpdateItemWithBadPermissions(): void {
-		$slug  = 'wpgraphql_login_access_control';
+		$slug   = 'wpgraphql_login_access_control';
 		$values = [
 			'shouldBlockUnauthorizedDomains' => true,
 		];
 		// Test as unauthenticated user.
 		wp_set_current_user( 0 );
 
-		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request = new \WP_REST_Request( 'POST', $this->endpoint );
 		$request->set_param( 'slug', $slug );
 		$request->set_param( 'values', $values );
 
@@ -286,7 +284,7 @@ class SettingsRestControllerTest extends WPTestCase {
 		// Test as subscriber.
 		wp_set_current_user( $this->subscriber_id );
 
-		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request = new \WP_REST_Request( 'POST', $this->endpoint );
 		$request->set_param( 'slug', $slug );
 		$request->set_param( 'values', $values );
 
@@ -309,7 +307,7 @@ class SettingsRestControllerTest extends WPTestCase {
 
 		wp_set_current_user( $this->admin_id );
 
-		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request = new \WP_REST_Request( 'POST', $this->endpoint );
 		$request->set_param( 'slug', AccessControlSettings::get_slug() );
 		$request->set_param( 'values', $values );
 
@@ -332,7 +330,7 @@ class SettingsRestControllerTest extends WPTestCase {
 		// Test additionalAuthorizedDomains as wildcard string.
 		$values['additionalAuthorizedDomains'] = '*';
 
-		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request = new \WP_REST_Request( 'POST', $this->endpoint );
 		$request->set_param( 'slug', AccessControlSettings::get_slug() );
 		$request->set_param( 'values', $values );
 
@@ -352,7 +350,7 @@ class SettingsRestControllerTest extends WPTestCase {
 		// Test sanitization of additionalAuthorizedDomains as string.
 		$values['additionalAuthorizedDomains'] = 'https://example.com, badurl, https://example.org';
 
-		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request = new \WP_REST_Request( 'POST', $this->endpoint );
 		$request->set_param( 'slug', AccessControlSettings::get_slug() );
 		$request->set_param( 'values', $values );
 

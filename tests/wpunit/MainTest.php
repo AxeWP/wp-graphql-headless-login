@@ -6,7 +6,6 @@ use WPGraphQL\Login\Main;
  * Tests Main.
  */
 class MainTest extends \Codeception\TestCase\WPTestCase {
-
 	public $instance;
 
 	/**
@@ -53,7 +52,7 @@ class MainTest extends \Codeception\TestCase\WPTestCase {
 	public function testClone(): void {
 		$this->setExpectedIncorrectUsage( '__clone' );
 
-		$instance        = Main::instance();
+		$instance = Main::instance();
 		clone $instance;
 	}
 
@@ -81,5 +80,4 @@ class MainTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertTrue( defined( 'WPGRAPHQL_LOGIN_PLUGIN_URL' ) );
 		$this->assertTrue( defined( 'WPGRAPHQL_LOGIN_PLUGIN_FILE' ) );
 	}
-
 }
