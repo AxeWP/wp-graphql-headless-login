@@ -21,9 +21,20 @@ jobs:
           extensions: mbstring, intl
           tools: composer:v2
 
-      - name: Install dependencies
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: "--no-progress"
+
+      - name: Install Node.js dependencies
+        run: npm ci
+        env:
+          CI: true
+
+      - name: Build assets
         run: |
           composer install --no-dev --optimize-autoloader
+          npm run build
 
       - name: Create Artifact
         run: |
