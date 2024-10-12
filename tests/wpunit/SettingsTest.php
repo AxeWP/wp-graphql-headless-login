@@ -19,9 +19,9 @@ class SettingsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	 * Tests that the Settings tab is registered.
 	 */
 	public function testGetSettingsData(): void {
-		$instance = new Settings();
+		$instance   = new Settings();
 		$reflection = new ReflectionClass( $instance );
-		$method = $reflection->getMethod( 'get_settings_data' );
+		$method     = $reflection->getMethod( 'get_settings_data' );
 		$method->setAccessible( true );
 
 		$actual = $method->invoke( $instance );
@@ -30,22 +30,22 @@ class SettingsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 
 		// Test Secret
 		$expected_secret = [
-			'hasKey' => true,
+			'hasKey'     => true,
 			'isConstant' => false,
 		];
-		
+
 		$this->assertArrayHasKey( 'secret', $actual );
 		$this->assertEquals( $expected_secret, $actual['secret'] );
 
 		// Test Nonce
 		$this->assertArrayHasKey( 'nonce', $actual );
 		$nonce = $actual['nonce'];
-		
+
 		$this->assertTrue( (bool) wp_verify_nonce( $nonce, 'wp_graphql_settings' ) );
 
 		// Test Settings
 		$this->assertArrayHasKey( 'settings', $actual );
-		
+
 		$expected_settings = [
 			AccessControlSettings::get_slug(),
 			PluginSettings::get_slug(),

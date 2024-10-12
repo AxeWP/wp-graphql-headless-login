@@ -53,6 +53,4 @@ class AutoloaderTest extends WPTestCase {
 
 		do_action( 'admin_notices' );
 	}
-
-
 }

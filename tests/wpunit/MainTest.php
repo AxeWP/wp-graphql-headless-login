@@ -45,7 +45,7 @@ class MainTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	public function testClone(): void {
 		$this->setExpectedIncorrectUsage( '__clone' );
 
-		$instance        = Main::instance();
+		$instance = Main::instance();
 		clone $instance;
 	}
 

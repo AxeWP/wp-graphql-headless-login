@@ -1,6 +1,7 @@
 <?php
 
 use WPGraphQL\Login\Admin\Settings\PluginSettings;
+use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 
 /**
  * Tests access functons
@@ -46,22 +47,22 @@ class AccessFunctionsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	 *
 	 * @covers graphql_login_get_provider_settings()
 	 */
-	// public function testGetProviderSettings(): void {
-	// $expected = [
-	// 'name'      => 'Facebook',
-	// 'isEnabled' => false,
-	// ];
+	public function testGetProviderSettings(): void {
+		$expected = [
+			'name'      => 'Facebook',
+			'isEnabled' => false,
+		];
 
-	// update_option( ProviderSettings::$settings_prefix . 'facebook', $expected );
+	update_option( ProviderSettings::$settings_prefix . 'facebook', $expected );
 
 	// reset Utils::providers
-	// $this->tester->reset_utils_properties();
+	$this->tester->reset_utils_properties();
 
-	// $actual = graphql_login_get_provider_settings( 'facebook' );
+	$actual = graphql_login_get_provider_settings( 'facebook' );
 
-	// $this->assertEquals( $expected, $actual );
+	$this->assertEquals( $expected, $actual );
 
-	// cleanup db
-	// delete_option( ProviderSettings::$settings_prefix . 'facebook' );
-	// }
+		// cleanup db
+		delete_option( ProviderSettings::$settings_prefix . 'facebook' );
+	}
 }

@@ -83,16 +83,16 @@ class SettingsRegistryTest extends \Codeception\TestCase\WPTestCase {
 
 		$settings = MockSettings::get_all();
 
-		foreach( $settings as $setting ) {
+		foreach ( $settings as $setting ) {
 			$instance_slug = $setting::get_slug();
-			$instance = MockSettings::get( $instance_slug );
+			$instance      = MockSettings::get( $instance_slug );
 
 			$this->assertInstanceOf( AbstractSettings::class, $instance );
 		}
 
 		// Test after init should return the settings.
 		$expected = $actual;
-		$actual = MockSettings::get( $slug );
+		$actual   = MockSettings::get( $slug );
 
 		$this->assertInstanceOf( AccessControlSettings::class, $actual );
 		$this->assertSame( $expected, $actual );
@@ -106,7 +106,7 @@ class SettingsRegistryTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertNotEmpty( $settings );
 		$this->assertCount( 2, $settings );
 
-		foreach( $settings as $setting ) {
+		foreach ( $settings as $setting ) {
 			$this->assertInstanceOf( AbstractSettings::class, $setting );
 		}
 	}
