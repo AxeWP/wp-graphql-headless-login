@@ -12,6 +12,11 @@ namespace WPGraphQL\Login\Auth\ProviderConfig;
 
 use WPGraphQL\Login\Utils\Utils;
 
+/**
+ * Trait - ProviderConfigStaticTrait
+ *
+ * @phpstan-import-type Setting from \WPGraphQL\Login\Admin\Settings\AbstractSettings
+ */
 trait ProviderConfigStaticTrait {
 	/**
 	 * Returns whether the provider is enabled in the settings.
@@ -177,15 +182,18 @@ trait ProviderConfigStaticTrait {
 	 *
 	 * @see ProviderConfig::login_options_schema().
 	 *
-	 * @return array<string,array<string,mixed>>
+	 * @return array<string,Setting>
 	 */
 	protected static function default_login_options_schema(): array {
 		return [
 			'useAuthenticationCookie' => [
-				'type'        => 'boolean',
-				'description' => __( 'Set authentication cookie', 'wp-graphql-headless-login' ),
-				'help'        => __( 'If enabled, a WordPress authentication cookie will be set after a successful login. This is useful for granting access to the WordPress dashboard or other protected areas of the WordPress backend without having to re-authenticate.', 'wp-graphql-headless-login' ),
-				'order'       => 2,
+				'description'       => __( 'Set authentication cookie', 'wp-graphql-headless-login' ),
+				'label'             => __( 'Set Authentication Cookie', 'wp-graphql-headless-login' ),
+				'type'              => 'boolean',
+				'help'              => __( 'If enabled, a WordPress authentication cookie will be set after a successful login. This is useful for granting access to the WordPress dashboard or other protected areas of the WordPress backend without having to re-authenticate.', 'wp-graphql-headless-login' ),
+				'order'             => 2,
+				'sanitize_callback' => static function ( $value ) {
+					return (bool) $value; },
 			],
 		];
 	}
