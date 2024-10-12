@@ -15,7 +15,52 @@ class SettingsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	 */
 	public $tester;
 
-	public function testGetAllSettings(): void {
+	/**
+	 * Tests that the Settings tab is registered.
+	 */
+	public function testGetSettingsData(): void {
+		$instance = new Settings();
+		$reflection = new ReflectionClass( $instance );
+		$method = $reflection->getMethod( 'get_settings_data' );
+		$method->setAccessible( true );
+
+		$actual = $method->invoke( $instance );
+
+		$this->assertNotEmpty( $actual );
+
+		// Test Secret
+		$expected_secret = [
+			'hasKey' => true,
+			'isConstant' => false,
+		];
+		
+		$this->assertArrayHasKey( 'secret', $actual );
+		$this->assertEquals( $expected_secret, $actual['secret'] );
+
+		// Test Nonce
+		$this->assertArrayHasKey( 'nonce', $actual );
+		$nonce = $actual['nonce'];
+		
+		$this->assertTrue( (bool) wp_verify_nonce( $nonce, 'wp_graphql_settings' ) );
+
+		// Test Settings
+		$this->assertArrayHasKey( 'settings', $actual );
+		
+		$expected_settings = [
+			AccessControlSettings::get_slug(),
+			PluginSettings::get_slug(),
+		];
+
+		foreach ( $expected_settings as $setting ) {
+			$this->assertArrayHasKey( $setting, $actual['settings'] );
+			$this->assertNotEmpty( $actual['settings'][ $setting ] );
+		}
+
+
+		$this->assertArrayHasKey( 'providers', $actual['settings'] );
+	}
+
+	public function testGetAllSettings() : void {
 		$this->markTestIncomplete( 'Settings now have an abstract class with a different structure.' );
 		/**
 		 * Clear static setting variables.
@@ -109,41 +154,6 @@ class SettingsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 			array_keys( $settings['providers'] ),
 			'Provider settings should have the same keys as the registered providers.'
 		);
-	}
-
-	public function testSanitizeAccessControlOptions() {
-		// Test sanitization
-		$original = [
-			'hasAccessControlAllowCredentials' => 'true',
-			'hasSiteAddressInOrigin'           => 'true',
-			'shouldBlockUnauthorizedDomains'   => '0',
-			'customHeaders'                    => [ '*', '<strong>X-Wrapped-In-HTML</strong>' ],
-		];
-
-		$this->markTestIncomplete( 'Sanitization now happens on the endpoint, not in the settings.' );
-
-		$actual = AccessControlSettings::sanitize_callback( $original );
-
-		$this->assertTrue( $actual['hasAccessControlAllowCredentials'], 'hasSiteAddressInOrigin should be (bool) true.' );
-		$this->assertTrue( $actual['hasSiteAddressInOrigin'], 'hasSiteAddressInOrigin should be (bool) true.' );
-		$this->assertFalse( $actual['shouldBlockUnauthorizedDomains'], 'shouldBlockUnauthorizedDomains should be (bool) false.' );
-		$this->assertEquals( [ '*', 'X-Wrapped-In-HTML' ], $actual['customHeaders'], 'customHeaders should be sanitized.' );
-
-		// Test additionalAuthorizedDomains as wildcard string.
-		$original['additionalAuthorizedDomains'] = '*';
-
-		$actual = AccessControlSettings::sanitize_callback( $original );
-
-		$this->assertEquals( [ '*' ], $actual['additionalAuthorizedDomains'], 'additionalAuthorizedDomains should be an array with a single wildcard.' );
-
-		// Test sanitization of additionalAuthorizedDomains as string.
-		$original['additionalAuthorizedDomains'] = 'https://example.com, badurl, https://example.org';
-
-		$actual = AccessControlSettings::sanitize_callback( $original );
-
-		$this->assertEquals( 'https://example.com', $actual['additionalAuthorizedDomains'][0], 'additionalAuthorizedDomains should be an array of sanitized values.' );
-		$this->assertStringStartsWith( 'http', $actual['additionalAuthorizedDomains'][1], 'additionalAuthorizedDomains should be an array of sanitized values.' );
-		$this->assertEquals( 'https://example.org', $actual['additionalAuthorizedDomains'][2], 'additionalAuthorizedDomains should be an array of sanitized values' );
 	}
 
 	protected function assertArrayNotHasKeys( $keys, $array, $message = '' ): void {

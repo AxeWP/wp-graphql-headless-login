@@ -1,7 +1,7 @@
 <?php
 
 use Codeception\TestCase\WPTestCase;
-use WPGraphQL\Login\Admin\SettingsRegistry;
+use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 
 class SettingsRestControllerTest extends WPTestCase {
 	/**
@@ -12,6 +12,7 @@ class SettingsRestControllerTest extends WPTestCase {
 	/**
 	 * The Subscriber ID.
 	 */
+	private int $subscriber_id;
 
 	/**
 	 * The REST endpoint to use.
@@ -294,4 +295,80 @@ class SettingsRestControllerTest extends WPTestCase {
 		$this->assertSame( 403, $response->get_status() );
 	}
 
+	/**
+	 * Tests that Access Control settings are sanitized properly.
+	 */
+	public function testAccessControlSettingsSanitization(): void {
+		// Test sanitization
+		$values = [
+			'hasAccessControlAllowCredentials' => 'true',
+			'hasSiteAddressInOrigin'           => 'true',
+			'shouldBlockUnauthorizedDomains'   => '0',
+			'customHeaders'                    => [ '*', '<strong>X-Wrapped-In-HTML</strong>' ],
+		];
+
+		wp_set_current_user( $this->admin_id );
+
+		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request->set_param( 'slug', AccessControlSettings::get_slug() );
+		$request->set_param( 'values', $values );
+
+		$response = $this->server->dispatch( $request );
+
+		$this->assertEquals( 200, $response->get_status() );
+
+		$data = $response->get_data();
+
+		$this->assertIsArray( $data );
+		$this->assertArrayHasKey( AccessControlSettings::get_slug(), $data );
+
+		$actual = $data[ AccessControlSettings::get_slug() ];
+
+		$this->assertTrue( $actual['hasAccessControlAllowCredentials'], 'hasSiteAddressInOrigin should be (bool) true.' );
+		$this->assertTrue( $actual['hasSiteAddressInOrigin'], 'hasSiteAddressInOrigin should be (bool) true.' );
+		$this->assertFalse( $actual['shouldBlockUnauthorizedDomains'], 'shouldBlockUnauthorizedDomains should be (bool) false.' );
+		$this->assertEquals( [ '*', 'X-Wrapped-In-HTML' ], $actual['customHeaders'], 'customHeaders should be sanitized.' );
+
+		// Test additionalAuthorizedDomains as wildcard string.
+		$values['additionalAuthorizedDomains'] = '*';
+
+		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request->set_param( 'slug', AccessControlSettings::get_slug() );
+		$request->set_param( 'values', $values );
+
+		$response = $this->server->dispatch( $request );
+
+		$this->assertEquals( 200, $response->get_status() );
+
+		$data = $response->get_data();
+
+		$this->assertIsArray( $data );
+		$this->assertArrayHasKey( AccessControlSettings::get_slug(), $data );
+
+		$actual = $data[ AccessControlSettings::get_slug() ];
+
+		$this->assertEquals( [ '*' ], $actual['additionalAuthorizedDomains'], 'additionalAuthorizedDomains should be an array with a single wildcard.' );
+
+		// Test sanitization of additionalAuthorizedDomains as string.
+		$values['additionalAuthorizedDomains'] = 'https://example.com, badurl, https://example.org';
+
+		$request  = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request->set_param( 'slug', AccessControlSettings::get_slug() );
+		$request->set_param( 'values', $values );
+
+		$response = $this->server->dispatch( $request );
+
+		$this->assertEquals( 200, $response->get_status() );
+
+		$data = $response->get_data();
+
+		$this->assertIsArray( $data );
+		$this->assertArrayHasKey( AccessControlSettings::get_slug(), $data );
+
+		$actual = $data[ AccessControlSettings::get_slug() ];
+
+		$this->assertEquals( 'https://example.com', $actual['additionalAuthorizedDomains'][0], 'additionalAuthorizedDomains should be an array of sanitized values.' );
+		$this->assertStringStartsWith( 'http', $actual['additionalAuthorizedDomains'][1], 'additionalAuthorizedDomains should be an array of sanitized values.' );
+		$this->assertEquals( 'https://example.org', $actual['additionalAuthorizedDomains'][2], 'additionalAuthorizedDomains should be an array of sanitized values' );
+	}
 }

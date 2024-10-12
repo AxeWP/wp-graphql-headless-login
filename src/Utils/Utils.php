@@ -91,7 +91,13 @@ class Utils {
 			return false;
 		}
 
-		$instance->update_values( [ $option_name => $value ] );
+		$prepared_value = $instance->prepare_value( $option_name, $value );
+
+		if ( $prepared_value instanceof \WP_Error ) {
+			return false;
+		}
+
+		$instance->update_values( [ $option_name => $prepared_value ] );
 
 		self::$settings[ $option_name ] = $value;
 
