@@ -10,6 +10,8 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Admin\Upgrade;
 
+use WPGraphQL\Login\Admin\Settings\PluginSettings;
+
 /**
  * Class V0_4_0
  */
@@ -54,7 +56,7 @@ class V0_4_0 extends AbstractUpgrade {
 			return;
 		}
 
-		$success = update_option( 'wpgraphql_login_settings', $existing_values );
+		$success = update_option( PluginSettings::get_slug(), $existing_values );
 
 		if ( ! $success ) {
 			throw new \Exception( 'Failed to migrate plugin settings.' );
