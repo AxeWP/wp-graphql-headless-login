@@ -102,22 +102,11 @@ cleanup_after() {
 			fi
 	fi
 
-	# Clean up composer dependencies.
-	if [[ -z "$SKIP_TESTS_CLEANUP" ]]; then
-    "Changing composer configuration in container."
-    composer config --global discard-changes true
-
-    "Removing devDependencies."
-    composer install --no-dev --no-interaction --no-progress --no-suggest --optimize-autoloader
-
-	fi
-
 	# Set public test result files permissions.
 	if [ -n "$(ls tests/_output)" ]; then
 			echo "Setting result files permissions."
 			chmod 777 -R tests/_output/*
 	fi
-	
 }
 
 # Prepare to run tests.

@@ -52,3 +52,4 @@ wp-cli.local.yml
 tests/*.suite.yml
 coverage/*
 .log/
+c3.php

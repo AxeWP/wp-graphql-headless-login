@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - chore!: Remove `vendor`, `vendor-prefixed`, and `build` directories from the repository.
 - chore: Update Composer dependencies.
 - chore: Update Strauss to v0.19.4.
+- ci!: Update ci scripts and commands, docker configuration, and env variables.
 
 ## [0.3.1] - 2024-09-07
 
