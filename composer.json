@@ -106,19 +106,12 @@
 	},
 	"scripts": {
 		"install-test-env": "bash bin/install-test-env.sh",
-		"install-stan-env": "bash bin/install-stan-env.sh",
-		"docker-build": "bash bin/run-docker.sh build",
 		"delete-vendor-files": "rm -rf composer.lock vendor src/vendor-prefixed/*",
-		"docker-run": "bash bin/run-docker.sh run",
-		"docker-destroy": "docker compose down",
-		"build-and-run": [
-			"@docker-build",
-			"@docker-run"
-		],
-		"build-app": "@docker-build -a",
-		"build-test": "@docker-build -t",
-		"run-app": "@docker-run -a",
-		"run-test": "@docker-run -t",
+		"docker:build": "bash bin/build-docker.sh",
+		"docker:start": "@docker:build && @docker:up",
+		"docker:stop": "docker compose down --volumes",
+		"docker:up": " sh -c 'composer docker:stop' && docker compose --env-file .env up --detach",
+		"docker:run-codeception": "bash bin/run-codeception.sh",
 		"lint": "vendor/bin/phpcs",
 		"phpcs-i": [
 			"php ./vendor/bin/phpcs -i"

@@ -12,6 +12,7 @@ Thumbs.db
 .env
 .env.*
 !.env.dist
+!.env.ci
 
 # Strauss
 bin/strauss.phar

@@ -26,7 +26,6 @@
 /package.json export-ignore
 /phpstan.neon.dist export-ignore
 /phpunit.xml.dist export-ignore
-/postcss.config.js export-ignore
 /tsconfig.base.json export-ignore
 /tsconfig.json export-ignore
 /webpack.config.js export-ignore
