@@ -61,51 +61,87 @@ jobs:
           extensions: json, mbstring
           tools: composer:v2
 
-      - name: Install dependencies
+      - name: Install Composer dependencies
         uses: ramsey/composer-install@v3
+        with:
+          composer-options: "--no-progress"
 
-      - name: Build "testing" Docker Image
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Node.js dependencies
+        run: npm ci
         env:
-          PHP_VERSION: ${{ matrix.php }}
+          CI: true
+
+      - name: Build assets
+        run: |
+          npm run build
+
+      - name: Copy .env file
+        run: |
+          cp .docker/.env.ci .env
+          echo "INCLUDE_EXTENSIONS=${{ matrix.extensions }}" >> .env
+          echo "WP_VERSION=${{ matrix.wordpress }}" >> .env
+          echo "PHP_VERSION=${{ matrix.php }}" >> .env
+        env:
           WP_VERSION: ${{ matrix.wordpress }}
+          PHP_VERSION: ${{ matrix.php }}
           INCLUDE_EXTENSIONS: ${{ matrix.extensions }}
-        run: composer build-test
+
+      - name: Build test environment
+        run: |
+          composer run docker:build
+        env:
+          WP_VERSION: ${{ matrix.wordpress }}
+          PHP_VERSION: ${{ matrix.php }}
+          COVERAGE: ${{ matrix.coverage }}
+
+      - name: Start test environment
+        run: |
+          composer run docker:up
+
+          CONTAINER_ID=$(docker compose ps -q wordpress)
+          if [ -n "$CONTAINER_ID" ]; then
+            docker exec -e COVERAGE=${COVERAGE:-} $CONTAINER_ID init-docker.sh
+          else
+            echo "Error: WordPress container not found."
+            exit 1
+          fi
+        env:
+          WP_VERSION: ${{ matrix.wordpress }}
+          PHP_VERSION: ${{ matrix.php }}
+          COVERAGE: ${{ matrix.coverage }}
 
       - name: Run Acceptance Tests w/ Docker
+        run: |  
+          if [ "${{ matrix.extensions }}" = "true" ]; then
+            composer run-script docker:run-codeception
+          fi
         env:
           COVERAGE: ${{ matrix.coverage }}
           USING_XDEBUG: ${{ matrix.coverage }}
           DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG || matrix.debug }}
-          SKIP_TESTS_CLEANUP: ${{ matrix.coverage }}
+          SKIP_TESTS_CLEANUP: 'true'
           SUITES: acceptance
-          PHP_VERSION: ${{ matrix.php }}
-          WP_VERSION: ${{ matrix.wordpress }}
-          INCLUDE_EXTENSIONS: ${{ matrix.extensions }}
-        run: |
-          if [ "${{ matrix.extensions }}" = "true" ]; then
-            composer run-test
-          fi
 
       - name: Run Functional Tests w/ Docker
+        run: composer run-script docker:run-codeception
         env:
           COVERAGE: ${{ matrix.coverage }}
           USING_XDEBUG: ${{ matrix.coverage }}
           DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG || matrix.debug }}
-          SKIP_TESTS_CLEANUP: ${{ matrix.coverage }}
+          SKIP_TESTS_CLEANUP: 'true'
           SUITES: functional
-          PHP_VERSION: ${{ matrix.php }}
-          WP_VERSION: ${{ matrix.wordpress }}
-        run: composer run-test
 
       - name: Run WPUnit Tests w/ Docker
+        run: composer run-script docker:run-codeception
         env:
           COVERAGE: ${{ matrix.coverage }}
           USING_XDEBUG: ${{ matrix.coverage }}
           DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG || matrix.debug }}
-          SKIP_TESTS_CLEANUP: ${{ matrix.coverage }}
-          PHP_VERSION: ${{ matrix.php }}
-          WP_VERSION: ${{ matrix.wordpress }}
-        run: composer run-test
 
       - name: Push Codecoverage to Coveralls.io
         if: ${{ matrix.coverage == 1 }}

@@ -27,7 +27,6 @@ if ( ! function_exists( 'graphql_login_get_setting' ) ) {
 	}
 }
 
-
 if ( ! function_exists( 'graphql_login_get_provider_settings' ) ) {
 	/**
 	 * Gets the provider settings from the database.

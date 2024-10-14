@@ -7,26 +7,25 @@
 
 actor: AcceptanceTester
 modules:
-  enabled:
-    - \Tests\WPGraphQL\Login\Helper\Helper
-    - \Tests\WPGraphQL\Login\Helper\GraphQL
-    - Asserts
-    - REST
-    - WPBrowser
-    - WPDb
-    - WPLoader
-  config:
-    WPDb:
-      cleanup: true
-    WPLoader:
-      loadOnly: true
-      plugins:
-        - wp-graphql/wp-graphql.php
-        - woocommerce/woocommerce.php
-        - wp-graphql-woocommerce/wp-graphql-woocommerce.php
-        - wp-graphql-headless-login/wp-graphql-headless-login.php
-      activatePlugins:
-        - wp-graphql/wp-graphql.php
-        - wp-graphql-woocommerce/wp-graphql-woocommerce.php
-        - woocommerce/woocommerce.php
-        - wp-graphql-headless-login/wp-graphql-headless-login.php
+    enabled:
+        - \Tests\WPGraphQL\Login\Helper\GraphQL
+        - \Tests\WPGraphQL\Login\Helper\Helper
+        - Asserts
+        - lucatume\WPBrowser\Module\WPBrowser
+        - lucatume\WPBrowser\Module\WPDb
+        - lucatume\WPBrowser\Module\WPFilesystem
+        - lucatume\WPBrowser\Module\WPLoader
+        - REST
+    config:
+        lucatume\WPBrowser\Module\WPLoader:
+            loadOnly: true
+            plugins:
+                - wp-graphql/wp-graphql.php
+                - woocommerce/woocommerce.php
+                - wp-graphql-woocommerce/wp-graphql-woocommerce.php
+                - wp-graphql-headless-login/wp-graphql-headless-login.php
+            activatePlugins:
+                - wp-graphql/wp-graphql.php
+                - wp-graphql-woocommerce/wp-graphql-woocommerce.php
+                - woocommerce/woocommerce.php
+                - wp-graphql-headless-login/wp-graphql-headless-login.php
