@@ -22,14 +22,14 @@ setup_before() {
 	cd "$PROJECT_DIR"
 
 	# Download c3 for testing.
-	if [ ! -f "$PROJECT_DIR/c3.php" ]; then
+	if [ ! -f "c3.php" ]; then
 			echo "Downloading Codeception's c3.php"
-			curl -L 'https://raw.github.com/Codeception/c3/2.0/c3.php' > "$PROJECT_DIR/c3.php"
+			curl -L 'https://raw.github.com/Codeception/c3/2.0/c3.php' > "c3.php"
 	fi
 
 	# Install the PHP dependencies
 	echo "Running composer install"
-	COMPOSER_MEMORY_LIMIT=-1 composer install --no-interaction
+	COMPOSER_MEMORY_LIMIT=-1 composer install
 
 	# Install pcov/clobber if PHP7.1+
 	if version_gt $PHP_VERSION 7.0 && [[ -n "$COVERAGE" ]] && [[ -z "$USING_XDEBUG" ]]; then

@@ -14,17 +14,27 @@ extensions:
     enabled:
         - Codeception\Extension\RunFailed
     commands:
-        - Codeception\Command\GenerateWPUnit
-        - Codeception\Command\GenerateWPRestApi
-        - Codeception\Command\GenerateWPRestController
-        - Codeception\Command\GenerateWPRestPostTypeController
-        - Codeception\Command\GenerateWPAjax
-        - Codeception\Command\GenerateWPCanonical
-        - Codeception\Command\GenerateWPXMLRPC
+        - lucatume\WPBrowser\Command\DbExport
+        - lucatume\WPBrowser\Command\DbImport
+        - lucatume\WPBrowser\Command\DevInfo
+        - lucatume\WPBrowser\Command\DevRestart
+        - lucatume\WPBrowser\Command\DevStart
+        - lucatume\WPBrowser\Command\DevStop
+        - lucatume\WPBrowser\Command\GenerateWPAjax
+        - lucatume\WPBrowser\Command\GenerateWPCanonical
+        - lucatume\WPBrowser\Command\GenerateWPRestApi
+        - lucatume\WPBrowser\Command\GenerateWPRestController
+        - lucatume\WPBrowser\Command\GenerateWPRestPostTypeController
+        - lucatume\WPBrowser\Command\GenerateWPUnit
+        - lucatume\WPBrowser\Command\GenerateWPXMLRPC
+        - lucatume\WPBrowser\Command\MonkeyCacheClear
+        - lucatume\WPBrowser\Command\MonkeyCachePath
+        - lucatume\WPBrowser\Command\RunAll
+        - lucatume\WPBrowser\Command\RunOriginal
 coverage:
     enabled: true
     remote: false
-    c3_url: '%WORDPRESS_URL%/wp-content/plugins/wp-graphql-headless-login/wp-graphql-headless-login.php'
+    c3_url: "%WORDPRESS_URL%/wp-content/plugins/wp-graphql-headless-login/wp-graphql-headless-login.php"
     include:
         - src/*
         - /access-functions.php
@@ -41,47 +51,47 @@ coverage:
     show_only_summary: false
 modules:
     config:
-        WPDb:
-            dsn: '%TEST_DB_DSN%'
-            user: '%TEST_DB_USER%'
-            password: '%TEST_DB_PASSWORD%'
+        REST:
+            depends: lucatume\WPBrowser\Module\WPBrowser
+            url: "%WORDPRESS_URL%"
+        lucatume\WPBrowser\Module\WPFilesystem:
+            wpRootFolder: '%WORDPRESS_ROOT_DIR%'
+            themes: '/wp-content/themes'
+            plugins: '/wp-content/plugins'
+            mu-plugins: '/wp-content/mu-plugins'
+            uploads: '/wp-content/uploads'
+        lucatume\WPBrowser\Module\WPBrowser:
+            url: '%WORDPRESS_URL%'
+            adminUsername: '%WORDPRESS_ADMIN_USER%'
+            adminPassword: '%WORDPRESS_ADMIN_PASSWORD%'
+            adminPath: '/wp-admin'
+            headers:
+                X_WPBROWSER_REQUEST: 1
+                X_TEST_REQUEST: 1
+                X_APM_REQUEST: 1
+            connect_timeout: 3
+            cookies: false
+        lucatume\WPBrowser\Module\WPDb:
+            dsn: "%TEST_DB_DSN%"
+            user: "%TEST_DB_USER%"
+            password: "%TEST_DB_PASSWORD%"
             populator: 'mysql -u $user -p$password -h $host $dbname < $dump'
             dump: 'tests/_data/dump.sql'
             populate: true
             cleanup: true
             waitlock: 0
-            url: '%WORDPRESS_URL%'
+            url: "%WORDPRESS_URL%"
             urlReplacement: true
-            tablePrefix: '%WORDPRESS_TABLE_PREFIX%'
-        WPBrowser:
-            url: '%WORDPRESS_URL%'
-            wpRootFolder: '%WP_ROOT_FOLDER%'
-            adminUsername: '%WORDPRESS_ADMIN_USER%'
-            adminPassword: '%WORDPRESS_ADMIN_PASSWORD%'
-            adminPath: '%WORDPRESS_ADMIN_PATH%'
-            headers:
-              X_WPBROWSER_REQUEST: 1
-              X_TEST_REQUEST: 1
-              X_APM_REQUEST: 1
-            cookies: false
-        REST:
-            depends: WPBrowser
-            url: '%WORDPRESS_URL%'
-        WPFilesystem:
-            wpRootFolder: '%WORDPRESS_ROOT_DIR%'
-            plugins: '/wp-content/plugins'
-            mu-plugins: '/wp-content/mu-plugins'
-            themes: '/wp-content/themes'
-            uploads: '/wp-content/uploads'
-        WPLoader:
-            wpRootFolder: '%WORDPRESS_ROOT_DIR%'
-            dbName: '%TEST_DB_NAME%'
-            dbHost: '%TEST_DB_HOST%'
-            dbUser: '%TEST_DB_USER%'
-            dbPassword: '%TEST_DB_PASSWORD%'
-            tablePrefix: '%TEST_TABLE_PREFIX%'
-            domain: '%WORDPRESS_DOMAIN%'
-            adminEmail: '%WORDPRESS_ADMIN_EMAIL%'
+            tablePrefix: "%WORDPRESS_TABLE_PREFIX%"
+        lucatume\WPBrowser\Module\WPLoader:
+            wpRootFolder: "%WORDPRESS_ROOT_DIR%"
+            dbName: "%TEST_DB_NAME%"
+            dbHost: "%TEST_DB_HOST%"
+            dbUser: "%TEST_DB_USER%"
+            dbPassword: "%TEST_DB_PASSWORD%"
+            tablePrefix: "%TEST_TABLE_PREFIX%"
+            domain: "%WORDPRESS_DOMAIN%"
+            adminEmail: "%WORDPRESS_ADMIN_EMAIL%"
             title: 'Test'
             plugins:
                 - wp-graphql/wp-graphql.php

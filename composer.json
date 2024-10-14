@@ -26,7 +26,7 @@
 		"league/oauth2-linkedin": "^5.1"
 	},
 	"require-dev": {
-		"lucatume/wp-browser": "<3.5",
+		"lucatume/wp-browser": "^3.5",
 		"codeception/lib-innerbrowser": "^1.0",
 		"codeception/module-asserts": "^1.0",
 		"codeception/module-cli": "^1.0",

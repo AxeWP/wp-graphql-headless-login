@@ -5,23 +5,23 @@
 
 actor: FunctionalTester
 modules:
-  enabled:
-    - \Tests\WPGraphQL\Login\Helper\Functional
-    - \Tests\WPGraphQL\Login\Helper\Helper
-    - \Tests\WPGraphQL\Login\Helper\GraphQL
-    - Asserts
-    - REST
-    - WPDb
-    - WPBrowser
-    - WPLoader
-  config:
-    WPDb:
-      cleanup: false
-    WPLoader:
-      plugins:
-        - wp-graphql/wp-graphql.php
-        - wp-graphql-headless-login/wp-graphql-headless-login.php
-      activatePlugins:
-        - wp-graphql/wp-graphql.php
-        - wp-graphql-headless-login/wp-graphql-headless-login.php
-bootstrap: bootstrap.php
+    enabled:
+        - \Tests\WPGraphQL\Login\Helper\Functional
+        - \Tests\WPGraphQL\Login\Helper\GraphQL
+        - \Tests\WPGraphQL\Login\Helper\Helper
+        - Asserts
+        - lucatume\WPBrowser\Module\WPBrowser
+        - lucatume\WPBrowser\Module\WPDb
+        - lucatume\WPBrowser\Module\WPLoader
+        - REST
+    config:
+        lucatume\WPBrowser\Module\WPDb:
+            cleanup: false
+        lucatume\WPBrowser\Module\WPLoader:
+            loadOnly: true
+            plugins:
+                - wp-graphql/wp-graphql.php
+                - wp-graphql-headless-login/wp-graphql-headless-login.php
+            activatePlugins:
+                - wp-graphql/wp-graphql.php
+                - wp-graphql-headless-login/wp-graphql-headless-login.php
