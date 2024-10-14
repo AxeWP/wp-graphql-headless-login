@@ -27,10 +27,6 @@ setup_before() {
 			curl -L 'https://raw.github.com/Codeception/c3/2.0/c3.php' > "c3.php"
 	fi
 
-	# Install the PHP dependencies
-	echo "Running composer install"
-	COMPOSER_MEMORY_LIMIT=-1 composer install
-
 	# Install pcov/clobber if PHP7.1+
 	if version_gt $PHP_VERSION 7.0 && [[ -n "$COVERAGE" ]] && [[ -z "$USING_XDEBUG" ]]; then
 			echo "Using pcov/clobber for codecoverage"
@@ -42,6 +38,10 @@ setup_before() {
 	elif [[ -n "$COVERAGE" ]] && [[ -n "$USING_XDEBUG" ]]; then
 			echo "Using XDebug for codecoverage"
 	fi
+
+	# Install the PHP dev-dependencies.
+	echo "Running composer install"
+	COMPOSER_MEMORY_LIMIT=-1 composer install --no-suggest
 }
 
 ##
