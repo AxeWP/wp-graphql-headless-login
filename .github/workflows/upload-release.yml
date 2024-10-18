@@ -21,12 +21,28 @@ jobs:
           extensions: mbstring, intl
           tools: composer:v2
 
-      - name: Install dependencies
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: "--no-progress"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Node.js dependencies
+        run: npm ci
+        env:
+          CI: true
+
+      - name: Build assets
         run: |
-          composer install --no-dev --optimize-autoloader
+          npm run build
 
       - name: Create Artifact
         run: |
+          composer install --no-dev --optimize-autoloader
           mkdir plugin-build
           composer archive -vvv --format=zip --file="plugin-build/wp-graphql-headless-login"
 

@@ -3,14 +3,8 @@
 # Suite for unit or integration tests that require WordPress functions and classes.
 actor: WpunitTester
 modules:
-  enabled:
-    - WPLoader
-    - \Tests\WPGraphQL\Login\Helper\Helper
-    - \Tests\WPGraphQL\Login\Helper\Wpunit
-  disabled:
-    - WPDb
-    - WPBrowser
-  config:
-    WPDb:
-      cleanup: false
+    enabled:
+        - lucatume\WPBrowser\Module\WPLoader
+        - \Tests\WPGraphQL\Login\Helper\Helper
+        - \Tests\WPGraphQL\Login\Helper\Wpunit
 bootstrap: bootstrap.php

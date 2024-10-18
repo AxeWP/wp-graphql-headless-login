@@ -23,12 +23,12 @@ jobs:
     name: Check code
 
     services:
-      mariadb:
+      mysql:
         image: mariadb:10
         ports:
           - 3306:3306
         env:
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ROOT_PASSWORD: password
         # Ensure docker waits for mariadb to start
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
@@ -52,10 +52,11 @@ jobs:
       - name: Setup WordPress
         run: |
           cp .env.dist .env
-          composer run install-stan-env
+          composer run install-test-env
+          # Remove the symlinked plugin and copy the plugin to the WordPress install
+          rm -rf /tmp/wordpress/wp-content/plugins/wp-graphql-headless-login
           cp -R . /tmp/wordpress/wp-content/plugins/wp-graphql-headless-login
-
 
       - name: Run PHPStan
         working-directory: /tmp/wordpress/wp-content/plugins/wp-graphql-headless-login
-        run: composer run-script phpstan
+        run: composer run-script phpstan -- --error-format=github

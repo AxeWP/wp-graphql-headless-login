@@ -11,7 +11,7 @@
  * Text Domain: wp-graphql-headless-login
  * Domain Path: /languages
  * Requires at least: 6.0
- * Tested up to: 6.6
+ * Tested up to: 6.6.2
  * Requires PHP: 7.4
  * Requires Plugins: wp-graphql
  * WPGraphQL requires at least: 1.14.0
@@ -57,12 +57,11 @@ if ( file_exists( __DIR__ . '/deactivation.php' ) ) {
 	register_activation_hook( __FILE__, 'WPGraphQL\Login\deactivation_callback' );
 }
 
-
-	/**
-	 * Define plugin constants.
-	 *
-	 * @since 0.0.1
-	 */
+/**
+ * Define plugin constants.
+ *
+ * @since 0.0.1
+ */
 function constants(): void {
 	// Plugin version.
 	if ( ! defined( 'WPGRAPHQL_LOGIN_VERSION' ) ) {
@@ -109,13 +108,13 @@ function dependencies_not_ready(): array {
 	return $deps;
 }
 
-	/**
-	 * Checks if any known plugin conflicts are present.
-	 *
-	 * @since 0.0.4
-	 *
-	 * @return string[]
-	 */
+/**
+ * Checks if any known plugin conflicts are present.
+ *
+ * @since 0.0.4
+ *
+ * @return string[]
+ */
 function plugin_conflicts(): array {
 	$conflicts = [];
 
@@ -130,11 +129,11 @@ function plugin_conflicts(): array {
 	return $conflicts;
 }
 
-	/**
-	 * Initializes plugin.
-	 *
-	 * @since 0.0.1
-	 */
+/**
+ * Initializes plugin.
+ *
+ * @since 0.0.1
+ */
 function init(): void {
 	constants();
 
