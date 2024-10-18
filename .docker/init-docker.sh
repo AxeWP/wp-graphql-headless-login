@@ -6,6 +6,8 @@ set -e
 # Wait for the database
 dockerize -wait tcp://"${WORDPRESS_DB_HOST}":3306 -timeout 1m
 
+# Get the current user
+
 cd "$WORDPRESS_ROOT_DIR/wp-content/plugins/$PLUGIN_SLUG"
 
 # Load NVM
@@ -29,6 +31,6 @@ fi
 # Go back to the root directory
 cd "$WORDPRESS_ROOT_DIR"
 
-# Get current user and update permissions
-CURRENT_USER=$(id -u):$(id -g)
-chown $CURRENT_USER .
+# Set permissions to www-data
+echo "Setting permissions to www-data"
+chown -R www-data:www-data .

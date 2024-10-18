@@ -10,7 +10,7 @@ echo -e "$(status_message "WordPress: ${WP_VERSION} PHP: ${PHP_VERSION}")"
 
 # Exits with a status of 0 (true) if provided version number is higher than proceeding numbers.
 version_gt() {
-    test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1";
+	test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1";
 }
 
 ##
@@ -41,7 +41,7 @@ setup_before() {
 
 	# Install the PHP dev-dependencies.
 	echo "Running composer install"
-	COMPOSER_MEMORY_LIMIT=-1 composer install --no-suggest
+	COMPOSER_MEMORY_LIMIT=-1 composer install
 }
 
 ##

@@ -49,7 +49,7 @@ install_db() {
 
 install_wordpress() {
 	# Create the WordPress root directory if it doesn't exist.
-	echo - "switching to the WordPress root directory $WORDPRESS_ROOT_DIR"
+	echo -e "$(status_message "Switching to the WordPress root directory $WORDPRESS_ROOT_DIR")"
 	mkdir -p "$WORDPRESS_ROOT_DIR"
 	cd "$WORDPRESS_ROOT_DIR" || { echo -e "$(error_message "Failed to enter directory: $WORDPRESS_ROOT_DIR")"; exit 1; }
 
@@ -174,7 +174,7 @@ post_setup() {
 		wp db export "$SQLDUMP" --allow-root
 	fi
 
-	echo echo -e "$(status_message "Installed plugins")"
+	echo -e "$(status_message "Installed plugins")"
 	wp plugin list --allow-root
 }
 
@@ -194,7 +194,7 @@ if [ "$1" == '--reset-site' ]; then
 	wp db reset --yes --quiet --allow-root
 fi
 
-echo - "switching to the WordPress root directory $WORDPRESS_ROOT_DIR"
+echo -e "$(status_message "Switching to the WordPress root directory $WORDPRESS_ROOT_DIR")"
 
 install_wordpress
 configure_wordpress

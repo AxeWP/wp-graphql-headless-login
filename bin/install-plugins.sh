@@ -43,7 +43,7 @@ install_woocommerce() {
 
 		# Install composer deps
 		cd $WORDPRESS_ROOT_DIR/wp-content/plugins/wp-graphql-woocommerce
-		composer install --no-dev --no-interaction --no-progress --no-suggest --optimize-autoloader
+		composer install --no-dev --no-interaction --no-progress --optimize-autoloader
 
 		cd $WORDPRESS_ROOT_DIR
 		wp plugin activate wp-graphql-woocommerce --allow-root
