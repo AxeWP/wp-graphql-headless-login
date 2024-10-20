@@ -141,6 +141,11 @@ setup_plugin() {
 
 	# Build the plugin
 	npm run build
+
+	# Fix file permissions
+	# Set permissions to www-data
+	echo "Setting permissions"
+	chmod -R 777 .
 }
 
 post_setup() {

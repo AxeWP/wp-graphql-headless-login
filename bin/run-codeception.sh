@@ -2,6 +2,8 @@
 
 ORIGINAL_PATH=$(pwd)
 BASEDIR=$(dirname "$0")
+PROJECT_DIR="$WORDPRESS_ROOT_DIR/wp-content/plugins/$PLUGIN_SLUG"
+
 
 source "${BASEDIR}/_lib.sh"
 source "${BASEDIR}/docker-functions.sh"
@@ -17,8 +19,6 @@ version_gt() {
 # Set up before running tests.
 ##
 setup_before() {
-	PROJECT_DIR="$WORDPRESS_ROOT_DIR/wp-content/plugins/$PLUGIN_SLUG"
-
 	cd "$PROJECT_DIR"
 
 	# Download c3 for testing.
@@ -42,6 +42,10 @@ setup_before() {
 	# Install the PHP dev-dependencies.
 	echo "Running composer install"
 	COMPOSER_MEMORY_LIMIT=-1 composer install
+
+# Set output permission
+	echo "Setting Codeception output directory permissions"
+	chmod 777 -R tests/_output
 }
 
 ##
@@ -63,26 +67,24 @@ run_tests() {
 	fi
 
 	# If maintenance mode is active, de-activate it
-	if $(container wp maintenance-mode is-active --allow-root); then
+	if $(wp maintenance-mode is-active --allow-root); then
 		echo "Deactivating maintenance mode"
-		container wp maintenance-mode deactivate --allow-root
+		wp maintenance-mode deactivate --allow-root
 	fi
 
 	# Suites is the comma separated list of suites/tests to run.
 	echo "Running Test Suite $suites"
-	container bash -c "cd wp-content/plugins/$PLUGIN_SLUG && vendor/bin/codecept run -c codeception.dist.yml ${suites} ${coverage:-} ${debug:-} --no-exit"
+	cd "$PROJECT_DIR" && vendor/bin/codecept run -c codeception.dist.yml ${suites} ${coverage:-} ${debug:-} --no-exit
 }
 
 ##
 # Clean up after running tests.
 ##
 cleanup_after() {
-	PROJECT_DIR="$WORDPRESS_ROOT_DIR/wp-content/plugins/$PLUGIN_SLUG"
-
 	cd "$PROJECT_DIR"
 
 	# Remove c3.php
-	if [ -f "$PROJECT_DIR/c3.php" ] && [ "$SKIP_TESTS_CLEANUP" != "true" ]; then
+	if [ -f "c3.php" ] && [ "$SKIP_TESTS_CLEANUP" != "true" ]; then
 			echo "Removing Codeception's c3.php"
 			rm -rf "$PROJECT_DIR/c3.php"
 	fi
@@ -111,23 +113,20 @@ cleanup_after() {
 
 # Prepare to run tests.
 echo "Setting up for Codeception tests"
-container bash -c "$(declare -f version_gt); $(declare -f setup_before); setup_before"
+setup_before
 
-# Set output permission
-echo "Setting Codeception output directory permissions"
-container bash -c "chmod 777 wp-content/plugins/$PLUGIN_SLUG/tests/_output"
 
 # Run the tests
 run_tests $SUITES
 
 # Clean up after running tests.
 echo "Cleaning up after Codeception tests"
-container bash -c "$(declare -f version_gt); $(declare -f cleanup_after); cleanup_after"
+cleanup_after
 
 # Check results and exit accordingly.
 if [ -f "tests/_output/failed" ]; then
-    echo "Uh oh, Codeception tests failed."
-    exit 1
+	echo "Uh oh, Codeception tests failed."
+	exit 1
 else
-    echo "Woohoo! Codeception tests completed succesfully!"
+	echo "Woohoo! Codeception tests completed succesfully!"
 fi

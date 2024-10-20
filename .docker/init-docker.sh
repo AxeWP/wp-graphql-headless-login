@@ -30,7 +30,3 @@ fi
 
 # Go back to the root directory
 cd "$WORDPRESS_ROOT_DIR"
-
-# Set permissions to www-data
-echo "Setting permissions to www-data"
-chown -R www-data:www-data .
