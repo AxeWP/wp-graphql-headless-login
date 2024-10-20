@@ -25,7 +25,7 @@ namespace WPGraphQL\Login\Admin\Settings;
  *    value: string|bool|int|float
  *  },
  *  controlOverrides?: array<string,mixed>,
- *  controlType?: 'jwtSecret',
+ *  controlType?: 'formTokenField'|'jwtSecret'|'select'|'text'|'toggle',
  *  default?: mixed,
  *  help?: string,
  *  hidden?: bool,
