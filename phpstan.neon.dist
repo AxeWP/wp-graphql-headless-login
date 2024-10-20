@@ -26,8 +26,6 @@ parameters:
 		excludePaths:
 			analyse:
 				- vendor-prefixed/
-			analyseAndScan:
-				- ../wp-graphql/tests
 		scanFiles:
 			- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
 			- vendor/axepress/wp-graphql-stubs/wp-graphql-stubs.php

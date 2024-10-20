@@ -51,7 +51,7 @@ class Wpunit extends \Codeception\Module {
 
 		$site_secret = wp_generate_password( 64, false, false );
 
-		update_option( PluginSettings::$settings_prefix . 'jwt_secret_key', $site_secret );
+		update_option( PluginSettings::get_slug() . 'jwt_secret_key', $site_secret );
 		TokenManager::issue_new_user_secret( $user_id, false );
 		$helper->reset_utils_properties();
 

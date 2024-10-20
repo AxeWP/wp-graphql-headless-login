@@ -16,7 +16,7 @@ class Functional extends \Codeception\Module {
 
 		$site_secret = wp_generate_password( 64, false, false );
 
-		$wpdb->haveOptionInDatabase( PluginSettings::$settings_prefix . 'jwt_secret_key', $site_secret );
+		$wpdb->haveOptionInDatabase( PluginSettings::get_slug() . 'jwt_secret_key', $site_secret );
 
 		// Reset the utils properties to ensure the site secret is used.
 

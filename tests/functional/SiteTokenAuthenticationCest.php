@@ -22,7 +22,7 @@ class SiteTokenAuthenticationCest {
 				],
 			]
 		);
-		$I->haveOptionInDatabase( AccessControlSettings::$settings_prefix . 'access_control', [] );
+		$I->haveOptionInDatabase( AccessControlSettings::get_slug() . 'access_control', [] );
 		$I->reset_utils_properties();
 	}
 

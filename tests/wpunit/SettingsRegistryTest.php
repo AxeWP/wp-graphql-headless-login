@@ -18,7 +18,7 @@ class MockSettings extends SettingsRegistry {
 	}
 }
 
-class SettingsRegistryTest extends \Codeception\TestCase\WPTestCase {
+class SettingsRegistryTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	/**
 	 * @var \WpunitTester
 	 */

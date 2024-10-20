@@ -53,14 +53,14 @@ class AccessFunctionsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 			'isEnabled' => false,
 		];
 
-	update_option( ProviderSettings::$settings_prefix . 'facebook', $expected );
+		update_option( ProviderSettings::$settings_prefix . 'facebook', $expected );
 
-	// reset Utils::providers
-	$this->tester->reset_utils_properties();
+		// reset Utils::providers
+		$this->tester->reset_utils_properties();
 
-	$actual = graphql_login_get_provider_settings( 'facebook' );
+		$actual = graphql_login_get_provider_settings( 'facebook' );
 
-	$this->assertEquals( $expected, $actual );
+		$this->assertEquals( $expected, $actual );
 
 		// cleanup db
 		delete_option( ProviderSettings::$settings_prefix . 'facebook' );
