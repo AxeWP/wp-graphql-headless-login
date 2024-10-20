@@ -5,16 +5,8 @@ use WPGraphQL\Login\Main;
 /**
  * Tests Main.
  */
-class MainTest extends \Codeception\TestCase\WPTestCase {
-
+class MainTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	public $instance;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setUp(): void {
-		parent::setUp();
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -62,11 +54,9 @@ class MainTest extends \Codeception\TestCase\WPTestCase {
 	 * @covers \WPGraphQL\Login\Main
 	 */
 	public function testConstants() {
-		do_action( 'init' );
 		$this->assertTrue( defined( 'WPGRAPHQL_LOGIN_VERSION' ) );
 		$this->assertTrue( defined( 'WPGRAPHQL_LOGIN_PLUGIN_DIR' ) );
 		$this->assertTrue( defined( 'WPGRAPHQL_LOGIN_PLUGIN_URL' ) );
 		$this->assertTrue( defined( 'WPGRAPHQL_LOGIN_PLUGIN_FILE' ) );
 	}
-
 }

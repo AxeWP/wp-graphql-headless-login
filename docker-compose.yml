@@ -1,50 +1,47 @@
-version: '3.9'
-
 services:
-  app:
-    depends_on:
-      - app_db
-    image: wp-graphql-headless-login:latest-wp${WP_VERSION-6.6}-php${PHP_VERSION-8.2}
-    volumes:
-      - '.:/var/www/html/wp-content/plugins/wp-graphql-headless-login'
-      - './.log/app:/var/log/apache2'
+  wordpress:
+    build:
+      context: ./.docker
+      args:
+        WP_VERSION: ${WP_VERSION}
+        PHP_VERSION: ${PHP_VERSION}
+    image: ${PLUGIN_SLUG}:latest-wp${WP_VERSION}-php${PHP_VERSION}
+    restart: always
+    ports:
+      - "8890:80"
+    environment:
+      WP_VERSION: ${WP_VERSION}
+      PHP_VERSION: ${PHP_VERSION}
     env_file:
       - .env
-    environment:
-      WP_URL: http://localhost:8091
-      USING_XDEBUG: ${USING_XDEBUG:-}
-    ports:
-      - '8091:80'
+    user: root
+    depends_on:
+      - mysql
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./:/var/www/html/wp-content/plugins/${PLUGIN_SLUG}
     networks:
-      local:
+      - plugin_network
 
-  app_db:
+  mysql:
     image: mariadb:10
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE:      wordpress
-      MYSQL_USER:          wordpress
-      MYSQL_PASSWORD:      wordpress
+    restart: always
     ports:
-      - '3306'
-    networks:
-      testing:
-      local:
-
-  testing:
-    depends_on:
-      - app_db
-    image: wp-graphql-headless-login-testing:latest-wp${WP_VERSION-6.6}-php${PHP_VERSION-8.2}
-    volumes:
-      - '.:/var/www/html/wp-content/plugins/wp-graphql-headless-login'
-      - './.log/testing:/var/log/apache2'
-    env_file:
-      - .env
+      - '3306:3306'
     environment:
-      SUITES: ${SUITES:-}
+      MYSQL_ROOT_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      MYSQL_USER: ${WORDPRESS_DB_USER}
+      MYSQL_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      MYSQL_DATABASE: ${WORDPRESS_DB_NAME}
+    volumes:
+      - db:/var/lib/mysql
     networks:
-      testing:
+      - plugin_network
 
 networks:
-  local:
-  testing:
+  plugin_network:
+    driver: bridge
+
+volumes:
+  wordpress_data:
+  db:

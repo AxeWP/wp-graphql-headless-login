@@ -12,13 +12,13 @@ Thumbs.db
 .env
 .env.*
 !.env.dist
+!.docker/.env.ci
 
 # Strauss
 bin/strauss.phar
 
 # Ruleset Overrides
 phpcs.xml
-phpunit.xml
 phpstan.neon
 rector.php
 
@@ -29,14 +29,14 @@ plugin-build
 auth.json
 
 # Composer deps
-!vendor
-vendor/*
-!vendor/autoload.php
-!vendor/composer
-vendor/composer/*/
+vendor
+vendor-prefixed
 
 # NPM deps
 node_modules
+
+# Built assets
+build
 
 # Generated Schema used in some tooling. Versioned Schema is uploaded as a Release artifact to Github.
 schema.graphql
@@ -51,3 +51,4 @@ wp-cli.local.yml
 tests/*.suite.yml
 coverage/*
 .log/
+c3.php

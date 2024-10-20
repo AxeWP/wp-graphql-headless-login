@@ -5,8 +5,7 @@ use WPGraphQL\Login\Auth\ServerAuthentication;
 /**
  * Tests ServerAuthentication.
  */
-class ServerAuthenticationTest extends \Codeception\TestCase\WPTestCase {
-
+class ServerAuthenticationTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	/**
 	 * @var \WpunitTester
 	 */
@@ -33,7 +32,7 @@ class ServerAuthenticationTest extends \Codeception\TestCase\WPTestCase {
 	 */
 	public function testDetermineCurrentUser(): void {
 		$instance = ServerAuthentication::instance();
-		$user_id = $this->factory()->user->create();
+		$user_id  = $this->factory()->user->create();
 
 		// Test without token.
 		$actual = $instance->determine_current_user( $this->admin );

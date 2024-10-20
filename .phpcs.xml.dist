@@ -11,7 +11,6 @@
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>/vendor-prefixed/</exclude-pattern>
 	<exclude-pattern>/node_modules/</exclude-pattern>
-	<exclude-pattern>*/tests/*</exclude-pattern>
 
 	<!-- How to scan: include CLI args so you don't need to pass them manually -->
 	<!-- Usage instructions: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage -->

@@ -7,8 +7,7 @@ use WPGraphQL\Login\CoreSchemaFilters;
 /**
  * Tests CoreSchemaFilters.
  */
-class CoreSchemaFiltersTest extends \Codeception\TestCase\WPTestCase {
-
+class CoreSchemaFiltersTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	/**
 	 * @var \WpunitTester
 	 */
@@ -31,7 +30,7 @@ class CoreSchemaFiltersTest extends \Codeception\TestCase\WPTestCase {
 	/**
 	 * Tests get_type_prefix();
 	 */
-	public function testGetTypePrefix() : void {
+	public function testGetTypePrefix(): void {
 		$actual = CoreSchemaFilters::get_type_prefix();
 		$this->assertEquals( '', $actual );
 
@@ -45,7 +44,7 @@ class CoreSchemaFiltersTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @covers \WPGraphQL\Login\CoreSchemaFilters
 	 */
-	public function testCheckIfSecretIsRevokedWhenRevoked() : void {
+	public function testCheckIfSecretIsRevokedWhenRevoked(): void {
 		$user_id = $this->factory()->user->create();
 
 		// We should get a thrown UserError.
@@ -63,7 +62,7 @@ class CoreSchemaFiltersTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @covers \WPGraphQL\Login\CoreSchemaFilters
 	 */
-	public function testCheckIfSecretIsRevoked() : void {
+	public function testCheckIfSecretIsRevoked(): void {
 		$user_id = $this->factory()->user->create();
 
 		$expected = 'test_token';

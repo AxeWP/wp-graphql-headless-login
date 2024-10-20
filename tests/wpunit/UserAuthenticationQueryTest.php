@@ -59,13 +59,14 @@ class LoginClientTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
 		$this->tester->clear_client_config( 'facebook' );
 		$this->tester->clear_client_config( 'google' );
 		$this->clearSchema();
+
 		parent::tearDown();
 	}
 
 	/**
 	 * Test the `user.auth` query.
 	 */
-	public function testUserAuthQuery() : void {
+	public function testUserAuthQuery(): void {
 		$query = '
 			query UserAuth( $id: ID! ) {
 				user( id: $id, idType: DATABASE_ID ) {
@@ -105,8 +106,8 @@ class LoginClientTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
 						$this->expectedObject(
 							'auth',
 							[
-								$this->expectedField( 'authToken', static::IS_NULL ),
-								$this->expectedField( 'authTokenExpiration', static::IS_NULL ),
+								$this->expectedField( 'authToken', self::IS_NULL ),
+								$this->expectedField( 'authTokenExpiration', self::IS_NULL ),
 								$this->expectedField( 'isUserSecretRevoked', false ),
 								$this->expectedNode(
 									'linkedIdentities',
@@ -124,9 +125,9 @@ class LoginClientTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
 									],
 									1
 								),
-								$this->expectedField( 'refreshToken', static::IS_NULL ),
-								$this->expectedField( 'refreshTokenExpiration', static::IS_NULL ),
-								$this->expectedField( 'userSecret', static::IS_NULL ),
+								$this->expectedField( 'refreshToken', self::IS_NULL ),
+								$this->expectedField( 'refreshTokenExpiration', self::IS_NULL ),
+								$this->expectedField( 'userSecret', self::IS_NULL ),
 							]
 						),
 					]
@@ -149,8 +150,8 @@ class LoginClientTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
 						$this->expectedObject(
 							'auth',
 							[
-								$this->expectedField( 'authToken', static::NOT_FALSY ),
-								$this->expectedField( 'authTokenExpiration', static::NOT_FALSY ),
+								$this->expectedField( 'authToken', self::NOT_FALSY ),
+								$this->expectedField( 'authTokenExpiration', self::NOT_FALSY ),
 								$this->expectedField( 'isUserSecretRevoked', false ),
 								$this->expectedNode(
 									'linkedIdentities',
@@ -168,9 +169,9 @@ class LoginClientTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
 									],
 									1
 								),
-								$this->expectedField( 'refreshToken', static::NOT_FALSY ),
-								$this->expectedField( 'refreshTokenExpiration', static::NOT_FALSY ),
-								$this->expectedField( 'userSecret', static::NOT_FALSY ),
+								$this->expectedField( 'refreshToken', self::NOT_FALSY ),
+								$this->expectedField( 'refreshTokenExpiration', self::NOT_FALSY ),
+								$this->expectedField( 'userSecret', self::NOT_FALSY ),
 							]
 						),
 					]
@@ -178,5 +179,4 @@ class LoginClientTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
 			]
 		);
 	}
-
 }

@@ -1,6 +1,5 @@
 <?php
 
-use WPGraphQL\Login\Admin\Settings;
 
 /**
  * Tests ProviderEnum class
@@ -30,10 +29,10 @@ class ProviderEnumTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
 	 *
 	 * @covers \WPGraphQL\Login\Type\Enum\ProviderEnum::get_values()
 	 */
-	public function testNoProviderEnum() : void {
+	public function testNoProviderEnum(): void {
 		add_filter(
 			'graphql_login_registered_provider_configs',
-			function() {
+			static function () {
 				return [];
 			}
 		);
@@ -57,5 +56,4 @@ class ProviderEnumTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase {
 		$this->assertCount( 1, $actual['data']['__type']['enumValues'] );
 		$this->assertEquals( 'NONE', $actual['data']['__type']['enumValues'][0]['name'] );
 	}
-
 }

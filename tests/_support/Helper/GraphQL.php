@@ -5,7 +5,6 @@ namespace Tests\WPGraphQL\Login\Helper;
 // all public methods declared in helper class will be available in $I
 
 class GraphQL extends \Codeception\Module {
-
 	/**
 	 * Sends GraphQL and returns a response
 	 *
@@ -15,13 +14,12 @@ class GraphQL extends \Codeception\Module {
 	 * @param array|null $variables
 	 * @param array|null $request_headers
 	 */
-	public function sendGraphQLRequest( $query, $variables = null, $request_headers = [] ) : array {
+	public function sendGraphQLRequest( $query, $variables = null, $request_headers = [] ): array {
 		$rest = $this->getModule( 'REST' );
 
-		// Add item to cart.
+		// Set request headers
 		$rest->haveHttpHeader( 'Content-Type', 'application/json' );
 
-		// Set request headers
 		foreach ( $request_headers as $header => $value ) {
 			$rest->haveHttpHeader( $header, $value );
 		}
@@ -37,15 +35,15 @@ class GraphQL extends \Codeception\Module {
 			)
 		);
 
-		// Confirm success.
-		$rest->seeResponseCodeIs( 200 );
-		$rest->seeResponseIsJson();
-
 		// Get response.
+		$rest->seeResponseIsJson();
 		$response = json_decode( $rest->grabResponse(), true );
 
 		// use --debug flag to view
 		codecept_debug( json_encode( $response, JSON_PRETTY_PRINT ) );
+
+		// Confirm success.
+		$rest->seeResponseCodeIs( 200 );
 
 		return $response;
 	}
@@ -54,10 +52,13 @@ class GraphQL extends \Codeception\Module {
 	 * Sets the GraphQL debug mode to on.
 	 */
 	public function haveGraphQLDebug() {
-		// Enable graphql debug
-		$graphql_settings                       = get_option( 'graphql_general_settings', [] ) ?: [];
+		/** @var \lucatume\WPBrowser\Module\WPDb $wpdb */
+		$wpdb = $this->getModule( 'lucatume\WPBrowser\Module\WPDb' );
+
+		$graphql_settings = $wpdb->grabOptionFromDatabase( 'graphql_general_settings' ) ?: [];
 
 		$graphql_settings['debug_mode_enabled'] = 'on';
-		update_option( 'graphql_general_settings', $graphql_settings );
+
+		$wpdb->haveOptionInDatabase( 'graphql_general_settings', $graphql_settings );
 	}
 }

@@ -10,12 +10,12 @@ jobs:
     name: Generate and Upload WPGraphQL Schema Artifact
 
     services:
-      mariadb:
+      mysql:
         image: mariadb:10
         ports:
           - 3306:3306
         env:
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ROOT_PASSWORD: password
         # Ensure docker waits for mariadb to start
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
@@ -31,10 +31,19 @@ jobs:
           coverage: none
           tools: composer:v2, wp-cli
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
       - name: Setup WordPress
         run: |
           cp .env.dist .env
+          # Append to the .env file
+          echo "INCLUDE_EXTENSIONS=${{ env.INCLUDE_EXTENSIONS }}" >> .env
           composer run install-test-env
+        env:
+          INCLUDE_EXTENSIONS: ''
 
       - name: Generate the Static Schema
         run: |

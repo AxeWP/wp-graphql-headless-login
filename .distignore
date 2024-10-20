@@ -32,7 +32,6 @@ composer.json
 composer.lock
 docker-compose.yml
 phpstan.neon.dist
-phpunit.xml.dist
 README.md
 schema.graphql
 strauss.phar

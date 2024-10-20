@@ -5,8 +5,7 @@ use WPGraphQL\Login\TypeRegistry;
 /**
  * Tests TypeRegistry.
  */
-class TypeRegistryTest extends \Codeception\TestCase\WPTestCase {
-
+class TypeRegistryTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	/**
 	 * {@inheritDoc}
 	 */
@@ -67,5 +66,4 @@ class TypeRegistryTest extends \Codeception\TestCase\WPTestCase {
 		$actual = did_action( 'graphql_login_after_register_types' );
 		$this->assertEquals( 1, $actual, 'After action should have been called once' );
 	}
-
 }

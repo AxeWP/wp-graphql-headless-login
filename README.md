@@ -33,9 +33,15 @@ This plugin is inspired by and aims to replace <a href="https://github.com/wp-gr
 2. Download the [latest release](https://github.com/AxeWP/wp-graphql-headless-login/releases) `.zip` file, upload it to your WordPress install, and activate the plugin.
 3. Enable and configure the authentication providers you want to use in GraphQL > Settings > Headless Login.
 
+### With WP-CLI
+
+```bash
+wp plugin install https://github.com/AxeWP/wp-graphql-headless-login/releases/latest/download/wp-graphql-headless-login.zip --activate
+```
+
 ### With Composer
 
-```console
+```bash
 composer require axepress/wp-graphql-headless-login
 ```
 
@@ -112,7 +118,7 @@ Supported providers (out of the box):
 
 ## Testing
 
-1. Update your `.env` file to your testing environment specifications.
+1. Copy `.env.dist` to `.env`, and update the file to match your local environment.
 2. Run `composer install` to get the dev-dependencies.
 3. Run `composer install-test-env` to create the test environment.
 4. Run your test suite with [Codeception](https://codeception.com/docs/02-GettingStarted#Running-Tests).

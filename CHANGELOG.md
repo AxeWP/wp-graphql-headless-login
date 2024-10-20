@@ -1,10 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to a modified version of [Semantic Versioning](./README.md#updating-and-versioning).
 
 ## [Unreleased]
+
+- chore!: Remove `vendor`, `vendor-prefixed`, and `build` directories from the repository.
+- chore: Update Composer dependencies.
+- chore: Update Strauss to v0.19.4.
+- ci!: Update ci scripts and commands, docker configuration, and env variables.
+- tests!: Update codeception tests to use `wp-browser` > v3.5.x.
+- tests: Format and lint test files.
 
 ## [0.3.1] - 2024-09-07
 
@@ -144,7 +150,6 @@ To address this, the provider slug was renamed from `generic-oauth2` to `oauth2-
 - dev!: Rename `OAuth2 (Generic)` provider slug to `oauth2-generic`.
 - fix: Use `ProviderConfig::get_slug()` for Provider registry keys. H/t @ryntab and @stephane-segning.
 
-
 ## [0.0.7] - 2023-03-24
 
 - fix: Only create one notice when the SiteToken mutation cannot be enabled.
@@ -174,8 +179,6 @@ This release adds support for a special Site Token provider, which allows users 
 - tests: Rename provider mutation test files.
 - tests: Backfill tests for Settings registry.
 - tests: Backfill tests for `OAuth2 Generic` provider.
-
-
 
 ## [0.0.5] - 2023-02-26
 
