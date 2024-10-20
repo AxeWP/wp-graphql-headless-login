@@ -6,13 +6,13 @@ set -e
 ORIGINAL_PATH=$(pwd)
 BASEDIR=$(dirname "$0")
 
+# Include common environment variables and functions
+source "${BASEDIR}/_lib.sh"
+
 # Common variables.
 WP_DEBUG=${WP_DEBUG:-true}
 SCRIPT_DEBUG=${SCRIPT_DEBUG:-true}
 WP_VERSION=${WP_VERSION:-"latest"}
-
-# Include common environment variables and functions
-source "${BASEDIR}/_lib.sh"
 
 ##
 # Install the database.
@@ -141,11 +141,6 @@ setup_plugin() {
 
 	# Build the plugin
 	npm run build
-
-	# Fix file permissions
-	# Set permissions to www-data
-	echo "Setting permissions"
-	chmod -R 777 .
 }
 
 post_setup() {
