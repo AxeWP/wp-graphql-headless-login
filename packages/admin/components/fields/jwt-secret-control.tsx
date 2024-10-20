@@ -1,4 +1,4 @@
-import { useEffect } from '@wordpress/element';
+import { useEffect } from 'react';
 import { BaseControl, Button } from '@wordpress/components';
 import { dispatch } from '@wordpress/data';
 import { __, sprintf } from '@wordpress/i18n';

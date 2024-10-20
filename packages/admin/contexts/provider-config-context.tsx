@@ -5,8 +5,8 @@ import {
 	useState,
 	useCallback,
 	useEffect,
-} from '@wordpress/element';
-import type { PropsWithChildren } from 'react';
+	type PropsWithChildren,
+} from 'react';
 import type {
 	ClientOptionsType,
 	LoginOptionsType,
