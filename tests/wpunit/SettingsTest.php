@@ -15,88 +15,52 @@ class SettingsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	 */
 	public $tester;
 
-	public function testGetAllSettings(): void {
-		/**
-		 * Clear static setting variables.
-		 */
-		$reflection          = new ReflectionClass( AccessControlSettings::class );
-		$reflection_property = $reflection->getProperty( 'config' );
-		$reflection_property->setAccessible( true );
-		$reflection_property->setValue( [] );
-		$reflection_property = $reflection->getProperty( 'args' );
-		$reflection_property->setAccessible( true );
-		$reflection_property->setValue( [] );
+	/**
+	 * Tests that the Settings tab is registered.
+	 */
+	public function testGetSettingsData(): void {
+		$instance   = new Settings();
+		$reflection = new ReflectionClass( $instance );
+		$method     = $reflection->getMethod( 'get_settings_data' );
+		$method->setAccessible( true );
 
-		$reflection          = new ReflectionClass( PluginSettings::class );
-		$reflection_property = $reflection->getProperty( 'config' );
-		$reflection_property->setAccessible( true );
-		$reflection_property->setValue( [] );
-		$reflection_property = $reflection->getProperty( 'args' );
-		$reflection_property->setAccessible( true );
-		$reflection_property->setValue( [] );
+		$actual = $method->invoke( $instance );
 
-		$reflection          = new ReflectionClass( ProviderSettings::class );
-		$reflection_property = $reflection->getProperty( 'config' );
-		$reflection_property->setAccessible( true );
-		$reflection_property->setValue( [] );
-		$reflection_property = $reflection->getProperty( 'args' );
-		$reflection_property->setAccessible( true );
-		$reflection_property->setValue( [] );
+		$this->assertNotEmpty( $actual );
 
-		$settings = Settings::get_all_settings();
+		// Test Secret
+		$expected_secret = [
+			'hasKey'     => true,
+			'isConstant' => false,
+		];
 
-		// Test Access Control.
-		codecept_debug( $settings['access_control'] );
-		$this->assertArrayHasKey( 'access_control', $settings );
-		$this->assertNotEmpty( $settings['access_control'][ AccessControlSettings::$settings_prefix . 'access_control' ] );
-		$this->assertArrayNotHasKeys(
-			[
-				'advanced',
-				'default',
-				'help',
-				'label',
-				'order',
-				'required',
-			],
-			$settings['access_control'][ AccessControlSettings::$settings_prefix . 'access_control' ]['show_in_rest']['schema']['properties'],
-			'Access Control settings should not have excluded keys.'
-		);
+		$this->assertArrayHasKey( 'secret', $actual );
+		$this->assertEquals( $expected_secret, $actual['secret'] );
 
-		$config_keys = array_keys( AccessControlSettings::get_config() );
+		// Test Nonce
+		$this->assertArrayHasKey( 'nonce', $actual );
+		$nonce = $actual['nonce'];
 
-		$this->assertEqualSets(
-			$config_keys,
-			array_keys( $settings['access_control'][ AccessControlSettings::$settings_prefix . 'access_control' ]['show_in_rest']['schema']['properties'] ),
-			'Access Control settings should have the same keys as the config.'
-		);
+		$this->assertTrue( (bool) wp_verify_nonce( $nonce, 'wp_graphql_settings' ) );
 
-		// Test Plugin
-		codecept_debug( $settings['plugin'] );
-		$this->assertArrayHasKey( 'plugin', $settings );
-		$this->assertNotEmpty( $settings['plugin'] );
-		$this->assertArrayNotHasKeys(
-			[
-				'advanced',
-				'help',
-				'label',
-				'order',
-				'hidden',
-			],
-			$settings['plugin'],
-			'Plugin settings should not have excluded keys.'
-		);
+		// Test Settings
+		$this->assertArrayHasKey( 'settings', $actual );
 
-		$config_keys = array_keys( PluginSettings::get_config() );
-		$this->assertEqualSets(
-			$config_keys,
-			array_keys( $settings['plugin'] ),
-			'Plugin settings should have the same keys as the config.'
-		);
+		$expected_settings = [
+			AccessControlSettings::get_slug(),
+			PluginSettings::get_slug(),
+		];
 
-		// Test Providers
-		codecept_debug( $settings['providers'] );
-		$this->assertArrayHasKey( 'providers', $settings );
-		$this->assertNotEmpty( $settings['providers'] );
+		foreach ( $expected_settings as $setting ) {
+			$this->assertArrayHasKey( $setting, $actual['settings'] );
+			$this->assertNotEmpty( $actual['settings'][ $setting ] );
+		}
+
+		// Test Providers.
+		$this->assertArrayHasKey( 'providers', $actual['settings'] );
+		$this->assertNotEmpty( $actual['settings']['providers'] );
+
+		$providers = $actual['settings']['providers'];
 
 		$provider_keys = array_map(
 			static fn ( string $key ) => ProviderSettings::$settings_prefix . $key,
@@ -105,61 +69,21 @@ class SettingsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 
 		$this->assertEqualSets(
 			$provider_keys,
-			array_keys( $settings['providers'] ),
+			array_keys( $providers ),
 			'Provider settings should have the same keys as the registered providers.'
 		);
-	}
 
-	public function testHideSensitiveDataFromRest() {
-		$original_value = 'some value';
+		// Ensure the keys are in ProviderSettings::get_config().
+		$reflection        = new ReflectionClass( ProviderSettings::class );
+		$provider_settings = $reflection->getProperty( 'config' );
+		$provider_settings->setAccessible( true );
+		// Set the config to null to force a reload.
+		$provider_settings->setValue( [] );
 
-		// Test any other key.
-		$actual = Settings::hide_sensitive_data_from_rest( $original_value, 'some_other_key' );
+		$provider_settings = ProviderSettings::get_config();
 
-		$this->assertEquals( $original_value, $actual, 'Any other key should return the original value.' );
-
-		// Test a key that should be hidden.
-		$actual = Settings::hide_sensitive_data_from_rest( $original_value, PluginSettings::$settings_prefix . 'jwt_secret_key' );
-
-		$this->assertEquals( '********', $actual, 'A key that should be hidden should return a masked value.' );
-	}
-
-	public function testSanitizeAccessControlOptions() {
-		// Test sanitization
-		$original = [
-			'hasAccessControlAllowCredentials' => 'true',
-			'hasSiteAddressInOrigin'           => 'true',
-			'shouldBlockUnauthorizedDomains'   => '0',
-			'customHeaders'                    => [ '*', '<strong>X-Wrapped-In-HTML</strong>' ],
-		];
-
-		$actual = AccessControlSettings::sanitize_callback( $original );
-
-		$this->assertTrue( $actual['hasAccessControlAllowCredentials'], 'hasSiteAddressInOrigin should be (bool) true.' );
-		$this->assertTrue( $actual['hasSiteAddressInOrigin'], 'hasSiteAddressInOrigin should be (bool) true.' );
-		$this->assertFalse( $actual['shouldBlockUnauthorizedDomains'], 'shouldBlockUnauthorizedDomains should be (bool) false.' );
-		$this->assertEquals( [ '*', 'X-Wrapped-In-HTML' ], $actual['customHeaders'], 'customHeaders should be sanitized.' );
-
-		// Test additionalAuthorizedDomains as wildcard string.
-		$original['additionalAuthorizedDomains'] = '*';
-
-		$actual = AccessControlSettings::sanitize_callback( $original );
-
-		$this->assertEquals( [ '*' ], $actual['additionalAuthorizedDomains'], 'additionalAuthorizedDomains should be an array with a single wildcard.' );
-
-		// Test sanitization of additionalAuthorizedDomains as string.
-		$original['additionalAuthorizedDomains'] = 'https://example.com, badurl, https://example.org';
-
-		$actual = AccessControlSettings::sanitize_callback( $original );
-
-		$this->assertEquals( 'https://example.com', $actual['additionalAuthorizedDomains'][0], 'additionalAuthorizedDomains should be an array of sanitized values.' );
-		$this->assertStringStartsWith( 'http', $actual['additionalAuthorizedDomains'][1], 'additionalAuthorizedDomains should be an array of sanitized values.' );
-		$this->assertEquals( 'https://example.org', $actual['additionalAuthorizedDomains'][2], 'additionalAuthorizedDomains should be an array of sanitized values' );
-	}
-
-	protected function assertArrayNotHasKeys( $keys, $array, $message = '' ): void {
-		foreach ( (array) $keys as $key ) {
-			$this->assertArrayNotHasKey( $key, $array, $message );
+		foreach ( $provider_keys as $key ) {
+			$this->assertArrayHasKey( $key, $provider_settings, 'The provider key ' . $key . ' should be in the provider settings.' );
 		}
 	}
 }

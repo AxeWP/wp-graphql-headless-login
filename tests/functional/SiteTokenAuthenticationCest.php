@@ -22,7 +22,7 @@ class SiteTokenAuthenticationCest {
 				],
 			]
 		);
-		$I->haveOptionInDatabase( AccessControlSettings::$settings_prefix . 'access_control', [] );
+		$I->haveOptionInDatabase( AccessControlSettings::get_slug() . 'access_control', [] );
 		$I->reset_utils_properties();
 	}
 
@@ -81,15 +81,13 @@ class SiteTokenAuthenticationCest {
 		// The query has errors because the mutation is not allowed.
 
 		$I->haveOptionInDatabase(
-			AccessControlSettings::$settings_prefix . 'access_control',
+			AccessControlSettings::get_slug(),
 			[
 				'shouldBlockUnauthorizedDomains' => true,
 				'hasSiteAddressInOrigin'         => true,
 			]
 		);
 		$I->reset_utils_properties();
-
-		$I->haveHttpHeader( 'Origin', 'https://example.com' );
 
 		$response = $I->sendGraphQLRequest(
 			$query,

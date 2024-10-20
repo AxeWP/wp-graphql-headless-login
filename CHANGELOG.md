@@ -5,8 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- feat!: Refactor Settings handling and storage.
+- feat: Refactor admin package.
+- feat: Add Upgrader class for handling plugin upgrades.
+- chore!: Bump minimum WordPress version to 6.2.
 - chore!: Remove `vendor`, `vendor-prefixed`, and `build` directories from the repository.
 - chore: Update Composer dependencies.
+- chore: Update NPM dependencies.
 - chore: Update Strauss to v0.19.4.
 - ci!: Update ci scripts and commands, docker configuration, and env variables.
 - tests!: Update codeception tests to use `wp-browser` > v3.5.x.
