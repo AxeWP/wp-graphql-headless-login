@@ -26,7 +26,7 @@
 		"lint:phpstan": "composer run-script phpstan",
 		"start": "rimraf build/* && cross-env BABEL_ENV=default CHECK_CIRCULAR_DEPS=true webpack --watch",
 		"ts:check": "tsc --build tsconfig.json",
-		"packages-update": "wp-scripts packages-update --dist-tag=wp-6.0",
+		"packages-update": "wp-scripts packages-update --dist-tag=wp-6.2",
 		"wp-env": "wp-env"
 	},
 	"repository": {
