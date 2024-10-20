@@ -19,5 +19,9 @@ chmod +x ./bin/install-test-env.sh
 
 bash -c "./bin/install-test-env.sh"
 
+echo "Setting permissions"
+chmod -R "$WORDPRESS_ROOT_DIR/wp-content/plugins/$PLUGIN_SLUG" 777 .
+
 # Go back to the root directory
 cd "$WORDPRESS_ROOT_DIR"
+

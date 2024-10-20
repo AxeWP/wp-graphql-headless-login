@@ -6,19 +6,19 @@ set -e
 ORIGINAL_PATH=$(pwd)
 BASEDIR=$(dirname "$0")
 
+# Include common environment variables and functions
+source "${BASEDIR}/_lib.sh"
+
 # Common variables.
 WP_DEBUG=${WP_DEBUG:-true}
 SCRIPT_DEBUG=${SCRIPT_DEBUG:-true}
 WP_VERSION=${WP_VERSION:-"latest"}
 
-# Include common environment variables and functions
-source "${BASEDIR}/_lib.sh"
-
 ##
 # Install the database.
 ##
 install_db() {
-	if [ "${SKIP_DB_CREATE}" = "true" ]; then
+	if [ "${SKIP_DB_CREATE}" == "true" ]; then
 		return 0
 	fi
 
@@ -81,7 +81,7 @@ configure_wordpress() {
 	# Create a wp-config.php file if it doesn't exist.
 	if [ ! -f "wp-config.php" ]; then
 		echo -e "$(status_message "Creating wp-config.php file...")"
-		wp config create --dbname="$WORDPRESS_DB_NAME" --dbuser="$WORDPRESS_DB_USER" --dbpass="$WORDPRESS_DB_PASSWORD" --dbhost="$WORDPRESS_DB_HOST" --dbprefix="$WORDPRESS_TABLE_PREFIX" --allow-root
+		wp config create --dbname="$WORDPRESS_DB_NAME" --dbuser="$WORDPRESS_DB_USER" --dbpass="$WORDPRESS_DB_PASSWORD" --dbhost="$WORDPRESS_DB_HOST" --dbprefix="$WORDPRESS_TABLE_PREFIX"
 	fi
 
 	# Install WordPress.
@@ -89,7 +89,8 @@ configure_wordpress() {
 
 	SITE_TITLE=${WORDPRESS_SITE_TITLE:-"Headless Login Tests"}
 
-	wp core install --title="$SITE_TITLE" --admin_user="$WORDPRESS_ADMIN_USER" --admin_password="$WORDPRESS_ADMIN_PASSWORD" --admin_email="$WORDPRESS_ADMIN_EMAIL" --skip-email --url="$WORDRESS_URL" --allow-root
+
+	wp core install --title="$SITE_TITLE" --admin_user="$WORDPRESS_ADMIN_USER" --admin_password="$WORDPRESS_ADMIN_PASSWORD" --admin_email="$WORDPRESS_ADMIN_EMAIL" --skip-email --url="$WORDPRESS_URL" --allow-root
 
 	echo -e "$(status_message "Running WordPress version: $(wp core version --allow-root) at $(wp option get home --allow-root)")"
 }
@@ -141,11 +142,6 @@ setup_plugin() {
 
 	# Build the plugin
 	npm run build
-
-	# Fix file permissions
-	# Set permissions to www-data
-	echo "Setting permissions"
-	chmod -R 777 .
 }
 
 post_setup() {
