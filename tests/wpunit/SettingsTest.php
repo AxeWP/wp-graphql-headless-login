@@ -72,5 +72,18 @@ class SettingsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 			array_keys( $providers ),
 			'Provider settings should have the same keys as the registered providers.'
 		);
+
+		// Ensure the keys are in ProviderSettings::get_config().
+		$reflection        = new ReflectionClass( ProviderSettings::class );
+		$provider_settings = $reflection->getProperty( 'config' );
+		$provider_settings->setAccessible( true );
+		// Set the config to null to force a reload.
+		$provider_settings->setValue( [] );
+
+		$provider_settings = ProviderSettings::get_config();
+
+		foreach ( $provider_keys as $key ) {
+			$this->assertArrayHasKey( $key, $provider_settings, 'The provider key ' . $key . ' should be in the provider settings.' );
+		}
 	}
 }
