@@ -51,6 +51,7 @@ class AuthCookie {
 			return;
 		}
 
+		/** @var 'None'|'Lax'|'Strict' $samesite */
 		$samesite      = Utils::get_access_control_setting( 'loginCookieSameSiteOption', 'Lax' );
 		$cookie_domain = Utils::get_access_control_setting( 'loginCookieDomain', '' );
 
@@ -79,15 +80,14 @@ class AuthCookie {
 	/**
 	 * Wrapper for `set_custom_cookie` that includes SameSite attribute.
 	 *
-	 * @param string $name     The name of the cookie.
-	 * @param string $value    The value of the cookie.
-	 * @param int    $expires  The time the cookie expires.
-	 * @param string $path     The path on the server in which the cookie will be available on.
-	 * @param string $domain   The (sub)domain that the cookie is available to.
-	 * @param bool   $secure   Indicates that the cookie should only be transmitted over a secure HTTPS connection from the client.
-	 * @param string $samesite The SameSite mode for the cookie. Defaults to 'None'.
+	 * @param string                $name     The name of the cookie.
+	 * @param string                $value    The value of the cookie.
+	 * @param int                   $expires  The time the cookie expires.
+	 * @param string                $path     The path on the server in which the cookie will be available on.
+	 * @param string                $domain   The (sub)domain that the cookie is available to.
+	 * @param bool                  $secure   Indicates that the cookie should only be transmitted over a secure HTTPS connection from the client.
+	 * @param 'Lax'|'None'|'Strict' $samesite The SameSite mode for the cookie. Defaults to 'None'.
 	 */
-	// phpcs:ignore Generic.Metrics.Functions.TooManyArguments
 	private static function set_custom_cookie( string $name, string $value, int $expires, string $path, string $domain, bool $secure, string $samesite ): void {
 		// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.cookies_setcookie
 		setcookie(
