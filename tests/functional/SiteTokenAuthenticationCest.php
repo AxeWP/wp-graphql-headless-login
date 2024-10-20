@@ -89,8 +89,6 @@ class SiteTokenAuthenticationCest {
 		);
 		$I->reset_utils_properties();
 
-		$I->haveHttpHeader( 'Origin', 'https://example.com' );
-
 		$response = $I->sendGraphQLRequest(
 			$query,
 			$variables,

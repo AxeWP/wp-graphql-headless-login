@@ -89,7 +89,7 @@ configure_wordpress() {
 
 	SITE_TITLE=${WORDPRESS_SITE_TITLE:-"Headless Login Tests"}
 
-	wp core install --title="$SITE_TITLE" --admin_user="$WORDPRESS_ADMIN_USER" --admin_password="$WORDPRESS_ADMIN_PASSWORD" --admin_email="$WORDPRESS_ADMIN_EMAIL" --skip-email --url="$WORDRESS_URL" --allow-root
+	wp core install --title="$SITE_TITLE" --admin_user="$WORDPRESS_ADMIN_USER" --admin_password="$WORDPRESS_ADMIN_PASSWORD" --admin_email="$WORDPRESS_ADMIN_EMAIL" --skip-email --url="$WORDPRESS_URL" --allow-root
 
 	echo -e "$(status_message "Running WordPress version: $(wp core version --allow-root) at $(wp option get home --allow-root)")"
 }

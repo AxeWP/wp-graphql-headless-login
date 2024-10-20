@@ -147,7 +147,7 @@ class AuthenticatedQueryCest {
 				'shouldBlockUnauthorizedDomains' => true,
 				'hasSiteAddressInOrigin'         => true,
 				'additionalAuthorizedDomains'    => [
-					'example.com',
+					'https://example.com',
 				],
 				'customHeaders'                  => [
 					'X-Custom-Header',
@@ -189,15 +189,16 @@ class AuthenticatedQueryCest {
 
 		$I->seeResponseCodeIs( 403 );
 
-		$I->haveHttpHeader( 'Origin', 'https://example.com' );
-
 		$I->reset_utils_properties();
+
+		$I->haveHttpHeader( 'Origin', 'https://example.com' );
 
 		$response = $I->sendGraphQLRequest(
 			$query,
 			null,
 			[
 				'Authorization' => 'Bearer ' . $expected_tokens['auth_token'],
+				'Origin'        => 'https://example.com',
 			]
 		);
 
