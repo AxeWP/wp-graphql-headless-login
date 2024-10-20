@@ -3,57 +3,6 @@
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 
 class AuthenticatedQueryCest {
-	public function testQueryWithValidHeaders( FunctionalTester $I ) {
-		$I->wantTo( 'Query with valid authentication headers' );
-
-		$user_id = $I->haveUserInDatabase( 'testuser', 'administrator', [ 'user_pass' => 'testpass' ] );
-
-		$I->haveGraphQLDebug();
-
-		$expected_tokens = $I->generate_user_tokens( $user_id );
-
-		$query = 'query {
-			viewer { 
-				databaseId
-				username
-				auth {
-					authToken
-					authTokenExpiration
-					refreshToken
-					refreshTokenExpiration
-					isUserSecretRevoked
-					userSecret
-				}
-			}
-		}';
-
-		$response = $I->sendGraphQLRequest(
-			$query,
-			null,
-			[
-				'Authorization' => 'Bearer ' . $expected_tokens['auth_token'],
-			]
-		);
-
-		$I->seeHttpHeader( 'X-WPGraphQL-Login-Token' );
-		$I->seeHttpHeader( 'X-WPGraphQL-Login-Refresh-Token' );
-
-		// The query is valid and has no errors.
-		$I->assertArrayNotHasKey( 'errors', $response );
-		$I->assertEmpty( $response['extensions']['debug'] );
-
-		// The response is properly returning data as expected.
-		$I->assertArrayHasKey( 'data', $response );
-		$I->assertEquals( $user_id, $response['data']['viewer']['databaseId'] );
-		$I->assertEquals( 'testuser', $response['data']['viewer']['username'] );
-		$I->assertNotEmpty( $response['data']['viewer']['auth']['authToken'] );
-		$I->assertNotEmpty( $response['data']['viewer']['auth']['authTokenExpiration'] );
-		$I->assertNotEmpty( $response['data']['viewer']['auth']['refreshToken'] );
-		$I->assertNotEmpty( $response['data']['viewer']['auth']['refreshTokenExpiration'] );
-		$I->assertFalse( $response['data']['viewer']['auth']['isUserSecretRevoked'] );
-		$I->assertNotEmpty( $response['data']['viewer']['auth']['userSecret'] );
-	}
-
 	public function testQueryWithInvalidHeaders( FunctionalTester $I ) {
 		$I->wantTo( 'Query with invalid authentication headers.' );
 
@@ -103,9 +52,9 @@ class AuthenticatedQueryCest {
 		$I->haveHttpHeader( 'Content-Type', 'application/json' );
 		$I->setHeader( 'Authorization', 'Bearer ' . $auth_token );
 
-		$I->sendPOST(
+		$I->sendPost(
 			// Use site url.
-			get_site_url( null, '/graphql' ),
+			'/graphql',
 			json_encode(
 				[
 					'query' => $query,
@@ -186,14 +135,13 @@ class AuthenticatedQueryCest {
 		$I->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['date'] );
 	}
 
-	public function testQueryWithAccessControl( FunctionalTester $I ) {
+	public function testQueryWithHeaders( FunctionalTester $I ) {
 		$I->wantTo( 'Query with Access Control headers configured' );
 
+		$user_id = $I->haveUserInDatabase( 'testuser', 'administrator', [ 'user_pass' => 'testpass' ] );
 		$I->haveGraphQLDebug();
 
-		$user_id = $I->haveUserInDatabase( 'testuser', 'administrator', [ 'user_pass' => 'testpass' ] );
-
-		update_option(
+		$I->haveOptionInDatabase(
 			AccessControlSettings::$settings_prefix . 'access_control',
 			[
 				'shouldBlockUnauthorizedDomains' => true,
@@ -208,7 +156,7 @@ class AuthenticatedQueryCest {
 		);
 		$I->reset_utils_properties();
 
-		$expected_tokens = $I->generate_user_tokens( $user_id );
+		$expected_tokens = $I->generateUserTokens( $user_id );
 
 		$query = 'query {
 			viewer { 
@@ -241,8 +189,9 @@ class AuthenticatedQueryCest {
 
 		$I->seeResponseCodeIs( 403 );
 
-		// Set HTTP_ORIGIN to a domain that is allowed.
-		$_SERVER['HTTP_ORIGIN'] = 'https://example.com';
+		$I->haveHttpHeader( 'Origin', 'https://example.com' );
+
+		$I->reset_utils_properties();
 
 		$response = $I->sendGraphQLRequest(
 			$query,

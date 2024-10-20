@@ -10,7 +10,7 @@ use WPGraphQL\Login\Utils\Utils;
  *
  * @coversDefaultClass \WPGraphQL\Login\Utils\Utils
  */
-class UtilsTest extends \Codeception\TestCase\WPTestCase {
+class UtilsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	public $tester;
 
 	/**
@@ -18,6 +18,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 	 */
 	public function setUp(): void {
 		parent::setUp();
+
 		$this->tester->reset_utils_properties();
 	}
 
@@ -33,7 +34,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @covers \WPGraphQL\Login\Utils\Utils::get_setting
 	 */
-	public function testGetSetting() : void {
+	public function testGetSetting(): void {
 		// Test default value (false)
 		$actual = Utils::get_setting( 'delete_data_on_deactivate' );
 
@@ -67,7 +68,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @covers \WPGraphQL\Login\Utils\Utils::update_plugin_setting
 	 */
-	public function testUpdatePluginSetting() : void {
+	public function testUpdatePluginSetting(): void {
 		// Test db value.
 		$expected = true;
 		Utils::update_plugin_setting( 'delete_data_on_deactivate', $expected );
@@ -86,7 +87,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @covers \WPGraphQL\Login\Utils\Utils::get_access_control_setting
 	 */
-	public function testGetAccessControlSetting() : void {
+	public function testGetAccessControlSetting(): void {
 		$expected = [];
 
 		// Test default value (false)
@@ -122,7 +123,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @covers \WPGraphQL\Login\Utils\Utils::get_provider_settings
 	 */
-	public function testGetProviderSettings() : void {
+	public function testGetProviderSettings(): void {
 		// Test default value ([])
 		$actual = Utils::get_provider_settings( 'facebook' );
 
@@ -206,7 +207,7 @@ class UtilsTest extends \Codeception\TestCase\WPTestCase {
 	 *
 	 * @covers \WPGraphQL\Login\Utils\Utils::is_current_user
 	 */
-	public function testIsCurrentUser() : void {
+	public function testIsCurrentUser(): void {
 		$user = $this->factory()->user->create_and_get();
 
 		// Test logged out

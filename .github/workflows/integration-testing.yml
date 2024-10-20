@@ -118,7 +118,14 @@ jobs:
       - name: Run Acceptance Tests w/ Docker
         run: |  
           if [ "${{ matrix.extensions }}" = "true" ]; then
-            composer run-script docker:run-codeception
+            docker exec \
+              --env COVERAGE=${{ env.COVERAGE }} \
+              --env USING_XDEBUG=${{ env.USING_XDEBUG }} \
+              --env DEBUG=${{ env.DEBUG }} \
+              --env SKIP_TESTS_CLEANUP=${{ env.SKIP_TESTS_CLEANUP }} \
+              --env SUITES=${{ env.SUITES }} \
+              $(docker compose ps -q wordpress) \
+              bash -c "cd wp-content/plugins/wp-graphql-headless-login && bin/run-codeception.sh"
           fi
         env:
           COVERAGE: ${{ matrix.coverage }}
@@ -128,7 +135,15 @@ jobs:
           SUITES: acceptance
 
       - name: Run Functional Tests w/ Docker
-        run: composer run-script docker:run-codeception
+        run: |
+          docker exec \
+            --env COVERAGE=${{ env.COVERAGE }} \
+            --env USING_XDEBUG=${{ env.USING_XDEBUG }} \
+            --env DEBUG=${{ env.DEBUG }} \
+            --env SKIP_TESTS_CLEANUP=${{ env.SKIP_TESTS_CLEANUP }} \
+            --env SUITES=${{ env.SUITES }} \
+            $(docker compose ps -q wordpress) \
+            bash -c "cd wp-content/plugins/wp-graphql-headless-login && bin/run-codeception.sh"
         env:
           COVERAGE: ${{ matrix.coverage }}
           USING_XDEBUG: ${{ matrix.coverage }}
@@ -137,11 +152,19 @@ jobs:
           SUITES: functional
 
       - name: Run WPUnit Tests w/ Docker
-        run: composer run-script docker:run-codeception
+        run: |
+          docker exec \
+            --env COVERAGE=${{ env.COVERAGE }} \
+            --env USING_XDEBUG=${{ env.USING_XDEBUG }} \
+            --env DEBUG=${{ env.DEBUG }} \
+            --env SUITES=${{ env.SUITES }} \
+            $(docker compose ps -q wordpress) \
+            bash -c "cd wp-content/plugins/wp-graphql-headless-login && bin/run-codeception.sh"
         env:
           COVERAGE: ${{ matrix.coverage }}
           USING_XDEBUG: ${{ matrix.coverage }}
           DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG || matrix.debug }}
+          SUITES: wpunit
 
       - name: Push Codecoverage to Coveralls.io
         if: ${{ matrix.coverage == 1 }}

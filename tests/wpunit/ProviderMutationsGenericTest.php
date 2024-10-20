@@ -93,7 +93,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 
 		add_filter(
 			'graphql_login_provider_config_instances',
-			function( $providers ) {
+			static function ( $providers ) {
 				$providers['oauth2-generic'] = new FooGenericProviderConfig();
 
 				return $providers;
@@ -108,10 +108,11 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 	public function tearDown(): void {
 		$this->tester->reset_utils_properties();
 		$this->clearSchema();
+
 		parent::tearDown();
 	}
 
-	public function login_query() : string {
+	public function login_query(): string {
 		return '
 			mutation Login( $input: LoginInput! ) {
 				login(
@@ -141,7 +142,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		';
 	}
 
-	public function link_query() : string {
+	public function link_query(): string {
 		return '
 			mutation LinkUser( $input : LinkUserIdentityInput! ) {
 				linkUserIdentity(
@@ -162,7 +163,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		';
 	}
 
-	public function testLoginWithNoProvisioning() : void {
+	public function testLoginWithNoProvisioning(): void {
 		$query = $this->login_query();
 
 		// Test with no oauthResponse.
@@ -291,7 +292,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		);
 	}
 
-	public function testLoginWithLinkExistingUsers() : void {
+	public function testLoginWithLinkExistingUsers(): void {
 		$config                                      = $this->provider_config;
 		$config['loginOptions']['linkExistingUsers'] = true;
 
@@ -369,7 +370,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		$this->assertNotEquals( 'mock_username', $actual['data']['login']['user']['username'] );
 	}
 
-	public function testLoginWithCreateUser() : void {
+	public function testLoginWithCreateUser(): void {
 		$config = $this->provider_config;
 		$config['loginOptions']['createUserIfNoneExists'] = true;
 
@@ -454,7 +455,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		$this->assertNotEquals( $this->test_user, $actual['data']['login']['user']['databaseId'] );
 	}
 
-	public function testLinkUserIdentityWithNoPermissions() : void {
+	public function testLinkUserIdentityWithNoPermissions(): void {
 		$query = $this->link_query();
 
 		$variables = [
@@ -487,7 +488,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		$this->assertEquals( 'You must be logged in as the user to link your identity.', $actual['errors'][0]['message'] );
 	}
 
-	public function testLinkUserIdentityWithExistingIdentity() : void {
+	public function testLinkUserIdentityWithExistingIdentity(): void {
 		$query = $this->link_query();
 
 		$variables = [
@@ -510,7 +511,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		$this->assertEquals( 'This identity is already linked to your account.', $actual['errors'][0]['message'] );
 	}
 
-	public function testLinkUserIdentityWithConflictingIdentity() : void {
+	public function testLinkUserIdentityWithConflictingIdentity(): void {
 		$query = $this->link_query();
 
 		$variables = [
@@ -535,7 +536,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		$this->assertEquals( 'This identity is already linked to another account.', $actual['errors'][0]['message'] );
 	}
 
-	public function testLinkUserIdentity() : void {
+	public function testLinkUserIdentity(): void {
 		$query = $this->link_query();
 
 		$variables = [

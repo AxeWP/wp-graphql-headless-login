@@ -47,13 +47,14 @@ class LoginClientQueriesTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase
 	public function tearDown(): void {
 		$this->tester->clear_client_config( 'facebook' );
 		$this->clearSchema();
+
 		parent::tearDown();
 	}
 
 	/**
 	 * Test the `loginClients` query.
 	 */
-	public function testClientsQuery() : void {
+	public function testClientsQuery(): void {
 		$query = '
 			query LoginClientQuery {
 				loginClients {
@@ -109,8 +110,8 @@ class LoginClientQueriesTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase
 						$this->expectedField( 'order', $this->client_config['order'] ),
 						$this->expectedField( 'provider', WPEnumType::get_safe_name( $this->client_config['slug'] ) ),
 						// These should be null because the user isnt Authenticated
-						$this->expectedField( 'clientOptions', static::IS_NULL ),
-						$this->expectedField( 'loginOptions', static::IS_NULL ),
+						$this->expectedField( 'clientOptions', self::IS_NULL ),
+						$this->expectedField( 'loginOptions', self::IS_NULL ),
 					]
 				),
 			]
@@ -165,7 +166,7 @@ class LoginClientQueriesTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase
 		);
 	}
 
-	public function testClientQuery() : void {
+	public function testClientQuery(): void {
 		$query = '
 			query LoginClientQuery( $provider: LoginProviderEnum! ) {
 				loginClient( provider: $provider ) {
@@ -221,8 +222,8 @@ class LoginClientQueriesTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase
 						$this->expectedField( 'order', $this->client_config['order'] ),
 						$this->expectedField( 'provider', WPEnumType::get_safe_name( $this->client_config['slug'] ) ),
 						// These should be null because the user isnt Authenticated
-						$this->expectedField( 'clientOptions', static::IS_NULL ),
-						$this->expectedField( 'loginOptions', static::IS_NULL ),
+						$this->expectedField( 'clientOptions', self::IS_NULL ),
+						$this->expectedField( 'loginOptions', self::IS_NULL ),
 					]
 				),
 			]
@@ -260,5 +261,4 @@ class LoginClientQueriesTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase
 			]
 		);
 	}
-
 }

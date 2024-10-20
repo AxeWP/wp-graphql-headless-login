@@ -9,13 +9,13 @@ use WPGraphQL\Login\Auth\ProviderRegistry;
 /**
  * Test Settings\Settings class
  */
-class SettingsTest extends \Codeception\TestCase\WPTestCase {
+class SettingsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	/**
 	 * @var \WpunitTester
 	 */
 	public $tester;
 
-	public function testGetAllSettings() : void {
+	public function testGetAllSettings(): void {
 		/**
 		 * Clear static setting variables.
 		 */
@@ -99,7 +99,7 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertNotEmpty( $settings['providers'] );
 
 		$provider_keys = array_map(
-			fn( string $key ) => ProviderSettings::$settings_prefix . $key,
+			static fn ( string $key ) => ProviderSettings::$settings_prefix . $key,
 			array_keys( ProviderRegistry::get_instance()->get_registered_providers() )
 		);
 
@@ -157,10 +157,9 @@ class SettingsTest extends \Codeception\TestCase\WPTestCase {
 		$this->assertEquals( 'https://example.org', $actual['additionalAuthorizedDomains'][2], 'additionalAuthorizedDomains should be an array of sanitized values' );
 	}
 
-	protected function assertArrayNotHasKeys( $keys, $array, $message = '' ) : void {
+	protected function assertArrayNotHasKeys( $keys, $array, $message = '' ): void {
 		foreach ( (array) $keys as $key ) {
 			$this->assertArrayNotHasKey( $key, $array, $message );
 		}
 	}
-
 }

@@ -111,7 +111,6 @@
 		"docker:start": "@docker:build && @docker:up",
 		"docker:stop": "docker compose down --volumes",
 		"docker:up": " sh -c 'composer docker:stop' && docker compose --env-file .env up --detach",
-		"docker:run-codeception": "bash bin/run-codeception.sh",
 		"lint": "vendor/bin/phpcs",
 		"phpcs-i": [
 			"php ./vendor/bin/phpcs -i"

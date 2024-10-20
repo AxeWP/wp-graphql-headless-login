@@ -15,8 +15,6 @@ modules:
         - lucatume\WPBrowser\Module\WPLoader
         - REST
     config:
-        lucatume\WPBrowser\Module\WPDb:
-            cleanup: false
         lucatume\WPBrowser\Module\WPLoader:
             loadOnly: true
             plugins:

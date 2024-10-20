@@ -1,11 +1,12 @@
 <?php
 
 use WPGraphQL\Login\Admin\Settings\PluginSettings;
+use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 
 class PasswordLoginCest {
 	public function _before( AcceptanceTester $I ) {
-		$I->set_client_config(
-			'password',
+		$I->haveOptionInDatabase(
+			ProviderSettings::$settings_prefix . 'password',
 			[
 				'name'          => 'Password',
 				'slug'          => 'password',
@@ -26,7 +27,7 @@ class PasswordLoginCest {
 		$user_id = $I->haveUserInDatabase( 'testuser', 'administrator', [ 'user_pass' => 'testpass' ] );
 
 		$I->haveGraphQLDebug();
-		$expected_tokens = $I->generate_user_tokens( $user_id );
+		$expected_tokens = $I->generateUserTokens( $user_id );
 
 		$query = '
 			mutation LoginWithPassword( $username: String! $password: String!) {

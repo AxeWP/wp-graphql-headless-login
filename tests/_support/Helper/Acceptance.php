@@ -5,6 +5,4 @@ namespace Tests\WPGraphQL\Login\Helper;
 // all public methods declared in helper class will be available in $I
 
 class Acceptance extends \Codeception\Module {
-
-
 }

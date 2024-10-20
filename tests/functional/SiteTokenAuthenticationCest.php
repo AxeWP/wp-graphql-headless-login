@@ -1,12 +1,12 @@
 <?php
 
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
+use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 
 class SiteTokenAuthenticationCest {
-
 	public function _before( FunctionalTester $I ) {
-		$I->set_client_config(
-			'siteToken',
+		$I->haveOptionInDatabase(
+			ProviderSettings::$settings_prefix . 'siteToken',
 			[
 				'name'          => 'Site Token',
 				'slug'          => 'siteToken',
@@ -22,8 +22,8 @@ class SiteTokenAuthenticationCest {
 				],
 			]
 		);
+		$I->haveOptionInDatabase( AccessControlSettings::$settings_prefix . 'access_control', [] );
 		$I->reset_utils_properties();
-		update_option( AccessControlSettings::$settings_prefix . 'access_control', [] );
 	}
 
 	public function testLoginWithSiteToken( FunctionalTester $I ) {
@@ -80,7 +80,7 @@ class SiteTokenAuthenticationCest {
 
 		// The query has errors because the mutation is not allowed.
 
-		update_option(
+		$I->haveOptionInDatabase(
 			AccessControlSettings::$settings_prefix . 'access_control',
 			[
 				'shouldBlockUnauthorizedDomains' => true,
@@ -88,6 +88,8 @@ class SiteTokenAuthenticationCest {
 			]
 		);
 		$I->reset_utils_properties();
+
+		$I->haveHttpHeader( 'Origin', 'https://example.com' );
 
 		$response = $I->sendGraphQLRequest(
 			$query,

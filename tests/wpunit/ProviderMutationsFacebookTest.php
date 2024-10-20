@@ -4,13 +4,12 @@
  */
 
 use Mockery as m;
-use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\Facebook;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Facebook as OAuth2Facebook;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\OAuth2Config;
 use WPGraphQL\Login\Auth\User;
+use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\Facebook;
 
 class FooFacebookProvider extends Facebook {
-
 	protected function fetchResourceOwnerDetails( $token ) {
 		return json_decode( '{"id": 12345, "name": "mock_name", "username": "mock_username", "first_name": "mock_first_name", "last_name": "mock_last_name", "email": "mock_email@email.com", "Location": "mock_home", "link": "mock_facebook_url"}', true );
 	}
@@ -87,7 +86,7 @@ class ProviderMutationsFacebookTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 
 		add_filter(
 			'graphql_login_provider_config_instances',
-			function( $providers ) {
+			static function ( $providers ) {
 				$providers['facebook'] = new FooFacebookProviderConfig();
 
 				return $providers;
@@ -102,10 +101,11 @@ class ProviderMutationsFacebookTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 	public function tearDown(): void {
 		$this->tester->reset_utils_properties();
 		$this->clearSchema();
+
 		parent::tearDown();
 	}
 
-	public function login_query() : string {
+	public function login_query(): string {
 		return '
 			mutation Login( $code: String!, $state: String ) {
 				login(
@@ -135,7 +135,7 @@ class ProviderMutationsFacebookTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		';
 	}
 
-	public function link_query() : string {
+	public function link_query(): string {
 		return '
 			mutation LinkUser( $code: String!, $state: String, $userId: ID! ) {
 				linkUserIdentity(
@@ -156,7 +156,7 @@ class ProviderMutationsFacebookTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		';
 	}
 
-	public function testLoginWithNoProvisioning() : void {
+	public function testLoginWithNoProvisioning(): void {
 		$query = $this->login_query();
 
 		$variables = [
@@ -220,7 +220,7 @@ class ProviderMutationsFacebookTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		$this->assertNotEquals( 'mock_username', $actual['data']['login']['user']['username'] );
 	}
 
-	public function testLoginWithLinkExistingUsers() : void {
+	public function testLoginWithLinkExistingUsers(): void {
 		$config                                      = $this->provider_config;
 		$config['loginOptions']['linkExistingUsers'] = true;
 
@@ -294,7 +294,7 @@ class ProviderMutationsFacebookTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		$this->assertNotEquals( 'mock_username', $actual['data']['login']['user']['username'] );
 	}
 
-	public function testLoginWithCreateUser() : void {
+	public function testLoginWithCreateUser(): void {
 		$config = $this->provider_config;
 		$config['loginOptions']['createUserIfNoneExists'] = true;
 
@@ -375,7 +375,7 @@ class ProviderMutationsFacebookTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		$this->assertNotEquals( $this->test_user, $actual['data']['login']['user']['databaseId'] );
 	}
 
-	public function testLinkUserIdentityWithNoPermissions() : void {
+	public function testLinkUserIdentityWithNoPermissions(): void {
 		$query = $this->link_query();
 
 		$variables = [
@@ -404,7 +404,7 @@ class ProviderMutationsFacebookTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		$this->assertEquals( 'You must be logged in as the user to link your identity.', $actual['errors'][0]['message'] );
 	}
 
-	public function testLinkUserIdentityWithExistingIdentity() : void {
+	public function testLinkUserIdentityWithExistingIdentity(): void {
 		$query = $this->link_query();
 
 		$variables = [
@@ -423,7 +423,7 @@ class ProviderMutationsFacebookTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		$this->assertEquals( 'This identity is already linked to your account.', $actual['errors'][0]['message'] );
 	}
 
-	public function testLinkUserIdentityWithConflictingIdentity() : void {
+	public function testLinkUserIdentityWithConflictingIdentity(): void {
 		$query = $this->link_query();
 
 		$variables = [
@@ -444,7 +444,7 @@ class ProviderMutationsFacebookTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		$this->assertEquals( 'This identity is already linked to another account.', $actual['errors'][0]['message'] );
 	}
 
-	public function testLinkUserIdentity() : void {
+	public function testLinkUserIdentity(): void {
 		$query = $this->link_query();
 
 		$variables = [

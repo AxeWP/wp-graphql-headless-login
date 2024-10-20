@@ -48,10 +48,11 @@ class ProviderMutationsPasswordTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 	public function tearDown(): void {
 		$this->tester->reset_utils_properties();
 		$this->clearSchema();
+
 		parent::tearDown();
 	}
 
-	public function login_query() : string {
+	public function login_query(): string {
 		return '
 			mutation Login( $username: String!, $password: String! ) {
 				login(
@@ -81,7 +82,7 @@ class ProviderMutationsPasswordTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		';
 	}
 
-	public function link_query() : string {
+	public function link_query(): string {
 		return '
 			mutation LinkUser( $input: LinkUserIdentityInput! ) {
 				linkUserIdentity(
@@ -102,7 +103,7 @@ class ProviderMutationsPasswordTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		';
 	}
 
-	public function testLoginWithNoProvisioning() : void {
+	public function testLoginWithNoProvisioning(): void {
 		$query = $this->login_query();
 
 		// Test bad username.
@@ -177,7 +178,7 @@ class ProviderMutationsPasswordTest extends \Tests\WPGraphQL\TestCase\WPGraphQLT
 		);
 	}
 
-	public function testLinkUserIdentity() : void {
+	public function testLinkUserIdentity(): void {
 		$query = $this->link_query();
 
 		$variables = [
