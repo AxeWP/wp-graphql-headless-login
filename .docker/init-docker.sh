@@ -19,14 +19,5 @@ chmod +x ./bin/install-test-env.sh
 
 bash -c "./bin/install-test-env.sh"
 
-# Enable XDebug
-if [[ "$COVERAGE" == '1' ]]; then
-	echo "Enabling XDebug 3"
-	cp /usr/local/etc/php/conf.d/disabled/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/
-elif [[ -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ]]; then
-	echo "Disabling XDebug"
-	rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-fi
-
 # Go back to the root directory
 cd "$WORDPRESS_ROOT_DIR"

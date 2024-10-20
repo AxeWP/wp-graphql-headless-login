@@ -12,14 +12,13 @@ Thumbs.db
 .env
 .env.*
 !.env.dist
-!.env.ci
+!.docker/.env.ci
 
 # Strauss
 bin/strauss.phar
 
 # Ruleset Overrides
 phpcs.xml
-phpunit.xml
 phpstan.neon
 rector.php
 

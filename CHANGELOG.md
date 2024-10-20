@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - chore: Update Composer dependencies.
 - chore: Update Strauss to v0.19.4.
 - ci!: Update ci scripts and commands, docker configuration, and env variables.
+- tests!: Update codeception tests to use `wp-browser` > v3.5.x.
+- tests: Format and lint test files.
 
 ## [0.3.1] - 2024-09-07
 

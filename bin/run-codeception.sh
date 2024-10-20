@@ -6,14 +6,8 @@ PROJECT_DIR="$WORDPRESS_ROOT_DIR/wp-content/plugins/$PLUGIN_SLUG"
 
 
 source "${BASEDIR}/_lib.sh"
-source "${BASEDIR}/docker-functions.sh"
 
 echo -e "$(status_message "WordPress: ${WP_VERSION} PHP: ${PHP_VERSION}")"
-
-# Exits with a status of 0 (true) if provided version number is higher than proceeding numbers.
-version_gt() {
-	test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1";
-}
 
 ##
 # Set up before running tests.
@@ -27,16 +21,23 @@ setup_before() {
 			curl -L 'https://raw.github.com/Codeception/c3/2.0/c3.php' > "c3.php"
 	fi
 
-	# Install pcov/clobber if PHP7.1+
-	if version_gt $PHP_VERSION 7.0 && [[ -n "$COVERAGE" ]] && [[ -z "$USING_XDEBUG" ]]; then
-			echo "Using pcov/clobber for codecoverage"
+	# Enable XDebug or PCOV for code coverage.
+	if [[ "$COVERAGE" == '1' ]]; then
+		if [[ "$USING_XDEBUG" == '1' ]]; then
+			echo "Enabling XDebug 3"
+			cp /usr/local/etc/php/conf.d/disabled/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/
+			echo "xdebug.mode=coverage" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+		else
+			echo "Using pcov/clobber for code coverage"
 			docker-php-ext-enable pcov
 			echo "pcov.enabled=1" >> /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
-			echo "pcov.directory = ${PROJECT_DIR}" >> /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
+			echo "pcov.directory=${PROJECT_DIR}" >> /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
 			COMPOSER_MEMORY_LIMIT=-1 composer require pcov/clobber --dev
 			vendor/bin/pcov clobber
-	elif [[ -n "$COVERAGE" ]] && [[ -n "$USING_XDEBUG" ]]; then
-			echo "Using XDebug for codecoverage"
+		fi
+	elif [[ -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ]]; then
+		echo "Disabling XDebug"
+		rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 	fi
 
 	# Install the PHP dev-dependencies.
@@ -57,7 +58,7 @@ run_tests() {
 	fi
 
 	local suites=$1
-	if [[ -z "$suites" ]]; then
+	if [[ -z "$SUITES" ]]; then
 		echo "No test suites specified. Must specify variable SUITES."
 		exit 1
 	fi
@@ -74,7 +75,8 @@ run_tests() {
 
 	# Suites is the comma separated list of suites/tests to run.
 	echo "Running Test Suite $suites"
-	cd "$PROJECT_DIR" && vendor/bin/codecept run -c codeception.dist.yml ${suites} ${coverage:-} ${debug:-} --no-exit
+	cd "$PROJECT_DIR"
+  XDEBUG_MODE=coverage vendor/bin/codecept run -c codeception.dist.yml ${suites} ${coverage:-} ${debug:-} --no-exit
 }
 
 ##
@@ -83,32 +85,29 @@ run_tests() {
 cleanup_after() {
 	cd "$PROJECT_DIR"
 
-	# Remove c3.php
+	# Remove c3.php if it exists and cleanup is not skipped
 	if [ -f "c3.php" ] && [ "$SKIP_TESTS_CLEANUP" != "true" ]; then
-			echo "Removing Codeception's c3.php"
-			rm -rf "$PROJECT_DIR/c3.php"
+		echo "Removing Codeception's c3.php"
+		rm "c3.php"
 	fi
 
-	# Clean coverage.xml and clean up PCOV configurations.
-	if [ -f "tests/_output/coverage.xml" ] && [[ -n "$COVERAGE" ]]; then
-			echo 'Cleaning coverage.xml for deployment'.
-			pattern="$PROJECT_DIR/"
-			sed -i "s~$pattern~~g" "tests/_output/coverage.xml"
-
-			# Remove pcov/clobber
-			if version_gt $PHP_VERSION 7.0 && [[ -z "$SKIP_TESTS_CLEANUP" ]] && [[ -z "$USING_XDEBUG" ]]; then
-					echo 'Removing pcov/clobber.'
-					vendor/bin/pcov unclobber
-					COMPOSER_MEMORY_LIMIT=-1 composer remove --dev pcov/clobber
-					rm /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
-			fi
+	# Disable XDebug or PCOV if they were enabled for code coverage
+	if [[ "$COVERAGE" == '1' ]]; then
+		if [[ "$USING_XDEBUG" == '1' ]]; then
+			echo "Disabling XDebug 3"
+			rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+		else
+			echo "Disabling pcov/clobber"
+			docker-php-ext-disable pcov
+			sed -i '/pcov.enabled=1/d' /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
+			sed -i '/pcov.directory=${PROJECT_DIR}/d' /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
+			COMPOSER_MEMORY_LIMIT=-1 composer remove pcov/clobber --dev
+		fi
 	fi
 
-	# Set public test result files permissions.
-	if [ -n "$(ls tests/_output)" ]; then
-			echo "Setting result files permissions."
-			chmod 777 -R tests/_output/*
-	fi
+	# Set output permission back to default
+	echo "Resetting Codeception output directory permissions"
+	chmod 777 -R tests/_output
 }
 
 # Prepare to run tests.

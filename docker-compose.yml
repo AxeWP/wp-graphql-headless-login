@@ -12,7 +12,6 @@ services:
     environment:
       WP_VERSION: ${WP_VERSION}
       PHP_VERSION: ${PHP_VERSION}
-      COVERAGE: ${COVERAGE:-}
     env_file:
       - .env
     user: root

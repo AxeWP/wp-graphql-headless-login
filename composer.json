@@ -26,7 +26,8 @@
 		"league/oauth2-linkedin": "^5.1"
 	},
 	"require-dev": {
-		"lucatume/wp-browser": "^3.5",
+		"axepress/wp-graphql-cs": "^2.0.0-beta",
+		"axepress/wp-graphql-stubs": "^1.14.0",
 		"codeception/lib-innerbrowser": "^1.0",
 		"codeception/module-asserts": "^1.0",
 		"codeception/module-cli": "^1.0",
@@ -37,17 +38,16 @@
 		"codeception/module-webdriver": "^1.0",
 		"codeception/phpunit-wrapper": "^9.0",
 		"codeception/util-universalframework": "^1.0",
+		"lucatume/wp-browser": "^3.5",
 		"mockery/mockery": "^1.5",
-		"wp-graphql/wp-graphql-testcase": "^3.0.1",
-		"phpstan/phpstan": "^1.2",
-		"phpstan/extension-installer": "^1.1",
-		"szepeviktor/phpstan-wordpress": "^1.1.5",
-		"php-stubs/woocommerce-stubs": "^9.0",
-		"axepress/wp-graphql-stubs": "^1.14.0",
-		"axepress/wp-graphql-cs": "^2.0.0-beta",
-		"wp-cli/wp-cli-bundle": "^2.8.1",
 		"php-coveralls/php-coveralls": "^2.5",
-		"phpcompatibility/php-compatibility": "dev-develop as 9.99.99"
+		"php-stubs/woocommerce-stubs": "^9.0",
+		"phpcompatibility/php-compatibility": "dev-develop as 9.99.99",
+		"phpstan/extension-installer": "^1.1",
+		"phpstan/phpstan": "^1.2",
+		"szepeviktor/phpstan-wordpress": "^1.1.5",
+		"wp-cli/wp-cli-bundle": "^2.8.1",
+		"wp-graphql/wp-graphql-testcase": "^3.0.1"
 	},
 	"config": {
 		"allow-plugins": {
@@ -168,8 +168,6 @@
 			"/package-lock.json",
 			"/package.json",
 			"/phpstan.neon.dist",
-			"/phpunit.xml.dist",
-			"/postcss.config.js",
 			"/tsconfig.base.json",
 			"/tsconfig.json",
 			"/webpack.config.js"
