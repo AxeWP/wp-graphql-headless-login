@@ -55,12 +55,52 @@ class AuthCookie {
 		$samesite      = Utils::get_cookie_setting( 'sameSiteOption', 'Lax' );
 		$cookie_domain = Utils::get_cookie_setting( 'cookieDomain', '' );
 
-		self::set_custom_cookie( $auth_cookie_name, $auth_cookie, $expire, PLUGINS_COOKIE_PATH, $cookie_domain, $secure, $samesite );
-		self::set_custom_cookie( $auth_cookie_name, $auth_cookie, $expire, ADMIN_COOKIE_PATH, $cookie_domain, $secure, $samesite );
-		self::set_custom_cookie( LOGGED_IN_COOKIE, $logged_in_cookie, $expire, COOKIEPATH, $cookie_domain, $secure_logged_in_cookie, $samesite );
+		self::set_custom_cookie(
+			$auth_cookie_name,
+			$auth_cookie,
+			[
+				'expires'  => $expire,
+				'path'     => PLUGINS_COOKIE_PATH,
+				'domain'   => $cookie_domain,
+				'samesite' => $samesite,
+				'secure'   => $secure,
+			]
+		);
+		self::set_custom_cookie(
+			$auth_cookie_name,
+			$auth_cookie,
+			[
+				'expires'  => $expire,
+				'path'     => ADMIN_COOKIE_PATH,
+				'domain'   => $cookie_domain,
+				'samesite' => $samesite,
+				'secure'   => $secure,
+			]
+		);
+		self::set_custom_cookie(
+			LOGGED_IN_COOKIE,
+			$logged_in_cookie,
+			[
+				'expires'  => $expire,
+				'path'     => COOKIEPATH,
+				'domain'   => $cookie_domain,
+				'samesite' => $samesite,
+				'secure'   => $secure_logged_in_cookie,
+			]
+		);
 
 		if ( COOKIEPATH !== SITECOOKIEPATH ) {
-			self::set_custom_cookie( LOGGED_IN_COOKIE, $logged_in_cookie, $expire, SITECOOKIEPATH, $cookie_domain, $secure_logged_in_cookie, $samesite );
+			self::set_custom_cookie(
+				LOGGED_IN_COOKIE,
+				$logged_in_cookie,
+				[
+					'expires'  => $expire,
+					'path'     => SITECOOKIEPATH,
+					'domain'   => $cookie_domain,
+					'samesite' => $samesite,
+					'secure'   => $secure_logged_in_cookie,
+				]
+			);
 		}
 	}
 
@@ -80,27 +120,16 @@ class AuthCookie {
 	/**
 	 * Wrapper for `set_custom_cookie` that includes SameSite attribute.
 	 *
-	 * @param string                $name     The name of the cookie.
-	 * @param string                $value    The value of the cookie.
-	 * @param int                   $expires  The time the cookie expires.
-	 * @param string                $path     The path on the server in which the cookie will be available on.
-	 * @param string                $domain   The (sub)domain that the cookie is available to.
-	 * @param bool                  $secure   Indicates that the cookie should only be transmitted over a secure HTTPS connection from the client.
-	 * @param 'Lax'|'None'|'Strict' $samesite The SameSite mode for the cookie. Defaults to 'None'.
+	 * @param string                                                                                  $name     The name of the cookie.
+	 * @param string                                                                                  $value    The value of the cookie.
+	 * @param array{expires:int,path:string,domain:string,samesite:'Lax'|'None'|'Strict',secure:bool} $options The cookie options.
 	 */
-	private static function set_custom_cookie( string $name, string $value, int $expires, string $path, string $domain, bool $secure, string $samesite ): void {
+	private static function set_custom_cookie( string $name, string $value, array $options ): void {
 		// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.cookies_setcookie
 		setcookie(
 			$name,
 			$value,
-			[
-				'expires'  => $expires,
-				'path'     => $path,
-				'domain'   => $domain,
-				'samesite' => $samesite,
-				'secure'   => $secure,
-				'httponly' => true,
-			]
+			$options
 		);
 	}
 }
