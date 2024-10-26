@@ -6,13 +6,12 @@ import {
 	useState,
 } from 'react';
 import apiFetch from '@wordpress/api-fetch';
-import type { AllowedSettingKeys } from '@/admin/types';
 
 const REST_ENDPOINT = 'wp-graphql-login/v1/settings';
 
 type AllowedStatuses = 'saving' | 'complete' | undefined;
 
-type SettingType = Record< AllowedSettingKeys, Record< string, unknown > >;
+type SettingType = Record< string, Record< string, unknown > >;
 
 const SettingsContext = createContext< {
 	settings: SettingType | undefined;

@@ -31,6 +31,13 @@ class AccessControlSettings extends AbstractSettings {
 	/**
 	 * {@inheritDoc}
 	 */
+	public function get_label(): string {
+		return __( 'Access Control', 'wp-graphql-headless-login' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_description(): string {
 		return __( 'Manage Access Control settings for the plugin.', 'wp-graphql-headless-login' );
 	}

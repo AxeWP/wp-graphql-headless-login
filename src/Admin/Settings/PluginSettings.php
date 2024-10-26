@@ -31,6 +31,13 @@ class PluginSettings extends AbstractSettings {
 	/**
 	 * {@inheritDoc}
 	 */
+	public function get_label(): string {
+		return __( 'Misc', 'wp-graphql-headless-login' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_description(): string {
 		return __( 'Miscellaneous settings for the plugin.', 'wp-graphql-headless-login' );
 	}
