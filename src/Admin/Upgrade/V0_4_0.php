@@ -11,6 +11,7 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login\Admin\Upgrade;
 
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
+use WPGraphQL\Login\Admin\Settings\CookieSettings;
 use WPGraphQL\Login\Admin\Settings\PluginSettings;
 
 /**
@@ -100,7 +101,7 @@ class V0_4_0 extends AbstractUpgrade {
 			}
 
 			$cookie_settings[ $new_key ] = $access_control_settings[ $old_key ];
-			unset( $old_access_control_settings[ $old_key ] );
+			unset( $access_control_settings[ $old_key ] );
 		}
 
 		$success = update_option( CookieSettings::get_slug(), $cookie_settings );
