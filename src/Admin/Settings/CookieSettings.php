@@ -31,6 +31,13 @@ class CookieSettings extends AbstractSettings {
 	/**
 	 * {@inheritDoc}
 	 */
+	public function get_label(): string {
+		return __( 'Cookies', 'wp-graphql-headless-login' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_description(): string {
 		return __( 'Manage Cookie generation, headers, and settings for the plugin.', 'wp-graphql-headless-login' );
 	}

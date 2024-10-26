@@ -16,12 +16,6 @@ declare global {
 	};
 }
 
-type AllowedSettingKeys =
-	| 'providers'
-	| 'wpgraphql_login_settings'
-	| 'wpgraphql_login_access_control'
-	| 'wpgraphql_login_cookies';
-
 type AllowedConditionalLogicOperators = '==' | '!=' | '>' | '<' | '>=' | '<=';
 
 type FieldSchema = {
@@ -46,10 +40,14 @@ type FieldSchema = {
 	required?: boolean;
 };
 
-type SettingSchema = Record<
-	AllowedSettingKeys,
-	Record< string, FieldSchema >
->;
+type SettingSchema = {
+	[ key: string ]: {
+		title: string;
+		description: string;
+		label: string;
+		fields: Record< string, FieldSchema >;
+	}
+};
 
 type ProviderSettingType = {
 	name: string;

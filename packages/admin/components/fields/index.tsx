@@ -1,4 +1,4 @@
-import type { AllowedSettingKeys, SettingSchema } from '@/admin/types';
+import type { FieldSchema } from '@/admin/types';
 import { Field } from './field';
 
 export const Fields = ( {
@@ -9,7 +9,7 @@ export const Fields = ( {
 }: {
 	excludedProperties?: string[];
 	values: Record< string, unknown > | undefined;
-	fields: SettingSchema[ AllowedSettingKeys ];
+	fields: Record< string, FieldSchema >;
 	setValue: ( values: Record< string, unknown > ) => void;
 } ) => {
 	if ( ! values ) {

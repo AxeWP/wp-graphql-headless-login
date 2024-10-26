@@ -1,69 +1,23 @@
-import { __ } from '@wordpress/i18n';
 import { Panel, PanelBody, PanelRow } from '@wordpress/components';
 import clsx from 'clsx';
 import { lazy, Suspense, type PropsWithChildren } from 'react';
 import { Loading } from '@/admin/components/ui/loading';
 import { useCurrentScreen } from './context';
 import { SettingsScreen } from './setting-screen';
-import type { AllowedSettingKeys } from '@/admin/types';
 
 import styles from './styles.module.scss';
+import { getSettingForScreen } from './utils';
+import { __ } from '@wordpress/i18n';
 
 const ClientSettingsScreen = lazy(
 	() => import( '../provider-config/ClientSettings' )
 );
-
-export type AllowedScreens =
-	| 'access-control'
-	| 'providers'
-	| 'cookies'
-	| 'plugin-settings';
-
-export const SCREEN_MAP: Record< AllowedScreens, AllowedSettingKeys > = {
-	'access-control': 'wpgraphql_login_access_control',
-	cookies: 'wpgraphql_login_cookies',
-	'plugin-settings': 'wpgraphql_login_settings',
-	providers: 'providers',
-};
 
 /**
  * The titles of the screens that are available in the admin.
  *
  * @todo get from the server.
  */
-const SCREEN_TITLES: Record< AllowedScreens, string > = {
-	'access-control': __(
-		'Access Control Settings',
-		'wp-graphql-headless-login'
-	),
-	cookies: __( 'Cookies', 'wp-graphql-headless-login' ),
-	'plugin-settings': __( 'Plugin Settings', 'wp-graphql-headless-login' ),
-	providers: __( 'Login Providers', 'wp-graphql-headless-login' ),
-};
-
-/**
- * The descriptions of the screens that are available in the admin.
- *
- * @todo get from the server.
- */
-const SCREEN_DESCRIPTIONS: Record< AllowedScreens, string > = {
-	'access-control': __(
-		'Configure the Access Control headers for the plugin.',
-		'wp-graphql-headless-login'
-	),
-	'plugin-settings': __(
-		'Configure the plugin settings.',
-		'wp-graphql-headless-login'
-	),
-	cookies: __(
-		'Configure the cookies that the plugin uses.',
-		'wp-graphql-headless-login'
-	),
-	providers: __(
-		'Configure the Authentication Providers that are available to users.',
-		'wp-graphql-headless-login'
-	),
-};
 
 const Wrapper = ( {
 	title,
@@ -95,8 +49,18 @@ const Wrapper = ( {
 export const Screen = () => {
 	const { currentScreen } = useCurrentScreen();
 
-	const title = SCREEN_TITLES[ currentScreen ];
-	const description = SCREEN_DESCRIPTIONS[ currentScreen ];
+	const settingKey = getSettingForScreen( currentScreen );
+
+	// @todo get provider context from global.
+	const title =
+		wpGraphQLLogin?.settings[ settingKey ]?.title ||
+		__( 'Login Providers', 'wp-graphql-headless-login' );
+	const description =
+		wpGraphQLLogin?.settings[ settingKey ]?.description ||
+		__(
+			'Configure the Authentication Providers that are available to users.',
+			'wp-graphql-headless-login'
+		);
 
 	return (
 		<Suspense fallback={ <Loading /> }>
@@ -104,9 +68,7 @@ export const Screen = () => {
 				{ currentScreen === 'providers' ? (
 					<ClientSettingsScreen />
 				) : (
-					<SettingsScreen
-						settingKey={ SCREEN_MAP[ currentScreen ] }
-					/>
+					<SettingsScreen settingKey={ settingKey } />
 				) }
 			</Wrapper>
 		</Suspense>
