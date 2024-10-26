@@ -2,7 +2,7 @@ import { Button, Icon, NavigableMenu } from '@wordpress/components';
 import { link as LinkSVG } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
 import { useCurrentScreen } from '@/admin/components/screen/context';
-import type { AllowedScreens } from '@/admin/components/screen/screen';
+import { getScreenForSetting } from '@/admin/components/screen/utils';
 
 import styles from './styles.module.scss';
 
@@ -13,43 +13,57 @@ const LinkIcon = () => {
 	return <Icon icon={ LinkSVG } className={ styles.linkIcon } size={ 16 } />;
 };
 
-const SCREEN_LABELS: Record< AllowedScreens, string > = {
-	providers: __( 'Login Providers', 'wp-graphql-headless-login' ),
-	'access-control': __( 'Access Control', 'wp-graphql-headless-login' ),
-	'plugin-settings': __( 'Misc', 'wp-graphql-headless-login' ),
+/**
+ * Builds and returns the menu object from the wpGraphQLLogin.settings global.
+ */
+export const getMenuObject = (): Record< string, string > => {
+	const settings = wpGraphQLLogin.settings;
+
+	const menu: Record< string, string > = {
+		providers: '', // We want this as the first key.
+	};
+
+	for ( const key in settings ) {
+		// @todo get providers from global after the refactor.
+		const menuTitle =
+			settings[ key ].label ||
+			__( 'Providers', 'wp-graphql-headless-login' );
+		const screen = getScreenForSetting( key );
+
+		menu[ screen ] = menuTitle;
+	}
+
+	return menu;
 };
 
 export const Menu = () => {
 	const { currentScreen, setCurrentScreen } = useCurrentScreen();
+
+	// Build the menu object of screens and labels from the wpGraphQLLogin?.settings.
+	const menuItems = getMenuObject();
 
 	return (
 		<NavigableMenu orientation="horizontal">
 			<ul role="menubar" className={ styles.menu }>
 				{
 					// Loop through the screen titles and create a button for each one.
-					Object.entries( SCREEN_LABELS ).map(
-						( [ screen, title ] ) => (
-							<li key={ screen }>
-								<Button
-									key={ screen }
-									className={
-										currentScreen === screen
-											? styles.active
-											: ''
-									}
-									variant="tertiary"
-									onClick={ () =>
-										setCurrentScreen(
-											screen as AllowedScreens
-										)
-									}
-									role="menuitem"
-								>
-									{ title }
-								</Button>
-							</li>
-						)
-					)
+					Object.entries( menuItems ).map( ( [ screen, title ] ) => (
+						<li key={ screen }>
+							<Button
+								key={ screen }
+								className={
+									currentScreen === screen
+										? styles.active
+										: ''
+								}
+								variant="tertiary"
+								onClick={ () => setCurrentScreen( screen ) }
+								role="menuitem"
+							>
+								{ title }
+							</Button>
+						</li>
+					) )
 				}
 				<li>
 					<Button

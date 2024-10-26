@@ -58,6 +58,11 @@ abstract class AbstractSettings {
 	abstract public function get_title(): string;
 
 	/**
+	 * The label used in the menu
+	 */
+	abstract public function get_label(): string;
+
+	/**
 	 * The screen description.
 	 */
 	abstract public function get_description(): string;
@@ -120,7 +125,7 @@ abstract class AbstractSettings {
 	/**
 	 * Get the config used to render the settings in the UI.
 	 *
-	 * @return array<string,array{
+	 * @return array{title:string,description:string,fields:array<string,array{
 	 *  description: string,
 	 *  label: string,
 	 *  type: string,
@@ -135,13 +140,13 @@ abstract class AbstractSettings {
 	 *  help?: string,
 	 *  isAdvanced?: bool,
 	 *  required?: bool,
-	 * }>
+	 * }>}
 	 */
 	public function get_render_config(): array {
 		$config = $this->get_config();
 
 		// Unset the excluded keys.
-		return array_map(
+		$fields = array_map(
 			static function ( $setting ) {
 				$excluded_keys = [
 					'sanitize_callback',
@@ -156,6 +161,13 @@ abstract class AbstractSettings {
 			},
 			$config
 		);
+
+		return [
+			'title'       => $this->get_title(),
+			'label'       => $this->get_label(),
+			'description' => $this->get_description(),
+			'fields'      => $fields,
+		];
 	}
 
 	/**

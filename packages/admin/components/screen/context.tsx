@@ -6,11 +6,11 @@ import {
 	useContext,
 	startTransition,
 } from 'react';
-import { SCREEN_MAP, type AllowedScreens } from './screen';
+import { isAllowedScreen } from './utils';
 
 const ScreenContext = createContext< {
-	currentScreen: AllowedScreens;
-	setCurrentScreen: ( screen: AllowedScreens ) => void;
+	currentScreen: string;
+	setCurrentScreen: ( screen: string ) => void;
 } >( {
 	currentScreen: 'providers',
 	setCurrentScreen: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
@@ -18,7 +18,7 @@ const ScreenContext = createContext< {
 
 export const ScreenProvider = ( { children }: PropsWithChildren ) => {
 	const [ currentScreen, setCurrentScreen ] =
-		useState< AllowedScreens >( 'providers' );
+		useState< string >( 'providers' );
 
 	// The screen is set as a query parameter in the URL.
 	useEffect( () => {
@@ -26,8 +26,9 @@ export const ScreenProvider = ( { children }: PropsWithChildren ) => {
 			const url = new URL( window.location.href );
 			const screen = url.searchParams.get( 'screen' );
 
-			if ( screen && screen in SCREEN_MAP ) {
-				setCurrentScreen( screen as AllowedScreens );
+			// Allowed screens appear in the WPGraphQLLogin.settings global.
+			if ( screen && isAllowedScreen( screen ) ) {
+				setCurrentScreen( screen );
 			}
 		} );
 	}, [] );

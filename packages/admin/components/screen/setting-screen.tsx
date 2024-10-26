@@ -4,13 +4,8 @@ import { useEffect } from 'react';
 import { Button, PanelBody, Spinner } from '@wordpress/components';
 import { Fields } from '@/admin/components/fields';
 import { useSettings } from '@/admin/contexts/settings-context';
-import type { AllowedSettingKeys } from '@/admin/types';
 
-export const SettingsScreen = ( {
-	settingKey,
-}: {
-	settingKey: AllowedSettingKeys;
-} ) => {
+export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 	const {
 		settings: allSettings,
 		updateSettings,
@@ -19,7 +14,8 @@ export const SettingsScreen = ( {
 		errorMessage,
 	} = useSettings();
 
-	const optionsSchema = wpGraphQLLogin?.settings?.[ settingKey ] || undefined;
+	const optionsSchema =
+		wpGraphQLLogin?.settings?.[ settingKey ]?.fields || undefined;
 
 	const settings = allSettings?.[ settingKey ] || undefined;
 
