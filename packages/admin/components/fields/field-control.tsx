@@ -77,7 +77,7 @@ export const FieldControl = ( {
 	onChange,
 	required,
 	type,
-	value,
+	value: originalValue,
 	...rest
 }: FieldControlProps ) => {
 	const controlType =
@@ -92,6 +92,9 @@ export const FieldControl = ( {
 	if ( ! ControlComponent ) {
 		return null;
 	}
+
+	// Fallback to the default value if the value is not set.
+	const value = originalValue ?? rest?.default;
 
 	// Build the component props.
 	let componentProps: ControlComponentPropsMap[ typeof controlType ] = {
