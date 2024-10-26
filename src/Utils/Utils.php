@@ -10,6 +10,7 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login\Utils;
 
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
+use WPGraphQL\Login\Admin\Settings\CookieSettings;
 use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 use WPGraphQL\Login\Admin\SettingsRegistry;
@@ -136,6 +137,39 @@ class Utils {
 		}
 
 		return isset( self::$access_control[ $option_name ] ) ? self::$access_control[ $option_name ] : $default_value;
+	}
+
+	/**
+	 * Gets a single Cookie setting.
+	 *
+	 * Uses get_option() which means scalars are converted into strings.
+	 *
+	 * @see https://developer.wordpress.org/reference/functions/get_option/#return
+	 *
+	 * @param string      $option_name   The name of the setting.
+	 * @param mixed|false $default_value The default value. Optional. Default false.
+	 *
+	 * @return mixed
+	 */
+	public static function get_cookie_setting( string $option_name, $default_value = false ) {
+		$instance = SettingsRegistry::get( CookieSettings::get_slug() );
+
+		if ( ! $instance ) {
+			return $default_value;
+		}
+
+		$values = $instance->get_values();
+
+		$option_value = $values[ $option_name ] ?? null;
+
+		/**
+		 * Filter the value before returning it
+		 *
+		 * @param mixed  $value         The value of the field
+		 * @param string $option_name   The name of the option
+		 * @param mixed  $default_value The default value if there is no value set
+		 */
+		return apply_filters( 'graphql_login_cookie_setting', $option_value, $option_name, $default_value );
 	}
 
 	/**

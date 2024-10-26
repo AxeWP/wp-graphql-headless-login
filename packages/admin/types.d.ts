@@ -19,7 +19,8 @@ declare global {
 type AllowedSettingKeys =
 	| 'providers'
 	| 'wpgraphql_login_settings'
-	| 'wpgraphql_login_access_control';
+	| 'wpgraphql_login_access_control'
+	| 'wpgraphql_login_cookies';
 
 type AllowedConditionalLogicOperators = '==' | '!=' | '>' | '<' | '>=' | '<=';
 

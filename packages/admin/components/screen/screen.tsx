@@ -13,10 +13,15 @@ const ClientSettingsScreen = lazy(
 	() => import( '../provider-config/ClientSettings' )
 );
 
-export type AllowedScreens = 'access-control' | 'providers' | 'plugin-settings';
+export type AllowedScreens =
+	| 'access-control'
+	| 'providers'
+	| 'cookies'
+	| 'plugin-settings';
 
 export const SCREEN_MAP: Record< AllowedScreens, AllowedSettingKeys > = {
 	'access-control': 'wpgraphql_login_access_control',
+	cookies: 'wpgraphql_login_cookies',
 	'plugin-settings': 'wpgraphql_login_settings',
 	providers: 'providers',
 };
@@ -31,6 +36,7 @@ const SCREEN_TITLES: Record< AllowedScreens, string > = {
 		'Access Control Settings',
 		'wp-graphql-headless-login'
 	),
+	cookies: __( 'Cookies', 'wp-graphql-headless-login' ),
 	'plugin-settings': __( 'Plugin Settings', 'wp-graphql-headless-login' ),
 	providers: __( 'Login Providers', 'wp-graphql-headless-login' ),
 };
@@ -47,6 +53,10 @@ const SCREEN_DESCRIPTIONS: Record< AllowedScreens, string > = {
 	),
 	'plugin-settings': __(
 		'Configure the plugin settings.',
+		'wp-graphql-headless-login'
+	),
+	cookies: __(
+		'Configure the cookies that the plugin uses.',
 		'wp-graphql-headless-login'
 	),
 	providers: __(

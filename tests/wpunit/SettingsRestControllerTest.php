@@ -92,10 +92,15 @@ class SettingsRestControllerTest extends WPTestCase {
 		$expected = [
 			'wpgraphql_login_access_control' => [
 				'shouldBlockUnauthorizedDomains'   => false,
-				'hasAccessControlAllowCredentials' => false,
 				'hasSiteAddressInOrigin'           => false,
 				'additionalAuthorizedDomains'      => [],
 				'customHeaders'                    => [],
+			],
+			'wpgraphql_login_cookies'        => [
+				'hasAccessControlAllowCredentials' => false,
+				'hasLogoutMutation'                => false,
+				'sameSiteOption'                   => 'Lax',
+				'cookieDomain'                     => '',
 			],
 			'wpgraphql_login_settings'       => [
 				'show_advanced_settings'    => false,
@@ -152,10 +157,15 @@ class SettingsRestControllerTest extends WPTestCase {
 		$expected = [
 			'wpgraphql_login_access_control' => [
 				'shouldBlockUnauthorizedDomains'   => true, // This is the only value that should change.
-				'hasAccessControlAllowCredentials' => false,
 				'hasSiteAddressInOrigin'           => false,
 				'additionalAuthorizedDomains'      => [],
 				'customHeaders'                    => [],
+			],
+			'wpgraphql_login_cookies'        => [
+				'hasAccessControlAllowCredentials' => false,
+				'hasLogoutMutation'                => false,
+				'sameSiteOption'                   => 'Lax',
+				'cookieDomain'                     => '',
 			],
 			'wpgraphql_login_settings'       => [
 				'show_advanced_settings'    => false,
@@ -299,7 +309,6 @@ class SettingsRestControllerTest extends WPTestCase {
 	public function testAccessControlSettingsSanitization(): void {
 		// Test sanitization
 		$values = [
-			'hasAccessControlAllowCredentials' => 'true',
 			'hasSiteAddressInOrigin'           => 'true',
 			'shouldBlockUnauthorizedDomains'   => '0',
 			'customHeaders'                    => [ '*', '<strong>X-Wrapped-In-HTML</strong>' ],
@@ -322,7 +331,6 @@ class SettingsRestControllerTest extends WPTestCase {
 
 		$actual = $data[ AccessControlSettings::get_slug() ];
 
-		$this->assertTrue( $actual['hasAccessControlAllowCredentials'], 'hasSiteAddressInOrigin should be (bool) true.' );
 		$this->assertTrue( $actual['hasSiteAddressInOrigin'], 'hasSiteAddressInOrigin should be (bool) true.' );
 		$this->assertFalse( $actual['shouldBlockUnauthorizedDomains'], 'shouldBlockUnauthorizedDomains should be (bool) false.' );
 		$this->assertEquals( [ '*', 'X-Wrapped-In-HTML' ], $actual['customHeaders'], 'customHeaders should be sanitized.' );

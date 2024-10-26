@@ -41,7 +41,7 @@ class AccessControlSettings extends AbstractSettings {
 	public function get_config(): array {
 		return [
 			// Should Block Unauthorized Domains.
-			'shouldBlockUnauthorizedDomains'   => [
+			'shouldBlockUnauthorizedDomains' => [
 				'description'       => __( 'Whether to block requests from unauthorized domains', 'wp-graphql-headless-login' ),
 				'label'             => __( 'Block unauthorized domains', 'wp-graphql-headless-login' ),
 				'type'              => 'boolean',
@@ -52,25 +52,8 @@ class AccessControlSettings extends AbstractSettings {
 				'required'          => true,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			// Has Access Control Allow Credentials.
-			'hasAccessControlAllowCredentials' => [
-				'description'       => __( 'Whether the `Access-Control-Allow-Credentials` header should be added to the request.', 'wp-graphql-headless-login' ),
-				'label'             => __( 'Add Access-Control-Allow-Credentials', 'wp-graphql-headless-login' ),
-				'type'              => 'boolean',
-				'isAdvanced'        => false,
-				'default'           => false,
-				'help'              => __( 'If enabled, the `Access-Control-Allow-Credentials` header will be included in the request. Requires `Block Unauthorized Domains` to be enabled.', 'wp-graphql-headless-login' ),
-				'order'             => 2,
-				'required'          => false,
-				'sanitize_callback' => 'rest_sanitize_boolean',
-				'conditionalLogic'  => [
-					'slug'     => 'shouldBlockUnauthorizedDomains',
-					'operator' => '==',
-					'value'    => true,
-				],
-			],
 			// Has Site Address In Origin.
-			'hasSiteAddressInOrigin'           => [
+			'hasSiteAddressInOrigin'         => [
 				'description'       => __( 'Whether the Site URL should be added to the `Access-Control-Allow-Origin` header', 'wp-graphql-headless-login' ),
 				'label'             => __( 'Add Site URL to Access-Control-Allow-Origin', 'wp-graphql-headless-login' ),
 				'type'              => 'boolean',
@@ -82,7 +65,7 @@ class AccessControlSettings extends AbstractSettings {
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
 			// Additional Authorized Domains.
-			'additionalAuthorizedDomains'      => [
+			'additionalAuthorizedDomains'    => [
 				'description'       => __( 'An array additional authorized domains to include in the Access-Control-Allow-Origin header.', 'wp-graphql-headless-login' ),
 				'label'             => __( 'Additional authorized domains', 'wp-graphql-headless-login' ),
 				'type'              => 'array',
@@ -109,7 +92,7 @@ class AccessControlSettings extends AbstractSettings {
 				},
 			],
 			// Custom Headers.
-			'customHeaders'                    => [
+			'customHeaders'                  => [
 				'description'       => __( 'An array of custom headers to add to the response', 'wp-graphql-headless-login' ),
 				'label'             => __( 'Custom Headers', 'wp-graphql-headless-login' ),
 				'type'              => 'array',
@@ -126,47 +109,6 @@ class AccessControlSettings extends AbstractSettings {
 						$value
 					);
 				},
-			],
-			// Login Cookie Same Site Option.
-			'loginCookieSameSiteOption'        => [
-				'description'       => __( 'Login Cookie same-site option (None, Lax, Strict)', 'wp-graphql-headless-login' ),
-				'label'             => __( 'Authentication Cookie - Samesite cookie mode', 'wp-graphql-headless-login' ),
-				'type'              => 'string',
-				'controlType'       => 'select',
-				'default'           => 'Lax',
-				'help'              => __( 'If the "Set authentication cookie" option is enabled, you can choose the SameSite attribute for authentication. Choose "None" if cross-site access is required, "Lax" for moderate protection, or "Strict" for maximum protection.', 'wp-graphql-headless-login' ),
-				'isAdvanced'        => true,
-				'order'             => 6,
-				'required'          => false,
-				'enum'              => [
-					'Lax',
-					'None',
-					'Strict',
-				],
-				'sanitize_callback' => 'sanitize_text_field',
-			],
-			// Login Cookie Domain.
-			'loginCookieDomain'                => [
-				'description'       => __( 'Login Cookie Domain', 'wp-graphql-headless-login' ),
-				'label'             => __( 'Authentication Cookie - Cookie Domain', 'wp-graphql-headless-login' ),
-				'type'              => 'string',
-				'default'           => '',
-				'help'              => __( 'If the "Set authentication cookie" option is enabled, choose the domain for the cookie. Leave blank by default. To share across subdomains, use your root domain prefixed with a period (e.g., .mydomain.com).', 'wp-graphql-headless-login' ),
-				'isAdvanced'        => true,
-				'order'             => 7,
-				'required'          => false,
-				'sanitize_callback' => 'sanitize_text_field',
-			],
-			'hasLogoutMutation'                => [
-				'description'       => __( 'Enable Logout Mutation', 'wp-graphql-headless-login' ),
-				'label'             => __( 'Enable `logout` Mutation', 'wp-graphql-headless-login' ),
-				'type'              => 'boolean',
-				'default'           => false,
-				'help'              => __( 'Enable this option to allow logout mutations in WP GraphQL. This is useful when using cookie authentication, as it allows logout session requests. Note: "Set authentication cookie" and `Access-Control-Allow-Credentials` must be enabled.', 'wp-graphql-headless-login' ),
-				'isAdvanced'        => true,
-				'order'             => 4,
-				'required'          => false,
-				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
 		];
 	}

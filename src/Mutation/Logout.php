@@ -33,7 +33,7 @@ class Logout extends MutationType {
 	 */
 	public static function register(): void {
 		// Only register the mutation if the setting is enabled.
-		if ( ! Utils::get_access_control_setting( 'hasLogoutMutation' ) ) {
+		if ( ! Utils::get_cookie_setting( 'hasLogoutMutation' ) ) {
 			return;
 		}
 

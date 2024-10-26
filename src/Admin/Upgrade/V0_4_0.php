@@ -10,6 +10,7 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Admin\Upgrade;
 
+use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 use WPGraphQL\Login\Admin\Settings\PluginSettings;
 
 /**
@@ -29,6 +30,8 @@ class V0_4_0 extends AbstractUpgrade {
 	protected function upgrade(): void {
 		// Migrate Plugin Settings.
 		$this->migrate_plugin_settings();
+		// Migrate Access Control Settings.
+		$this->migrate_access_control_settings();
 	}
 
 	/**
@@ -69,6 +72,48 @@ class V0_4_0 extends AbstractUpgrade {
 			if ( ! $success ) {
 				throw new \Exception( 'Failed to delete old plugin settings.' );
 			}
+		}
+	}
+
+	/**
+	 * Migrates relevant Access Control settings to Cookie settings.
+	 *
+	 * @throws \Exception Throws an exception if the migration fails.
+	 */
+	private function migrate_access_control_settings(): void {
+		$setttings_map = [
+			'hasAccessControlAllowCredentials' => 'hasAccessControlAllowCredentials',
+		];
+
+		$access_control_settings = get_option( AccessControlSettings::get_slug(), [] );
+
+		// If there are no existing values, there is nothing to migrate.
+		if ( empty( $access_control_settings ) ) {
+			return;
+		}
+
+		$cookie_settings = get_option( CookieSettings::get_slug(), [] );
+
+		foreach ( $setttings_map as $old_key => $new_key ) {
+			if ( ! isset( $access_control_settings[ $old_key ] ) ) {
+				continue;
+			}
+
+			$cookie_settings[ $new_key ] = $access_control_settings[ $old_key ];
+			unset( $old_access_control_settings[ $old_key ] );
+		}
+
+		$success = update_option( CookieSettings::get_slug(), $cookie_settings );
+
+		if ( ! $success ) {
+			throw new \Exception( 'Failed to migrate access control settings.' );
+		}
+
+		// Update the access control settings.
+		$success = update_option( AccessControlSettings::get_slug(), $access_control_settings );
+
+		if ( ! $success ) {
+			throw new \Exception( 'Failed to update access control settings.' );
 		}
 	}
 }

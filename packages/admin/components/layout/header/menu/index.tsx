@@ -16,6 +16,7 @@ const LinkIcon = () => {
 const SCREEN_LABELS: Record< AllowedScreens, string > = {
 	providers: __( 'Login Providers', 'wp-graphql-headless-login' ),
 	'access-control': __( 'Access Control', 'wp-graphql-headless-login' ),
+	cookies: __( 'Cookies', 'wp-graphql-headless-login' ),
 	'plugin-settings': __( 'Misc', 'wp-graphql-headless-login' ),
 };
 
