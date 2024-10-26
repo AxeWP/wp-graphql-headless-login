@@ -93,6 +93,7 @@ export const FieldControl = ( {
 		return null;
 	}
 
+	// Fallback to the default value if the value is not set.
 	const value = originalValue ?? rest?.default;
 
 	// Build the component props.
