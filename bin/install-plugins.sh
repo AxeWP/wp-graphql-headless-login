@@ -42,11 +42,6 @@ install_woocommerce() {
 		# TODO: revert to latest after WooGraphQL release issues in 0.21.1 are resolved.
 		wp plugin install https://github.com/wp-graphql/wp-graphql-woocommerce/releases/download/v0.21.0/wp-graphql-woocommerce.zip --allow-root
 
-		# Install composer deps
-		cd $WORDPRESS_ROOT_DIR/wp-content/plugins/wp-graphql-woocommerce
-		composer install --no-dev --no-interaction --no-progress --optimize-autoloader
-
-		cd $WORDPRESS_ROOT_DIR
 		wp plugin activate wp-graphql-woocommerce --allow-root
 	fi
 }
