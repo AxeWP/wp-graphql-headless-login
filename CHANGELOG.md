@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- ci: Test compatibility with WordPress 6.7.1.
 - feat!: Refactor Settings handling and storage.
 - feat: Refactor admin package.
 - feat: Add Upgrader class for handling plugin upgrades.
