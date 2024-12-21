@@ -53,8 +53,6 @@ class ProviderRegistry {
 
 		// Validate the providers, and then add them to the registry.
 		foreach ( $this->registered_providers as $slug => $class ) {
-			/** @var string $class */
-
 			// Skip if the provider class does not exist.
 			if ( ! class_exists( $class ) ) {
 				graphql_debug(
@@ -83,11 +81,7 @@ class ProviderRegistry {
 				continue;
 			}
 
-			/**
-			 * Skip if the provider is disabled.
-			 *
-			 * @var \WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig $class
-			 */
+			// Skip if the provider is disabled.
 			if ( ! $class::is_enabled() ) {
 				continue;
 			}

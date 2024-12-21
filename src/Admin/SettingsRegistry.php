@@ -62,7 +62,7 @@ class SettingsRegistry implements Registrable {
 			self::init();
 		}
 
-		/** @var \WPGraphQL\Login\Admin\Settings\AbstractSettings[] */
+		/** @var array<string,\WPGraphQL\Login\Admin\Settings\AbstractSettings> */
 		return self::$settings;
 	}
 
