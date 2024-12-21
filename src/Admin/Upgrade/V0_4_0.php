@@ -60,19 +60,11 @@ class V0_4_0 extends AbstractUpgrade {
 			return;
 		}
 
-		$success = update_option( PluginSettings::get_slug(), $existing_values );
-
-		if ( ! $success ) {
-			throw new \Exception( 'Failed to migrate plugin settings.' );
-		}
+		update_option( PluginSettings::get_slug(), $existing_values );
 
 		// Delete the old settings.
 		foreach ( $settings_map as $old_key => $new_key ) {
-			$success = delete_option( $old_key );
-
-			if ( ! $success ) {
-				throw new \Exception( 'Failed to delete old plugin settings.' );
-			}
+			delete_option( $old_key );
 		}
 	}
 
@@ -104,17 +96,7 @@ class V0_4_0 extends AbstractUpgrade {
 			unset( $access_control_settings[ $old_key ] );
 		}
 
-		$success = update_option( CookieSettings::get_slug(), $cookie_settings );
-
-		if ( ! $success ) {
-			throw new \Exception( 'Failed to migrate access control settings.' );
-		}
-
-		// Update the access control settings.
-		$success = update_option( AccessControlSettings::get_slug(), $access_control_settings );
-
-		if ( ! $success ) {
-			throw new \Exception( 'Failed to update access control settings.' );
-		}
+		update_option( CookieSettings::get_slug(), $cookie_settings );
+		update_option( AccessControlSettings::get_slug(), $access_control_settings );
 	}
 }

@@ -58,7 +58,11 @@ class CookieSettings extends AbstractSettings {
 				'order'             => 1,
 				'required'          => false,
 				'sanitize_callback' => 'rest_sanitize_boolean',
-				// @todo add `disabled` attribute.
+				'conditionalLogic'  => [
+					'slug'     => AccessControlSettings::get_slug() . '.shouldBlockUnauthorizedDomains',
+					'operator' => '==',
+					'value'    => true,
+				],
 			],
 			// Has Logout Mutation.
 			'hasLogoutMutation'                => [

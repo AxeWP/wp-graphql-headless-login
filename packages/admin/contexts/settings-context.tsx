@@ -6,6 +6,7 @@ import {
 	useState,
 } from 'react';
 import apiFetch from '@wordpress/api-fetch';
+import { __ } from '@wordpress/i18n';
 
 const REST_ENDPOINT = 'wp-graphql-login/v1/settings';
 
@@ -79,6 +80,13 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 		} catch ( error ) {
 			if ( error instanceof Error ) {
 				setErrorMessage( error.message );
+			} else {
+				setErrorMessage(
+					__(
+						'Unable to save settings. An unknown error occurred',
+						'wp-graphql-headless-login'
+					)
+				);
 			}
 		} finally {
 			setStatus( 'complete' );
@@ -175,6 +183,20 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 			const fieldValue = settings?.[ targetSetting ]?.[ targetField ];
 
 			if ( ! fieldValue ) {
+				return false;
+			}
+
+			// If the field schema has a condition, we need to check if the condition is met.
+			const isParentConditionMet = wpGraphQLLogin?.settings?.[
+				targetSetting
+			]?.fields?.[ targetField ]?.conditionalLogic
+				? isConditionMet( {
+						settingKey: targetSetting,
+						field: targetField,
+				  } )
+				: true;
+
+			if ( ! isParentConditionMet ) {
 				return false;
 			}
 

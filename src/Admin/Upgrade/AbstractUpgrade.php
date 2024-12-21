@@ -41,13 +41,8 @@ abstract class AbstractUpgrade {
 	public function run(): bool {
 		$current_version = get_option( self::VERSION_OPTION_KEY, null );
 
-		// If the current version is empty, there is nothing to upgrade.
-		if ( empty( $current_version ) ) {
-			return true;
-		}
-
 		// If the current version is the same as the version to upgrade to, there is nothing to upgrade.
-		if ( version_compare( static::$version, $current_version, '<=' ) ) {
+		if ( ! empty( $current_version ) && version_compare( static::$version, $current_version, '<=' ) ) {
 			return true;
 		}
 
