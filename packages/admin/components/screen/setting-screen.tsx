@@ -7,17 +7,20 @@ import { useSettings } from '@/admin/contexts/settings-context';
 
 export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 	const {
-		settings: allSettings,
+		settings,
 		updateSettings,
+		saveSettings,
 		isComplete,
 		isSaving,
+		isDirty,
 		errorMessage,
+		isConditionMet,
 	} = useSettings();
 
 	const optionsSchema =
 		wpGraphQLLogin?.settings?.[ settingKey ]?.fields || undefined;
 
-	const settings = allSettings?.[ settingKey ] || undefined;
+	const localValues = settings?.[ settingKey ] || {};
 
 	useEffect( () => {
 		if ( errorMessage && ! isSaving ) {
@@ -39,15 +42,13 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 		}
 	}, [ errorMessage, isSaving ] );
 
-	const save = async ( values: Record< string, unknown > ) => {
+	const save = async () => {
+		// Prevent multiple save requests
 		if ( isSaving ) {
 			return;
 		}
 
-		await updateSettings( {
-			slug: settingKey,
-			values,
-		} );
+		await saveSettings( settingKey );
 
 		if ( isComplete && ! errorMessage ) {
 			// @ts-expect-error this isnt typed.
@@ -62,6 +63,20 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 		}
 	};
 
+	const setValue = ( value: Record< string, unknown > ) => {
+		updateSettings( {
+			slug: settingKey,
+			values: value,
+		} );
+	};
+
+	const validateConditionalLogic = ( field: string ) => {
+		return isConditionMet( {
+			settingKey,
+			field,
+		} );
+	};
+
 	if ( ! settings || ! optionsSchema ) {
 		return null;
 	}
@@ -71,15 +86,17 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 			<PanelBody>
 				<Fields
 					fields={ optionsSchema }
-					values={ settings }
-					setValue={ save }
+					values={ localValues }
+					setValue={ setValue }
 					excludedProperties={ undefined }
+					validateConditionalLogic={ validateConditionalLogic }
 				/>
 			</PanelBody>
 			<Button
 				isBusy={ isSaving }
-				onClick={ () => save( settings ) }
-				disabled={ isSaving }
+				onClick={ save }
+				disabled={ ! isDirty || isSaving }
+				variant="primary"
 			>
 				{ __( 'Save', 'wp-graphql-headless-login' ) }
 				{ isSaving && <Spinner /> }

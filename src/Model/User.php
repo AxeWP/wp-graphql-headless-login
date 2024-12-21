@@ -21,7 +21,7 @@ use WPGraphQL\Login\Auth\User as AuthUser;
  * @property ?string $refreshToken
  * @property ?int    $refreshTokenExpiration
  * @property ?string $userSecret
- * @property ?array  $linkedIdentities
+ * @property ?array<array{provider:string,id:string}> $linkedIdentities
  */
 class User {
 	/**

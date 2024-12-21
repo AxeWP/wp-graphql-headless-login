@@ -21,10 +21,12 @@ export const Field = ( {
 	field,
 	value,
 	setValue,
+	isConditionMet = true,
 }: {
 	field: FieldSchema;
 	value: unknown;
 	setValue: ( value: unknown ) => void;
+	isConditionMet?: boolean;
 } ) => {
 	return (
 		<FieldWrapper isAdvanced={ !! field.isAdvanced }>
@@ -34,6 +36,7 @@ export const Field = ( {
 				onChange={ ( newValue ) => {
 					setValue( newValue );
 				} }
+				disabled={ ! isConditionMet }
 			/>
 		</FieldWrapper>
 	);

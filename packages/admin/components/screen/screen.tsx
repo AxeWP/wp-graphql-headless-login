@@ -13,12 +13,6 @@ const ClientSettingsScreen = lazy(
 	() => import( '../provider-config/ClientSettings' )
 );
 
-/**
- * The titles of the screens that are available in the admin.
- *
- * @todo get from the server.
- */
-
 const Wrapper = ( {
 	title,
 	children,

@@ -15,10 +15,10 @@ use WPGraphQL\Model\Model;
  * Class - Client
  *
  * @property ?string $authorizationUrl
- * @property array   $clientOptions
+ * @property array<string,mixed> $clientOptions
  * @property ?string $id
  * @property bool    $isEnabled
- * @property array   $loginOptions
+ * @property array<string,mixed> $loginOptions
  * @property ?string $name
  * @property ?int    $order
  * @property string  $provider

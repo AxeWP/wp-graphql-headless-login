@@ -204,7 +204,6 @@ export function ClientPanel() {
 			<CustomPanel />
 
 			<Button
-				isPrimary
 				variant="primary"
 				onClick={ () => {
 					saveRecord();

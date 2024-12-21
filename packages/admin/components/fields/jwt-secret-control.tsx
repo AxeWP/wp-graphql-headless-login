@@ -6,7 +6,8 @@ import { useSettings } from '@/admin/contexts/settings-context';
 import type { FieldSchema } from '@/admin/types';
 
 export function JwtSecretControl( { label, help }: FieldSchema ) {
-	const { updateSettings, errorMessage, isSaving } = useSettings();
+	const { updateSettings, saveSettings, errorMessage, isSaving } =
+		useSettings();
 
 	useEffect( () => {
 		if ( ! isSaving && errorMessage ) {
@@ -29,12 +30,14 @@ export function JwtSecretControl( { label, help }: FieldSchema ) {
 	}, [ isSaving, errorMessage ] );
 
 	const regenerateJwtSecret = async () => {
-		const success = await updateSettings( {
+		await updateSettings( {
 			slug: 'wpgraphql_login_settings',
 			values: {
 				jwt_secret_key: '',
 			},
 		} );
+
+		const success = await saveSettings( 'wpgraphql_login_settings' );
 
 		if ( success ) {
 			// @ts-expect-error this isnt typed.
