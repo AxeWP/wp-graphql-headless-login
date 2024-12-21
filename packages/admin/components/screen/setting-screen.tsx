@@ -14,6 +14,7 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 		isSaving,
 		isDirty,
 		errorMessage,
+		isConditionMet,
 	} = useSettings();
 
 	const optionsSchema =
@@ -69,6 +70,13 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 		} );
 	};
 
+	const validateConditionalLogic = ( field: string ) => {
+		return isConditionMet( {
+			settingKey,
+			field,
+		} );
+	};
+
 	if ( ! settings || ! optionsSchema ) {
 		return null;
 	}
@@ -81,6 +89,7 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 					values={ localValues }
 					setValue={ setValue }
 					excludedProperties={ undefined }
+					validateConditionalLogic={ validateConditionalLogic }
 				/>
 			</PanelBody>
 			<Button

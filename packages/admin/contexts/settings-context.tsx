@@ -21,17 +21,23 @@ const SettingsContext = createContext< {
 		slug: keyof SettingType;
 		values: Record< string, unknown >;
 	} ) => void;
-	resetSettings: () => void;
 	saveSettings: ( slug: keyof SettingType ) => Promise< boolean >;
+	isConditionMet: ( {
+		settingKey,
+		field,
+	}: {
+		settingKey: string;
+		field: string;
+	} ) => boolean;
 	isComplete: boolean;
 	isDirty: boolean;
 	isSaving: boolean;
 	errorMessage: string | undefined;
 	showAdvancedSettings: boolean;
 } >( {
+	isConditionMet: () => true,
 	settings: undefined,
 	updateSettings: () => {},
-	resetSettings: () => {},
 	saveSettings: async () => false,
 	isDirty: false,
 	isSaving: false,
@@ -104,13 +110,6 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 	};
 
 	/**
-	 * Reset the settings to the server state
-	 */
-	const resetSettings = () => {
-		setSettings( serverSettings );
-	};
-
-	/**
 	 * Save the settings to the REST API
 	 */
 	const saveSettings = async (
@@ -142,13 +141,69 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 		}
 	};
 
+	/**
+	 * Checks whether the condition for a field is met.
+	 */
+	const isConditionMet = ( {
+		settingKey,
+		field,
+	}: {
+		settingKey: string;
+		field: string;
+	} ) => {
+		// Get the logic rule.
+		const conditionalLogic =
+			wpGraphQLLogin?.settings?.[ settingKey ]?.fields?.[ field ]
+				?.conditionalLogic;
+
+		if ( ! conditionalLogic ) {
+			return true;
+		}
+
+		const conditionalLogicArray = Array.isArray( conditionalLogic )
+			? conditionalLogic
+			: [ conditionalLogic ];
+
+		// Check if the condition is met by comparing the current field value to the rule.
+		return conditionalLogicArray.every( ( rule ) => {
+			const { slug, operator, value } = rule;
+
+			// Parse the slug to get the setting and field. If there is no dot, the field is on the current setting.
+			const [ targetSetting, targetField ] = slug.includes( '.' )
+				? slug.split( '.' )
+				: [ settingKey, slug ];
+			const fieldValue = settings?.[ targetSetting ]?.[ targetField ];
+
+			if ( ! fieldValue ) {
+				return false;
+			}
+
+			switch ( operator ) {
+				case '==':
+					return fieldValue === value;
+				case '!=':
+					return fieldValue !== value;
+				case '>':
+					return fieldValue > value;
+				case '<':
+					return fieldValue < value;
+				case '>=':
+					return fieldValue >= value;
+				case '<=':
+					return fieldValue <= value;
+				default:
+					return true;
+			}
+		} );
+	};
+
 	return (
 		<SettingsContext.Provider
 			value={ {
 				settings,
+				isConditionMet,
 				updateSettings,
 				saveSettings,
-				resetSettings,
 				isComplete,
 				isDirty,
 				isSaving,

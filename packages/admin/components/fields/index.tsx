@@ -6,11 +6,13 @@ export const Fields = ( {
 	fields,
 	values,
 	setValue,
+	validateConditionalLogic,
 }: {
 	excludedProperties?: string[];
 	values: Record< string, unknown > | undefined;
 	fields: Record< string, FieldSchema >;
 	setValue: ( values: Record< string, unknown > ) => void;
+	validateConditionalLogic?: ( field: string ) => boolean;
 } ) => {
 	if ( ! values ) {
 		return null;
@@ -36,11 +38,16 @@ export const Fields = ( {
 					return null;
 				}
 
+				const isConditionMet = validateConditionalLogic
+					? validateConditionalLogic( fieldKey )
+					: true;
+
 				return (
 					<Field
 						key={ fieldKey }
 						field={ fields[ fieldKey ] }
 						value={ values[ fieldKey ] }
+						isConditionMet={ isConditionMet }
 						setValue={ ( newValue ) => {
 							setValue( {
 								...values,
