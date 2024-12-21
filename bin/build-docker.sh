@@ -16,7 +16,7 @@ print_usage_instructions() {
 	echo ""
 	echo "  WP_VERSION=6.7 PHP_VERSION=8.2 npm run docker:build -- - c"
 	echo ""
-	echo "  WP_VERSION=6.7S PHP_VERSION=8.2 bin/build-docker.sh -- c"
+	echo "  WP_VERSION=6.7 PHP_VERSION=8.2 bin/build-docker.sh -- c"
 	exit 1
 }
 
