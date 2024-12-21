@@ -1,6 +1,8 @@
 <?php
 
 use Codeception\TestCase\WPTestCase;
+use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
+use WPGraphQL\Login\Admin\Settings\CookieSettings;
 use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Upgrade\AbstractUpgrade;
 use WPGraphQL\Login\Admin\Upgrade\UpgradeRegistry;
@@ -181,10 +183,19 @@ class UpgradeTest extends WPTestCase {
 	 * Tests the v0.4.0 upgrade process.
 	 */
 	public function testV0_4_0Upgrade(): void {
+		global $wpdb;
 		// Set the old settings.
 		update_option( 'wp_graphql_login_settings_show_advanced_settings', true );
 		update_option( 'wp_graphql_login_settings_delete_data_on_deactivate', true );
 		update_option( 'wp_graphql_login_settings_jwt_secret_key', 'secret' );
+
+		$status = $wpdb->insert(
+			$wpdb->options,
+			[
+				'option_name'  => 'wpgraphql_login_access_control',
+				'option_value' => serialize( [ 'hasAccessControlAllowCredentials' => true ] ),
+			]
+		);
 
 		// Set the version to < 0.4.0.
 		update_option( AbstractUpgrade::VERSION_OPTION_KEY, '0.3.0' );
@@ -201,11 +212,15 @@ class UpgradeTest extends WPTestCase {
 			],
 			get_option( PluginSettings::get_slug() )
 		);
+		$this->assertTrue(
+			get_option( CookieSettings::get_slug() )['hasAccessControlAllowCredentials']
+		);
 
 		// Check the old settings.
 		$this->assertFalse( get_option( 'wp_graphql_login_settings_show_advanced_settings' ) );
 		$this->assertFalse( get_option( 'wp_graphql_login_settings_delete_data_on_deactivate' ) );
 		$this->assertFalse( get_option( 'wp_graphql_login_settings_jwt_secret_key' ) );
+		$this->assertArrayNotHasKey( 'hasAccessControlAllowCredentials', get_option( AccessControlSettings::get_slug(), [] ) );
 	}
 
 	/**
