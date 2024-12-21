@@ -11,6 +11,7 @@ import type { ComponentProps, ComponentType } from 'react';
 type FieldControlProps = FieldSchema & {
 	value: unknown;
 	onChange: ( selected: unknown ) => void;
+	disabled?: boolean;
 };
 
 // Define the prop types for each control component
@@ -71,6 +72,7 @@ const getControlType = ( type: string ): AllowedControlTypes => {
 export const FieldControl = ( {
 	controlType: originalControlType,
 	description,
+	disabled,
 	help,
 	isAdvanced,
 	label,
@@ -101,6 +103,7 @@ export const FieldControl = ( {
 		label: label || description,
 		required: required || false,
 		help: help || undefined,
+		disabled: disabled || false,
 	};
 
 	switch ( controlType ) {
@@ -109,7 +112,7 @@ export const FieldControl = ( {
 				componentProps = {
 					...componentProps,
 					value: ( value as string ) || '',
-					onChange: ( selected: unknown ) => onChange( selected ),
+					onChange,
 				} as TextControlProps;
 				break;
 			}
@@ -134,7 +137,7 @@ export const FieldControl = ( {
 			componentProps = {
 				...componentProps,
 				value: ( value as string ) || '',
-				onChange: ( selected: unknown ) => onChange( selected ),
+				onChange,
 				options:
 					rest?.enum?.map( ( v: string ) => ( {
 						label: v.charAt( 0 ).toUpperCase() + v.slice( 1 ),
@@ -145,7 +148,7 @@ export const FieldControl = ( {
 		case 'formTokenField':
 			componentProps = {
 				...componentProps,
-				onChange: ( selected: unknown ) => onChange( selected ),
+				onChange,
 				tokenizeOnSpace: true,
 				value: value || [],
 			} as FormTokenFieldControlProps;
