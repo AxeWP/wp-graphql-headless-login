@@ -10,22 +10,30 @@ import apiFetch from '@wordpress/api-fetch';
 const REST_ENDPOINT = 'wp-graphql-login/v1/settings';
 
 type AllowedStatuses = 'saving' | 'complete' | undefined;
-
 type SettingType = Record< string, Record< string, unknown > >;
 
 const SettingsContext = createContext< {
 	settings: SettingType | undefined;
-	updateSettings: ( args: {
+	updateSettings: ( {
+		slug,
+		values,
+	}: {
 		slug: keyof SettingType;
-		values: SettingType[ keyof SettingType ];
-	} ) => Promise< boolean >;
-	isSaving: boolean;
+		values: Record< string, unknown >;
+	} ) => void;
+	resetSettings: () => void;
+	saveSettings: ( slug: keyof SettingType ) => Promise< boolean >;
 	isComplete: boolean;
+	isDirty: boolean;
+	isSaving: boolean;
 	errorMessage: string | undefined;
 	showAdvancedSettings: boolean;
 } >( {
 	settings: undefined,
-	updateSettings: async () => false,
+	updateSettings: () => {},
+	resetSettings: () => {},
+	saveSettings: async () => false,
+	isDirty: false,
 	isSaving: false,
 	isComplete: false,
 	errorMessage: undefined,
@@ -35,10 +43,23 @@ const SettingsContext = createContext< {
 export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 	const [ status, setStatus ] = useState< AllowedStatuses >( undefined );
 	const [ errorMessage, setErrorMessage ] = useState< string | undefined >();
-
 	const [ settings, setSettings ] = useState< SettingType | undefined >(
 		undefined
 	);
+
+	// Cached server state. This is used to determine if the settings are dirty
+	const [ serverSettings, setServerSettings ] = useState<
+		SettingType | undefined
+	>( undefined );
+
+	const isDirty =
+		( settings &&
+			JSON.stringify( settings ) !== JSON.stringify( serverSettings ) ) ||
+		false;
+	const isSaving = status === 'saving';
+	const isComplete = status === 'complete';
+	const showAdvancedSettings =
+		!! settings?.wpgraphql_login_settings?.show_advanced_settings;
 
 	// Fetch settings from the REST API
 	useEffect( () => {
@@ -46,7 +67,8 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 			apiFetch< SettingType >( {
 				path: REST_ENDPOINT,
 			} ).then( ( response ) => {
-				setSettings( response );
+				setServerSettings( response );
+				setSettings( response ); // Initialize settings
 			} );
 		} catch ( error ) {
 			if ( error instanceof Error ) {
@@ -57,24 +79,54 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 		}
 	}, [] );
 
-	const updateSettings = async ( {
+	/**
+	 * Update the settings state with new values
+	 */
+	const updateSettings = ( {
 		slug,
 		values,
 	}: {
 		slug: keyof SettingType;
-		values: SettingType[ keyof SettingType ];
+		values: Record< string, unknown >;
 	} ) => {
-		setStatus( 'saving' );
+		setSettings( ( prevSettings ) => {
+			if ( ! prevSettings ) {
+				return {
+					[ slug ]: values,
+				};
+			}
 
+			return {
+				...prevSettings,
+				[ slug ]: values,
+			};
+		} );
+	};
+
+	/**
+	 * Reset the settings to the server state
+	 */
+	const resetSettings = () => {
+		setSettings( serverSettings );
+	};
+
+	/**
+	 * Save the settings to the REST API
+	 */
+	const saveSettings = async (
+		slug: keyof SettingType
+	): Promise< boolean > => {
+		setStatus( 'saving' );
 		try {
 			const response = await apiFetch< SettingType >( {
 				path: REST_ENDPOINT,
 				method: 'POST',
 				data: {
 					slug,
-					values,
+					values: settings?.[ slug ],
 				},
 			} );
+			setServerSettings( response );
 			setSettings( response );
 			setErrorMessage( undefined );
 			setStatus( 'complete' );
@@ -95,12 +147,13 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 			value={ {
 				settings,
 				updateSettings,
-				isSaving: status === 'saving',
-				isComplete: status === 'complete',
+				saveSettings,
+				resetSettings,
+				isComplete,
+				isDirty,
+				isSaving,
 				errorMessage,
-				showAdvancedSettings:
-					!! settings?.wpgraphql_login_settings
-						?.show_advanced_settings,
+				showAdvancedSettings,
 			} }
 		>
 			{ children }

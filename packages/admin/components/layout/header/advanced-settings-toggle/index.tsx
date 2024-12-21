@@ -6,7 +6,8 @@ import { __ } from '@wordpress/i18n';
  * The advanced settings toggle.
  */
 export const AdvancedSettingsToggle = () => {
-	const { showAdvancedSettings, updateSettings } = useSettings();
+	const { showAdvancedSettings, updateSettings, saveSettings } =
+		useSettings();
 
 	const classNames = 'wp-graphql-headless-login__advanced-settings-toggle';
 	const label = __( 'Show advanced settings', 'wp-graphql-headless-login' );
@@ -18,6 +19,9 @@ export const AdvancedSettingsToggle = () => {
 				show_advanced_settings: value,
 			},
 		} );
+
+		// Save the setting immediately
+		await saveSettings( 'wpgraphql_login_settings' );
 	};
 
 	return (
