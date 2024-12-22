@@ -36,12 +36,8 @@ class UpgradeRegistry implements Registrable {
 		// Remove all the unneeded upgrade classes.
 		$db_version = get_option( AbstractUpgrade::VERSION_OPTION_KEY, null );
 
-		if ( empty( $db_version ) ) {
-			return;
-		}
-
 		foreach ( $upgrade_classes as $upgrade_class ) {
-			if ( version_compare( $upgrade_class::$version, $db_version, '<=' ) ) {
+			if ( ! empty( $db_version ) && version_compare( $upgrade_class::$version, $db_version, '<=' ) ) {
 				unset( $upgrade_classes[ array_search( $upgrade_class, $upgrade_classes, true ) ] );
 			}
 		}

@@ -111,6 +111,10 @@ abstract class AbstractSettings {
 				$sanitized_values = [];
 
 				foreach ( $values as $key => $value ) {
+					if ( ! isset( $config[ $key ] ) ) {
+						continue;
+					}
+
 					$setting = $config[ $key ];
 
 					// Sanitize the value if a callback is provided.

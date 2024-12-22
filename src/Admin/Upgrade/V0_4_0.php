@@ -56,19 +56,11 @@ class V0_4_0 extends AbstractUpgrade {
 			return;
 		}
 
-		$success = update_option( PluginSettings::get_slug(), $existing_values );
-
-		if ( ! $success ) {
-			throw new \Exception( 'Failed to migrate plugin settings.' );
-		}
+		update_option( PluginSettings::get_slug(), $existing_values );
 
 		// Delete the old settings.
 		foreach ( $settings_map as $old_key => $new_key ) {
-			$success = delete_option( $old_key );
-
-			if ( ! $success ) {
-				throw new \Exception( 'Failed to delete old plugin settings.' );
-			}
+			delete_option( $old_key );
 		}
 	}
 }
