@@ -18,13 +18,13 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 
 	public $default_options = [
 		'accessControl' => [
-			'shouldBlockUnauthorizedDomains'   => false,
-			'hasSiteAddressInOrigin'           => false,
-			'additionalAuthorizedDomains'      => [],
+			'shouldBlockUnauthorizedDomains' => false,
+			'hasSiteAddressInOrigin'         => false,
+			'additionalAuthorizedDomains'    => [],
 		],
-		'cookies' => [
+		'cookies'       => [
 			'hasAccessControlAllowCredentials' => false,
-		]
+		],
 	];
 
 	/**
@@ -307,7 +307,7 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 			array_merge(
 				$this->default_options['accessControl'],
 				[
-					'shouldBlockUnauthorizedDomains'   => true,
+					'shouldBlockUnauthorizedDomains' => true,
 				]
 			)
 		);

@@ -91,10 +91,10 @@ class SettingsRestControllerTest extends WPTestCase {
 		// Ensure the settings are returned with default values.
 		$expected = [
 			'wpgraphql_login_access_control' => [
-				'shouldBlockUnauthorizedDomains'   => false,
-				'hasSiteAddressInOrigin'           => false,
-				'additionalAuthorizedDomains'      => [],
-				'customHeaders'                    => [],
+				'shouldBlockUnauthorizedDomains' => false,
+				'hasSiteAddressInOrigin'         => false,
+				'additionalAuthorizedDomains'    => [],
+				'customHeaders'                  => [],
 			],
 			'wpgraphql_login_cookies'        => [
 				'hasAccessControlAllowCredentials' => false,
@@ -156,10 +156,10 @@ class SettingsRestControllerTest extends WPTestCase {
 
 		$expected = [
 			'wpgraphql_login_access_control' => [
-				'shouldBlockUnauthorizedDomains'   => true, // This is the only value that should change.
-				'hasSiteAddressInOrigin'           => false,
-				'additionalAuthorizedDomains'      => [],
-				'customHeaders'                    => [],
+				'shouldBlockUnauthorizedDomains' => true, // This is the only value that should change.
+				'hasSiteAddressInOrigin'         => false,
+				'additionalAuthorizedDomains'    => [],
+				'customHeaders'                  => [],
 			],
 			'wpgraphql_login_cookies'        => [
 				'hasAccessControlAllowCredentials' => false,
@@ -309,9 +309,9 @@ class SettingsRestControllerTest extends WPTestCase {
 	public function testAccessControlSettingsSanitization(): void {
 		// Test sanitization
 		$values = [
-			'hasSiteAddressInOrigin'           => 'true',
-			'shouldBlockUnauthorizedDomains'   => '0',
-			'customHeaders'                    => [ '*', '<strong>X-Wrapped-In-HTML</strong>' ],
+			'hasSiteAddressInOrigin'         => 'true',
+			'shouldBlockUnauthorizedDomains' => '0',
+			'customHeaders'                  => [ '*', '<strong>X-Wrapped-In-HTML</strong>' ],
 		];
 
 		wp_set_current_user( $this->admin_id );

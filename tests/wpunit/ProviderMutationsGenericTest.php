@@ -374,7 +374,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		$did_filter = false;
 		add_filter(
 			'send_auth_cookies',
-			function ( $send ) use ( &$did_filter ) {
+			static function ( $send ) use ( &$did_filter ) {
 				$did_filter = true;
 
 				return true;
