@@ -64,6 +64,7 @@ class AuthCookie {
 				'domain'   => $cookie_domain,
 				'samesite' => $samesite,
 				'secure'   => $secure,
+				'httponly' => true,
 			]
 		);
 		self::set_custom_cookie(
@@ -75,6 +76,7 @@ class AuthCookie {
 				'domain'   => $cookie_domain,
 				'samesite' => $samesite,
 				'secure'   => $secure,
+				'httponly' => true,
 			]
 		);
 		self::set_custom_cookie(
@@ -86,6 +88,7 @@ class AuthCookie {
 				'domain'   => $cookie_domain,
 				'samesite' => $samesite,
 				'secure'   => $secure_logged_in_cookie,
+				'httponly' => true,
 			]
 		);
 
@@ -99,6 +102,7 @@ class AuthCookie {
 					'domain'   => $cookie_domain,
 					'samesite' => $samesite,
 					'secure'   => $secure_logged_in_cookie,
+					'httponly' => true,
 				]
 			);
 		}
