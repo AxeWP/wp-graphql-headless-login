@@ -12,6 +12,7 @@ namespace WPGraphQL\Login\Admin;
 
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 use WPGraphQL\Login\Admin\Settings\RestController;
+use WPGraphQL\Login\Admin\Upgrade\UpgradeRegistry;
 use WPGraphQL\Login\Auth\TokenManager;
 
 /**
@@ -43,6 +44,9 @@ class Settings {
 		add_action( 'init', [ self::class, 'register_provider_settings' ] );
 		add_action( 'graphql_register_settings', [ self::class, 'register_settings_tab' ] );
 		add_action( 'admin_enqueue_scripts', [ self::class, 'register_admin_scripts' ] );
+
+		// Handle upgrades.
+		UpgradeRegistry::init();
 	}
 
 	/**
