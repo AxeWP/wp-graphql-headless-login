@@ -39,7 +39,7 @@ class Utils {
 	 *
 	 * @var ?array<string,mixed>
 	 */
-	protected static $access_control;
+	protected static $access_control = [];
 
 	/**
 	 * Gets a single plugin setting.
@@ -55,15 +55,7 @@ class Utils {
 	 */
 	public static function get_setting( string $option_name, $default_value = false ) {
 		if ( ! isset( self::$settings[ $option_name ] ) ) {
-			$instance = SettingsRegistry::get( PluginSettings::get_slug() );
-
-			if ( ! $instance ) {
-				return $default_value;
-			}
-
-			$values = $instance->get_values();
-
-			$option_value = $values[ $option_name ] ?? null;
+			$option_value = self::get_setting_value( PluginSettings::get_slug(), $option_name, $default_value );
 
 			/**
 			 * Filter the value before returning it.
@@ -118,14 +110,24 @@ class Utils {
 	 * @return mixed
 	 */
 	public static function get_access_control_setting( string $option_name, $default_value = false ) {
-		if ( ! isset( self::$access_control ) ) {
+		if ( ! isset( self::$access_control[ $option_name ] ) ) {
+			/**
+			 * @todo For backcompat, we go through all the settings to make sure the access control settings are loaded before applying the filter.
+			 *
+			 * This is a temporary solution and will be removed in a future release.
+			 */
 			$instance = SettingsRegistry::get( AccessControlSettings::get_slug() );
 
 			if ( ! $instance ) {
 				return $default_value;
 			}
 
-			$access_control = $instance->get_values();
+			$all_options = array_keys( $instance->get_config() );
+
+			$access_control = [];
+			foreach ( $all_options as $option ) {
+				$access_control[ $option ] = self::get_setting_value( AccessControlSettings::get_slug(), $option, $default_value );
+			}
 
 			/**
 			 * Filter the value before returning it
@@ -152,15 +154,7 @@ class Utils {
 	 * @return mixed
 	 */
 	public static function get_cookie_setting( string $option_name, $default_value = false ) {
-		$instance = SettingsRegistry::get( CookieSettings::get_slug() );
-
-		if ( ! $instance ) {
-			return $default_value;
-		}
-
-		$values = $instance->get_values();
-
-		$option_value = $values[ $option_name ] ?? null;
+		$option_value = self::get_setting_value( CookieSettings::get_slug(), $option_name, $default_value );
 
 		/**
 		 * Filter the value before returning it
@@ -225,5 +219,98 @@ class Utils {
 		}
 
 		return get_current_user_id() === $user_id;
+	}
+
+	/**
+	 * Gets the setting value.
+	 *
+	 * @param string $slug The setting slug.
+	 * @param string $option_name The field key.
+	 * @param mixed  $default_value The default value.
+	 *
+	 * @return mixed
+	 */
+	protected static function get_setting_value( string $slug, string $option_name, $default_value = false ) {
+		$instance = SettingsRegistry::get( $slug );
+
+		if ( ! $instance || ! self::is_field_dependency_met( $slug, $option_name ) ) {
+			return $default_value;
+		}
+
+		$values = $instance->get_values();
+
+		return $values[ $option_name ] ?? $default_value;
+	}
+
+	/**
+	 * Check if a field dependency is met.
+	 *
+	 * @param string $slug The setting slug.
+	 * @param string $option_name The field key.
+	 */
+	protected static function is_field_dependency_met( string $slug, string $option_name ): bool {
+		$instance = SettingsRegistry::get( $slug );
+
+		// Bail if invalid setting slug.
+		if ( ! $instance ) {
+			return false;
+		}
+
+		$config = $instance->get_config();
+
+		// Bail if invalid field key.
+		if ( ! isset( $config[ $option_name ] ) ) {
+			return false;
+		}
+
+		// If there's no conditional logic, the dependency is met.
+		if ( ! isset( $config[ $option_name ]['conditionalLogic'] ) ) {
+			return true;
+		}
+
+		$rule = $config[ $option_name ]['conditionalLogic'];
+
+		// The rule slug is in the format of `field` or `slug.field`. If there is only one part, the slug is the same as the current one.
+		$slug_parts = explode( '.', $rule['slug'] );
+
+		if ( empty( $slug_parts ) ) {
+			return false;
+		}
+
+		$dep_slug        = count( $slug_parts ) > 1 ? $slug_parts[0] : $slug;
+		$dep_option_name = count( $slug_parts ) > 1 ? $slug_parts[1] : $rule['slug'];
+
+		$dep_instance = SettingsRegistry::get( $dep_slug );
+		// If the dependency's parent is not met, the dependency is not met.
+		if ( null === $dep_instance || ! self::is_field_dependency_met( $dep_slug, $dep_option_name ) ) {
+			return false;
+		}
+
+		$dep_config     = $dep_instance->get_config();
+		$all_dep_values = $dep_instance->get_values();
+
+		// Get the default value if the field is not set.
+		$dep_value = $dep_config[ $dep_option_name ]['default'] ?? null;
+		if ( isset( $all_dep_values[ $dep_option_name ] ) ) {
+			$dep_value = $all_dep_values[ $dep_option_name ];
+		}
+
+		// Check if the dependency is met.
+		switch ( $rule['operator'] ) {
+			case '==':
+				return $dep_value === $rule['value'];
+			case '!=':
+				return $dep_value !== $rule['value'];
+			case '>':
+				return $dep_value > $rule['value'];
+			case '<':
+				return $dep_value < $rule['value'];
+			case '>=':
+				return $dep_value >= $rule['value'];
+			case '<=':
+				return $dep_value <= $rule['value'];
+			default:
+				return false;
+		}
 	}
 }
