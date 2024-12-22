@@ -109,5 +109,13 @@ class SiteTokenAuthenticationCest {
 		$I->assertNotEmpty( $response['data']['login']['refreshTokenExpiration'] );
 		$I->assertEquals( 'testuser', $response['data']['login']['user']['username'] );
 		$I->assertEquals( 'some_email@test.com', $response['data']['login']['user']['email'] );
+
+		$cookies = $I->grabCookiesWithPattern( '/^wordpress_logged_in_/' );
+
+		/** @var \Symfony\Component\BrowserKit\Cookie */
+		foreach ( $cookies as $cookie ) {
+			$parsed_cookie = wp_parse_auth_cookie( $cookie->getValue(), 'logged_in' );
+			$I->assertNotEmpty( $parsed_cookie );
+		}
 	}
 }

@@ -370,6 +370,84 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTe
 		$this->assertNotEquals( 'mock_username', $actual['data']['login']['user']['username'] );
 	}
 
+	public function testLoginWithAuthCookie(): void {
+		$did_filter = false;
+		add_filter(
+			'send_auth_cookies',
+			function ( $send ) use ( &$did_filter ) {
+				$did_filter = true;
+
+				return true;
+			},
+			99
+		);
+
+		// Test with user to match.
+		User::link_user_identity( $this->test_user, 'oauth2-generic', '12345' );
+
+		$config = $this->provider_config;
+		$config['loginOptions']['useAuthenticationCookie'] = true;
+
+		$this->tester->set_client_config( 'oauth2-generic', $config );
+
+		$query = $this->login_query();
+
+		$variables = [
+			'input' => [
+				'oauthResponse' => [
+					'code' => 'mock_authorization_code',
+				],
+				'provider'      => 'OAUTH2_GENERIC',
+			],
+		];
+
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assertArrayNotHasKey( 'errors', $actual );
+		$this->assertQuerySuccessful(
+			$actual,
+			[
+				$this->expectedObject(
+					'login',
+					[
+						$this->expectedField( 'authToken', self::NOT_FALSY ),
+						$this->expectedField( 'authTokenExpiration', self::NOT_FALSY ),
+						$this->expectedField( 'refreshToken', self::NOT_FALSY ),
+						$this->expectedField( 'refreshTokenExpiration', self::NOT_FALSY ),
+						$this->expectedObject(
+							'user',
+							[
+								$this->expectedField( 'databaseId', $this->test_user ),
+								$this->expectedObject(
+									'auth',
+									[
+
+										$this->expectedField( 'isUserSecretRevoked', false ),
+										$this->expectedNode(
+											'linkedIdentities',
+											[
+												$this->expectedField( 'id', '12345' ),
+												$this->expectedField( 'provider', 'OAUTH2_GENERIC' ),
+											],
+											0
+										),
+										$this->expectedField( 'userSecret', self::NOT_FALSY ),
+									]
+								),
+							]
+						),
+					]
+				),
+			]
+		);
+
+		// setcookies() is not available in Codeception, but we can check if the filter was called.
+		$this->assertTrue( $did_filter );
+
+		// Cleanup.
+		remove_all_filters( 'send_auth_cookies' );
+	}
+
 	public function testLoginWithCreateUser(): void {
 		$config = $this->provider_config;
 		$config['loginOptions']['createUserIfNoneExists'] = true;
