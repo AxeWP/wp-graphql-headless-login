@@ -11,10 +11,6 @@ parameters:
 		reportAlwaysTrueInLastCondition: true
 		reportStaticMethodSignatures: true
 		reportWrongPhpDocTypeInVarTag: true
-		dynamicConstantNames:
-			- ADMIN_COOKIE_PATH
-			- COOKIEPATH
-			- SITECOOKIEPATH
 		bootstrapFiles:
 			- phpstan/constants.php
 		dynamicConstantNames:
