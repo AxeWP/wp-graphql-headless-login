@@ -22,7 +22,6 @@ class SiteTokenAuthenticationCest {
 				],
 			]
 		);
-		$I->haveOptionInDatabase( AccessControlSettings::get_slug() . 'access_control', [] );
 		$I->reset_utils_properties();
 	}
 
