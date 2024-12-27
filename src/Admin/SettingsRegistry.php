@@ -33,6 +33,7 @@ class SettingsRegistry implements Registrable {
 
 		$classes_to_register = [
 			Settings\AccessControlSettings::class,
+			Settings\CookieSettings::class,
 			Settings\PluginSettings::class,
 		];
 

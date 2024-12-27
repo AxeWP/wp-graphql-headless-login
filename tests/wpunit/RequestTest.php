@@ -1,6 +1,7 @@
 <?php
 
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
+use WPGraphQL\Login\Admin\Settings\CookieSettings;
 use WPGraphQL\Login\Auth\Request;
 use WPGraphQL\Login\Auth\TokenManager;
 
@@ -16,10 +17,14 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	public $tester;
 
 	public $default_options = [
-		'shouldBlockUnauthorizedDomains'   => false,
-		'hasAccessControlAllowCredentials' => false,
-		'hasSiteAddressInOrigin'           => false,
-		'additionalAuthorizedDomains'      => [],
+		'accessControl' => [
+			'shouldBlockUnauthorizedDomains' => false,
+			'hasSiteAddressInOrigin'         => false,
+			'additionalAuthorizedDomains'    => [],
+		],
+		'cookies'       => [
+			'hasAccessControlAllowCredentials' => false,
+		],
 	];
 
 	/**
@@ -28,7 +33,8 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		update_option( AccessControlSettings::get_slug(), $this->default_options );
+		update_option( AccessControlSettings::get_slug(), $this->default_options['accessControl'] );
+		update_option( CookieSettings::get_slug(), $this->default_options['cookies'] );
 
 		$this->tester->reset_utils_properties();
 	}
@@ -38,6 +44,7 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	 */
 	public function tearDown(): void {
 		delete_option( AccessControlSettings::get_slug() );
+		delete_option( CookieSettings::get_slug() );
 		$this->tester->reset_utils_properties();
 
 		parent::tearDown();
@@ -80,7 +87,7 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 
 		// Test with shouldBlockUnauthorizedDomains set to true.
 
-		update_option( AccessControlSettings::get_slug(), array_merge( $this->default_options, [ 'shouldBlockUnauthorizedDomains' => true ] ) );
+		update_option( AccessControlSettings::get_slug(), array_merge( $this->default_options['accessControl'], [ 'shouldBlockUnauthorizedDomains' => true ] ) );
 		$this->tester->reset_utils_properties();
 
 		// If the origin is the same as the host this should be fine.
@@ -104,7 +111,7 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		update_option(
 			AccessControlSettings::get_slug(),
 			array_merge(
-				$this->default_options,
+				$this->default_options['accessControl'],
 				[
 					'shouldBlockUnauthorizedDomains' => true,
 					'hasSiteAddressInOrigin'         => true,
@@ -120,7 +127,7 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		update_option(
 			AccessControlSettings::get_slug(),
 			array_merge(
-				$this->default_options,
+				$this->default_options['accessControl'],
 				[
 					'shouldBlockUnauthorizedDomains' => true,
 					'hasSiteAddressInOrigin'         => true,
@@ -135,7 +142,7 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		update_option(
 			AccessControlSettings::get_slug(),
 			array_merge(
-				$this->default_options,
+				$this->default_options['accessControl'],
 				[
 					'shouldBlockUnauthorizedDomains' => true,
 					'hasSiteAddressInOrigin'         => false,
@@ -158,7 +165,7 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		update_option(
 			AccessControlSettings::get_slug(),
 			array_merge(
-				$this->default_options,
+				$this->default_options['accessControl'],
 				[
 					'shouldBlockUnauthorizedDomains' => true,
 					'additionalAuthorizedDomains'    => [
@@ -186,7 +193,7 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		update_option(
 			AccessControlSettings::get_slug(),
 			array_merge(
-				$this->default_options,
+				$this->default_options['accessControl'],
 				[
 					'shouldBlockUnauthorizedDomains' => true,
 					'additionalAuthorizedDomains'    => [],
@@ -272,9 +279,9 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 
 		// Test with hasAccessControlAllowCredentials.
 		update_option(
-			AccessControlSettings::get_slug(),
+			CookieSettings::get_slug(),
 			array_merge(
-				$this->default_options,
+				$this->default_options['cookies'],
 				[
 					'hasAccessControlAllowCredentials' => true,
 				]
@@ -298,9 +305,17 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		update_option(
 			AccessControlSettings::get_slug(),
 			array_merge(
-				$this->default_options,
+				$this->default_options['accessControl'],
 				[
-					'shouldBlockUnauthorizedDomains'   => true,
+					'shouldBlockUnauthorizedDomains' => true,
+				]
+			)
+		);
+		update_option(
+			CookieSettings::get_slug(),
+			array_merge(
+				$this->default_options['cookies'],
+				[
 					'hasAccessControlAllowCredentials' => true,
 				]
 			)
@@ -327,7 +342,7 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		update_option(
 			AccessControlSettings::get_slug(),
 			array_merge(
-				$this->default_options,
+				$this->default_options['accessControl'],
 				[
 					'customHeaders' => [
 						'X-Custom-Header',
@@ -367,7 +382,7 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		update_option(
 			AccessControlSettings::get_slug(),
 			array_merge(
-				$this->default_options,
+				$this->default_options['accessControl'],
 				[
 					'shouldBlockUnauthorizedDomains' => true,
 				]
@@ -426,7 +441,7 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		update_option(
 			AccessControlSettings::get_slug(),
 			array_merge(
-				$this->default_options,
+				$this->default_options['accessControl'],
 				[
 					'shouldBlockUnauthorizedDomains' => true,
 				]
@@ -457,7 +472,7 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		update_option(
 			AccessControlSettings::get_slug(),
 			array_merge(
-				$this->default_options,
+				$this->default_options['accessControl'],
 				[
 					'shouldBlockUnauthorizedDomains' => true,
 					'hasSiteAddressInOrigin'         => true,
@@ -477,7 +492,7 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		update_option(
 			AccessControlSettings::get_slug(),
 			array_merge(
-				$this->default_options,
+				$this->default_options['accessControl'],
 				[
 					'shouldBlockUnauthorizedDomains' => true,
 					'hasSiteAddressInOrigin'         => true,

@@ -104,7 +104,7 @@ class SettingsRegistryTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	private function assertValidSettings( $settings ): void {
 		$this->assertIsArray( $settings );
 		$this->assertNotEmpty( $settings );
-		$this->assertCount( 2, $settings );
+		$this->assertCount( 3, $settings );
 
 		foreach ( $settings as $setting ) {
 			$this->assertInstanceOf( AbstractSettings::class, $setting );

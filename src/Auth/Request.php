@@ -308,7 +308,7 @@ class Request {
 	 * Checks whether the Access-Control-Allow-Credentials header should be sent.
 	 */
 	protected static function has_acac_header(): bool {
-		return (bool) Utils::get_access_control_setting( 'hasAccessControlAllowCredentials' );
+		return (bool) Utils::get_cookie_setting( 'hasAccessControlAllowCredentials' );
 	}
 
 	/**

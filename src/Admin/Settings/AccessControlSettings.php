@@ -48,7 +48,7 @@ class AccessControlSettings extends AbstractSettings {
 	public function get_config(): array {
 		return [
 			// Should Block Unauthorized Domains.
-			'shouldBlockUnauthorizedDomains'   => [
+			'shouldBlockUnauthorizedDomains' => [
 				'description'       => __( 'Whether to block requests from unauthorized domains', 'wp-graphql-headless-login' ),
 				'label'             => __( 'Block unauthorized domains', 'wp-graphql-headless-login' ),
 				'type'              => 'boolean',
@@ -59,25 +59,8 @@ class AccessControlSettings extends AbstractSettings {
 				'required'          => true,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			// Has Access Control Allow Credentials.
-			'hasAccessControlAllowCredentials' => [
-				'description'       => __( 'Whether the `Access-Control-Allow-Credentials` header should be added to the request.', 'wp-graphql-headless-login' ),
-				'label'             => __( 'Add Access-Control-Allow-Credentials', 'wp-graphql-headless-login' ),
-				'type'              => 'boolean',
-				'isAdvanced'        => false,
-				'default'           => false,
-				'help'              => __( 'If enabled, the `Access-Control-Allow-Credentials` header will be included in the request. Requires `Block Unauthorized Domains` to be enabled.', 'wp-graphql-headless-login' ),
-				'order'             => 2,
-				'required'          => false,
-				'sanitize_callback' => 'rest_sanitize_boolean',
-				'conditionalLogic'  => [
-					'slug'     => 'shouldBlockUnauthorizedDomains',
-					'operator' => '==',
-					'value'    => true,
-				],
-			],
 			// Has Site Address In Origin.
-			'hasSiteAddressInOrigin'           => [
+			'hasSiteAddressInOrigin'         => [
 				'description'       => __( 'Whether the Site URL should be added to the `Access-Control-Allow-Origin` header', 'wp-graphql-headless-login' ),
 				'label'             => __( 'Add Site URL to Access-Control-Allow-Origin', 'wp-graphql-headless-login' ),
 				'type'              => 'boolean',
@@ -89,7 +72,7 @@ class AccessControlSettings extends AbstractSettings {
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
 			// Additional Authorized Domains.
-			'additionalAuthorizedDomains'      => [
+			'additionalAuthorizedDomains'    => [
 				'description'       => __( 'An array additional authorized domains to include in the Access-Control-Allow-Origin header.', 'wp-graphql-headless-login' ),
 				'label'             => __( 'Additional authorized domains', 'wp-graphql-headless-login' ),
 				'type'              => 'array',
@@ -116,7 +99,7 @@ class AccessControlSettings extends AbstractSettings {
 				},
 			],
 			// Custom Headers.
-			'customHeaders'                    => [
+			'customHeaders'                  => [
 				'description'       => __( 'An array of custom headers to add to the response', 'wp-graphql-headless-login' ),
 				'label'             => __( 'Custom Headers', 'wp-graphql-headless-login' ),
 				'type'              => 'array',

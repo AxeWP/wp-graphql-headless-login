@@ -210,6 +210,7 @@ class TypeRegistry {
 		$classes_to_register = [
 			Mutation\LinkUserIdentity::class,
 			Mutation\Login::class,
+			Mutation\Logout::class,
 			Mutation\RefreshToken::class,
 			Mutation\RefreshUserSecret::class,
 			Mutation\RevokeUserSecret::class,
