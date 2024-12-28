@@ -25,6 +25,7 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
+    name: Check schema
 
     services:
       mysql:
