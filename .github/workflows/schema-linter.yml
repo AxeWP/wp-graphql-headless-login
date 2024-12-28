@@ -1,4 +1,4 @@
-name: Schema Linter
+name: Schema Linting
 
 on:
   push:
@@ -8,6 +8,12 @@ on:
     branches:
       - develop
       - main
+    paths:
+      - '.github/workflows/schema-linter.yml'
+      - '**.php'
+      - 'bin/**'
+      - 'composer.json'
+      - 'composer.lock'
 
 # Cancel previous workflow run groups that have not completed.
 concurrency:

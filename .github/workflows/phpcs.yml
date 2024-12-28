@@ -9,6 +9,12 @@ on:
     branches:
       - develop
       - main
+    paths:
+      - '.github/workflows/phpcs.yml'
+      - '**.php'
+      - '.phpcs.xml.dist'
+      - 'composer.json'
+      - 'composer.lock'
 
 # Cancel previous workflow run groups that have not completed.
 concurrency:
@@ -20,7 +26,7 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    name: PHPCS
+    name: Check code with PHPCS
 
     steps:
       - name: Checkout
