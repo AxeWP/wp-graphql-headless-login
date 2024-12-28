@@ -5,23 +5,42 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.4.0] - 2024-12-28
+
+This _major_ release brings a complete overhaul to the Admin settings screen, along with support for configuring Cookies and a new `logout` mutation for clearing them.
+
+Behind the scenes, we've refactored the Settings handling and storage, updated our Composer/NPM dependencies and build scripts, and bumped our minimum WordPress version to 6.2.
+
+> [!NOTE]
+> Updating to this release will automatically migrate your existing settings to the new format. However, if you have custom code that interacts with the settings, you may need to update it to reflect the new structure.
+>
+> Provider Configuration settings have **not** been changed.
+
+### Contributor Notes
+
+Composer and NPM scripts have been updated, alongside the `.env.dist` file and other environment variables. Please make sure to update your local environment accordingly.
+
+### What's changed
+
 - feat!: Refactor Settings handling and storage.
 - feat: Add Upgrader class for handling plugin upgrades.
 - feat: Refactor admin package.
 - feat: Add support for Cookie configuration and `logout` mutation. Props @alexookah.
 - chore!: Bump minimum WordPress version to 6.2.
-- chore!: Remove `vendor`, `vendor-prefixed`, and `build` directories from the repository.
+- chore!: Remove `vendor` and `vendor-prefixed` from the repository.
 - chore: Update Composer dependencies.
 - chore: Update NPM dependencies.
 - chore: Update Strauss to v0.19.4.
-- ci!: Update ci scripts and commands, docker configuration, and env variables.
-- tests!: Update codeception tests to use `wp-browser` > v3.5.x.
+- ci!: Update CI scripts and commands, docker configuration, and env variables.
+- tests!: Update Codeception tests to use `wp-browser` > v3.5.x.
 - ci: Test compatibility with WordPress 6.7.1.
 - tests: Format and lint test files.
 
 ## [0.3.1] - 2024-09-07
 
-This _patch_ releases fixes a bug where descriptions were not being displayed for `FormTokenField` types in the settings screen. Additionally, we've updated our dependencies to the latest (SemVer-compatibile) versions.
+This _minor_ releases fixes a bug where descriptions were not being displayed for `FormTokenField` types in the settings screen. Additionally, we've updated our dependencies to the latest (SemVer-compatibile) versions.
+
+### What's changed
 
 - fix: Display missing help text to `FormTokenField` types in the settings screen. H/t alexookah.
 - dev: Add `react-jsx-runtime` polyfill for WordPress backwards-compatibility.
@@ -40,6 +59,8 @@ This _major_ release refactors the root files to use the `WPGraphQL\Login` names
 > Although this release technically contains breaking changes, these changes are limited to developers directly extending the `wp-graphql-headless-login.php`, `wp-graphql-activation.php`, `wp-graphql-deactivation.php` files, and the `WPGraphQL\Login\Main` class.
 > If you are using the plugin as intended, you should not experience any issues when upgrading.
 
+### What's changed
+
 - feat: Add the `authTokenExpiration` field to the `refreshToken` mutation response. H/t @richardaubin.
 - chore!: Add `WPGraphQL/RankMath` namespace to root-level files ( `activation.php`, `deactivation.php`, `wp-graphql-rank-math.php` ).
 - chore: Declare `strict_types` in all PHP files.
@@ -55,7 +76,9 @@ This _major_ release refactors the root files to use the `WPGraphQL\Login` names
 
 This _major_ release bumps the minimum supported WordPress version to 6.0, and the minimum supported WPGraphQL version to 1.14.0. It also fixes a bug when extending the `OAuth2Config` class`.
 
-Note: This release is a breaking change, as the `Psr` dependencies are now prefixed with `\WPGraphQL\Login\Vendor`. This class should only be used internally, but if for some reason you're relying on the bundled `Psr` classes in your own code, you'll need to update your references.
+**Note**: This release is a breaking change, as the `Psr` dependencies are now prefixed with `\WPGraphQL\Login\Vendor`. This class should only be used internally, but if for some reason you're relying on the bundled `Psr` classes in your own code, you'll need to update your references.
+
+### What's changed
 
 - fix: Avoid strict-typing `League\OAuth2\Client\Provider\AbstractProvider` to the `\WPGraphQL\Login\Vendor` namespace. H/t @pat-flew .
 - chore!: Use Strauss to prefix `Psr` dependencies. This is a breaking change, as the `Psr` dependencies are now prefixed with `\WPGraphQL\Login\Vendor`.
@@ -72,6 +95,8 @@ Note: This release is a breaking change, as the `Psr` dependencies are now prefi
 
 This minor release fixes a bug where the `determine_current_user` filter was being applied too late in the lifecycle for some plugins. It also better integrates with WPGraphQL for WooCommerce upcoming release which adds built-in support for the plugin. We've also upgraded our coding standards and fixed all the resulting issues.
 
+### What's changed
+
 - fix: Apply the `determine_current_user` filter before the plugin is initialized. H/t @kidunot89 for reporting.
 - dev: Refactor autoload handling to `WPGraphQL\Login\Autoloader` class. Note: this does *not* remove the `vendor/` or `vendor-prefixed/` directories from the repository.
 - dev: Remove local registration of `LoginPayload.customer` for WooGraphQL 0.18.2+. Props @kidunot89.
@@ -82,6 +107,8 @@ This minor release fixes a bug where the `determine_current_user` filter was bei
 ## [0.1.3] - 2023-8-20
 
 This release includes a refactored Admin JS package for backwards-compatibility and stability, new features and developer hooks extend and customize the authentication lifecycle, and a handful of bug fixes.
+
+### What's changed
 
 - feat: Add support for setting a custom `scopeSeparator` for Generic OAuth2 providers. H/t @martinowren for bringing this up!
 - feat: Relocate Admin JS to `packages/admin` directory, and refactor for backwards-compatibility.
@@ -102,6 +129,8 @@ This release includes a refactored Admin JS package for backwards-compatibility 
 ## [0.1.2] - 2023-6-05
 
 This minor release implements the new WPGraphQL Coding Standards ruleset for `PHP_CodeSniffer`. While many of the addressed sniffs are cosmetic, numerous smells regarding performance, type safety, sanitization, and 3rd-party interoperability have been fixed as well.
+
+### What's changed
 
 - chore: Implement `axepress/wp-graphql-cs` PHP_Codesniffer ruleset.
 - chore: Update WPGraphQL Plugin Boilerplate to v0.0.9.

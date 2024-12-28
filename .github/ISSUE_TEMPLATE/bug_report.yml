@@ -7,7 +7,7 @@ body:
         Thank you for taking the time to report a possible bug!
 
         Please remember, a bug report is not the place to ask questions. You can
-        use Slack for that, or start a topic in [GitHub
+        use Discord for that, or start a topic in [GitHub
         Discussions](https://github.com/AxeWP/wp-graphql-headless-login/discussions).
   - type: textarea
     attributes:

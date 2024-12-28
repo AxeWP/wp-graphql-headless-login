@@ -3,7 +3,7 @@
  * Registers the Logout mutation.
  *
  * @package WPGraphQL\Logout\Mutation
- * @since @todo
+ * @since 0.4.0
  */
 
 declare( strict_types = 1 );

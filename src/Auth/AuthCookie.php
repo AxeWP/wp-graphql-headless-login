@@ -3,7 +3,7 @@
  * Authentication Cookie.
  *
  * @package WPGraphQL\Login\Auth
- * @since @todo
+ * @since 0.4.0
  */
 
 declare(strict_types=1);

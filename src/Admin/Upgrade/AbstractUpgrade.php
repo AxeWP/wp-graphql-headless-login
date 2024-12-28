@@ -5,7 +5,7 @@
  * Handles the upgrade process for the plugin.
  *
  * @package WPGraphQL\Login\Admin\Upgrade
- * @since @next-version
+ * @since 0.4.0
  */
 
 declare( strict_types = 1 );
