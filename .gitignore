@@ -35,8 +35,8 @@ vendor-prefixed
 # NPM deps
 node_modules
 
-# Built assets
-build
+# Built assets - enable once this is on wpackagist
+# build
 
 # Generated Schema used in some tooling. Versioned Schema is uploaded as a Release artifact to Github.
 schema.graphql

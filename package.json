@@ -1,6 +1,6 @@
 {
 	"name": "wp-graphql-headless-login",
-	"version": "0.3.1",
+	"version": "0.4.0",
 	"description": "A WordPress plugin that provides headless login and authentication for WPGraphQL",
 	"homepage": "https://github.com/AxeWP/wp-graphql-headless-login",
 	"author": "AxePress Development <support@axepress.dev> (https://axepress.dev)",
@@ -67,8 +67,8 @@
 		"@babel/core": "^7.26.0",
 		"@babel/plugin-syntax-jsx": "^7.25.9",
 		"@svgr/webpack": "^8.1.0",
-		"@typescript-eslint/eslint-plugin": "^8.18.1",
-		"@typescript-eslint/parser": "^8.18.1",
+		"@typescript-eslint/eslint-plugin": "^8.18.2",
+		"@typescript-eslint/parser": "^8.18.2",
 		"@wordpress/babel-plugin-import-jsx-pragma": "^5.14.0",
 		"@wordpress/babel-preset-default": "^8.14.0",
 		"@wordpress/env": "^10.14.0",
@@ -97,7 +97,7 @@
 	"overrides": {
 		"react": "18.3.0",
 		"react-dom": "18.3.0",
-		"@typescript-eslint/eslint-plugin": "^8.18.1",
-		"@typescript-eslint/parser": "^8.18.1"
+		"@typescript-eslint/eslint-plugin": "^8.18.2",
+		"@typescript-eslint/parser": "^8.18.2"
 	}
 }

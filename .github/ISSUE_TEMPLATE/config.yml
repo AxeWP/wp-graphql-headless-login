@@ -6,6 +6,6 @@ contact_links:
   - name: Premium Support Request
     url: https://axepress.dev/contact/
     about: For premium support requests, custom development, or to sponsor a feature, please contact us directly.
-  - name: Slack Community
-    url: https://join.slack.com/t/wp-graphql/shared_invite/zt-3vloo60z-PpJV2PFIwEathWDOxCTTLA
-    about: The WPGraphQL Slack is a great place to communicate in real-time. Ask questions, discuss features, get to know other folks using WPGraphQL.
+  - name: Discord Channel
+    url: https://discord.gg/55h7WmYZff
+    about: The WPGraphQL Discord is a great place to communicate in real-time. Ask questions, discuss features, get to know other folks using WPGraphQL.

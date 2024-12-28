@@ -3,7 +3,7 @@
  * Registers the Cookie Settings
  *
  * @package WPGraphQL\Login\Admin\Settings
- * @since @todo
+ * @since 0.4.0
  */
 
 declare( strict_types = 1 );
