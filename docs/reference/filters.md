@@ -80,7 +80,7 @@ apply_filters( 'graphql_login_authenticated_user_data', $user_data, $slug, $inpu
 
 ### `graphql_login_pre_get_user_from_data`
 
-Shortcircuits the user matching logic, allowing you to provide your own logic for matching the user from the provider user data.
+Short-circuits the user matching logic, allowing you to provide your own logic for matching the user from the provider user data.
 If null is returned, the default matching logic will be used.
 
 ```php
@@ -316,7 +316,7 @@ apply_filters( `graphql_login_provider_config_instances', $provider_configs );
 
 #### Parameters
 
-* **`$provider_configs`** _(WPGQL\Login\Auth\ProviderConfig\ProviderConfig[])_ : The list of enabled ProviderConfig instances.
+* **`$provider_configs`** _(WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig[])_ : The list of enabled ProviderConfig instances.
 
 ### `graphql_login_client_options_fields`
 

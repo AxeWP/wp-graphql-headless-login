@@ -1268,7 +1268,7 @@
                 "MIT"
             ],
             "description": "WPGraphQL function and class declaration stubs for static analysis.",
-            "homepage": "https://github.com/axewp/wp-graphql-stubs",
+            "homepage": "https://github.com/AxeWP/wp-graphql-stubs",
             "keywords": [
                 "PHPStan",
                 "graphql",

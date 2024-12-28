@@ -8,7 +8,7 @@ body:
 
         Please remember, a bug report is not the place to ask questions. You can
         use Slack for that, or start a topic in [GitHub
-        Discussions](https://github.com/axewp/wp-graphql-headless-login/discussions).
+        Discussions](https://github.com/AxeWP/wp-graphql-headless-login/discussions).
   - type: textarea
     attributes:
       label: Description
@@ -64,7 +64,7 @@ body:
       label: Please confirm that you have searched existing issues in the repo.
       description: >-
         You can do this by searching
-        https://github.com/axewp/wp-graphql-headless-login/issues and making sure the
+        https://github.com/AxeWP/wp-graphql-headless-login/issues and making sure the
         bug is not related to another plugin.
       options:
         - label: 'Yes'

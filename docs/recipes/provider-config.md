@@ -4,7 +4,7 @@ Headless Login for WPGraphQL allows you to add support for other authentication 
 
 The `ProviderConfig` class also has a child class called `OAuth2Config` that you can extend to handle OAuth2 providers. This class is built to work seamlessly with League's [OAuth2 Client](https://oauth2-client.thephpleague.com/) library, however you can extend it to work with any OAuth2 library, or use the parent `ProviderConfig` class to handle your own custom authentication flow, such as [SAML](https://en.wikipedia.org/wiki/Security_Assertion_Markup_Language), [keycloak](https://www.keycloak.org/), or practically anything else.
 
-> **Note:** Headless Login for WPGraphQL dogfoods its own APIs. For real-world examples of how to use the `ProviderConfig` class, you can check out the included provider configs in the [src/Auth/ProviderConfig](../../src/Auth/ProviderConfig) directory.
+> **Note:** Headless Login for WPGraphQL dog-foods its own APIs. For real-world examples of how to use the `ProviderConfig` class, you can check out the included provider configs in the [src/Auth/ProviderConfig](../../src/Auth/ProviderConfig) directory.
 
 ## Example: Registering a `OAuth2Config` class with League's OAuth2 Client library.
 

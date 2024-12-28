@@ -214,7 +214,7 @@ const callbacks = {
 };
 ```
 
-Now we need to define the `refreshAuthToken` function that we use in the `jwt` callback. This is where we use the `refresToken` mutation from Headless Login for WPGraphQL to get a new JWT token.
+Now we need to define the `refreshAuthToken` function that we use in the `jwt` callback. This is where we use the `refreshToken` mutation from Headless Login for WPGraphQL to get a new JWT token.
 
 ```js
 // pages/api/auth/[...nextauth].js
