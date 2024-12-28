@@ -32,6 +32,7 @@ Composer and NPM scripts have been updated, alongside the `.env.dist` file and o
 - chore: Update NPM dependencies.
 - chore: Update Strauss to v0.19.4.
 - ci!: Update CI scripts and commands, docker configuration, and env variables.
+- ci: Add workflow to lint JS/TS/CSS files.
 - tests!: Update Codeception tests to use `wp-browser` > v3.5.x.
 - ci: Test compatibility with WordPress 6.7.1.
 - tests: Format and lint test files.

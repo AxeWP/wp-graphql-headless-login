@@ -1,0 +1,83 @@
+name: JS/CSS Linting
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
+    paths:
+      - '.github/workflows/package-linter.yml'
+      - '**.js'
+      - 'build/**'
+      - 'packages/**'
+      - '.eslintignore'
+      - '.prettierignore'
+      - '.stylelintrc.json'
+      - 'global.d.ts'
+      - 'package-lock.json'
+      - 'package.json'
+      - 'tsconfig.base.json'
+      - 'tsconfig.json'
+
+# Cancel previous workflow run groups that have not completed.
+concurrency:
+  # Group workflow runs by workflow name, along with the head branch ref of the pull request
+  # or otherwise the branch or tag ref.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    name: Check packages
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP w/ Composer & WP-CLI
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: mbstring, intl, bcmath, exif, gd, mysqli, opcache, zip, pdo_mysql
+          coverage: none
+          tools: composer:v2, wp-cli
+
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: "--no-progress"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Node.js dependencies
+        run: npm ci
+        env:
+          CI: true
+
+      - name: Check Assets build
+        run: |
+          npm run build
+        continue-on-error: true
+
+      - name: Lint JS
+        run: |
+          npm run lint:js
+        continue-on-error: true
+
+      - name: Lint CSS
+        run: |
+          npm run lint:css
+        continue-on-error: true
+
+      - name: Lint TypeScript
+        run: |
+          npm run ts:check
+        continue-on-error: true

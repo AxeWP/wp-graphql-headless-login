@@ -57,10 +57,16 @@ install_wordpress() {
 	if [[ -f "wp-load.php" ]]; then
 		CURRENT_WP_VERSION=$(wp core version --allow-root | cut -d '.' -f 1,2)
 		echo -e "$(status_message "Current WordPress version: $CURRENT_WP_VERSION...")"
+		echo -e "$(status_message "Requested WordPress version: $WP_VERSION...")"
 
 		# Update WordPress if the version is different.
 		if [[ -n "$WP_VERSION" ]] && [[ "$WP_VERSION" != "latest" ]] && [[ "$WP_VERSION" != "$CURRENT_WP_VERSION" ]]; then
 			status_message "Updating WordPress version $WP_VERSION..."
+			wp core download --version="$WP_VERSION" --force --allow-root
+		fi
+		
+		if ! wp core verify-checksums --version="$WP_VERSION" --allow-root; then
+			echo -e "$(error_message "WordPress checksum verification failed. Redownloading WordPress...")"
 			wp core download --version="$WP_VERSION" --force --allow-root
 		fi
 	else
@@ -193,8 +199,6 @@ if [ "$1" == '--reset-site' ]; then
 	echo -e "$(status_message "Resetting test database...")"
 	wp db reset --yes --quiet --allow-root
 fi
-
-echo -e "$(status_message "Switching to the WordPress root directory $WORDPRESS_ROOT_DIR")"
 
 install_wordpress
 configure_wordpress

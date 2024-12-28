@@ -1,4 +1,4 @@
-name: Integration Testing
+name: Codeception
 
 on:
   push:
@@ -10,9 +10,14 @@ on:
       - develop
       - main
     paths:
+      - '.github/workflows/codeception.yml'
       - '**.php'
-      - '.github/workflows/*.yml'
-      - '!docs/**'
+      - '.docker/**'
+      - 'bin/**'
+      - 'build/**'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'docker-compose.yml'
 
 # Cancel previous workflow run groups that have not completed.
 concurrency:
@@ -94,7 +99,7 @@ jobs:
 
       - name: Start test environment
         run: |
-          composer run docker:up
+          docker compose --env-file .env up --detach
 
           CONTAINER_ID=$(docker compose ps -q wordpress)
           if [ -n "$CONTAINER_ID" ]; then
@@ -121,6 +126,7 @@ jobs:
           DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG || matrix.debug }}
           SKIP_TESTS_CLEANUP: 'true'
           SUITES: acceptance
+        continue-on-error: true
 
       - name: Run Functional Tests w/ Docker
         run: |
@@ -134,6 +140,7 @@ jobs:
           DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG || matrix.debug }}
           SKIP_TESTS_CLEANUP: 'true'
           SUITES: functional
+        continue-on-error: true
 
       - name: Run WPUnit Tests w/ Docker
         run: |

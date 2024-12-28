@@ -1,4 +1,4 @@
-name: Code Quality
+name: PHP Static Analysis
 
 on:
   push:
@@ -9,6 +9,14 @@ on:
     branches:
       - develop
       - main
+    paths:
+      - '.github/workflows/phpstan.yml'
+      - '**.php'
+      - 'bin/**'
+      - '.env.dist'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'phpstan.neon.dist'
 
 # Cancel previous workflow run groups that have not completed.
 concurrency:
