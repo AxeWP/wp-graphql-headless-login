@@ -99,7 +99,7 @@ jobs:
 
       - name: Start test environment
         run: |
-          composer run docker:up
+          docker compose --env-file .env up --detach
 
           CONTAINER_ID=$(docker compose ps -q wordpress)
           if [ -n "$CONTAINER_ID" ]; then
