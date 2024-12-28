@@ -15,7 +15,7 @@
 	* [`graphql_login_after_authenticate`](#graphql_login_after_authenticate)
 	* [`graphql_login_get_user_from_data`](#graphql_login_get_user_from_data)
 	* [`graphql_login_validate_client`](#graphql_login_validate_client)
-	* [`graphql_login_after_sucecssful_login`](#graphql_login_after_successful_login)
+	* [`graphql_login_after_successful_login`](#graphql_login_after_successful_login)
 	* [`graphql_login_link_user_identity`](#graphql_login_link_user_identity)
 
 ## Activation / Deactivation

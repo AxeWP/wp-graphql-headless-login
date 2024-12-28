@@ -57,7 +57,7 @@ Until we hit v1.0, we're using a _modified_ version of [SemVer](https://semver.o
 
 Development of Headless Login for WPGraphQL is provided by [AxePress Development](https://axepress.dev). Community contributions are _welcome_ and **encouraged**.
 
-Basic support is provided for free, both in [this repo](https://github.com/axewp/wp-graphql-headnessl-login/issues) and in [WPGraphQL Slack](https://join.slack.com/t/wp-graphql/shared_invite/zt-3vloo60z-PpJV2PFIwEathWDOxCTTLA).
+Basic support is provided for free, both in [this repo](https://github.com/AxeWP/wp-graphql-headnessl-login/issues) and in [WPGraphQL Slack](https://join.slack.com/t/wp-graphql/shared_invite/zt-3vloo60z-PpJV2PFIwEathWDOxCTTLA).
 
 Priority support and custom development are available to [our Sponsors](https://github.com/sponsors/AxeWP).
 
@@ -78,11 +78,11 @@ Supported providers (out of the box):
   * OAuth2 - Generic: Any other OAuth 2.0 provider.
   * SAML authentication and more coming soon!
 - Use a [special Site Token](./docs/reference/mutations.md#login-with-a-site-token-and-user-identity
-) to support WordPress authentication with any  externalaly authenticated user identity (e.g. [Auth.js](https://authjs.dev/)).
+) to support WordPress authentication with any externally-authenticated user identity (e.g. [Auth.js](https://authjs.dev/)).
 - Add your own Authentication Provider by [extending the `ProviderConfig` class](./docs/recipes/provider-config.md).
 - Authenticate with JWT tokens using a [HTTP Authorization header]().
 - [Set CORS headers](./docs/reference/settings.md) to allow or restrict access to the GraphQL endpoint.
-- Generate short-term `authToken`s and long term `refreshToken`s for seamless reauthentication in your headless app.
+- Generate short-term `authToken`s and long term `refreshToken`s for seamless re-authentication in your headless app.
 - [Link a user account](./docs/reference/mutations.md#manually-link-the-wordpress-user-to-a-providers-resource-owner) to an authentication provider's resource owner, to allow users to authenticate with multiple providers.
 - Query the [enabled `loginClient` authorization urls](./docs/reference/queries.md#querying-login-clients), to use in your frontend's login buttons.
 - Extensive WordPress [actions](./docs/actions.md) and [filters](./docs/reference/filters.md) for customization of the plugin's behavior.

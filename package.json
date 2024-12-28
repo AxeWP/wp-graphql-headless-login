@@ -2,7 +2,7 @@
 	"name": "wp-graphql-headless-login",
 	"version": "0.3.1",
 	"description": "A WordPress plugin that provides headless login and authentication for WPGraphQL",
-	"homepage": "https://github.com/axewp/wp-graphql-headless-login",
+	"homepage": "https://github.com/AxeWP/wp-graphql-headless-login",
 	"author": "AxePress Development <support@axepress.dev> (https://axepress.dev)",
 	"license": "GPL-3.0",
 	"email": "support@axepress.dev",
@@ -31,14 +31,14 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/axewp/wp-graphql-headless-login.git"
+		"url": "git+https://github.com/AxeWP/wp-graphql-headless-login.git"
 	},
 	"keywords": [
 		"WordPress",
 		"GraphQL"
 	],
 	"bugs": {
-		"url": "https://github.com/axewp/wp-graphql-headless-login/issues"
+		"url": "https://github.com/AxeWP/wp-graphql-headless-login/issues"
 	},
 	"lint-staged": {
 		"*.php": "composer run check-cs"

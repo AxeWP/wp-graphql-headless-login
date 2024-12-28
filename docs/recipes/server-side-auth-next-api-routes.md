@@ -267,7 +267,7 @@ export default withIronSessionApiRoute( loginHandler, ironOptions );
 
 On your Logout API route (e.g. `/pages/api/logout.js` ), you can clear the session data.
 
-Since we're using `iron-session`, we can just call `req.session.destroy()`. If you are useing a different session management library or your own secure cookie implementation, you'll need to use that library's API to clear the session data.
+Since we're using `iron-session`, we can just call `req.session.destroy()`. If you are using a different session management library or your own secure cookie implementation, you'll need to use that library's API to clear the session data.
 
 ```js
 
@@ -345,7 +345,7 @@ async function refreshAuthToken( refreshToken ) {
 async function userHandler( req, res ) {
   const user = req.session?.user;
 
-  // If the user doesn't have a refrsh token, they're not logged in.
+  // If the user doesn't have a refresh token, they're not logged in.
   if ( ! user?.refreshToken ) {
     req.session.user = {
       ...user,

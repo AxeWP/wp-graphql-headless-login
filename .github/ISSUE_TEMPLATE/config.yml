@@ -1,7 +1,7 @@
 blank_issues_enabled: true
 contact_links:
   - name: General Support Request
-    url: https://github.com/axewp/wp-graphql-headless-login/discussions
+    url: https://github.com/AxeWP/wp-graphql-headless-login/discussions
     about: For general help requests, create a new topic in Github Discussions
   - name: Premium Support Request
     url: https://axepress.dev/contact/
