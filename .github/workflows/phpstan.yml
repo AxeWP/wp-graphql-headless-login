@@ -28,7 +28,7 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    name: Check code with PHPStan
+    name: Check code
 
     services:
       mysql:

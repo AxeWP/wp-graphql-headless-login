@@ -1,4 +1,4 @@
-name: Package Linting
+name: JS/CSS Linting
 
 on:
   push:
@@ -33,7 +33,7 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    name: Check code with JS/CSS Linters
+    name: Check packages
 
     steps:
       - name: Checkout
