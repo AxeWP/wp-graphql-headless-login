@@ -80,4 +80,4 @@ jobs:
       - name: Lint TypeScript
         run: |
           npm run ts:check
-         continue-on-error: true
+        continue-on-error: true
