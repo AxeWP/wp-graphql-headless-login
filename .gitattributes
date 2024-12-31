@@ -17,6 +17,7 @@
 /.prettierignore export-ignore
 /.prettierrc.js export-ignore
 /.stylelintrc.json export-ignore
+/.typos.toml export-ignore
 /babel.config.js export-ignore
 /codeception.dist.yml export-ignore
 /composer.lock export-ignore
