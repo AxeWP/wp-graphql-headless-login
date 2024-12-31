@@ -6,7 +6,8 @@ ignore-hidden = false
 
 [default.extend-identifiers]
 # Typos
-"Github" = "GitHub"
+#"Github" = "GitHub"
 "Wordpress" = "WordPress"
 #"Woocommerce" = "WooCommerce"
+
 "Automattic" = "Automattic"
