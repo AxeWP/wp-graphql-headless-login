@@ -13,7 +13,7 @@ This _minor_ release confirms compatibility with WPGraphQL 2.0 and WordPress 6.7
 
 - chore: Test compatibility with WPGraphQL 2.0.0.
 - chore: Test compatibility with WordPress 6.7.2.
-- chore: Update composer dev-dependencies.
+- chore: Update NPM + Composer dev-dependencies.
 - ci: Cleanup tsconfig.json file.
 
 ## [0.4.0] - 2024-12-28
