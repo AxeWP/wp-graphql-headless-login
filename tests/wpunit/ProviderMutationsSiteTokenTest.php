@@ -139,7 +139,7 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\TestCase\WPGraphQL
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
 		$this->assertArrayHasKey( 'errors', $actual );
-		$this->assertEquals( 'Provider siteToken is not enabled.', $actual['errors'][0]['debugMessage'] );
+		$this->assertEquals( 'Provider siteToken is not enabled.', $actual['errors'][0]['extensions']['debugMessage'] );
 	}
 
 	public function testLoginWithNoProvisioning(): void {

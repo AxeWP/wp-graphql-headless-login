@@ -5,6 +5,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.4.1] - 2025-02-15
+
+This _minor_ release confirms compatibility with WPGraphQL 2.0 and WordPress 6.7.2.
+
+### What's changed
+
+- chore: Test compatibility with WPGraphQL 2.0.0.
+- chore: Test compatibility with WordPress 6.7.2.
+- chore: Update composer dev-dependencies.
+- ci: Cleanup tsconfig.json file.
+
 ## [0.4.0] - 2024-12-28
 
 This _major_ release brings a complete overhaul to the Admin settings screen, along with support for configuring Cookies and a new `logout` mutation for clearing them.
