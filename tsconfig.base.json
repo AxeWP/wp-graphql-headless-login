@@ -11,13 +11,10 @@
 		"checkJs": true,
 		"allowSyntheticDefaultImports": true,
 		"jsx": "preserve",
-		"target": "esnext",
-		"module": "esnext",
-		"lib": [ "dom", "esnext" ],
-		"declaration": true,
-		"declarationMap": true,
-		"composite": true,
-		"emitDeclarationOnly": true,
+		"target": "ES2022",
+		"module": "preserve",
+		"noEmit": true,
+		"lib": [ "ES2022", "DOM", "DOM.Iterable" ],
 		"isolatedModules": true,
 
 		/* Strict Type-Checking Options */

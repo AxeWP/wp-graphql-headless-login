@@ -166,6 +166,8 @@ post_setup() {
 	wp config set WP_DEBUG_LOG true --raw --allow-root
 	wp config set GRAPHQL_DEBUG true --raw --allow-root
 
+	wp core update-db --allow-root
+	
 	# Disable Update Checks
 	echo -e "$(status_message "Disabling update checks...")"
 	wp config set WP_AUTO_UPDATE_CORE false --raw --type=constant --quiet --allow-root

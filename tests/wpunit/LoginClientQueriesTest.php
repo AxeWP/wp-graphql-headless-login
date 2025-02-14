@@ -202,7 +202,7 @@ class LoginClientQueriesTest extends \Tests\WPGraphQL\TestCase\WPGraphQLTestCase
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
 		$this->assertArrayHasKey( 'errors', $actual );
-		$this->assertEquals( 'Provider facebook is not enabled.', $actual['errors'][0]['debugMessage'] );
+		$this->assertEquals( 'Provider facebook is not enabled.', $actual['errors'][0]['extensions']['debugMessage'] );
 
 		// Test with providers
 		$this->tester->set_client_config( 'facebook', $this->client_config );
