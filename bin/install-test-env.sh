@@ -10,6 +10,9 @@ BASEDIR=$(dirname "$0")
 source "${BASEDIR}/_lib.sh"
 
 # Common variables.
+TMPDIR=${TMPDIR-/tmp}
+TMPDIR=$(echo $TMPDIR | sed -e "s/\/$//")
+
 WP_DEBUG=${WP_DEBUG:-true}
 SCRIPT_DEBUG=${SCRIPT_DEBUG:-true}
 WP_VERSION=${WP_VERSION:-"latest"}
@@ -47,6 +50,14 @@ install_db() {
 	fi
 }
 
+download() {
+	if [ $(which curl) ]; then
+		curl -s "$1" >"$2"
+	elif [ $(which wget) ]; then
+		wget -nv -O "$2" "$1"
+	fi
+}
+
 install_wordpress() {
 	# Create the WordPress root directory if it doesn't exist.
 	echo -e "$(status_message "Switching to the WordPress root directory $WORDPRESS_ROOT_DIR")"
@@ -54,25 +65,35 @@ install_wordpress() {
 	cd "$WORDPRESS_ROOT_DIR" || { echo -e "$(error_message "Failed to enter directory: $WORDPRESS_ROOT_DIR")"; exit 1; }
 
 	# Download WordPress
-	if [[ -f "wp-load.php" ]]; then
-		CURRENT_WP_VERSION=$(wp core version --allow-root | cut -d '.' -f 1,2)
-		echo -e "$(status_message "Current WordPress version: $CURRENT_WP_VERSION...")"
-		echo -e "$(status_message "Requested WordPress version: $WP_VERSION...")"
-
-		# Update WordPress if the version is different.
-		if [[ -n "$WP_VERSION" ]] && [[ "$WP_VERSION" != "latest" ]] && [[ "$WP_VERSION" != "$CURRENT_WP_VERSION" ]]; then
-			status_message "Updating WordPress version $WP_VERSION..."
-			wp core download --version="$WP_VERSION" --force --allow-root
-		fi
-		
-		if ! wp core verify-checksums --version="$WP_VERSION" --allow-root; then
-			echo -e "$(error_message "WordPress checksum verification failed. Redownloading WordPress...")"
-			wp core download --version="$WP_VERSION" --force --allow-root
-		fi
+	if [[ $WP_VERSION == 'nightly' || $WP_VERSION == 'trunk' ]]; then
+		mkdir -p $TMPDIR/wordpress-nightly
+		download https://wordpress.org/nightly-builds/wordpress-latest.zip $TMPDIR/wordpress-nightly/wordpress-nightly.zip
+		unzip -q $TMPDIR/wordpress-nightly/wordpress-nightly.zip -d $TMPDIR/wordpress-nightly/
+		mv $TMPDIR/wordpress-nightly/wordpress/* $WORDPRESS_ROOT_DIR
 	else
-		# If WordPress is not present, download it
-		echo -e "$(status_message "WordPress not found. Downloading version $WP_VERSION...")"
-		wp core download --version="$WP_VERSION" --allow-root
+		if [ $WP_VERSION == 'latest' ]; then
+			local ARCHIVE_NAME='latest'
+		elif [[ $WP_VERSION =~ [0-9]+\.[0-9]+ ]]; then
+			# https serves multiple offers, whereas http serves single.
+			download https://api.wordpress.org/core/version-check/1.7/ $TMPDIR/wp-latest.json
+			if [[ $WP_VERSION =~ [0-9]+\.[0-9]+\.[0] ]]; then
+				# version x.x.0 means the first release of the major version, so strip off the .0 and download version x.x
+				LATEST_VERSION=${WP_VERSION%??}
+			else
+				# otherwise, scan the releases and get the most up to date minor version of the major release
+				local VERSION_ESCAPED=$(echo $WP_VERSION | sed 's/\./\\\\./g')
+				LATEST_VERSION=$(grep -o '"version":"'$VERSION_ESCAPED'[^"]*' $TMPDIR/wp-latest.json | sed 's/"version":"//' | head -1)
+			fi
+			if [[ -z "$LATEST_VERSION" ]]; then
+				local ARCHIVE_NAME="wordpress-$WP_VERSION"
+			else
+				local ARCHIVE_NAME="wordpress-$LATEST_VERSION"
+			fi
+		else
+			local ARCHIVE_NAME="wordpress-$WP_VERSION"
+		fi
+		download https://wordpress.org/${ARCHIVE_NAME}.tar.gz $TMPDIR/wordpress.tar.gz
+		tar --strip-components=1 -zxmf $TMPDIR/wordpress.tar.gz -C $WORDPRESS_ROOT_DIR
 	fi
 }
 
