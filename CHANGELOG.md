@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 
 - chore: Update help link for GitHub's list of available scopes. H/t @mommaroodles
+- chore: Update NPM + Composer dev-dependencies.
 
 ## [0.4.1] - 2025-02-15
 
