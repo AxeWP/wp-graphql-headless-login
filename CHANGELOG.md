@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- fix: Correctly load deactivation hook.
 - fix: Make scope help links clickable in the admin settings screen.
 - chore: Update help link for GitHub's list of available scopes. H/t @mommaroodles
 - chore: Update NPM + Composer dev-dependencies.
