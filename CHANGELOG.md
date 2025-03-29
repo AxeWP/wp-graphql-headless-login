@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.4.2] - 2025-3-29
+
+This _minor_ release fixes a bug where the deactivation hook was not being loaded correctly, and updates the help links in the admin settings screen to be clickable.
+
 - fix: Correctly load deactivation hook.
 - fix: Make scope help links clickable in the admin settings screen.
 - chore: Update help link for GitHub's list of available scopes. H/t @mommaroodles
