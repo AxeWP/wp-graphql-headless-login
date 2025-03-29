@@ -116,7 +116,7 @@ class Generic extends OAuth2Config {
 			],
 			'scope'            => [
 				'type'        => [ 'list_of' => 'String' ],
-				'description' => __( 'The fields to request from the Generic Graph API. See https://developers.facebook.com/docs/graph-api/reference/user for a list of available fields.', 'wp-graphql-headless-login' ),
+				'description' => __( 'The different scopes to request from the Generic OAuth2 API.', 'wp-graphql-headless-login' ),
 			],
 			'scopeSeparator'   => [
 				'type'        => 'String',

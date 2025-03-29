@@ -71,7 +71,15 @@ class Facebook extends OAuth2Config {
 			'scope'           => [
 				'type'        => 'array',
 				'description' => __( 'User Fields', 'wp-graphql-headless-login' ),
-				'help'        => __( 'The fields to request from the Facebook Graph API. See https://developers.facebook.com/docs/graph-api/reference/user for a list of available fields.', 'wp-graphql-headless-login' ),
+				'help'        => sprintf(
+					/* translators: %s: URL to Facebook Graph API documentation */
+					__( 'The fields to request from the Facebook Graph API. See %s for a list of available fields.', 'wp-graphql-headless-login' ),
+					sprintf(
+						'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+						'https://developers.facebook.com/docs/graph-api/reference/user',
+						__( 'Facebook Graph API documentation', 'wp-graphql-headless-login' )
+					),
+				),
 				'order'       => 12,
 				'advanced'    => true,
 				'items'       => [

@@ -48,7 +48,11 @@ class LinkedIn extends OAuth2Config {
 				'help'        => sprintf(
 					// translators: %s is the URL to the LinkedIn API documentation.
 					__( 'The scope to request from the provider. See %s for a list of available scopes.', 'wp-graphql-headless-login' ),
-					'https://learn.microsoft.com/en-us/linkedin/shared/authentication/authentication?context=linkedin%2Fcontext#permission-types',
+					sprintf(
+						'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+						'https://learn.microsoft.com/en-us/linkedin/shared/authentication/authentication?context=linkedin%2Fcontext#permission-types',
+						__( 'LinkedIn scopes documentation', 'wp-graphql-headless-login' )
+					),
 				),
 				'order'       => 10,
 				'advanced'    => true,

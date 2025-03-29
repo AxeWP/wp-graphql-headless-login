@@ -57,7 +57,15 @@ class Instagram extends OAuth2Config {
 			'scope' => [
 				'type'        => 'array',
 				'description' => __( 'Scope', 'wp-graphql-headless-login' ),
-				'help'        => __( 'The Scope to request from the Instagram OAuth2 API. See https://developers.facebook.com/docs/instagram-basic-display-api/overview#permissions for a list of available scopes.', 'wp-graphql-headless-login' ),
+				'help'        => sprintf(
+					/* translators: %s: URL to Instagram scopes documentation. */
+					__( 'The scope to request from the provider. See %s for a list of available scopes.', 'wp-graphql-headless-login' ),
+					sprintf(
+						'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+						'https://developers.facebook.com/docs/instagram-basic-display-api/overview#permissions',
+						__( 'Instagram scopes documentation', 'wp-graphql-headless-login' )
+					)
+				),
 				'order'       => 12,
 				'advanced'    => true,
 				'items'       => [
