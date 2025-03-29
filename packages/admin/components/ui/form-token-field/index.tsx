@@ -30,9 +30,8 @@ export function FormTokenFieldControl( {
 						'help components-form-token-field__help',
 						styles.help
 					) }
-				>
-					{ help }
-				</p>
+					dangerouslySetInnerHTML={ { __html: help } }
+				></p>
 			) }
 		</fieldset>
 	);

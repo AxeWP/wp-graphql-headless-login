@@ -77,7 +77,15 @@ class Google extends OAuth2Config {
 			'scope'        => [
 				'type'        => 'array',
 				'description' => __( 'Scope', 'wp-graphql-headless-login' ),
-				'help'        => __( 'The scope to request from the Google OAuth2 API. See https://developers.google.com/identity/protocols/oauth2/scope for a list of available scopes.', 'wp-graphql-headless-login' ),
+				'help'        => sprintf(
+					/* translators: %s: URL to Google scopes documentation. */
+					__( 'The scope to request from the provider. See %s for a list of available scopes.', 'wp-graphql-headless-login' ),
+					sprintf(
+						'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+						'https://developers.google.com/identity/protocols/oauth2/scopes',
+						__( 'Google scopes documentation', 'wp-graphql-headless-login' )
+					)
+				),
 				'order'       => 12,
 				'advanced'    => true,
 				'items'       => [
