@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- chore: Update help link for GitHub's list of available scopes. H/t @mommaroodles
+
 ## [0.4.1] - 2025-02-15
 
 This _minor_ release confirms compatibility with WPGraphQL 2.0 and WordPress 6.7.2.

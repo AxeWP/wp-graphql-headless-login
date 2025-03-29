@@ -45,7 +45,7 @@ class GitHub extends OAuth2Config {
 			'scope' => [
 				'type'        => 'array',
 				'description' => __( 'Scope', 'wp-graphql-headless-login' ),
-				'help'        => __( 'The scope to request from the provider. See https://docs.github.com/en/developers/apps/building-headless-login-apps/scope-for-headless-login-apps for a list of available scope.', 'wp-graphql-headless-login' ),
+				'help'        => __( 'The scope to request from the provider. See https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps#available-scopes for a list of available scope.', 'wp-graphql-headless-login' ),
 				'order'       => 10,
 				'advanced'    => true,
 				'items'       => [
@@ -62,7 +62,7 @@ class GitHub extends OAuth2Config {
 		return [
 			'scope' => [
 				'type'        => [ 'list_of' => 'String' ],
-				'description' => __( 'The scope to request from the provider. See https://docs.github.com/en/developers/apps/building-headless-login-apps/scope-for-headless-login-apps for a list of available scope.', 'wp-graphql-headless-login' ),
+				'description' => __( 'The scope to request from the provider. See https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps#available-scopes for a list of available scope.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}
