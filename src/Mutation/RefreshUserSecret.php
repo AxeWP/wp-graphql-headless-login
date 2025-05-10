@@ -35,7 +35,7 @@ class RefreshUserSecret extends MutationType {
 		return [
 			'userId' => [
 				'type'        => [ 'non_null' => 'ID' ],
-				'description' => __( 'The current WordPress user ID. Accepts either a global or database ID.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The current WordPress user ID. Accepts either a global or database ID.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}
@@ -47,23 +47,23 @@ class RefreshUserSecret extends MutationType {
 		return [
 			'success'           => [
 				'type'        => 'Boolean',
-				'description' => __( 'Whether the User secret was successfully revoked.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'Whether the User secret was successfully revoked.', 'wp-graphql-headless-login' ),
 			],
 			'revokedUserSecret' => [
 				'type'        => 'String',
-				'description' => __( 'The revoked user secret.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The revoked user secret.', 'wp-graphql-headless-login' ),
 			],
 			'userSecret'        => [
 				'type'        => 'String',
-				'description' => __( 'The new user secret.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The new user secret.', 'wp-graphql-headless-login' ),
 			],
 			'authToken'         => [
 				'type'        => 'String',
-				'description' => __( 'JWT Token that can be used in future requests for Authentication.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'JWT Token that can be used in future requests for Authentication.', 'wp-graphql-headless-login' ),
 			],
 			'refreshToken'      => [
 				'type'        => 'String',
-				'description' => __( 'JWT Token that can be used in future requests for Authentication.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'JWT Token that can be used in future requests for Authentication.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}

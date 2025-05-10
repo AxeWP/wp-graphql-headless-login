@@ -57,20 +57,20 @@ class Facebook extends OAuth2Config {
 		return [
 			'graphAPIVersion' => [
 				'type'        => 'string',
-				'description' => __( 'Graph API Version', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'Graph API Version', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The version of the Facebook Graph API to use. E.g. `v15.0`.', 'wp-graphql-headless-login' ),
 				'pattern'     => 'v(\d+\.){1,}\d+',
 				'order'       => 10,
 			],
 			'enableBetaTier'  => [
 				'type'        => 'boolean',
-				'description' => __( 'Enable Beta Tier', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'Enable Beta Tier', 'wp-graphql-headless-login' ),
 				'advanced'    => true,
 				'order'       => 11,
 			],
 			'scope'           => [
 				'type'        => 'array',
-				'description' => __( 'User Fields', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'User Fields', 'wp-graphql-headless-login' ),
 				'help'        => sprintf(
 					/* translators: %s: URL to Facebook Graph API documentation */
 					__( 'The fields to request from the Facebook Graph API. See %s for a list of available fields.', 'wp-graphql-headless-login' ),
@@ -96,19 +96,19 @@ class Facebook extends OAuth2Config {
 		return [
 			'graphApiVersion' => [
 				'type'        => 'String',
-				'description' => __( 'The Facebook Graph API version.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The Facebook Graph API version.', 'wp-graphql-headless-login' ),
 				'resolve'     => static function ( array $settings ): ?string {
 					return $settings['graphAPIVersion'] ?? null;
 				},
 			],
 			'enableBetaTier'  => [
 				'type'        => 'Boolean',
-				'description' => __( 'Enable the Facebook Beta Tier.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'Enable the Facebook Beta Tier.', 'wp-graphql-headless-login' ),
 				'resolve'     => static fn ( $value ): bool => $value['enableBetaTier'] ?? false,
 			],
 			'scope'           => [
 				'type'        => [ 'list_of' => 'String' ],
-				'description' => __( 'The fields to request from the Facebook Graph API. See https://developers.facebook.com/docs/graph-api/reference/user for a list of available fields.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The fields to request from the Facebook Graph API. See https://developers.facebook.com/docs/graph-api/reference/user for a list of available fields.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}

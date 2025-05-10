@@ -44,7 +44,7 @@ class LinkedIn extends OAuth2Config {
 		return [
 			'scope' => [
 				'type'        => 'array',
-				'description' => __( 'Scope', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'Scope', 'wp-graphql-headless-login' ),
 				'help'        => sprintf(
 					// translators: %s is the URL to the LinkedIn API documentation.
 					__( 'The scope to request from the provider. See %s for a list of available scopes.', 'wp-graphql-headless-login' ),
@@ -70,7 +70,7 @@ class LinkedIn extends OAuth2Config {
 		return [
 			'scope' => [
 				'type'        => [ 'list_of' => 'String' ],
-				'description' => sprintf(
+				'description' => static fn () => sprintf(
 					// translators: %s is the URL to the LinkedIn API documentation.
 					__( 'The scope to request from the provider. See %s for a list of available scopes.', 'wp-graphql-headless-login' ),
 					'https://learn.microsoft.com/en-us/linkedin/shared/authentication/authentication?context=linkedin%2Fcontext#permission-types',

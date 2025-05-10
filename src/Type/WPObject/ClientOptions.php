@@ -12,9 +12,17 @@ namespace WPGraphQL\Login\Type\WPObject;
 use WPGraphQL\Login\Auth\ProviderRegistry;
 use WPGraphQL\Login\Type\WPInterface\ClientOptions as ClientOptionsInterface;
 use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\Type;
+use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Helper\Compat;
 
 /**
  * Class - ClientOptions
+ *
+ * phpcs:disable SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation -- PHPStan formatting.
+ *
+ * @phpstan-import-type ObjectTypeConfig from \WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\ObjectType
+ * @extends \WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\Type<ObjectTypeConfig>
+ *
+ * phpcs:enable SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation
  */
 class ClientOptions extends Type {
 	/**
@@ -27,7 +35,7 @@ class ClientOptions extends Type {
 			$name   = static::type_name( $slug );
 			$fields = $provider::get_client_options_fields();
 			$config = [
-				'description'     => sprintf(
+				'description'     => static fn () => sprintf(
 					self::get_description(),
 					$slug
 				),
@@ -35,6 +43,9 @@ class ClientOptions extends Type {
 				'interfaces'      => [ ClientOptionsInterface::get_type_name() ],
 				'eagerlyLoadType' => true,
 			];
+
+			// @todo Remove this when WPGraphQL 2.3.0 is minimum.
+			$config = Compat::resolve_graphql_config( $config );
 
 			register_graphql_object_type( $name, $config );
 		}

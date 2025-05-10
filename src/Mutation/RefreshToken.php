@@ -33,7 +33,7 @@ class RefreshToken extends MutationType {
 		return [
 			'refreshToken' => [
 				'type'        => [ 'non_null' => 'String' ],
-				'description' => __( 'A valid, previously issued JWT refresh token. If valid, a new JWT authentication token will be provided. If invalid, expired, revoked or otherwise invalid, the `authToken` will return null, and the `success` field will return `false`.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'A valid, previously issued JWT refresh token. If valid, a new JWT authentication token will be provided. If invalid, expired, revoked or otherwise invalid, the `authToken` will return null, and the `success` field will return `false`.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}
@@ -45,15 +45,15 @@ class RefreshToken extends MutationType {
 		return [
 			'authToken'           => [
 				'type'        => 'String',
-				'description' => __( 'JWT Token that can be used in future requests for Authentication.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'JWT Token that can be used in future requests for Authentication.', 'wp-graphql-headless-login' ),
 			],
 			'authTokenExpiration' => [
 				'type'        => 'String',
-				'description' => __( 'The authentication token expiration timestamp.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The authentication token expiration timestamp.', 'wp-graphql-headless-login' ),
 			],
 			'success'             => [
 				'type'        => 'Boolean',
-				'description' => __( 'Whether the auth token was successfully refreshed.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'Whether the auth token was successfully refreshed.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}

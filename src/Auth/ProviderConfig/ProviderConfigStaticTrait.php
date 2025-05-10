@@ -16,6 +16,7 @@ use WPGraphQL\Login\Utils\Utils;
  * Trait - ProviderConfigStaticTrait
  *
  * @phpstan-import-type Setting from \WPGraphQL\Login\Admin\Settings\AbstractSettings
+ * @phpstan-import-type FieldConfig from \AxeWP\GraphQL\Interfaces\TypeWithFields
  */
 trait ProviderConfigStaticTrait {
 	/**
@@ -29,7 +30,7 @@ trait ProviderConfigStaticTrait {
 	/**
 	 * Gets the WPGraphQL fields config for the provider settings.
 	 *
-	 * @return array<string,array<string,mixed>>
+	 * @return array<string,FieldConfig>
 	 */
 	public static function get_client_options_fields(): array {
 		$fields = array_merge(
@@ -40,8 +41,8 @@ trait ProviderConfigStaticTrait {
 		/**
 		 * Filters the GraphQL fields for the provider's Client Options.
 		 *
-		 * @param array $fields An array of WPGraphQL field $configs.
-		 * @param string $slug The provider slug.
+		 * @param array<string,FieldConfig> $fields An array of WPGraphQL field $configs.
+		 * @param string                    $slug  The provider slug.
 		 */
 		$fields = apply_filters( 'graphql_login_client_options_fields', $fields, static::get_slug() );
 
@@ -75,7 +76,7 @@ trait ProviderConfigStaticTrait {
 	/**
 	 * Gets the WPGraphQL fields config for the provider settings.
 	 *
-	 * @return array<string,array<string,mixed>>
+	 * @return array<string,FieldConfig>
 	 */
 	public static function get_login_options_fields(): array {
 		$fields = array_merge(
@@ -121,23 +122,13 @@ trait ProviderConfigStaticTrait {
 	/**
 	 * Gets the default WPGraphQL fields config for the provider client options.
 	 *
-	 * @return array<string,array{
-	 *   type: string|array<string,string | array<string,string>>,
-	 *   description: string,
-	 *   args?: array<string,array{
-	 *     type: string|array<string,string | array<string,string>>,
-	 *     description: string,
-	 *     defaultValue?: mixed
-	 *   }>,
-	 *   resolve?: callable,
-	 *   deprecationReason?: string,
-	 * }>
+	 * @return array<string,FieldConfig>
 	 */
 	public static function default_client_options_fields(): array {
 		return [
 			'todo' => [
 				'type'        => 'Boolean',
-				'description' => __( 'This field exists solely to generate the  ClientOptions interface, in lieu of the shared custom fields that will be added in a future release', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'This field exists solely to generate the  ClientOptions interface, in lieu of the shared custom fields that will be added in a future release', 'wp-graphql-headless-login' ),
 			],
 		];
 	}
@@ -145,23 +136,13 @@ trait ProviderConfigStaticTrait {
 	/**
 	 * Gets the default WPGraphQL fields config for the provider client options.
 	 *
-	 * @return array<string,array{
-	 *   type: string|array<string,string | array<string,string>>,
-	 *   description: string,
-	 *   args?: array<string,array{
-	 *     type: string|array<string,string | array<string,string>>,
-	 *     description: string,
-	 *     defaultValue?: mixed
-	 *   }>,
-	 *   resolve?: callable,
-	 *   deprecationReason?: string,
-	 * }>
+	 * @return array<string,FieldConfig>
 	 */
 	public static function default_login_options_fields(): array {
 		return [
 			'useAuthenticationCookie' => [
 				'type'        => 'Boolean',
-				'description' => __( 'Whether to set a WordPress authentication cookie on successful login.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'Whether to set a WordPress authentication cookie on successful login.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}

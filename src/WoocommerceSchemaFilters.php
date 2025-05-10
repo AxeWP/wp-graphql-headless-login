@@ -10,6 +10,7 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login;
 
 use WPGraphQL\Login\Type\WPObject\AuthenticationData;
+use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Helper\Compat;
 use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\Registrable;
 
 /**
@@ -50,25 +51,28 @@ class WoocommerceSchemaFilters implements Registrable {
 		register_graphql_field(
 			AuthenticationData::get_type_name(),
 			'wooSessionToken',
-			[
-				'type'        => 'String',
-				'description' => __( 'A JWT token used to identify the current WooCommerce session', 'wp-graphql-headless-login' ),
-				'resolve'     => static function ( $user ) {
-					if ( ! function_exists( 'WC' ) ) {
-						return null;
-					}
+			// @todo remove Compat wrapper when WPGraphQL v2.3.0+ is required.
+			Compat::resolve_graphql_config(
+				[
+					'type'        => 'String',
+					'description' => static fn () => __( 'A JWT token used to identify the current WooCommerce session', 'wp-graphql-headless-login' ),
+					'resolve'     => static function ( $user ) {
+						if ( ! function_exists( 'WC' ) ) {
+							return null;
+						}
 
-					if ( get_current_user_id() !== $user->databaseId && 'guest' !== $user->id ) {
-						return null;
-					}
+						if ( get_current_user_id() !== $user->databaseId && 'guest' !== $user->id ) {
+							return null;
+						}
 
-					/** @var \WPGraphQL\WooCommerce\Utils\QL_Session_Handler $session */
-					$session = \WC()->session;
+						/** @var \WPGraphQL\WooCommerce\Utils\QL_Session_Handler $session */
+						$session = \WC()->session;
 
-					/** \WooCommerce::$session */
-					return apply_filters( 'graphql_customer_session_token', $session->build_token() ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-				},
-			]
+						/** \WooCommerce::$session */
+						return apply_filters( 'graphql_customer_session_token', $session->build_token() ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+					},
+				]
+			)
 		);
 
 		/**
@@ -81,19 +85,22 @@ class WoocommerceSchemaFilters implements Registrable {
 			register_graphql_field(
 				'LoginPayload',
 				'customer',
-				[
-					'type'        => 'Customer',
-					'description' => __( 'The customer object for the logged in user', 'wp-graphql-headless-login' ),
-					'resolve'     => static function ( $payload ) {
-						$user_id = isset( $payload['user']->ID ) ? $payload['user']->ID : null;
+				// @todo remove Compat wrapper when WPGraphQL v2.3.0+ is required.
+				Compat::resolve_graphql_config(
+					[
+						'type'        => 'Customer',
+						'description' => static fn () => __( 'The customer object for the logged in user', 'wp-graphql-headless-login' ),
+						'resolve'     => static function ( $payload ) {
+							$user_id = isset( $payload['user']->ID ) ? $payload['user']->ID : null;
 
-						if ( ! $user_id ) {
-							return null;
-						}
+							if ( ! $user_id ) {
+								return null;
+							}
 
-						return new \WPGraphQL\WooCommerce\Model\Customer( $user_id );
-					},
-				]
+							return new \WPGraphQL\WooCommerce\Model\Customer( $user_id );
+						},
+					]
+				)
 			);
 		}
 
@@ -105,22 +112,25 @@ class WoocommerceSchemaFilters implements Registrable {
 		register_graphql_field(
 			'LoginPayload',
 			'wooSessionToken',
-			[
-				'type'              => 'String',
-				'description'       => __( 'A JWT token used to identify the current WooCommerce session', 'wp-graphql-headless-login' ),
-				'deprecationReason' => __( 'Use `sessionToken` instead (available in WPGraphQL for WooCommerce v0.18.2+)', 'wp-graphql-headless-login' ),
-				'resolve'           => static function () {
-					if ( ! function_exists( 'WC' ) ) {
-						return null;
-					}
+			// @todo remove Compat wrapper when WPGraphQL v2.3.0+ is required.
+			Compat::resolve_graphql_config(
+				[
+					'type'              => 'String',
+					'description'       => __( 'A JWT token used to identify the current WooCommerce session', 'wp-graphql-headless-login' ),
+					'deprecationReason' => static fn () => __( 'Use `sessionToken` instead (available in WPGraphQL for WooCommerce v0.18.2+)', 'wp-graphql-headless-login' ),
+					'resolve'           => static function () {
+						if ( ! function_exists( 'WC' ) ) {
+							return null;
+						}
 
-					/** @var \WPGraphQL\WooCommerce\Utils\QL_Session_Handler $session */
-					$session = \WC()->session;
+						/** @var \WPGraphQL\WooCommerce\Utils\QL_Session_Handler $session */
+						$session = \WC()->session;
 
-					/** \WooCommerce::$session */
-					return apply_filters( 'graphql_customer_session_token', $session->build_token() ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-				},
-			],
+						/** \WooCommerce::$session */
+						return apply_filters( 'graphql_customer_session_token', $session->build_token() ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+					},
+				],
+			)
 		);
 	}
 }

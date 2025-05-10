@@ -37,11 +37,11 @@ class LinkedIdentity extends ObjectType {
 		return [
 			'provider' => [
 				'type'        => ProviderEnum::get_type_name(),
-				'description' => __( 'The login provider which provided the identity.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The login provider which provided the identity.', 'wp-graphql-headless-login' ),
 			],
 			'id'       => [
 				'type'        => 'ID',
-				'description' => __( 'The internal user identifier from the login provider.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The internal user identifier from the login provider.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}

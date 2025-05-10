@@ -36,11 +36,11 @@ class PasswordProviderResponseInput extends InputType {
 		return [
 			'username' => [
 				'type'        => [ 'non_null' => 'String' ],
-				'description' => __( 'The WordPress username to authenticate ass', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The WordPress username to authenticate ass', 'wp-graphql-headless-login' ),
 			],
 			'password' => [
 				'type'        => [ 'non_null' => 'String' ],
-				'description' => __( 'The password for the WordPress user.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The password for the WordPress user.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}

@@ -44,7 +44,7 @@ class ProviderEnum extends EnumType {
 
 			$values[ $name ] = [
 				'value'       => $provider::get_slug(),
-				'description' => sprintf(
+				'description' => static fn () => sprintf(
 					// translators: Headless Login provider name.
 					__( 'The %s provider.', 'wp-graphql-headless-login' ),
 					$provider::get_name()
@@ -55,7 +55,7 @@ class ProviderEnum extends EnumType {
 		if ( empty( $values ) ) {
 			$values['NONE'] = [
 				'value'       => 'none',
-				'description' => __( 'No Login Providers are currently enabled.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'No Login Providers are currently enabled.', 'wp-graphql-headless-login' ),
 			];
 		}
 

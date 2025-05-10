@@ -10,6 +10,7 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login\Type\WPObject;
 
 use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\ObjectType;
+use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Helper\Compat;
 use WPGraphQL\Model\User;
 
 /**
@@ -33,20 +34,23 @@ class AuthenticationData extends ObjectType {
 			register_graphql_field(
 				$type,
 				'auth',
-				[
-					'type'        => self::get_type_name(),
-					'description' => __( 'Headless Login authentication data.', 'wp-graphql-headless-login' ),
-					'resolve'     => static function ( $source ) {
-						if ( ! $source instanceof User && isset( $source->ID ) ) {
-							$user = get_user_by( 'ID', $source->ID );
+				// @todo remove Compat wrapper when WPGraphQL v2.3.0+ is required.
+				Compat::resolve_graphql_config(
+					[
+						'type'        => self::get_type_name(),
+						'description' => static fn () => __( 'Headless Login authentication data.', 'wp-graphql-headless-login' ),
+						'resolve'     => static function ( $source ) {
+							if ( ! $source instanceof User && isset( $source->ID ) ) {
+								$user = get_user_by( 'ID', $source->ID );
 
-							if ( $user instanceof \WP_User ) {
-								return new User( $user );
+								if ( $user instanceof \WP_User ) {
+									return new User( $user );
+								}
 							}
-						}
-						return $source;
-					},
-				]
+							return $source;
+						},
+					]
+				)
 			);
 		}
 	}
@@ -72,31 +76,31 @@ class AuthenticationData extends ObjectType {
 		return [
 			'authToken'              => [
 				'type'        => 'String',
-				'description' => __( 'A new authentication token to use in future requests.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'A new authentication token to use in future requests.', 'wp-graphql-headless-login' ),
 			],
 			'authTokenExpiration'    => [
 				'type'        => 'String',
-				'description' => __( 'The authentication token expiration timestamp.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The authentication token expiration timestamp.', 'wp-graphql-headless-login' ),
 			],
 			'isUserSecretRevoked'    => [
 				'type'        => 'Boolean',
-				'description' => __( 'Whether the user secret has been revoked.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'Whether the user secret has been revoked.', 'wp-graphql-headless-login' ),
 			],
 			'linkedIdentities'       => [
 				'type'        => [ 'list_of' => LinkedIdentity::get_type_name() ],
-				'description' => __( 'A list of linked identities from the Headless Login provider.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'A list of linked identities from the Headless Login provider.', 'wp-graphql-headless-login' ),
 			],
 			'userSecret'             => [
 				'type'        => 'String',
-				'description' => __( 'The user secret.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The user secret.', 'wp-graphql-headless-login' ),
 			],
 			'refreshToken'           => [
 				'type'        => 'String',
-				'description' => __( 'A new refresh token to use in future requests.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'A new refresh token to use in future requests.', 'wp-graphql-headless-login' ),
 			],
 			'refreshTokenExpiration' => [
 				'type'        => 'String',
-				'description' => __( 'The refresh token expiration timestamp.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The refresh token expiration timestamp.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}

@@ -30,32 +30,28 @@ class RevokeUserSecret extends MutationType {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * @return array{userId: array{type: array{non_null: string}, description: string}}
 	 */
 	public static function get_input_fields(): array {
 		return [
 			'userId' => [
 				'type'        => [ 'non_null' => 'ID' ],
-				'description' => __( 'The WordPress user ID. Accepts either a database or global ID.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The WordPress user ID. Accepts either a database or global ID.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * @return array{revokedUserSecret: array{type: string, description: string}, success: array{type: string, description: string}}
 	 */
 	public static function get_output_fields(): array {
 		return [
 			'revokedUserSecret' => [
 				'type'        => 'String',
-				'description' => __( 'The revoked user secret.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The revoked user secret.', 'wp-graphql-headless-login' ),
 			],
 			'success'           => [
 				'type'        => 'Boolean',
-				'description' => __( 'Whether the User secret was successfully revoked.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'Whether the User secret was successfully revoked.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}
