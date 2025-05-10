@@ -31,6 +31,13 @@ class RefreshUserSecret extends MutationType {
 	/**
 	 * {@inheritDoc}
 	 */
+	public static function get_description(): string {
+		return __( 'Refreshes the user secret and generates a new JWT authentication token.', 'wp-graphql-headless-login' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public static function get_input_fields(): array {
 		return [
 			'userId' => [

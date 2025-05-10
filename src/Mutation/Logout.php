@@ -43,6 +43,13 @@ class Logout extends MutationType {
 	/**
 	 * {@inheritDoc}
 	 */
+	public static function get_description(): string {
+		return __( 'Logs the user out of the site.', 'wp-graphql-headless-login' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public static function get_input_fields(): array {
 		// @todo add option to log out all sessions.
 		return [];

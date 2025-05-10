@@ -29,6 +29,13 @@ class RefreshToken extends MutationType {
 	/**
 	 * {@inheritDoc}
 	 */
+	public static function get_description(): string {
+		return __( 'Refreshes the JWT authentication token using a valid refresh token.', 'wp-graphql-headless-login' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public static function get_input_fields(): array {
 		return [
 			'refreshToken' => [
