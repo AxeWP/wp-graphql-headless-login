@@ -210,7 +210,20 @@ class Request {
 
 			// If the current host matches the allowed host, return the origin.
 			if ( $current_host === $allowed_host ) {
-				return $origin;
+
+				/**
+				 * If the allowed origin has a port, we need to check if the current request has the same port.
+				 *
+				 * @var string $current_origin
+				 */
+				$current_port = wp_parse_url( $current_origin, PHP_URL_PORT );
+				$allowed_port = wp_parse_url( $origin, PHP_URL_PORT );
+
+				if ( ! empty( $allowed_port ) && $current_port !== $allowed_port ) {
+					continue;
+				}
+
+				return $current_origin;
 			}
 		}
 

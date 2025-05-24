@@ -211,6 +211,60 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		unset( $_SERVER['HTTP_ORIGIN'] );
 	}
 
+	/**
+	 * Test authenticate_origin_on_request with different ports and subdomains.
+	 *
+	 * @return void
+	 */
+	public function testAuthenticateOriginOnRequestWithDifferentPortsAndSubdomains(): void {
+		// Test with different ports on the same domain.
+		update_option(
+			AccessControlSettings::get_slug(),
+			array_merge(
+				$this->default_options['accessControl'],
+				[
+					'shouldBlockUnauthorizedDomains' => true,
+					'additionalAuthorizedDomains'    => [
+						'http://localhost:3000',
+					],
+				]
+			)
+		);
+		$this->tester->reset_utils_properties();
+
+		$_SERVER['HTTP_ORIGIN'] = 'http://example.com:8080';
+
+		$this->expectException( \GraphQL\Error\UserError::class );
+		$this->expectExceptionMessage( 'Unauthorized request origin.' );
+
+		Request::authenticate_origin_on_request();
+
+		// Test with different subdomains.
+		update_option(
+			AccessControlSettings::get_slug(),
+			array_merge(
+				$this->default_options['accessControl'],
+				[
+					'shouldBlockUnauthorizedDomains' => true,
+					'additionalAuthorizedDomains'    => [
+						'http://sub1.example.com',
+					],
+				]
+			)
+		);
+		$this->tester->reset_utils_properties();
+
+		$_SERVER['HTTP_ORIGIN'] = 'http://sub2.example.com';
+
+		$this->expectException( \GraphQL\Error\UserError::class );
+		$this->expectExceptionMessage( 'Unauthorized request origin.' );
+
+		Request::authenticate_origin_on_request();
+
+		// Cleanup.
+		unset( $_SERVER['HTTP_ORIGIN'] );
+	}
+
 	public function testResponseHeadersToSend(): void {
 		$default_client_config = [
 			'name'          => 'Site Token',
