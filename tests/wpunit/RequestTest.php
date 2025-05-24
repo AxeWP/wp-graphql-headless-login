@@ -186,8 +186,13 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 
 		Request::authenticate_origin_on_request();
 
-		// Test with a subdomain will pass.
+		// Test with a subdomain will fail.
 		$_SERVER['HTTP_ORIGIN'] = 'https://subdomain.example.com';
+
+		$this->expectException( \GraphQL\Error\UserError::class );
+		$this->expectExceptionMessage( 'Unauthorized request origin.' );
+
+		Request::authenticate_origin_on_request();
 
 		// This will fail with additionalAuthorizedDomains set to false.
 		update_option(
@@ -204,6 +209,8 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 
 		$this->expectException( \GraphQL\Error\UserError::class );
 		$this->expectExceptionMessage( 'Unauthorized request origin.' );
+
+		$_SERVER['HTTP_ORIGIN'] = 'http://example.com';
 
 		Request::authenticate_origin_on_request();
 
@@ -222,7 +229,7 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 				[
 					'shouldBlockUnauthorizedDomains' => true,
 					'additionalAuthorizedDomains'    => [
-						'http://localhost:3000',
+						'http://example.com:3000',
 					],
 				]
 			)
@@ -230,16 +237,19 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		$this->tester->reset_utils_properties();
 
 		// Test it passes when matching.
-		$_SERVER['HTTP_ORIGIN'] = 'http://localhost:3000';
+		$_SERVER['HTTP_ORIGIN'] = 'http://example.com:3000';
 		Request::authenticate_origin_on_request();
 
 		// Test it fails when not matching ports.
-		$_SERVER['HTTP_ORIGIN'] = 'http://localhost:8080';
+		$_SERVER['HTTP_ORIGIN'] = 'http://example.com:8080';
 
 		$this->expectException( \GraphQL\Error\UserError::class );
 		$this->expectExceptionMessage( 'Unauthorized request origin.' );
 
 		Request::authenticate_origin_on_request();
+
+		// Cleanup.
+		unset( $_SERVER['HTTP_ORIGIN'] );
 	}
 
 	/**
