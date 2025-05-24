@@ -45,7 +45,6 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	public function tearDown(): void {
 		delete_option( AccessControlSettings::get_slug() );
 		delete_option( CookieSettings::get_slug() );
-		unset( $_SERVER['HTTP_ORIGIN'] );
 		$this->tester->reset_utils_properties();
 
 		parent::tearDown();
@@ -207,6 +206,8 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		$this->expectExceptionMessage( 'Unauthorized request origin.' );
 
 		Request::authenticate_origin_on_request();
+
+		unset( $_SERVER['HTTP_ORIGIN'] );
 	}
 
 	/**
