@@ -45,6 +45,7 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	public function tearDown(): void {
 		delete_option( AccessControlSettings::get_slug() );
 		delete_option( CookieSettings::get_slug() );
+		unset( $_SERVER['HTTP_ORIGIN'] );
 		$this->tester->reset_utils_properties();
 
 		parent::tearDown();
@@ -206,17 +207,12 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		$this->expectExceptionMessage( 'Unauthorized request origin.' );
 
 		Request::authenticate_origin_on_request();
-
-		// cleanup
-		unset( $_SERVER['HTTP_ORIGIN'] );
 	}
 
 	/**
-	 * Test authenticate_origin_on_request with different ports and subdomains.
-	 *
-	 * @return void
+	 * Test authenticate_origin_on_request with different ports.
 	 */
-	public function testAuthenticateOriginOnRequestWithDifferentPortsAndSubdomains(): void {
+	public function testAuthenticateOriginOnRequestWithDifferentPorts(): void {
 		// Test with different ports on the same domain.
 		update_option(
 			AccessControlSettings::get_slug(),
@@ -232,13 +228,24 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		);
 		$this->tester->reset_utils_properties();
 
-		$_SERVER['HTTP_ORIGIN'] = 'http://example.com:8080';
+		// Test it passes when matching.
+		$_SERVER['HTTP_ORIGIN'] = 'http://localhost:3000';
+
+		Request::authenticate_origin_on_request();
+
+		// Test it fails when not matching.
+		$_SERVER['HTTP_ORIGIN'] = 'http://localhost:8080';
 
 		$this->expectException( \GraphQL\Error\UserError::class );
 		$this->expectExceptionMessage( 'Unauthorized request origin.' );
 
 		Request::authenticate_origin_on_request();
+	}
 
+	/**
+	 * Test authenticate_origin_on_request with different subdomains.
+	 */
+	public function testAuthenticateOriginOnRequestWithDifferentSubdomains(): void {
 		// Test with different subdomains.
 		update_option(
 			AccessControlSettings::get_slug(),
@@ -254,6 +261,11 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		);
 		$this->tester->reset_utils_properties();
 
+		// Test it passes when matching.
+		$_SERVER['HTTP_ORIGIN'] = 'http://sub1.example.com';
+		Request::authenticate_origin_on_request();
+
+		// Test it fails when not matching.
 		$_SERVER['HTTP_ORIGIN'] = 'http://sub2.example.com';
 
 		$this->expectException( \GraphQL\Error\UserError::class );
