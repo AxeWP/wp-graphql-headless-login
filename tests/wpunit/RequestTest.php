@@ -235,22 +235,11 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 
 		// Test it fails when not matching ports.
 		$_SERVER['HTTP_ORIGIN'] = 'http://localhost:8080';
-		
-		// Verify that get_http_origin() returns the expected value.
-		$actual_origin = get_http_origin();
-		
-		if ( 'http://localhost:8080' === $actual_origin ) {
-			// Only test the exception if the origin is properly set.
-			$this->expectException( \GraphQL\Error\UserError::class );
-			$this->expectExceptionMessage( 'Unauthorized request origin.' );
-			Request::authenticate_origin_on_request();
-		} else {
-			// Skip this assertion in environments where HTTP_ORIGIN isn't respected.
-			$this->markTestSkipped( 'get_http_origin() does not respect $_SERVER[\'HTTP_ORIGIN\'] in this environment. Actual: ' . ( $actual_origin ?: 'null' ) );
-		}
 
-		// Cleanup.
-		unset( $_SERVER['HTTP_ORIGIN'] );
+		$this->expectException( \GraphQL\Error\UserError::class );
+		$this->expectExceptionMessage( 'Unauthorized request origin.' );
+
+		Request::authenticate_origin_on_request();
 	}
 
 	/**

@@ -26,9 +26,9 @@ abstract class OAuth2Config extends ProviderConfig {
 	/**
 	 * The client options.
 	 *
-	 * @var array<string,mixed>
+	 * @var ?array<string,mixed>
 	 */
-	protected array $client_options;
+	protected ?array $client_options;
 
 	/**
 	 * The provider class.
