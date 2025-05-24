@@ -200,8 +200,6 @@ class Request {
 			return null;
 		}
 
-		codecept_debug( $origins );
-
 		foreach ( $origins as $origin ) {
 			$allowed_host = wp_parse_url( $origin, PHP_URL_HOST );
 
@@ -220,11 +218,6 @@ class Request {
 				 */
 				$current_port = wp_parse_url( $current_origin, PHP_URL_PORT );
 				$allowed_port = wp_parse_url( $origin, PHP_URL_PORT );
-
-				codecept_debug( 'Current Origin: ' . $current_origin );
-				codecept_debug( 'Allowed Origin: ' . $origin );
-				codecept_debug( 'Current Port: ' . $current_port );
-				codecept_debug( 'Allowed Port: ' . $allowed_port );
 
 				if ( ! empty( $allowed_port ) && $current_port !== $allowed_port ) {
 					continue;
