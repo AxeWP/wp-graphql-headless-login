@@ -240,7 +240,13 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		$this->expectException( \GraphQL\Error\UserError::class );
 		$this->expectExceptionMessage( 'Unauthorized request origin.' );
 
-		Request::authenticate_origin_on_request();
+		try {
+			Request::authenticate_origin_on_request();
+		} catch ( \GraphQL\Error\UserError $e ) {
+			// Cleanup.
+			codecept_debug( $e );
+			throw $e;
+		}
 	}
 
 	/**
