@@ -16,7 +16,6 @@ class AccessFunctionsTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	 * {@inheritDoc}
 	 */
 	public function setUp(): void {
-		codecept_debug( $GLOBALS );
 		if ( ! isset( $GLOBALS['wp_filter'] ) ) {
 			$GLOBALS['wp_filter'] = [];
 		}

@@ -186,8 +186,13 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 
 		Request::authenticate_origin_on_request();
 
-		// Test with a subdomain will pass.
+		// Test with a subdomain will fail.
 		$_SERVER['HTTP_ORIGIN'] = 'https://subdomain.example.com';
+
+		$this->expectException( \GraphQL\Error\UserError::class );
+		$this->expectExceptionMessage( 'Unauthorized request origin.' );
+
+		Request::authenticate_origin_on_request();
 
 		// This will fail with additionalAuthorizedDomains set to false.
 		update_option(
@@ -205,9 +210,80 @@ class RequestTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		$this->expectException( \GraphQL\Error\UserError::class );
 		$this->expectExceptionMessage( 'Unauthorized request origin.' );
 
+		$_SERVER['HTTP_ORIGIN'] = 'http://example.com';
+
 		Request::authenticate_origin_on_request();
 
-		// cleanup
+		unset( $_SERVER['HTTP_ORIGIN'] );
+	}
+
+	/**
+	 * Test authenticate_origin_on_request with different ports.
+	 */
+	public function testAuthenticateOriginOnRequestWithDifferentPorts(): void {
+		// Test with different ports on the same domain.
+		update_option(
+			AccessControlSettings::get_slug(),
+			array_merge(
+				$this->default_options['accessControl'],
+				[
+					'shouldBlockUnauthorizedDomains' => true,
+					'additionalAuthorizedDomains'    => [
+						'http://example.com:3000',
+					],
+				]
+			)
+		);
+		$this->tester->reset_utils_properties();
+
+		// Test it passes when matching.
+		$_SERVER['HTTP_ORIGIN'] = 'http://example.com:3000';
+		Request::authenticate_origin_on_request();
+
+		// Test it fails when not matching ports.
+		$_SERVER['HTTP_ORIGIN'] = 'http://example.com:8080';
+
+		$this->expectException( \GraphQL\Error\UserError::class );
+		$this->expectExceptionMessage( 'Unauthorized request origin.' );
+
+		Request::authenticate_origin_on_request();
+
+		// Cleanup.
+		unset( $_SERVER['HTTP_ORIGIN'] );
+	}
+
+	/**
+	 * Test authenticate_origin_on_request with different subdomains.
+	 */
+	public function testAuthenticateOriginOnRequestWithDifferentSubdomains(): void {
+		// Test with different subdomains.
+		update_option(
+			AccessControlSettings::get_slug(),
+			array_merge(
+				$this->default_options['accessControl'],
+				[
+					'shouldBlockUnauthorizedDomains' => true,
+					'additionalAuthorizedDomains'    => [
+						'http://sub1.example.com',
+					],
+				]
+			)
+		);
+		$this->tester->reset_utils_properties();
+
+		// Test it passes when matching.
+		$_SERVER['HTTP_ORIGIN'] = 'http://sub1.example.com';
+		Request::authenticate_origin_on_request();
+
+		// Test it fails when not matching.
+		$_SERVER['HTTP_ORIGIN'] = 'http://sub2.example.com';
+
+		$this->expectException( \GraphQL\Error\UserError::class );
+		$this->expectExceptionMessage( 'Unauthorized request origin.' );
+
+		Request::authenticate_origin_on_request();
+
+		// Cleanup.
 		unset( $_SERVER['HTTP_ORIGIN'] );
 	}
 

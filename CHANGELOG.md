@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- fix: Compare ports when validating allowed origins. h/t @ahuseyn
+- chore: update Composer dev-dependencies.
+
 ## [0.4.2] - 2025-3-29
 
 This _minor_ release fixes a bug where the deactivation hook was not being loaded correctly, and updates the help links in the admin settings screen to be clickable.

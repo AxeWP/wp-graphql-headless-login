@@ -191,9 +191,9 @@ class Request {
 		}
 
 		// Unslash the origin.
-		$current_host = ! empty( $current_origin ) ? wp_unslash( $current_origin ) : null;
+		$current_origin = ! empty( $current_origin ) ? wp_unslash( $current_origin ) : null;
 		// Get the host name.
-		$current_host = ! empty( $current_host ) ? wp_parse_url( $current_host, PHP_URL_HOST ) : null;
+		$current_host = ! empty( $current_origin ) ? wp_parse_url( $current_origin, PHP_URL_HOST ) : null;
 
 		// If the request origin is not set, return null.
 		if ( empty( $current_host ) || ! is_string( $current_host ) ) {
@@ -210,7 +210,20 @@ class Request {
 
 			// If the current host matches the allowed host, return the origin.
 			if ( $current_host === $allowed_host ) {
-				return $origin;
+
+				/**
+				 * If the allowed origin has a port, we need to check if the current request has the same port.
+				 *
+				 * @var string $current_origin
+				 */
+				$current_port = wp_parse_url( $current_origin, PHP_URL_PORT );
+				$allowed_port = wp_parse_url( $origin, PHP_URL_PORT );
+
+				if ( ! empty( $allowed_port ) && $current_port !== $allowed_port ) {
+					continue;
+				}
+
+				return $current_origin;
 			}
 		}
 
