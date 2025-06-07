@@ -67,7 +67,7 @@ class GitHubProviderConfig extends \WPGraphQL\Login\Auth\ProviderConfig\OAuth2\O
     return [
       'scope' => [
         'type'        => 'array',
-        'description' => static fn () => __( 'The scopes to request from the provider.', 'my-plugin' ),
+        'description' => __( 'The scopes to request from the provider.', 'my-plugin' ),
         'help'        => __( 'See https://some-link for a list of available scopes.', 'my-plugin' ),
         'order'       => 10,
         'advanced'    => true,
