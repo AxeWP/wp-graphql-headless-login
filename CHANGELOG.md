@@ -5,12 +5,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-- dev: Add support for lazy-loading GraphQL descriptions and deprecation messages.
+## [0.4.3] - 2025-06-07
+
+This _minor_ release fixes a bug when validating allowed origins from different ports on the same domain. It also adds support for WPGraphQL 2.3's new lazy-loading features, resulting in significant performance improvements.
+
 - fix: Compare ports when validating allowed origins. h/t @ahuseyn
-- chore: Update Composer dev-dependencies.
+- dev: Add support for lazy-loading GraphQL descriptions and deprecation messages.
+- chore: Update NPM + Composer dependencies.
 - chore: Test compatibility with WordPress 6.8 + WPGraphQL 2.3
 
-## [0.4.2] - 2025-3-29
+## [0.4.2] - 2025-03-29
 
 This _minor_ release fixes a bug where the deactivation hook was not being loaded correctly, and updates the help links in the admin settings screen to be clickable.
 
