@@ -41,7 +41,7 @@ class GoogleProviderPromptTypeEnum extends EnumType {
 			],
 			'CONSENT'        => [
 				'value'       => 'consent',
-				'description' => static fn () => __( 'TThe authorization server prompts the user for consent before returning information to the client.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The authorization server prompts the user for consent before returning information to the client.', 'wp-graphql-headless-login' ),
 			],
 			'SELECT_ACCOUNT' => [
 				'value'       => 'select_account',
