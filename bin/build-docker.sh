@@ -14,9 +14,9 @@ print_usage_instructions() {
 	echo "Example use:"
 	echo "  npm run docker:build"
 	echo ""
-	echo "  WP_VERSION=6.7 PHP_VERSION=8.2 npm run docker:build -- - c"
+	echo "  WP_VERSION=6.8 PHP_VERSION=8.2 npm run docker:build -- - c"
 	echo ""
-	echo "  WP_VERSION=6.7 PHP_VERSION=8.2 bin/build-docker.sh -- c"
+	echo "  WP_VERSION=6.8 PHP_VERSION=8.2 bin/build-docker.sh -- c"
 	exit 1
 }
 
@@ -50,7 +50,7 @@ done
 
 
 TAG=${TAG:-latest}
-WP_VERSION=${WP_VERSION:-6.7}
+WP_VERSION=${WP_VERSION:-6.8}
 PHP_VERSION=${PHP_VERSION:-8.2}
 
 BUILD_NO_CACHE=${BUILD_NO_CACHE:-}

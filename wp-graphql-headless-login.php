@@ -14,7 +14,7 @@
  * Requires PHP: 7.4
  * Requires Plugins: wp-graphql
  * WPGraphQL requires at least: 1.14.0
- * WPGraphQL tested up to: 2.1.1
+ * WPGraphQL tested up to: 2.3.0
  * License: GPL-3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  *
