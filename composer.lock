@@ -4,32 +4,33 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "567e66d248579bfdcf8d3584ebb25c7c",
+    "content-hash": "888267a2a2ea5dd773787c355db2a191",
     "packages": [
         {
             "name": "axepress/wp-graphql-plugin-boilerplate",
-            "version": "0.1.0",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AxeWP/wp-graphql-plugin-boilerplate.git",
-                "reference": "49096512cd599068edbbcff8e46684e207789001"
+                "reference": "09495b61346453baabdf4c71a38ada3cfc91c3a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AxeWP/wp-graphql-plugin-boilerplate/zipball/49096512cd599068edbbcff8e46684e207789001",
-                "reference": "49096512cd599068edbbcff8e46684e207789001",
+                "url": "https://api.github.com/repos/AxeWP/wp-graphql-plugin-boilerplate/zipball/09495b61346453baabdf4c71a38ada3cfc91c3a7",
+                "reference": "09495b61346453baabdf4c71a38ada3cfc91c3a7",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.4"
             },
             "require-dev": {
-                "axepress/wp-graphql-cs": "^2.0.0-beta",
-                "axepress/wp-graphql-stubs": "^1.12.2",
+                "axepress/wp-graphql-cs": "^2.0.0",
+                "axepress/wp-graphql-stubs": "^2.3.0",
                 "phpcompatibility/php-compatibility": "dev-develop as 9.9.9",
                 "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "^1.2",
-                "szepeviktor/phpstan-wordpress": "^1.0",
+                "phpstan/phpstan": "^2.0",
+                "phpstan/phpstan-deprecation-rules": "^2.0.1",
+                "szepeviktor/phpstan-wordpress": "^2.0",
                 "wp-cli/wp-cli-bundle": "^2.8.1"
             },
             "type": "library",
@@ -55,7 +56,7 @@
             "description": "Boilerplate for creating WPGraphQL extensions",
             "support": {
                 "issues": "https://github.com/AxeWP/wp-graphql-plugin-boilerplate/issues",
-                "source": "https://github.com/AxeWP/wp-graphql-plugin-boilerplate/tree/0.1.0"
+                "source": "https://github.com/AxeWP/wp-graphql-plugin-boilerplate/tree/0.1.1"
             },
             "funding": [
                 {
@@ -63,7 +64,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-04-06T17:12:24+00:00"
+            "time": "2025-06-07T02:03:50+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -1238,25 +1239,25 @@
         },
         {
             "name": "axepress/wp-graphql-stubs",
-            "version": "v1.31.1",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AxeWP/wp-graphql-stubs.git",
-                "reference": "55296773a7537e0dbc008010959718c7c796e170"
+                "reference": "c210ac91cada7869ba60a371c16d6424e6dd73f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AxeWP/wp-graphql-stubs/zipball/55296773a7537e0dbc008010959718c7c796e170",
-                "reference": "55296773a7537e0dbc008010959718c7c796e170",
+                "url": "https://api.github.com/repos/AxeWP/wp-graphql-stubs/zipball/c210ac91cada7869ba60a371c16d6424e6dd73f1",
+                "reference": "c210ac91cada7869ba60a371c16d6424e6dd73f1",
                 "shasum": ""
             },
             "require": {
-                "php-stubs/wordpress-stubs": "^5.4 || ^6.0"
+                "php-stubs/wordpress-stubs": ">=5.4"
             },
             "require-dev": {
-                "php": ">=7.3",
+                "php": ">=7.4",
                 "php-stubs/generator": "^0.8.0",
-                "phpstan/phpstan": "^1.8"
+                "phpstan/phpstan": "^2.1.5"
             },
             "suggest": {
                 "szepeviktor/phpstan-wordpress": "WordPress extensions for PHPStan"
@@ -1278,7 +1279,7 @@
             ],
             "support": {
                 "issues": "https://github.com/AxeWP/wp-graphql-stubs/issues",
-                "source": "https://github.com/AxeWP/wp-graphql-stubs/tree/v1.31.1"
+                "source": "https://github.com/AxeWP/wp-graphql-stubs/tree/v2.3.0"
             },
             "funding": [
                 {
@@ -1286,7 +1287,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-29T12:41:14+00:00"
+            "time": "2025-04-29T12:54:31+00:00"
         },
         {
             "name": "behat/gherkin",
@@ -2071,16 +2072,16 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.5.6",
+            "version": "1.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "f65c239c970e7f072f067ab78646e9f0b2935175"
+                "reference": "d665d22c417056996c59019579f1967dfe5c1e82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/f65c239c970e7f072f067ab78646e9f0b2935175",
-                "reference": "f65c239c970e7f072f067ab78646e9f0b2935175",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/d665d22c417056996c59019579f1967dfe5c1e82",
+                "reference": "d665d22c417056996c59019579f1967dfe5c1e82",
                 "shasum": ""
             },
             "require": {
@@ -2127,7 +2128,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.5.6"
+                "source": "https://github.com/composer/ca-bundle/tree/1.5.7"
             },
             "funding": [
                 {
@@ -2143,7 +2144,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-03-06T14:30:56+00:00"
+            "time": "2025-05-26T15:08:54+00:00"
         },
         {
             "name": "composer/class-map-generator",
@@ -3585,16 +3586,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.4.0",
+            "version": "v5.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "447a020a1f875a434d62f2a401f53b82a396e494"
+                "reference": "ae59794362fe85e051a58ad36b289443f57be7a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/447a020a1f875a434d62f2a401f53b82a396e494",
-                "reference": "447a020a1f875a434d62f2a401f53b82a396e494",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/ae59794362fe85e051a58ad36b289443f57be7a9",
+                "reference": "ae59794362fe85e051a58ad36b289443f57be7a9",
                 "shasum": ""
             },
             "require": {
@@ -3637,9 +3638,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.4.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.5.0"
             },
-            "time": "2024-12-30T11:07:19+00:00"
+            "time": "2025-05-31T08:24:38+00:00"
         },
         {
             "name": "phar-io/manifest",

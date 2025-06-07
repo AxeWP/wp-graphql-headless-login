@@ -67,7 +67,7 @@ class GitHubProviderConfig extends \WPGraphQL\Login\Auth\ProviderConfig\OAuth2\O
     return [
       'scope' => [
         'type'        => 'array',
-        'description' => __( 'The scopes to request from the provider.', 'my-plugin' ),
+        'description' => static fn () => __( 'The scopes to request from the provider.', 'my-plugin' ),
         'help'        => __( 'See https://some-link for a list of available scopes.', 'my-plugin' ),
         'order'       => 10,
         'advanced'    => true,
@@ -89,7 +89,7 @@ class GitHubProviderConfig extends \WPGraphQL\Login\Auth\ProviderConfig\OAuth2\O
     return [
       'scope' => [
         'type'        => [ 'list_of' => 'String' ],
-        'description' => __( 'The scope to request from the provider.', 'wp-graphql-headless-login' ),
+        'description' => static fn () => __( 'The scope to request from the provider.', 'wp-graphql-headless-login' ),
       ],
     ];
   }

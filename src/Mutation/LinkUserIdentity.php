@@ -32,23 +32,30 @@ class LinkUserIdentity extends MutationType {
 	/**
 	 * {@inheritDoc}
 	 */
+	public static function get_description(): string {
+		return __( 'Links an identity to a WordPress user.', 'wp-graphql-headless-login' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public static function get_input_fields(): array {
 		return [
 			'oauthResponse' => [
 				'type'        => OAuthProviderResponseInput::get_type_name(),
-				'description' => __( 'The parsed response from an OAuth2 Authentication Provider.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The parsed response from an OAuth2 Authentication Provider.', 'wp-graphql-headless-login' ),
 			],
 			'identity'      => [
 				'type'        => 'String',
-				'description' => __( 'The user identity to use when logging in. Required by the SiteToken provider.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The user identity to use when logging in. Required by the SiteToken provider.', 'wp-graphql-headless-login' ),
 			],
 			'provider'      => [
 				'type'        => [ 'non_null' => ProviderEnum::get_type_name() ],
-				'description' => __( 'The Headless Login provider to use when logging in.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The Headless Login provider to use when logging in.', 'wp-graphql-headless-login' ),
 			],
 			'userId'        => [
 				'type'        => [ 'non_null' => 'ID' ],
-				'description' => __( 'The user ID to link the identity to. Accepts either a global or database ID.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The user ID to link the identity to. Accepts either a global or database ID.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}
@@ -60,11 +67,11 @@ class LinkUserIdentity extends MutationType {
 		return [
 			'success' => [
 				'type'        => 'Boolean',
-				'description' => __( 'Whether the identity was successfully linked to the user.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'Whether the identity was successfully linked to the user.', 'wp-graphql-headless-login' ),
 			],
 			'user'    => [
 				'type'        => 'User',
-				'description' => __( 'The user that was logged in.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The user that was logged in.', 'wp-graphql-headless-login' ),
 				'resolve'     => static function ( $payload ): ?User {
 					return empty( $payload['user'] ) ? null : new User( $payload['user'] );
 				},

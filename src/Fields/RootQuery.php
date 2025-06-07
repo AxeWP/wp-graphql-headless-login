@@ -43,7 +43,7 @@ class RootQuery extends FieldsType {
 		return [
 			'loginClients' => [
 				'type'        => [ 'list_of' => Client::get_type_name() ],
-				'description' => __( 'The registered Headless Login clients.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The registered Headless Login clients.', 'wp-graphql-headless-login' ),
 				'resolve'     => static function (): ?array {
 					$providers = ProviderRegistry::get_instance()->get_providers();
 
@@ -59,11 +59,11 @@ class RootQuery extends FieldsType {
 			],
 			'loginClient'  => [
 				'type'        => Client::get_type_name(),
-				'description' => __( 'The Headless Login client for the provided client ID.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The Headless Login client for the provided client ID.', 'wp-graphql-headless-login' ),
 				'args'        => [
 					'provider' => [
 						'type'        => [ 'non_null' => ProviderEnum::get_type_name() ],
-						'description' => __( 'The Provider slug.', 'wp-graphql-headless-login' ),
+						'description' => static fn () => __( 'The Provider slug.', 'wp-graphql-headless-login' ),
 					],
 				],
 				'resolve'     => static function ( $source, array $args ): ClientModel {

@@ -59,13 +59,13 @@ class Google extends OAuth2Config {
 		return [
 			'hostedDomain' => [
 				'type'        => 'string',
-				'description' => __( 'Hosted Domain', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'Hosted Domain', 'wp-graphql-headless-login' ),
 				'help'        => __( 'Streamline the login process for accounts owned by a Google Cloud organization. To optimize for Google Cloud organization accounts generally instead of just one organization domain, set a value of an asterisk `*`.', 'wp-graphql-headless-login' ),
 				'order'       => 10,
 			],
 			'promptType'   => [
 				'type'        => 'string',
-				'description' => __( 'Prompt Type', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'Prompt Type', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The type of prompt displayed to the user when authenticating.', 'wp-graphql-headless-login' ),
 				'enum'        => [
 					'none',
@@ -76,7 +76,7 @@ class Google extends OAuth2Config {
 			],
 			'scope'        => [
 				'type'        => 'array',
-				'description' => __( 'Scope', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'Scope', 'wp-graphql-headless-login' ),
 				'help'        => sprintf(
 					/* translators: %s: URL to Google scopes documentation. */
 					__( 'The scope to request from the provider. See %s for a list of available scopes.', 'wp-graphql-headless-login' ),
@@ -102,15 +102,15 @@ class Google extends OAuth2Config {
 		return [
 			'hostedDomain' => [
 				'type'        => 'String',
-				'description' => __( 'The Google Cloud organization the OAuth prompt is optimized for. If `*` the prompt is optimized for general use with any Google Cloud organization.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The Google Cloud organization the OAuth prompt is optimized for. If `*` the prompt is optimized for general use with any Google Cloud organization.', 'wp-graphql-headless-login' ),
 			],
 			'promptType'   => [
 				'type'        => GoogleProviderPromptTypeEnum::get_type_name(),
-				'description' => __( 'The prompt used for authentication and consent. Defaults to `consent`.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The prompt used for authentication and consent. Defaults to `consent`.', 'wp-graphql-headless-login' ),
 			],
 			'scope'        => [
 				'type'        => [ 'list_of' => 'String' ],
-				'description' => __( 'The scope to request from the Google Graph API. See https://developers.facebook.com/docs/graph-api/reference/user for a list of available scopes.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The scope to request from the Google Graph API. See https://developers.facebook.com/docs/graph-api/reference/user for a list of available scopes.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}

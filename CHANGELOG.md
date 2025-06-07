@@ -5,8 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- dev: Add support for lazy-loading GraphQL descriptions and deprecation messages.
 - fix: Compare ports when validating allowed origins. h/t @ahuseyn
-- chore: update Composer dev-dependencies.
+- chore: Update Composer dev-dependencies.
+- chore: Test compatibility with WordPress 6.8 + WPGraphQL 2.3
 
 ## [0.4.2] - 2025-3-29
 

@@ -33,23 +33,30 @@ class Login extends MutationType {
 	/**
 	 * {@inheritDoc}
 	 */
+	public static function get_description(): string {
+		return __( 'Logs a user in using the specified provider.', 'wp-graphql-headless-login' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public static function get_input_fields(): array {
 		return [
 			'credentials'   => [
 				'type'        => PasswordProviderResponseInput::get_type_name(),
-				'description' => __( 'The WordPress user credentials. Required by the Password provider.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The WordPress user credentials. Required by the Password provider.', 'wp-graphql-headless-login' ),
 			],
 			'oauthResponse' => [
 				'type'        => OAuthProviderResponseInput::get_type_name(),
-				'description' => __( 'The parsed response from an OAuth2 Authentication Provider.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The parsed response from an OAuth2 Authentication Provider.', 'wp-graphql-headless-login' ),
 			],
 			'identity'      => [
 				'type'        => 'String',
-				'description' => __( 'The user identity to use when logging in. Required by the SiteToken provider.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The user identity to use when logging in. Required by the SiteToken provider.', 'wp-graphql-headless-login' ),
 			],
 			'provider'      => [
 				'type'        => [ 'non_null' => ProviderEnum::get_type_name() ],
-				'description' => __( 'The Headless Login provider to use when logging in.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The Headless Login provider to use when logging in.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}
@@ -61,23 +68,23 @@ class Login extends MutationType {
 		return [
 			'authToken'              => [
 				'type'        => 'String',
-				'description' => __( 'JWT Token that can be used in future requests for Authentication.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'JWT Token that can be used in future requests for Authentication.', 'wp-graphql-headless-login' ),
 			],
 			'authTokenExpiration'    => [
 				'type'        => 'String',
-				'description' => __( 'The authentication token expiration timestamp.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The authentication token expiration timestamp.', 'wp-graphql-headless-login' ),
 			],
 			'refreshToken'           => [
 				'type'        => 'String',
-				'description' => __( 'Refresh Token that can be used to refresh the JWT Token.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'Refresh Token that can be used to refresh the JWT Token.', 'wp-graphql-headless-login' ),
 			],
 			'refreshTokenExpiration' => [
 				'type'        => 'String',
-				'description' => __( 'The refresh token expiration timestamp.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The refresh token expiration timestamp.', 'wp-graphql-headless-login' ),
 			],
 			'user'                   => [
 				'type'        => 'User',
-				'description' => __( 'The user that was logged in.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The user that was logged in.', 'wp-graphql-headless-login' ),
 				'resolve'     => static function ( $payload ): ?User {
 					return empty( $payload['user'] ) ? null : new User( $payload['user'] );
 				},

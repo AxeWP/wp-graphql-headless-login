@@ -43,6 +43,13 @@ class Logout extends MutationType {
 	/**
 	 * {@inheritDoc}
 	 */
+	public static function get_description(): string {
+		return __( 'Logs the user out of the site.', 'wp-graphql-headless-login' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public static function get_input_fields(): array {
 		// @todo add option to log out all sessions.
 		return [];
@@ -55,7 +62,7 @@ class Logout extends MutationType {
 		return [
 			'success' => [
 				'type'        => 'Boolean',
-				'description' => __( 'Whether the user was successfully logged out. Will return null if the user is not logged in.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'Whether the user was successfully logged out. Will return null if the user is not logged in.', 'wp-graphql-headless-login' ),
 				'resolve'     => static function ( $payload ) {
 					return $payload['success'] ?? null;
 				},

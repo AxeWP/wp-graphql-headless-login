@@ -164,14 +164,14 @@ class SiteToken extends ProviderConfig {
 			'headerKey' => [
 				'type'        => 'string',
 				'label'       => __( 'Header Key', 'wp-graphql-headless-login' ),
-				'description' => __( 'The custom header that will be used to store the site access token.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The custom header that will be used to store the site access token.', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The custom header that will be used to store the site access token. The header should only be set on a SERVER-SIDE request. E.g. `X-My-Site-Token`', 'wp-graphql-headless-login' ),
 				'order'       => 1,
 			],
 			'secretKey' => [
 				'type'        => 'string',
 				'label'       => __( 'Site Secret', 'wp-graphql-headless-login' ),
-				'description' => __( 'The secret used to authenticate the site token.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The secret used to authenticate the site token.', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The secret used to authenticate the site token. This should be the same as the value you set on your custom Header key.  The secret should only be set on a SERVER-SIDE request.', 'wp-graphql-headless-login' ),
 				'order'       => 2,
 			],
@@ -185,7 +185,7 @@ class SiteToken extends ProviderConfig {
 		return [
 			'metaKey' => [
 				'type'        => 'string',
-				'description' => __( 'The User meta key to check for the identity', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The User meta key to check for the identity', 'wp-graphql-headless-login' ),
 				'default'     => 'email',
 				'help'        => __( 'The WP_User key to check for the identity. Accepts `id`, `slug`, `email`, `login`, or a custom meta field.', 'wp-graphql-headless-login' ),
 				'order'       => 1,

@@ -39,35 +39,35 @@ class Client extends ObjectType {
 		return [
 			'authorizationUrl' => [
 				'type'        => 'String',
-				'description' => __( 'The authorization URL.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The authorization URL.', 'wp-graphql-headless-login' ),
 			],
 			'clientId'         => [
 				'type'        => 'ID',
-				'description' => __( 'The client ID.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The client ID.', 'wp-graphql-headless-login' ),
 			],
 			'clientOptions'    => [
 				'type'        => ClientOptions::get_type_name(),
-				'description' => __( 'The client options.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The client options.', 'wp-graphql-headless-login' ),
 			],
 			'isEnabled'        => [
 				'type'        => 'Boolean',
-				'description' => __( 'Whether the client is enabled.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'Whether the client is enabled.', 'wp-graphql-headless-login' ),
 			],
 			'loginOptions'     => [
 				'type'        => LoginOptions::get_type_name(),
-				'description' => __( 'The login options.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The login options.', 'wp-graphql-headless-login' ),
 			],
 			'name'             => [
 				'type'        => 'String',
-				'description' => __( 'The client name.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The client name.', 'wp-graphql-headless-login' ),
 			],
 			'order'            => [
 				'type'        => 'Int',
-				'description' => __( 'A field used for ordering clients.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'A field used for ordering clients.', 'wp-graphql-headless-login' ),
 			],
 			'provider'         => [
 				'type'        => ProviderEnum::get_type_name(),
-				'description' => __( 'The provider type.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The provider type.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}

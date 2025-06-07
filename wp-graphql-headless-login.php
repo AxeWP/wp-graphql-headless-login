@@ -14,7 +14,7 @@
  * Requires PHP: 7.4
  * Requires Plugins: wp-graphql
  * WPGraphQL requires at least: 1.14.0
- * WPGraphQL tested up to: 2.1.1
+ * WPGraphQL tested up to: 2.3.0
  * License: GPL-3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  *
@@ -182,7 +182,7 @@ function init(): void {
 					<?php
 					printf(
 						/* translators: dependency not ready error message */
-						esc_html__( '%1$s is not compatible with Headless Login for WPGraphqL. Please deactivate it.', 'wp-graphql-headless-login' ),
+						esc_html__( '%1$s is not compatible with Headless Login for WPGraphQL. Please deactivate it.', 'wp-graphql-headless-login' ),
 						esc_attr( $conflict ),
 					);
 					?>

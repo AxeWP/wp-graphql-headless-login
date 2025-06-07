@@ -36,11 +36,11 @@ class OAuthProviderResponseInput extends InputType {
 		return [
 			'code'  => [
 				'type'        => [ 'non_null' => 'String' ],
-				'description' => __( 'The authorization code returned from the OAuth provider.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The authorization code returned from the OAuth provider.', 'wp-graphql-headless-login' ),
 			],
 			'state' => [
 				'type'        => 'String',
-				'description' => __( 'The state returned from the OAuth provider.', 'wp-graphql-headless-login' ),
+				'description' => static fn () => __( 'The state returned from the OAuth provider.', 'wp-graphql-headless-login' ),
 			],
 		];
 	}
