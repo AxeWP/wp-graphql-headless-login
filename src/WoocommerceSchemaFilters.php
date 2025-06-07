@@ -116,7 +116,7 @@ class WoocommerceSchemaFilters implements Registrable {
 			Compat::resolve_graphql_config(
 				[
 					'type'              => 'String',
-					'description'       => static fn() => __( 'A JWT token used to identify the current WooCommerce session', 'wp-graphql-headless-login' ),
+					'description'       => static fn () => __( 'A JWT token used to identify the current WooCommerce session', 'wp-graphql-headless-login' ),
 					'deprecationReason' => static fn () => __( 'Use `sessionToken` instead (available in WPGraphQL for WooCommerce v0.18.2+)', 'wp-graphql-headless-login' ),
 					'resolve'           => static function () {
 						if ( ! function_exists( 'WC' ) ) {
