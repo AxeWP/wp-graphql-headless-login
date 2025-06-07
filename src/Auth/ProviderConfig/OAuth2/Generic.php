@@ -60,25 +60,25 @@ class Generic extends OAuth2Config {
 		return [
 			'urlAuthorize'            => [
 				'type'        => 'string',
-				'description' => static fn () => __( 'Authorization URL', 'wp-graphql-headless-login' ),
+				'description' => __( 'Authorization URL', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The URL to redirect the user to in order to authorize the client.', 'wp-graphql-headless-login' ),
 				'order'       => 10,
 			],
 			'urlAccessToken'          => [
 				'type'        => 'string',
-				'description' => static fn () => __( 'Access token URL', 'wp-graphql-headless-login' ),
+				'description' => __( 'Access token URL', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The URL to request an access token.', 'wp-graphql-headless-login' ),
 				'order'       => 11,
 			],
 			'urlResourceOwnerDetails' => [
 				'type'        => 'string',
-				'description' => static fn () => __( 'Resource Owner URL', 'wp-graphql-headless-login' ),
+				'description' => __( 'Resource Owner URL', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The URL to request the resource owner details.', 'wp-graphql-headless-login' ),
 				'order'       => 12,
 			],
 			'scope'                   => [
 				'type'        => 'array',
-				'description' => static fn () => __( 'Scope', 'wp-graphql-headless-login' ),
+				'description' => __( 'Scope', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The scope to request from the Generic OAuth2 API.', 'wp-graphql-headless-login' ),
 				'order'       => 12,
 				'advanced'    => true,
@@ -88,7 +88,7 @@ class Generic extends OAuth2Config {
 			],
 			'scopeSeparator'          => [
 				'type'        => 'string',
-				'description' => static fn () => __( 'Scope Separator', 'wp-graphql-headless-login' ),
+				'description' => __( 'Scope Separator', 'wp-graphql-headless-login' ),
 				'help'        => __( 'The scope separator to use when building the authorization URL. Defaults to `,`.', 'wp-graphql-headless-login' ),
 			],
 		];

@@ -56,7 +56,7 @@ class Instagram extends OAuth2Config {
 		return [
 			'scope' => [
 				'type'        => 'array',
-				'description' => static fn () => __( 'Scope', 'wp-graphql-headless-login' ),
+				'description' => __( 'Scope', 'wp-graphql-headless-login' ),
 				'help'        => sprintf(
 					/* translators: %s: URL to Instagram scopes documentation. */
 					__( 'The scope to request from the provider. See %s for a list of available scopes.', 'wp-graphql-headless-login' ),
