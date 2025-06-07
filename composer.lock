@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "90e13d7dc59cdae3eb33d2e787e6c6f0",
+    "content-hash": "888267a2a2ea5dd773787c355db2a191",
     "packages": [
         {
             "name": "axepress/wp-graphql-plugin-boilerplate",
-            "version": "dev-develop",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AxeWP/wp-graphql-plugin-boilerplate.git",
-                "reference": "b1c4967b7cefccaaf4f4c9a113d41e1d7c77d2a8"
+                "reference": "09495b61346453baabdf4c71a38ada3cfc91c3a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AxeWP/wp-graphql-plugin-boilerplate/zipball/b1c4967b7cefccaaf4f4c9a113d41e1d7c77d2a8",
-                "reference": "b1c4967b7cefccaaf4f4c9a113d41e1d7c77d2a8",
+                "url": "https://api.github.com/repos/AxeWP/wp-graphql-plugin-boilerplate/zipball/09495b61346453baabdf4c71a38ada3cfc91c3a7",
+                "reference": "09495b61346453baabdf4c71a38ada3cfc91c3a7",
                 "shasum": ""
             },
             "require": {
@@ -33,7 +33,6 @@
                 "szepeviktor/phpstan-wordpress": "^2.0",
                 "wp-cli/wp-cli-bundle": "^2.8.1"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -57,7 +56,7 @@
             "description": "Boilerplate for creating WPGraphQL extensions",
             "support": {
                 "issues": "https://github.com/AxeWP/wp-graphql-plugin-boilerplate/issues",
-                "source": "https://github.com/AxeWP/wp-graphql-plugin-boilerplate/tree/develop"
+                "source": "https://github.com/AxeWP/wp-graphql-plugin-boilerplate/tree/0.1.1"
             },
             "funding": [
                 {
@@ -65,7 +64,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-05-10T17:15:33+00:00"
+            "time": "2025-06-07T02:03:50+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -2073,16 +2072,16 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.5.6",
+            "version": "1.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "f65c239c970e7f072f067ab78646e9f0b2935175"
+                "reference": "d665d22c417056996c59019579f1967dfe5c1e82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/f65c239c970e7f072f067ab78646e9f0b2935175",
-                "reference": "f65c239c970e7f072f067ab78646e9f0b2935175",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/d665d22c417056996c59019579f1967dfe5c1e82",
+                "reference": "d665d22c417056996c59019579f1967dfe5c1e82",
                 "shasum": ""
             },
             "require": {
@@ -2129,7 +2128,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.5.6"
+                "source": "https://github.com/composer/ca-bundle/tree/1.5.7"
             },
             "funding": [
                 {
@@ -2145,7 +2144,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-03-06T14:30:56+00:00"
+            "time": "2025-05-26T15:08:54+00:00"
         },
         {
             "name": "composer/class-map-generator",
@@ -3587,16 +3586,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.4.0",
+            "version": "v5.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "447a020a1f875a434d62f2a401f53b82a396e494"
+                "reference": "ae59794362fe85e051a58ad36b289443f57be7a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/447a020a1f875a434d62f2a401f53b82a396e494",
-                "reference": "447a020a1f875a434d62f2a401f53b82a396e494",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/ae59794362fe85e051a58ad36b289443f57be7a9",
+                "reference": "ae59794362fe85e051a58ad36b289443f57be7a9",
                 "shasum": ""
             },
             "require": {
@@ -3639,9 +3638,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.4.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.5.0"
             },
-            "time": "2024-12-30T11:07:19+00:00"
+            "time": "2025-05-31T08:24:38+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -10900,12 +10899,6 @@
     ],
     "aliases": [
         {
-            "package": "axepress/wp-graphql-plugin-boilerplate",
-            "version": "dev-develop",
-            "alias": "0.2.0-beta.1",
-            "alias_normalized": "0.2.0.0-beta1"
-        },
-        {
             "package": "phpcompatibility/php-compatibility",
             "version": "dev-develop",
             "alias": "9.99.99",
@@ -10915,7 +10908,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "axepress/wp-graphql-cs": 10,
-        "axepress/wp-graphql-plugin-boilerplate": 20,
         "phpcompatibility/php-compatibility": 20
     },
     "prefer-stable": false,

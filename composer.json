@@ -17,7 +17,7 @@
 	],
 	"require": {
 		"php": ">=7.4",
-		"axepress/wp-graphql-plugin-boilerplate": "dev-develop as 0.2.0-beta.1",
+		"axepress/wp-graphql-plugin-boilerplate": "0.1.1",
 		"league/oauth2-facebook": "^2.2",
 		"league/oauth2-github": "^3.0",
 		"firebase/php-jwt": "^6.3",
@@ -127,22 +127,23 @@
 		"strauss-install": [
 			"test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.19.4/strauss.phar"
 		],
-		"strauss": [
+		"prefix-namespaces": [
 			"@strauss-install",
 			"@php bin/strauss.phar",
-			"composer dump-autoload --optimize"
+			"@composer dump-autoload"
 		],
 		"pre-install-cmd": [
-			"test -d vendor-prefixed || mkdir vendor-prefixed"
+			"test -d vendor-prefixed || mkdir vendor-prefixed",
+			"@strauss-install"
 		],
 		"pre-update-cmd": [
 			"@pre-install-cmd"
 		],
 		"post-install-cmd": [
-			"@strauss"
+			"@prefix-namespaces"
 		],
 		"post-update-cmd": [
-			"@post-install-cmd"
+			"@prefix-namespaces"
 		]
 	},
 	"archive": {

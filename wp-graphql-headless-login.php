@@ -182,7 +182,7 @@ function init(): void {
 					<?php
 					printf(
 						/* translators: dependency not ready error message */
-						esc_html__( '%1$s is not compatible with Headless Login for WPGraphqL. Please deactivate it.', 'wp-graphql-headless-login' ),
+						esc_html__( '%1$s is not compatible with Headless Login for WPGraphQL. Please deactivate it.', 'wp-graphql-headless-login' ),
 						esc_attr( $conflict ),
 					);
 					?>
