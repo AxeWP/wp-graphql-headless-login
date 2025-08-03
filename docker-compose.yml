@@ -38,7 +38,7 @@ services:
     networks:
       - plugin_network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -proot"]
       interval: 30s
       timeout: 10s
       retries: 5
