@@ -56,7 +56,6 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | b
     && nvm alias default $NODE_VERSION \
     && npm install -g npm
 
-USER www-data
 # Setup the container for testing
-COPY --chown=www-data:www-data init-docker.sh /usr/local/bin/init-docker.sh
+COPY init-docker.sh /usr/local/bin/init-docker.sh
 RUN chmod +x /usr/local/bin/init-docker.sh

@@ -1,6 +1,5 @@
 services:
   wordpress:
-    container_name: wordpress
     build:
       context: ./.docker
       args:
@@ -25,7 +24,6 @@ services:
       - plugin_network
 
   mysql:
-    container_name: mysql
     image: mariadb:10
     restart: always
     ports:
