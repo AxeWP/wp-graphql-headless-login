@@ -26,7 +26,7 @@ SHELL [ "/bin/bash", "-c" ]
 RUN apt-get update && \
     apt-get -y install \
     mariadb-client \
-    zip unzip
+    git zip unzip
 
 # Needed for Codeception WPDB test integration.
 RUN docker-php-ext-install pdo pdo_mysql
