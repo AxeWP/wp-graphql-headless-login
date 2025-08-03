@@ -2,8 +2,7 @@ services:
   wordpress:
     container_name: wordpress
     build:
-      context: .
-      dockerfile: ./.docker/Dockerfile
+      context: ./.docker
       args:
         WP_VERSION: ${WP_VERSION}
         PHP_VERSION: ${PHP_VERSION}
