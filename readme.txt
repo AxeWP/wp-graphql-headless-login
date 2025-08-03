@@ -2,7 +2,7 @@
 Contributors: axepress, justlevine
 Tags: GraphQL, Headless, React SSO, Social Login, OAuth2, SAML, Authentication, JWT, Login, OpenID, OIDC
 Requires at least: 6.2
-Tested up to: 6.8.1
+Tested up to: 6.8.2
 Requires PHP: 7.4
 Stable tag: 0.4.3
 Maintained at: https://github.com/AxeWP/wp-graphql-headless-login

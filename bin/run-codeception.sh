@@ -4,7 +4,6 @@ ORIGINAL_PATH=$(pwd)
 BASEDIR=$(dirname "$0")
 PROJECT_DIR="$WORDPRESS_ROOT_DIR/wp-content/plugins/$PLUGIN_SLUG"
 
-
 source "${BASEDIR}/_lib.sh"
 
 echo -e "$(status_message "WordPress: ${WP_VERSION} PHP: ${PHP_VERSION}")"
@@ -23,21 +22,12 @@ setup_before() {
 
 	# Enable XDebug or PCOV for code coverage.
 	if [[ "$COVERAGE" == '1' ]]; then
-		if [[ "$USING_XDEBUG" == '1' ]]; then
-			echo "Enabling XDebug 3"
-			cp /usr/local/etc/php/conf.d/disabled/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/
-			echo "xdebug.mode=coverage" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-		else
-			echo "Using pcov/clobber for code coverage"
-			docker-php-ext-enable pcov
-			echo "pcov.enabled=1" >> /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
-			echo "pcov.directory=${PROJECT_DIR}" >> /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
-			COMPOSER_MEMORY_LIMIT=-1 composer require pcov/clobber --dev
-			vendor/bin/pcov clobber
-		fi
-	elif [[ -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ]]; then
-		echo "Disabling XDebug"
-		rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+		echo "Using pcov/clobber for code coverage"
+		docker-php-ext-enable pcov
+		echo "pcov.enabled=1" >> /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
+		echo "pcov.directory=${PROJECT_DIR}" >> /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
+		COMPOSER_MEMORY_LIMIT=-1 composer require pcov/clobber --dev
+		vendor/bin/pcov clobber
 	fi
 
 	# Install the PHP dev-dependencies.
@@ -93,16 +83,11 @@ cleanup_after() {
 
 	# Disable XDebug or PCOV if they were enabled for code coverage
 	if [[ "$COVERAGE" == '1' ]]; then
-		if [[ "$USING_XDEBUG" == '1' ]]; then
-			echo "Disabling XDebug 3"
-			rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-		else
-			echo "Disabling pcov/clobber"
-			docker-php-ext-disable pcov
-			sed -i '/pcov.enabled=1/d' /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
-			sed -i '/pcov.directory=${PROJECT_DIR}/d' /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
-			COMPOSER_MEMORY_LIMIT=-1 composer remove pcov/clobber --dev
-		fi
+		echo "Disabling pcov/clobber"
+		docker-php-ext-disable pcov
+		sed -i '/pcov.enabled=1/d' /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
+		sed -i '/pcov.directory=${PROJECT_DIR}/d' /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
+		COMPOSER_MEMORY_LIMIT=-1 composer remove pcov/clobber --dev
 	fi
 
 	# Set output permission back to default

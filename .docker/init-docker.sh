@@ -3,10 +3,6 @@
 # Exit if any command fails.
 set -e
 
-# Wait for the database
-dockerize -wait tcp://"${WORDPRESS_DB_HOST}":3306 -timeout 1m
-
-# Get the current user
 
 cd "$WORDPRESS_ROOT_DIR/wp-content/plugins/$PLUGIN_SLUG"
 

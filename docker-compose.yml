@@ -1,7 +1,9 @@
 services:
   wordpress:
+    container_name: wordpress
     build:
-      context: ./.docker
+      context: .
+      dockerfile: ./.docker/Dockerfile
       args:
         WP_VERSION: ${WP_VERSION}
         PHP_VERSION: ${PHP_VERSION}
@@ -24,6 +26,7 @@ services:
       - plugin_network
 
   mysql:
+    container_name: mysql
     image: mariadb:10
     restart: always
     ports:
@@ -37,6 +40,11 @@ services:
       - db:/var/lib/mysql
     networks:
       - plugin_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 networks:
   plugin_network:
