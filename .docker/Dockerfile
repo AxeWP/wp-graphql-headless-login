@@ -58,5 +58,5 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | b
 
 USER www-data
 # Setup the container for testing
-COPY --chown=www-data:www-data .docker/init-docker.sh /usr/local/bin/init-docker.sh
+COPY --chown=www-data:www-data init-docker.sh /usr/local/bin/init-docker.sh
 RUN chmod +x /usr/local/bin/init-docker.sh
