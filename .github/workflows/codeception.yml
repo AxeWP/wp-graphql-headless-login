@@ -104,7 +104,7 @@ jobs:
       - name: Start test environment
         run: |
           docker compose up -d wordpress
-          docker exec -it wordpress init-docker.sh
+          docker exec wordpress init-docker.sh
         env:
           WP_VERSION: ${{ matrix.wordpress }}
           PHP_VERSION: ${{ matrix.php }}
