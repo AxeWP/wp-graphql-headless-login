@@ -103,15 +103,8 @@ jobs:
 
       - name: Start test environment
         run: |
-          docker compose --env-file .env up --detach
-
-          CONTAINER_ID=$(docker compose ps -q wordpress)
-          if [ -n "$CONTAINER_ID" ]; then
-            docker exec $CONTAINER_ID init-docker.sh
-          else
-            echo "Error: WordPress container not found."
-            exit 1
-          fi
+          docker compose up -d wordpress
+          docker exec -it wordpress init-docker.sh
         env:
           WP_VERSION: ${{ matrix.wordpress }}
           PHP_VERSION: ${{ matrix.php }}
@@ -152,7 +145,7 @@ jobs:
             --env COVERAGE=${{ env.COVERAGE }} \
             --env DEBUG=${{ env.DEBUG }} \
             --env SUITES=${{ env.SUITES }} \
-            $(docker compose ps -q wordpress) \
+            wordpress \
             bash -c "cd wp-content/plugins/wp-graphql-headless-login && bin/run-codeception.sh"
         env:
           COVERAGE: ${{ matrix.coverage }}
@@ -164,7 +157,6 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          docker exec $(docker compose ps -q wordpress) bash -c "git config --global --add safe.directory /var/www/html/wp-content/plugins/wp-graphql-headless-login"
           docker exec \
             --env COVERALLS_REPO_TOKEN=${{ secrets.GITHUB_TOKEN }} \
             --env COVERALLS_RUN_LOCALLY=1 \

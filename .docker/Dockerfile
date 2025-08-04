@@ -3,15 +3,19 @@
 # For testing only, use in production not recommended. #
 ###############################################################################
 
+# Debugging Build Args
+
 # Use build args to get the right wordpress + php image
 ARG WP_VERSION
 ARG PHP_VERSION
 
 FROM wordpress:${WP_VERSION:-6.8}-php${PHP_VERSION:-8.2}-apache AS base
 
+
 # Needed to specify the build args again after the FROM command.
 ARG WP_VERSION
 ARG PHP_VERSION
+RUN echo "Debugging Build Args: WP_VERSION=${WP_VERSION}, PHP_VERSION=${PHP_VERSION}"
 
 # Save the build args for use by the runtime environment
 ENV WP_VERSION=${WP_VERSION}
@@ -31,13 +35,13 @@ RUN apt-get update && \
 # Needed for Codeception WPDB test integration.
 RUN docker-php-ext-install pdo pdo_mysql
 
-# Install PCOV
-# This is needed for Codeception / PHPUnit to track code coverage
-RUN pecl install pcov
-
 # Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 RUN chmod +x /usr/local/bin/composer
+
+# Install PCOV
+# This is needed for Codeception / PHPUnit to track code coverage
+RUN pecl install pcov
 
 # Install WP-CLI
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
@@ -55,6 +59,11 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | b
     && nvm use $NODE_VERSION \
     && nvm alias default $NODE_VERSION \
     && npm install -g npm
+
+
+# Debugging Build Args
+RUN echo "Debugging Build Args: WP_VERSION=${WP_VERSION}, PHP_VERSION=${PHP_VERSION}"
+RUN echo "Environment Variables:" && env && echo "Build Args: WP_VERSION=${WP_VERSION}, PHP_VERSION=${PHP_VERSION}"
 
 # Setup the container for testing
 COPY init-docker.sh /usr/local/bin/init-docker.sh

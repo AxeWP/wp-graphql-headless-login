@@ -26,8 +26,6 @@ setup_before() {
 		docker-php-ext-enable pcov
 		echo "pcov.enabled=1" >> /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
 		echo "pcov.directory=${PROJECT_DIR}" >> /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
-		COMPOSER_MEMORY_LIMIT=-1 composer require pcov/clobber --dev
-		vendor/bin/pcov clobber
 	fi
 
 	# Install the PHP dev-dependencies.

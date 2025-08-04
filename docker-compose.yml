@@ -1,5 +1,6 @@
 services:
   wordpress:
+    container_name: wordpress
     build:
       context: ./.docker
       args:
@@ -9,9 +10,6 @@ services:
     restart: always
     ports:
       - "8890:80"
-    environment:
-      WP_VERSION: ${WP_VERSION}
-      PHP_VERSION: ${PHP_VERSION}
     env_file:
       - .env
     user: root

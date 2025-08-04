@@ -27,12 +27,17 @@ if [[ ! -f ".env" ]]; then
 	cp .env.dist .env
 fi
 
-source .env
+# Export variables to make them available to docker compose
+WP_VERSION=${WP_VERSION:-6.8}
+PHP_VERSION=${PHP_VERSION:-8.2}
+export WP_VERSION
+export PHP_VERSION
 
+# Load environment variables from .env file
 while getopts ":ch" opt; do
 	case ${opt} in
 	c)
-		echo "Build with  --no-cache"
+		echo "Build with --no-cache"
 		BUILD_NO_CACHE=--no-cache
 		;;
 	h)
@@ -49,14 +54,11 @@ while getopts ":ch" opt; do
 done
 
 
-TAG=${TAG:-latest}
-WP_VERSION=${WP_VERSION:-6.8}
-PHP_VERSION=${PHP_VERSION:-8.2}
-
 BUILD_NO_CACHE=${BUILD_NO_CACHE:-}
 
-docker build $BUILD_NO_CACHE \
-	-t "${PLUGIN_SLUG}:${TAG}-wp${WP_VERSION}-php${PHP_VERSION}" \
-	--build-arg WP_VERSION="${WP_VERSION}" \
-	--build-arg PHP_VERSION="${PHP_VERSION}" \
-	./.docker
+echo "Building Docker image for WordPress version ${WP_VERSION} and PHP version ${PHP_VERSION}"
+
+docker compose build $BUILD_NO_CACHE \
+	--build-arg WP_VERSION=${WP_VERSION} \
+	--build-arg PHP_VERSION=${PHP_VERSION} \
+	wordpress
