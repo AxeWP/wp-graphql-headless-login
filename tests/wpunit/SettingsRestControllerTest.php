@@ -2,6 +2,7 @@
 
 use Codeception\TestCase\WPTestCase;
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
+use WPGraphQL\Login\Auth\TokenManager;
 
 class SettingsRestControllerTest extends WPTestCase {
 	/**
@@ -301,6 +302,44 @@ class SettingsRestControllerTest extends WPTestCase {
 		$response = $this->server->dispatch( $request );
 
 		$this->assertSame( 403, $response->get_status() );
+	}
+
+	/**
+	 * Tests that settings cannot be updated with masked secret values.
+	 */
+	public function testSettingsCannotBeUpdatedWithMaskedSecretValues(): void {
+		$slug   = 'wpgraphql_login_settings';
+		$values = [
+			'jwt_secret_key' => '********',
+		];
+
+		// Set a real secret first.
+		wp_set_current_user( $this->admin_id );
+		TokenManager::issue_new_user_secret( $this->admin_id );
+		$this->tester->reset_utils_properties();
+
+		// First confirm that the real secret is set.
+		$request    = new \WP_REST_Request( 'GET', $this->endpoint );
+		$response   = $this->server->dispatch( $request );
+		$data       = $response->get_data();
+		$secret_key = TokenManager::get_secret_key();
+		$this->assertNotEmpty( $secret_key );
+		$this->assertSame( '********', $data[ $slug ]['jwt_secret_key'] );
+		$this->assertNotEquals( $data[ $slug ]['jwt_secret_key'], $secret_key );
+
+		// Now try to update the setting with the masked value.
+		$request = new \WP_REST_Request( 'POST', $this->endpoint );
+		$request->set_param( 'slug', $slug );
+		$request->set_param( 'values', $values );
+		$response = $this->server->dispatch( $request );
+		$this->assertSame( 200, $response->get_status() );
+		$data = $response->get_data();
+		$this->assertIsArray( $data );
+		$this->assertArrayHasKey( $slug, $data );
+		$this->assertSame( '********', $data[ $slug ]['jwt_secret_key'] );
+
+		$actual = TokenManager::get_secret_key();
+		$this->assertSame( $secret_key, $actual, 'The secret should not have changed.' );
 	}
 
 	/**

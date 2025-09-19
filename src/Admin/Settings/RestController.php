@@ -27,29 +27,32 @@ class RestController extends \WP_REST_Controller {
 	public const REST_BASE = 'settings';
 
 	/**
+	 * The placeholder for masked secret keys.
+	 */
+	protected const MASKED_PLACEHOLDER = '********';
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public function register_routes(): void {
-		// Get route.
 		register_rest_route(
 			self::NAMESPACE,
 			'/' . self::REST_BASE,
 			[
-				'methods'             => \WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'get_items' ],
-				'permission_callback' => [ $this, 'get_item_permissions_check' ],
-			]
-		);
-
-		// Post route.
-		register_rest_route(
-			self::NAMESPACE,
-			'/' . self::REST_BASE,
-			[
-				'methods'             => \WP_REST_Server::EDITABLE,
-				'args'                => $this->update_item_args(),
-				'callback'            => [ $this, 'update_item' ],
-				'permission_callback' => [ $this, 'get_item_permissions_check' ],
+				// Get route.
+				[
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_items' ],
+					'permission_callback' => [ $this, 'get_item_permissions_check' ],
+				],
+				// Post route.
+				[
+					'methods'             => \WP_REST_Server::EDITABLE,
+					'args'                => $this->update_item_args(),
+					'callback'            => [ $this, 'update_item' ],
+					'sanitize_callback'   => [ $this, 'sanitize_update_values' ],
+					'permission_callback' => [ $this, 'get_item_permissions_check' ],
+				],
 			]
 		);
 	}
@@ -94,7 +97,11 @@ class RestController extends \WP_REST_Controller {
 	 * @return \WP_REST_Response
 	 */
 	public function update_item( $request ) {
-		/** @var array<string,mixed> $values */
+		/**
+		 * These are sanitized by ::sanitize_update_values().
+		 *
+		 * @var array<string,mixed> $values
+		 */
 		$values = $request->get_param( 'values' );
 		$slug   = (string) $request->get_param( 'slug' );
 
@@ -229,7 +236,39 @@ class RestController extends \WP_REST_Controller {
 	private function sanitize_private_data( array $values ): array {
 		// Hide the JWT secret key.
 		if ( isset( $values['jwt_secret_key'] ) ) {
-			$values['jwt_secret_key'] = '********';
+			$values['jwt_secret_key'] = self::MASKED_PLACEHOLDER;
+		}
+
+		return $values;
+	}
+
+	/**
+	 * Sanitizes update values before they are used in the Update controller.
+	 *
+	 * @param array<string,mixed> $values The values to check and filter.
+	 *
+	 * @return array<string,mixed>
+	 */
+	public function sanitize_update_values( array $values ): array {
+		/**
+		* Ensure that JWT secret keys are not updated to masked values.
+		*
+		* This prevents attackers from setting the JWT keys to the asterisks, which would make the tokens predictable.
+		*/
+		$jwt_key_fields = [ 'jwt_secret_key' ];
+
+		foreach ( $jwt_key_fields as $field ) {
+			if ( ! isset( $values[ $field ] ) ) {
+				continue;
+			}
+
+			$key_value = $values[ $field ];
+
+			// If the value is the masked placeholder or consists only of asterisks, remove it.
+			if ( self::MASKED_PLACEHOLDER === $key_value || preg_match( '/^\*+$/', $key_value ) ) {
+				// Remove the key to prevent updating with masked value.
+				unset( $values[ $field ] );
+			}
 		}
 
 		return $values;
