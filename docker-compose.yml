@@ -24,7 +24,7 @@ services:
       - plugin_network
 
   mysql:
-    image: mariadb:10
+    image: mariadb:10.6
     restart: always
     ports:
       - '3306:3306'
@@ -33,6 +33,12 @@ services:
       MYSQL_USER: ${WORDPRESS_DB_USER}
       MYSQL_PASSWORD: ${WORDPRESS_DB_PASSWORD}
       MYSQL_DATABASE: ${WORDPRESS_DB_NAME}
+    command: >
+      --ssl=0
+      --skip-ssl
+      --skip-networking=0
+      --bind-address=0.0.0.0
+      --sql-mode=""
     volumes:
       - db:/var/lib/mysql
     networks:

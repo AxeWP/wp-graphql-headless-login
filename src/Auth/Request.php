@@ -210,7 +210,6 @@ class Request {
 
 			// If the current host matches the allowed host, return the origin.
 			if ( $current_host === $allowed_host ) {
-
 				/**
 				 * If the allowed origin has a port, we need to check if the current request has the same port.
 				 *

@@ -22,15 +22,10 @@ use WPGraphQL\Model\Model;
  * @property ?string $name
  * @property ?int    $order
  * @property string  $provider
+ *
+ * @phpstan-extends \WPGraphQL\Model\Model<\WPGraphQL\Login\Auth\Client>
  */
 class Client extends Model {
-	/**
-	 * Stores the incoming Client to be modeled
-	 *
-	 * @var \WPGraphQL\Login\Auth\Client $data
-	 */
-	protected $data;
-
 	/**
 	 * Client constructor.
 	 *

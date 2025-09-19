@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.4.4] - 2025-09-19
+
+This _patch_ release fixes a security issue where a malicious user with administrator permissions could set the JWT Secret Key to a masked value like `********`, making the JWTs predictable. Big thanks to Rapid7 and @M-GRV for the responsible disclosure, and to @M-GRV for the fix.
+
+- fix: Prevent malicious admin from changing JWT Secret Key to masked value. props @M-GRV
+- chore: update Composer deps.
+- ci: Test compatibility with WordPress 6.8.2.
+
 ## [0.4.3] - 2025-06-07
 
 This _minor_ release fixes a bug when validating allowed origins from different ports on the same domain. It also adds support for WPGraphQL 2.3's new lazy-loading features, resulting in significant performance improvements.
