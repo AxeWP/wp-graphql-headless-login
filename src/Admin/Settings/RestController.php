@@ -97,8 +97,6 @@ class RestController extends \WP_REST_Controller {
 	 */
 	public function update_item( $request ) {
 		/**
-		 * These are sanitized by ::sanitize_update_values().
-		 *
 		 * @var array<string,mixed> $values
 		 */
 		$values = $request->get_param( 'values' );
@@ -153,7 +151,8 @@ class RestController extends \WP_REST_Controller {
 						$sanitized_values[ $key ] = $config[ $key ]['sanitize_callback']( $value );
 					}
 
-					return $sanitized_values;
+					// Do additional sanitization.
+					return self::sanitize_update_values( $sanitized_values );
 				},
 				'validate_callback' => static function ( $param, $request ) {
 					// Bail if the values are not an array.
@@ -250,7 +249,7 @@ class RestController extends \WP_REST_Controller {
 	 *
 	 * @return array<string,mixed>
 	 */
-	public function sanitize_update_values( array $values ): array {
+	private static function sanitize_update_values( array $values ): array {
 		/**
 		* Ensure that JWT secret keys are not updated to masked values.
 		*
