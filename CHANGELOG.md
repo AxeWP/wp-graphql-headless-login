@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [0.4.4] - 2025-09-19
 
-This _patch_ release fixes a security issue where a malicious user with administrator permissions could set the JWT Secret Key to a masked value like `********`, making the JWTs predictable. Big thanks to Rapid7 and @M-GRV for the responsible disclosure to and @M-GRV for the fix.
+This _patch_ release fixes a security issue where a malicious user with administrator permissions could set the JWT Secret Key to a masked value like `********`, making the JWTs predictable. Big thanks to Rapid7 and @M-GRV for the responsible disclosure, and to @M-GRV for the fix.
 
 - fix: Prevent malicious admin from changing JWT Secret Key to masked value. props @M-GRV
 - chore: update Composer deps.
