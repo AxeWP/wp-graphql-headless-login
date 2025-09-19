@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- chore: update Composer deps.
+
 ## [0.4.3] - 2025-06-07
 
 This _minor_ release fixes a bug when validating allowed origins from different ports on the same domain. It also adds support for WPGraphQL 2.3's new lazy-loading features, resulting in significant performance improvements.
