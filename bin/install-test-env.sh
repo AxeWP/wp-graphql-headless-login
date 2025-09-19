@@ -200,7 +200,7 @@ post_setup() {
 	if [ ! -f "$SQLDUMP" ]; then
 		echo -e "$(status_message "Exporting test database dump...")"
 
-		wp db export "$SQLDUMP" --allow-root
+		wp db export "$SQLDUMP" --allow-root --ssl=false
 	fi
 
 	echo -e "$(status_message "Installed plugins")"
