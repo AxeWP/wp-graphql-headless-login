@@ -39,8 +39,7 @@ install_woocommerce() {
 	wp plugin activate woocommerce --allow-root
 
 	if ! $( wp plugin is-installed wp-graphql-woocommerce --allow-root ); then
-		# TODO: revert to latest after WooGraphQL release issues in 0.21.1 are resolved.
-		wp plugin install https://github.com/wp-graphql/wp-graphql-woocommerce/releases/download/v0.21.0/wp-graphql-woocommerce.zip --allow-root
+		wp plugin install https://github.com/wp-graphql/wp-graphql-woocommerce/releases/download/v0.21.2/wp-graphql-woocommerce.zip --allow-root
 
 		wp plugin activate wp-graphql-woocommerce --allow-root
 	fi
