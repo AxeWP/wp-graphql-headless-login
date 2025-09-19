@@ -50,7 +50,6 @@ class RestController extends \WP_REST_Controller {
 					'methods'             => \WP_REST_Server::EDITABLE,
 					'args'                => $this->update_item_args(),
 					'callback'            => [ $this, 'update_item' ],
-					'sanitize_callback'   => [ $this, 'sanitize_update_values' ],
 					'permission_callback' => [ $this, 'get_item_permissions_check' ],
 				],
 			]
@@ -104,6 +103,8 @@ class RestController extends \WP_REST_Controller {
 		 */
 		$values = $request->get_param( 'values' );
 		$slug   = (string) $request->get_param( 'slug' );
+
+		$values = $this->sanitize_update_values( $values );
 
 		/** @var \WPGraphQL\Login\Admin\Settings\AbstractSettings $setting */
 		$setting = SettingsRegistry::get( $slug );
