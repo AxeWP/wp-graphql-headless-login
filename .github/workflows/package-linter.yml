@@ -82,7 +82,7 @@ jobs:
         run: npm run lint:css
 
       - name: Lint TypeScript
-        run: npm run ts:check
+        run: npm run lint:js:types
 
       - name: Check Assets build
         run: npm run build:prod
