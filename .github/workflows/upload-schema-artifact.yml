@@ -67,7 +67,7 @@ jobs:
 
       - name: Generate GraphQL schema
         run: |
-          npm run wp-env -- run cli --env-cwd=wp-content/plugins/wp-graphql-gravity-forms  wp graphql generate-static-schema --output=tests/_output/schema.graphql
+          npm run wp-env -- run cli --env-cwd=wp-content/plugins/wp-graphql-headless-login  wp graphql generate-static-schema --output=tests/_output/schema.graphql
           echo "Schema generated: $(wc -l < tests/_output/schema.graphql) lines"
 
       - name: Upload schema as release artifact
