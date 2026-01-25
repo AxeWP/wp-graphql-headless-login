@@ -12,6 +12,10 @@ source .env
 setup_plugins() {
 	BASEDIR="$(pwd)"
 
+	if ! $( wp plugin is-installed woocommerce --allow-root ); then
+		wp plugin install woocommerce --allow-root
+	fi
+
 	cd ../wp-graphql-woocommerce || exit 1
 	if [ ! -d "vendor" ]; then
 		echo "Installing WPGraphQL WooCommerce dependencies..."

@@ -4,7 +4,6 @@
 	"plugins": [
 		"https://downloads.wordpress.org/plugin/wp-graphql.zip",
 		"https://downloads.wordpress.org/plugin/wpgraphql-ide.zip",
-		"https://downloads.wordpress.org/plugin/woocommerce.zip",
 		"wp-graphql/wp-graphql-woocommerce",
 		"."
 	],
