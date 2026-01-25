@@ -55,7 +55,9 @@ module.exports = {
 			{
 				devDependencies: [
 					'**/*.@(spec|test).@(j|t)s?(x)',
-					'**/@(webpack|jest).config.@(j|t)s',
+					'**/vitest.config.@(j|t)s',
+					'**/vitest.setup.@(j|t)s',
+					'**/@(webpack|jest|vite|vitest).config.@(j|t)s',
 					'**/scripts/**',
 				],
 			},
@@ -150,6 +152,13 @@ module.exports = {
 				],
 				'dot-notation': 'off',
 				'@typescript-eslint/dot-notation': [ 'error' ],
+			},
+		},
+		{
+			files: [ '**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}' ],
+			rules: {
+				'@typescript-eslint/no-explicit-any': 'warn',
+				'@typescript-eslint/no-unused-vars': 'off',
 			},
 		},
 	],

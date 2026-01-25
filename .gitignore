@@ -24,7 +24,7 @@ build/
 build-module/
 build-types/
 build/tsconfig.tsbuildinfo
-wp-graphql-gravity-forms.zip
+wp-graphql-headless-login.zip
 
 # Environment
 .env
@@ -55,9 +55,11 @@ c3.php
 # WP ENV
 /.wp-env.override.json
 
-# Tests & Coverage
-/coverage/
-
+ # Tests & Coverage (legacy, moved to tests/_output)
+ /coverage/
+ /test-results/
+ .vitest/
+  
 # TypeScript
 *.tsbuildinfo
 

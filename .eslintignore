@@ -5,3 +5,4 @@ coverage
 languages
 node_modules
 vendor
+vendor-prefixed
