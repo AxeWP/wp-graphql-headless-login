@@ -1,0 +1,78 @@
+name: JS Tests + Coverage
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
+    paths:
+      - 'bin/**'
+      - '.github/workflows/js-tests.yml'
+      - 'build/**'
+      - 'packages/**'
+      - '**/*.{ts,tsx,js,jsx}'
+      - 'vitest.config.ts'
+      - 'vitest.setup.ts'
+      - 'tsconfig.json'
+      - 'tsconfig.base.json'
+      - 'package.json'
+      - 'package-lock.json'
+
+concurrency:
+  # The concurrency group contains the workflow name and the branch name for pull requests
+  # or the commit hash for any other events.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Vitest with Coverage
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          show-progress: ${{ runner.debug == '1' && 'true' || 'false' }}
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          cache: 'npm'
+          node-version-file: '.nvmrc'
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Run Vitest with coverage
+        run: npm run test:coverage
+
+      - name: Upload HTML coverage report as artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: vitest-coverage-report
+          path: ./tests/_output/coverage/html
+          overwrite: true
+
+      - name: Upload code coverage report
+        continue-on-error: true
+        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./tests/_output/coverage/lcov.info, ./tests/_output/coverage/coverage-final.json
+          flags: javascript
+          name: codecov-js
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

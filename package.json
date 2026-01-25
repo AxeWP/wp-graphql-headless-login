@@ -101,10 +101,10 @@
 		"**/*.{css,scss}": [
 			"wp-scripts lint-style --fix"
 		],
-		"**/*.php": [
+		"src/**/*.php": [
 			"composer format --"
 		],
-		"**/*.{json,md,html,css,scss,js,jsx,ts,tsx,php}": [
+		"**/*.{json,md,css,scss,js,jsx,ts,tsx}": [
 			"wp-scripts format --"
 		]
 	},

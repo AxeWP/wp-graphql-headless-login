@@ -13,9 +13,9 @@ on:
     paths:
       - 'bin/**'
       - '.github/workflows/package-linter.yml'
-      - '**.js'
       - 'build/**'
       - 'packages/**'
+      - '**/*.{ts,tsx,js,jsx}'
       - '.eslintignore'
       - '.prettierignore'
       - '.stylelintrc.json'

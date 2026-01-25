@@ -1,4 +1,10 @@
 <?php
+/**
+ * MU-Plugin to fix URLs during Codeception tests.
+ *
+ * @package WPGraphQL\Login\Tests\MUPlugins
+ * @since @todo
+ */
 
 /**
  * Fix URLs for WPGraphQL requests made during Codeception tests.
@@ -18,7 +24,6 @@ function wpgraphql_wpenv_fix_url( $url ) {
 	return str_replace(
 		[
 			'http://localhost:8889',
-			'http://localhost',
 			'http://localhost',
 		],
 		'http://tests-wordpress',
