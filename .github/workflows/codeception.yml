@@ -105,6 +105,9 @@ jobs:
       - name: Install NPM dependencies
         run: npm ci
 
+      - name: Build dev assets.
+        run: npm run build:dev
+
       - name: Create cache directories
         run: mkdir -p ~/.wp-env/downloads
 
