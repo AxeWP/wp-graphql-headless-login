@@ -31,7 +31,7 @@
 		"sourceMap": true,
 
 		// Interop Constraints
-		"esModuleInterop": false,
+		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"isolatedModules": true,
 		// @todo: make true when we can use `type: "module"` in package.json
