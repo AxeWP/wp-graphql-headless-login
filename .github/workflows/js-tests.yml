@@ -56,7 +56,7 @@ jobs:
         run: npm ci
 
       - name: Run Vitest with coverage
-        run: npm run test:coverage
+        run: npm run test:js:coverage
 
       - name: Upload HTML coverage report as artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

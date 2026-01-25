@@ -129,13 +129,9 @@ The following functionality is currently supported:
 **Example test commands:**
 
 ```bash
-# Run all tests
-npm run test:codecept
-
-# Run specific suites
-npm run wp-env run tests-cli -- --env-cwd=wp-content/plugins/wp-graphql-headless-login -- vendor/bin/codecept run wpunit
-npm run wp-env run tests-cli -- --env-cwd=wp-content/plugins/wp-graphql-headless-login -- vendor/bin/codecept run functional
-npm run wp-env run tests-cli -- --env-cwd=wp-content/plugins/wp-graphql-headless-login -- vendor/bin/codecept run acceptance
+# Run
+npm run test:php -- run wpunit
+npm run test:php -- run tests/functional/SomeFunctionalTest.php -vvv
 
 # Stop the environment when done
 npm run wp-env stop

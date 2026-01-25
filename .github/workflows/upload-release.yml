@@ -38,7 +38,10 @@ jobs:
         run: npm ci
 
       - name: Build and zip
+        env:
+          NODE_ENV: production
         run: |
+          npm run build:js
           npm run plugin-zip
 
       - name: Upload artifact
