@@ -1,20 +1,6 @@
 #!/bin/sh
-# Modern Husky (2026): run lint-staged from local bin if available,
-# otherwise attempt `npx --no-install` and show a helpful message.
 
 set -e
 
-# Prefer the locally installed binary when available (works offline/CI)
-if [ -x "./node_modules/.bin/lint-staged" ]; then
-	exec "./node_modules/.bin/lint-staged"
-fi
-
-# If local binary isn't present, try npx without installing network packages.
-if command -v npx >/dev/null 2>&1; then
-	if npx --no-install lint-staged; then
-		exit 0
-	fi
-fi
-
-echo "\nERROR: lint-staged is not installed. Run 'npm install' or 'npm ci' to install dev dependencies." >&2
-exit 1
+# Lint Staged
+npx --no-install lint-staged

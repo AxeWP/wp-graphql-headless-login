@@ -55,11 +55,6 @@ c3.php
 # WP ENV
 /.wp-env.override.json
 
- # Tests & Coverage (legacy, moved to tests/_output)
- /coverage/
- /test-results/
- .vitest/
-  
 # TypeScript
 *.tsbuildinfo
 
