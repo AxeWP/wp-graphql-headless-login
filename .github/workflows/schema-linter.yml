@@ -43,10 +43,9 @@ jobs:
   # - Makes Composer packages available globally.
   # - Sets up Node.js.
   # - Installs npm dependencies.
-  # - Configures caching for Docker images.
+  # - Configures caching for wp-env.
   # - Sets up WordPress environment.
-  # - Starts the WordPress Docker testing environment.
-  # - Starts the Docker testing environment.
+  # - Starts the WordPress testing environment with wp-env.
   # - Setup GraphQL Schema Linter
   # - Generate GraphQL schema.
   # - Lint the generated schema.
