@@ -4,3 +4,6 @@ set -e
 
 # Lint Staged
 npx --no-install lint-staged
+
+npm run lint:js:types
+
