@@ -85,4 +85,4 @@ jobs:
         run: npm run lint:js:types
 
       - name: Check Assets build
-        run: npm run build:prod
+        run: npm run build:js
