@@ -51,7 +51,6 @@ export function ClientMenu() {
 								]?.[ 'name' ]?.default as string
 							}
 							icon={ <StatusBadge provider={ provider } /> }
-							isText
 							onClick={ () => setActiveClient( provider ) }
 						/>
 					) ) }

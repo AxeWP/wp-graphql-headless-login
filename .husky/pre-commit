@@ -4,4 +4,3 @@
 
 # Prefer local binary via npx without network fetch
 npx --no-install lint-staged
-npm run format

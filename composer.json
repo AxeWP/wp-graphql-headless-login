@@ -4,8 +4,8 @@
 	"type": "wordpress-plugin",
 	"license": "GPL-3.0-or-later",
 	"support": {
-		"issues": "https://github.com/AxeWP/wp-graphql-gravity-forms/issues",
-		"forum": "https://github.com/AxeWP/wp-graphql-gravity-forms/discussions"
+		"issues": "https://github.com/AxeWP/wp-graphql-headless-login/issues",
+		"forum": "https://github.com/AxeWP/wp-graphql-headless-login/discussions"
 	},
 	"authors": [
 		{

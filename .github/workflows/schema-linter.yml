@@ -120,7 +120,7 @@ jobs:
 
       - name: Generate GraphQL schema
         run: |
-          npm run wp-env -- run cli --env-cwd=wp-content/plugins/wp-graphql-gravity-forms  wp graphql generate-static-schema --output=tests/_output/schema.graphql
+          npm run wp-env -- run cli --env-cwd=wp-content/plugins/wp-graphql-headless-login  wp graphql generate-static-schema --output=tests/_output/schema.graphql
           echo "Schema generated: $(wc -l < tests/_output/schema.graphql) lines"
 
       - name: Lint the generated schema
@@ -136,7 +136,7 @@ jobs:
         id: get-latest-tag
 
       - name: Get previously released schema
-        run: curl 'https://github.com/axewp/wp-graphql-gravity-forms/releases/download/${{ steps.get-latest-tag.outputs.tag }}/schema.graphql' -L  --output /tmp/${{ steps.get-latest-tag.outputs.tag }}.graphql
+        run: curl 'https://github.com/axewp/wp-graphql-headless-login/releases/download/${{ steps.get-latest-tag.outputs.tag }}/schema.graphql' -L  --output /tmp/${{ steps.get-latest-tag.outputs.tag }}.graphql
 
       - name: Install Schema Inspector
         run: npm install -g @graphql-inspector/config @graphql-inspector/cli graphql@latest

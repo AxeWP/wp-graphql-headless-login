@@ -15,7 +15,7 @@
 		"LICENSE",
 		"README.md",
 		"readme.txt",
-		"wp-graphql-gravity-forms.php"
+		"wp-graphql-headless-login.php"
 	],
 	"scripts": {
 		"prepare": "husky",
@@ -34,6 +34,10 @@
 		"lint:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ -- composer run-script lint",
 		"lint:php:fix": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ -- composer run-script format",
 		"lint:php:stan": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ -- composer run-script phpstan",
+		"test": "vitest run",
+		"test:watch": "vitest watch",
+		"test:ui": "vitest --ui",
+		"test:coverage": "vitest run --coverage",
 		"test:codecept": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ -- vendor/bin/codecept",
 		"plugin-zip": "wp-scripts plugin-zip",
 		"start:js": "wp-scripts start --config ./webpack.config.js",
@@ -58,8 +62,13 @@
 		"@babel/cli": "^7.28.6",
 		"@babel/core": "^7.28.6",
 		"@svgr/webpack": "^8.1.0",
+		"@testing-library/jest-dom": "^6.9.1",
+		"@testing-library/react": "^16.3.2",
+		"@testing-library/user-event": "^14.6.1",
 		"@typescript-eslint/eslint-plugin": "^8.53.1",
 		"@typescript-eslint/parser": "^8.53.1",
+		"@vitest/coverage-v8": "^4.0.18",
+		"@vitest/ui": "^4.0.18",
 		"@wordpress/babel-preset-default": "^8.38.0",
 		"@wordpress/env": "^10.38.0",
 		"@wordpress/eslint-plugin": "^24.0.0",
@@ -72,24 +81,31 @@
 		"eslint-plugin-eslint-comments": "^3.2.0",
 		"eslint-plugin-import": "^2.32.0",
 		"husky": "^9.1.7",
+		"jsdom": "^27.4.0",
 		"lint-staged": "^16.2.7",
+		"msw": "^2.7.0",
 		"npm-run-all": "^4.1.5",
 		"prettier": "npm:wp-prettier@3",
 		"rimraf": "^6.1.2",
 		"tsconfig-paths-webpack-plugin": "^4.2.0",
 		"typescript": "^5.9.3",
 		"url-loader": "^4.1.1",
+		"vite-tsconfig-paths": "^6.0.4",
+		"vitest": "^4.0.18",
 		"webpack-remove-empty-scripts": "^1.1.1"
 	},
 	"lint-staged": {
 		"**/*.{js,jsx,ts,tsx}": [
-			"npm run lint:js:fix --"
+			"wp-scripts lint-js --fix"
 		],
 		"**/*.{css,scss}": [
-			"npm run lint:css:fix --"
+			"wp-scripts lint-style --fix"
 		],
 		"**/*.php": [
 			"composer format --"
+		],
+		"**/*.{json,md,html,css,scss,js,jsx,ts,tsx,php}": [
+			"wp-scripts format --"
 		]
 	},
 	"overrides": {
