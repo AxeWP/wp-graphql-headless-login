@@ -20,14 +20,12 @@ use WPGraphQL\Login\Admin\Upgrade\AbstractUpgrade;
 	 *
 	 * @since 0.0.1
 	 */
-function deactivation_callback(): callable {
-	return static function (): void {
-		// Fire an action when WPGraphQL is de-activating.
-		do_action( 'graphql_login_deactivate' );
+function deactivation_callback(): void {
+	// Fire an action when WPGraphQL is de-activating.
+	do_action( 'graphql_login_deactivate' );
 
-		// Delete data during activation.
-		delete_data();
-	};
+	// Delete data during activation.
+	delete_data();
 }
 
 	/**

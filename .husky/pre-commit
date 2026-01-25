@@ -1,0 +1,7 @@
+#!/bin/sh
+# Modern Husky (2026): don't source deprecated _/husky.sh; run lint-staged directly.
+# This keeps the hook resilient across Husky major versions.
+
+# Prefer local binary via npx without network fetch
+npx --no-install lint-staged
+npm run format

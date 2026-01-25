@@ -156,11 +156,11 @@ class Request {
 	 */
 	protected static function get_allowed_origins( $headers = [] ): array {
 		$origins = [
-			get_option( 'siteurl' ), // The WordPress Address is used for local POST requests.
+			site_url(), // The WordPress Address is used for local POST requests.
 		];
 
 		if ( Utils::get_access_control_setting( 'hasSiteAddressInOrigin' ) ) {
-			$origins[] = get_option( 'home' ); // The Site Address is used for remote POST requests. E.g. when using a different URL for the frontend.
+			$origins[] = home_url(); // The Site Address is used for remote POST requests. E.g. when using a different URL for the frontend.
 		}
 
 		// Get the origin from the existing header filters.

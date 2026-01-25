@@ -4,9 +4,15 @@ declare global {
 	const wpGraphQLLogin: {
 		hooks: _Hooks;
 		settings: SettingSchema & {
-			providers: Record< string, Record< string, FieldSchema & {
-				properties: Record< string, FieldSchema >;
-			} > >;
+			providers: Record<
+				string,
+				Record<
+					string,
+					FieldSchema & {
+						properties: Record< string, FieldSchema >;
+					}
+				>
+			>;
 		};
 		nonce: string;
 		secret: {
@@ -46,7 +52,7 @@ type SettingSchema = {
 		description: string;
 		label: string;
 		fields: Record< string, FieldSchema >;
-	}
+	};
 };
 
 type ProviderSettingType = {

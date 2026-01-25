@@ -6,177 +6,164 @@ on:
       - develop
       - main
   pull_request:
-    branches:
-      - develop
-      - main
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
     paths:
+      - 'bin/**'
+      - 'src/**'
+      - 'tests/**'
       - '.github/workflows/codeception.yml'
       - '**.php'
-      - '.docker/**'
-      - 'bin/**'
-      - 'build/**'
+      - '.env.dist'
+      - '.nvmrc'
+      - '.wp-env.json'
+      - 'codecov.yml'
+      - 'codeception.dist.yml'
       - 'composer.json'
       - 'composer.lock'
-      - 'docker-compose.yml'
+      - 'package.json'
+      - 'package-lock.json'
 
-# Cancel previous workflow run groups that have not completed.
 concurrency:
-  # Group workflow runs by workflow name, along with the head branch ref of the pull request
-  # or otherwise the branch or tag ref.
-  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
+  # The concurrency group contains the workflow name and the branch name for pull requests
+  # or the commit hash for any other events.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
   cancel-in-progress: true
 
 jobs:
-  continuous_integration:
-    runs-on: ubuntu-latest
-    name: WordPress ${{ matrix.wordpress }} on PHP ${{ matrix.php }}
-
+  # Runs the Codeception tests for WordPress.
+  #
+  # Performs the following steps:
+  # - Sets environment variables.
+  # - Checks out the repository.
+  # - Sets up PHP.
+  # - Installs Composer dependencies.
+  # - Sets up Node.js.
+  # - Installs npm dependencies.
+  # - Starts the WordPress Docker testing environment (with or without pcov coverage).
+  # - Logs PHP and WordPress versions from the container.
+  # - Runs Codeception tests (with coverage if enabled).
+  # - Uploads code coverage report to Codecov.io (if coverage is enabled).
+  # - Uploads HTML coverage report as an artifact (if coverage is enabled).
+  codeception:
+    name: PHP ${{ matrix.php }} WP ${{ matrix.wordpress }}${{ matrix.coverage && ' (coverage)' || '' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    timeout-minutes: 30
     strategy:
+      fail-fast: false
       matrix:
-        php: ["8.2", "8.1", "8.0"]
-        wordpress: ["6.8","6.7", "6.6", "6.5", "6.4", "6.3", "6.2"]
+        php: ['8.4', '8.3', '8.2', '8.1', '8.0']
+        wordpress: ['6.9', '6.8', '6.7', '6.6', '6.5', '6.4', '6.3', '6.2']
+        coverage: [0]
         include:
-          - php: "8.2"
-            wordpress: "6.8"
+          - php: '8.2'
+            wordpress: '6.8'
             coverage: 1
         exclude:
-          # New WP versions that dont support older PHP versions
-          - php: "8.0"
-            wordpress: "6.8"
-          - php: "8.0"
-            wordpress: "6.7"
-          - php: "8.0"
-            wordpress: "6.6"
-          - php: "8.0"
-            wordpress: "6.5"
-      fail-fast: false
+          - php: '8.4'
+            wordpress: ['6.6', '6.5', '6.4', '6.3', '6.2']
+          - php: '8.3'
+            wordpress: ['6.3', '6.2']
+    env:
+      WP_ENV_PHP_VERSION: ${{ matrix.php }}
+      WP_ENV_CORE: ${{ matrix.wordpress == 'trunk' && 'WordPress/WordPress' || format( 'https://wordpress.org/wordpress-{0}.zip', matrix.wordpress ) }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install PHP
-        uses: shivammathur/setup-php@v2
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          php-version: ${{ matrix.php }}
-          extensions: json, mbstring
+          show-progress: ${{ runner.debug == '1' && 'true' || 'false' }}
+          persist-credentials: false
+
+      ##
+      # This allows Composer dependencies to be installed using a single step.
+      #
+      # Since the tests are currently run within the Docker containers where the PHP version varies,
+      # the same PHP version needs to be configured for the action runner machine so that the correct
+      # dependency versions are installed and cached.
+      ##
+      - name: Set up PHP
+        uses: shivammathur/setup-php@ec406be512d7077f68eed36e63f4d91bc006edc4 # v2.35.4
+        with:
+          php-version: '${{ matrix.php }}'
           tools: composer:v2
+          extensions: json, mbstring
 
       - name: Install Composer dependencies
-        uses: ramsey/composer-install@v3
-        with:
-          composer-options: "--no-progress"
+        uses: ramsey/composer-install@3cf229dc2919194e9e36783941438d17239e8520 # v3.1.1
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
-          node-version: 20
+          cache: 'npm'
+          node-version-file: '.nvmrc'
 
-      - name: Install Node.js dependencies
+      - name: Install NPM dependencies
         run: npm ci
-        env:
-          CI: true
 
-      - name: Build assets
-        run: |
-          npm run build
+      - name: Create cache directories
+        run: mkdir -p ~/.wp-env/downloads
 
-      - name: Copy .env file
-        run: |
-          cp .docker/.env.ci .env
-          echo "INCLUDE_EXTENSIONS=${{ matrix.extensions }}" >> .env
-          echo "WP_VERSION=${{ matrix.wordpress }}" >> .env
-          echo "PHP_VERSION=${{ matrix.php }}" >> .env
-        env:
-          WP_VERSION: ${{ matrix.wordpress }}
-          PHP_VERSION: ${{ matrix.php }}
-          INCLUDE_EXTENSIONS: ${{ matrix.extensions }}
-
-      - name: Build test environment
-        run: |
-          composer run docker:build
-        env:
-          WP_VERSION: ${{ matrix.wordpress }}
-          PHP_VERSION: ${{ matrix.php }}
-
-      - name: Start test environment
-        run: |
-          docker compose --env-file .env up --detach
-
-          CONTAINER_ID=$(docker compose ps -q wordpress)
-          if [ -n "$CONTAINER_ID" ]; then
-            docker exec $CONTAINER_ID init-docker.sh
-          else
-            echo "Error: WordPress container not found."
-            exit 1
-          fi
-        env:
-          WP_VERSION: ${{ matrix.wordpress }}
-          PHP_VERSION: ${{ matrix.php }}
-
-      - name: Run Acceptance Tests w/ Docker
-        run: |  
-          if [ "${{ matrix.extensions }}" = "true" ]; then
-            docker exec \
-              --env DEBUG=${{ env.DEBUG }} \
-              --env SKIP_TESTS_CLEANUP=${{ env.SKIP_TESTS_CLEANUP }} \
-              --env SUITES=${{ env.SUITES }} \
-              $(docker compose ps -q wordpress) \
-              bash -c "cd wp-content/plugins/wp-graphql-headless-login && bin/run-codeception.sh"
-          fi
-        env:
-          DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG || matrix.debug }}
-          SKIP_TESTS_CLEANUP: 'true'
-          SUITES: acceptance
-        continue-on-error: true
-
-      - name: Run Functional Tests w/ Docker
-        run: |
-          docker exec \
-            --env DEBUG=${{ env.DEBUG }} \
-            --env SKIP_TESTS_CLEANUP=${{ env.SKIP_TESTS_CLEANUP }} \
-            --env SUITES=${{ env.SUITES }} \
-            $(docker compose ps -q wordpress) \
-            bash -c "cd wp-content/plugins/wp-graphql-headless-login && bin/run-codeception.sh"
-        env:
-          DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG || matrix.debug }}
-          SKIP_TESTS_CLEANUP: 'true'
-          SUITES: functional
-        continue-on-error: true
-
-      - name: Run WPUnit Tests w/ Docker
-        run: |
-          docker exec \
-            --env COVERAGE=${{ env.COVERAGE }} \
-            --env USING_XDEBUG=${{ env.USING_XDEBUG }} \
-            --env DEBUG=${{ env.DEBUG }} \
-            --env SUITES=${{ env.SUITES }} \
-            $(docker compose ps -q wordpress) \
-            bash -c "cd wp-content/plugins/wp-graphql-headless-login && bin/run-codeception.sh"
-        env:
-          COVERAGE: ${{ matrix.coverage }}
-          USING_XDEBUG: ${{ matrix.coverage }}
-          DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG || matrix.debug }}
-          SUITES: wpunit
-
-      - name: Push Codecoverage to Coveralls.io
-        if: ${{ matrix.coverage == 1 }}
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          docker exec $(docker compose ps -q wordpress) bash -c "git config --global --add safe.directory /var/www/html/wp-content/plugins/wp-graphql-headless-login"
-          docker exec \
-            --env COVERALLS_REPO_TOKEN=${{ secrets.GITHUB_TOKEN }} \
-            --env COVERALLS_RUN_LOCALLY=1 \
-            $(docker compose ps -q wordpress) \
-            bash -c "COVERALLS_RUN_LOCALLY=1 cd wp-content/plugins/wp-graphql-headless-login && vendor/bin/php-coveralls -v"
-
-      - name: Push CodeCoverage to CodeClimate
-        if: ${{ matrix.coverage == 1 }}
-        uses: paambaati/codeclimate-action@v9
-        env:
-          CC_TEST_REPORTER_ID: f775c7e015158d3505156743f180c5b6a4fecb372c63f682cfcd2c7d32ae23cc
+      - name: Cache WordPress downloads
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
         with:
-          coverageLocations: |
-            ${{github.workspace}}/tests/_output/*.xml:clover
-          prefix: '/var/www/html/wp-content/plugins/wp-graphql-headless-login'
+          path: ~/.wp-env/downloads
+          key: ${{ runner.os }}-wp-env-downloads-${{ hashFiles('.wp-env.json') }}
+          restore-keys: |
+            ${{ runner.os }}-wp-env-downloads-
+
+      - name: Start the Docker testing environment
+        uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: |
+            ${{ matrix.coverage && 'PCOV_ENABLED=1 ' || '' }}npm run wp-env start -- ${{ secrets.ACTIONS_STEP_DEBUG && '--debug' || '' }}
+
+      - name: Log versions
+        run: |
+          npm run wp-env -- run cli php -- -v
+          npm run wp-env -- run cli wp core version
+
+      # @todo These are broken by woo.
+      # - name: Run Acceptance Tests
+      #   run: |
+      #     npm run test:codecept -- run acceptance ${{ secrets.ACTIONS_STEP_DEBUG && '--debug' || '' }}
+
+      - name: Run Functional Tests
+        run: |
+          npm run test:codecept -- run functional ${{ secrets.ACTIONS_STEP_DEBUG && '--debug' || '' }}
+
+      - name: Run WPUnit Tests ${{ matrix.coverage && ' with coverage report' || '' }}
+        run: |
+          npm run test:codecept -- run wpunit ${{ secrets.ACTIONS_STEP_DEBUG && '--debug' || '' }} ${{ matrix.coverage && '--coverage --coverage-xml --coverage-html' || '' }}
+
+      - name: Upload test failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: test-failures-php${{ matrix.php }}-wp${{ matrix.wordpress }}
+          path: tests/_output/*.fail.html
+          if-no-files-found: ignore
+
+      - name: Upload HTML coverage report as artifact
+        if: ${{ matrix.coverage }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: wp-code-coverage-${{ matrix.php }}-${{ matrix.wordpress }}
+          path: tests/_output/coverage
+          overwrite: true
+
+      - name: Upload code coverage report
+        continue-on-error: true
+        if: ${{ matrix.coverage }}
+        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: tests/_output/coverage.xml
+          flags: wpunit
+          fail_ci_if_error: true

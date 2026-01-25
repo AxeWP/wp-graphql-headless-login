@@ -34,7 +34,7 @@ export const Fields = ( {
 					return null;
 				}
 
-				if ( fields[ fieldKey ]?.hidden ) {
+				if ( ! fields?.[ fieldKey ] || fields[ fieldKey ]?.hidden ) {
 					return null;
 				}
 

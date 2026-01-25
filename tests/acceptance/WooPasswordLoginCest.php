@@ -1,6 +1,5 @@
 <?php
 
-use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 
 class PasswordLoginCest {
@@ -18,6 +17,17 @@ class PasswordLoginCest {
 				],
 			]
 		);
+
+		$I->cli( [ 'plugin', 'activate', 'woocommerce' ] );
+		$I->cli( [ 'plugin', 'activate', 'wp-graphql-woocommerce' ] );
+	}
+
+	/**
+	 * After test cleanup.
+	 */
+	public function _after( AcceptanceTester $I ) {
+		$I->cli( [ 'plugin', 'deactivate', 'woocommerce' ] );
+		$I->cli( [ 'plugin', 'deactivate', 'wp-graphql-woocommerce' ] );
 	}
 
 	public function testMutation( AcceptanceTester $I ) {
@@ -27,7 +37,7 @@ class PasswordLoginCest {
 		$user_id = $I->haveUserInDatabase( 'testuser', 'administrator', [ 'user_pass' => 'testpass' ] );
 
 		$I->haveGraphQLDebug();
-		$expected_tokens = $I->generateUserTokens( $user_id );
+		$I->generateUserTokens( $user_id );
 
 		$query = '
 			mutation LoginWithPassword( $username: String! $password: String!) {
@@ -95,9 +105,7 @@ class PasswordLoginCest {
 			$I->assertNotEmpty( $parsed_cookie );
 		}
 
-		// Test token
-
-		wp_set_current_user( 0 );
+		// Test token.
 
 		// Query with the auth token.
 		$auth_token = $response['data']['login']['authToken'];
@@ -117,10 +125,6 @@ class PasswordLoginCest {
 				}
 			}
 		}';
-
-		wp_set_current_user( 0 );
-
-		$I->reset_utils_properties();
 
 		$response = $I->sendGraphQLRequest( $query, null, [ 'Authorization' => 'Bearer ' . $auth_token ] );
 
@@ -143,8 +147,5 @@ class PasswordLoginCest {
 		$I->assertFalse( $response['data']['viewer']['auth']['isUserSecretRevoked'] );
 		$I->assertNotEmpty( $response['data']['viewer']['auth']['userSecret'] );
 		$I->assertNotEmpty( $response['data']['viewer']['auth']['wooSessionToken'] );
-
-		// Cleanup
-		delete_option( PluginSettings::get_slug() );
 	}
 }

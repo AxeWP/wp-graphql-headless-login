@@ -18,21 +18,13 @@ class Functional extends \Codeception\Module {
 
 		$wpdb->haveOptionInDatabase( PluginSettings::get_slug() . 'jwt_secret_key', $site_secret );
 
-		// Reset the utils properties to ensure the site secret is used.
-
-		$helper->reset_utils_properties();
-
 		$wpdb->haveUserMetaInDatabase( $user_id, 'graphql_login_secret', uniqid( 'graphql_login_secret_', true ) );
 		$wpdb->haveUserMetaInDatabase( $user_id, 'graphql_login_secret_revoked', false );
 
 		$user = new \WP_User( $user_id );
-		$helper->reset_utils_properties();
-
 		$auth_token = TokenManager::get_auth_token( $user, false );
-		$helper->reset_utils_properties();
 
 		$refresh_token = TokenManager::get_refresh_token( $user, false );
-		$helper->reset_utils_properties();
 
 		return [
 			'site_secret'   => $site_secret,

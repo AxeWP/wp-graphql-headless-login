@@ -22,7 +22,6 @@ class SiteTokenAuthenticationCest {
 				],
 			]
 		);
-		$I->reset_utils_properties();
 	}
 
 	public function testLoginWithSiteToken( FunctionalTester $I ) {
@@ -86,13 +85,13 @@ class SiteTokenAuthenticationCest {
 				'hasSiteAddressInOrigin'         => true,
 			]
 		);
-		$I->reset_utils_properties();
 
 		$response = $I->sendGraphQLRequest(
 			$query,
 			$variables,
 			[
 				'X-My-Secret-Auth-Token' => 'some_secret',
+				'Origin'                 => 'http://tests-wordpress',
 			]
 		);
 

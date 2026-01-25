@@ -19,7 +19,7 @@ export const Notices = () => {
 	}
 
 	return (
-		<div className={ styles.notices }>
+		<div className={ styles[ 'notices' ] }>
 			<SnackbarList
 				className="edit-site-notices"
 				notices={ notices as any } // eslint-disable-line @typescript-eslint/no-explicit-any

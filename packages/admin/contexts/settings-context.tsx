@@ -1,9 +1,9 @@
 import {
 	createContext,
-	PropsWithChildren,
 	useContext,
 	useEffect,
 	useState,
+	type PropsWithChildren,
 } from 'react';
 import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
@@ -66,7 +66,9 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 	const isSaving = status === 'saving';
 	const isComplete = status === 'complete';
 	const showAdvancedSettings =
-		!! settings?.wpgraphql_login_settings?.show_advanced_settings;
+		!! settings?.[ 'wpgraphql_login_settings' ]?.[
+			'show_advanced_settings'
+		];
 
 	// Fetch settings from the REST API
 	useEffect( () => {
@@ -180,7 +182,14 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 			const [ targetSetting, targetField ] = slug.includes( '.' )
 				? slug.split( '.' )
 				: [ settingKey, slug ];
-			const fieldValue = settings?.[ targetSetting ]?.[ targetField ];
+
+			if ( ! targetSetting || ! targetField ) {
+				return false;
+			}
+
+			const fieldValue = settings?.[ targetSetting as string ]?.[
+				targetField
+			] as string | undefined;
 
 			if ( ! fieldValue ) {
 				return false;

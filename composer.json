@@ -3,6 +3,10 @@
 	"description": "A WordPress plugin that provides headless login and authentication for WPGraphQL",
 	"type": "wordpress-plugin",
 	"license": "GPL-3.0-or-later",
+	"support": {
+		"issues": "https://github.com/AxeWP/wp-graphql-gravity-forms/issues",
+		"forum": "https://github.com/AxeWP/wp-graphql-gravity-forms/discussions"
+	},
 	"authors": [
 		{
 			"name": "AxePress Development",
@@ -15,40 +19,6 @@
 			"email": "david@axepress.dev"
 		}
 	],
-	"require": {
-		"php": ">=7.4",
-		"axepress/wp-graphql-plugin-boilerplate": "0.1.1",
-		"league/oauth2-facebook": "^2.2",
-		"league/oauth2-github": "^3.0",
-		"firebase/php-jwt": "^6.3",
-		"league/oauth2-google": "^4.0",
-		"league/oauth2-instagram": "^3.1",
-		"league/oauth2-linkedin": "^5.1"
-	},
-	"require-dev": {
-		"axepress/wp-graphql-cs": "^2.0.0-beta",
-		"axepress/wp-graphql-stubs": "^2.3.0",
-		"codeception/lib-innerbrowser": "^1.0",
-		"codeception/module-asserts": "^1.0",
-		"codeception/module-cli": "^1.0",
-		"codeception/module-db": "^1.0",
-		"codeception/module-filesystem": "^1.0",
-		"codeception/module-phpbrowser": "^1.0",
-		"codeception/module-rest": "^2.0",
-		"codeception/module-webdriver": "^1.0",
-		"codeception/phpunit-wrapper": "^9.0",
-		"codeception/util-universalframework": "^1.0",
-		"lucatume/wp-browser": "^3.5",
-		"mockery/mockery": "^1.5",
-		"php-coveralls/php-coveralls": "^2.5",
-		"php-stubs/woocommerce-stubs": "^9.0",
-		"phpcompatibility/php-compatibility": "dev-develop as 9.99.99",
-		"phpstan/extension-installer": "^1.1",
-		"phpstan/phpstan": "^2.0.0",
-		"szepeviktor/phpstan-wordpress": "^2.0.0",
-		"wp-cli/wp-cli-bundle": "^2.12.0",
-		"wp-graphql/wp-graphql-testcase": "^3.0.1"
-	},
 	"config": {
 		"allow-plugins": {
 			"dealerdirect/phpcodesniffer-composer-installer": true,
@@ -104,28 +74,36 @@
 			"Tests\\WPGraphQL\\Login\\Helper\\": "tests/_support/Helper"
 		}
 	},
+	"require": {
+		"php": ">=7.4",
+		"axepress/wp-graphql-plugin-boilerplate": "0.1.1",
+		"league/oauth2-facebook": "^2.2",
+		"league/oauth2-github": "^3.0",
+		"firebase/php-jwt": "^6.3",
+		"league/oauth2-google": "^4.0",
+		"league/oauth2-instagram": "^3.1",
+		"league/oauth2-linkedin": "^5.1"
+	},
+	"require-dev": {
+		"axepress/wp-graphql-cs": "^2.0.0",
+		"axepress/wp-graphql-stubs": "^2.3",
+		"codeception/module-rest": "^2.0",
+		"lucatume/wp-browser": "^3.7",
+		"mockery/mockery": "^1.5",
+		"php-stubs/woocommerce-stubs": "^10.0",
+		"phpstan/extension-installer": "^1.1",
+		"phpstan/phpstan-deprecation-rules": "^2.0",
+		"phpstan/phpstan": "^2.0",
+		"szepeviktor/phpstan-wordpress": "^2.0",
+		"wp-cli/wp-cli-bundle": "^2.12.0",
+		"wp-graphql/wp-graphql-testcase": "^3.4.0"
+	},
 	"scripts": {
-		"install-test-env": "bash bin/install-test-env.sh",
-		"delete-vendor-files": "rm -rf composer.lock vendor src/vendor-prefixed/*",
-		"docker:build": "bash bin/build-docker.sh",
-		"docker:start": "@docker:build && @docker:up",
-		"docker:stop": "docker compose down --volumes",
-		"docker:up": " sh -c 'composer docker:stop' && docker compose --env-file .env up --detach",
 		"lint": "vendor/bin/phpcs",
-		"phpcs-i": [
-			"php ./vendor/bin/phpcs -i"
-		],
-		"check-cs": [
-			"php ./vendor/bin/phpcs"
-		],
-		"fix-cs": [
-			"php ./vendor/bin/phpcbf"
-		],
-		"phpstan": [
-			"vendor/bin/phpstan analyze --ansi --memory-limit=1G"
-		],
+		"format": "vendor/bin/phpcbf",
+		"phpstan": "vendor/bin/phpstan analyze --ansi --memory-limit=1G",
 		"strauss-install": [
-			"test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.19.4/strauss.phar"
+			"test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.26.3/strauss.phar"
 		],
 		"prefix-namespaces": [
 			"@strauss-install",
@@ -136,42 +114,8 @@
 			"test -d vendor-prefixed || mkdir vendor-prefixed",
 			"@strauss-install"
 		],
-		"pre-update-cmd": [
-			"@pre-install-cmd"
-		],
-		"post-install-cmd": [
-			"@prefix-namespaces"
-		],
-		"post-update-cmd": [
-			"@prefix-namespaces"
-		]
-	},
-	"archive": {
-		"name": "wp-graphql-headless-login",
-		"exclude": [
-			"/.*",
-			"!.wordpress-org",
-			"bin",
-			"docker",
-			"docs",
-			"node_modules",
-			"phpstan",
-			"plugin-build",
-			"tests",
-			"!vendor",
-			"!vendor-prefixed",
-			"/babel.config.js",
-			"/codeception.dist.yml",
-			"/composer.json",
-			"/composer.lock",
-			"/docker-compose.yml",
-			"/global.d.ts",
-			"/package-lock.json",
-			"/package.json",
-			"/phpstan.neon.dist",
-			"/tsconfig.base.json",
-			"/tsconfig.json",
-			"/webpack.config.js"
-		]
+		"pre-update-cmd": "@pre-install-cmd",
+		"post-install-cmd": "@prefix-namespaces",
+		"post-update-cmd": "@prefix-namespaces"
 	}
 }

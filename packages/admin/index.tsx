@@ -1,7 +1,7 @@
 import domReady from '@wordpress/dom-ready';
-import { createRoot } from '@wordpress/element';
 import { createHooks } from '@wordpress/hooks';
 import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 
 import App from './app';
 

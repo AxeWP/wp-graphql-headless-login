@@ -13,7 +13,7 @@ const ScreenContext = createContext< {
 	setCurrentScreen: ( screen: string ) => void;
 } >( {
 	currentScreen: 'providers',
-	setCurrentScreen: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+	setCurrentScreen: () => {},
 } );
 
 export const ScreenProvider = ( { children }: PropsWithChildren ) => {

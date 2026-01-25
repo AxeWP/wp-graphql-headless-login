@@ -1,56 +1,105 @@
 module.exports = {
 	extends: [ 'plugin:@wordpress/eslint-plugin/recommended' ],
-	globals: {
-		fetchMock: true,
-		IntersectionObserver: 'readonly',
-		// @todo Move E2E related ESLint configuration into custom config.
-		//
-		// We should have linting properties only included for files that they
-		// are specific to as opposed to globally.
-		page: 'readonly',
-		browser: 'readonly',
-		context: 'readonly',
+	plugins: [ 'import' ],
+	parserOptions: {
+		sourceType: 'module',
+		ecmaFeatures: {
+			jsx: true,
+		},
+		project: './tsconfig.json',
+	},
+	env: {
+		browser: true,
+		es6: true,
+		node: true,
 	},
 	settings: {
 		jsdoc: { mode: 'typescript' },
-		// List of modules that are externals in our webpack config.
-		// This helps the `import/no-extraneous-dependencies` and
-		//`import/no-unresolved` rules account for them.
-		'import/core-modules': [
-			'@wordpress/block-editor',
-			'@wordpress/a11y',
-			'@wordpress/api-fetch',
-			'@wordpress/compose',
-			'@wordpress/data',
-			'@wordpress/escape-html',
-			'@wordpress/hooks',
-			'@wordpress/keycodes',
-			'@wordpress/url',
-			'babel-jest',
-			'dotenv',
-			'jest-environment-puppeteer',
-			'lodash/kebabCase',
-			'lodash',
-			'prop-types',
-			'react',
-			'requireindex',
-		],
-		'import/resolver': {
-			node: {},
-			webpack: {
-				config: 'webpack.config.js',
+		settings: {
+			'import/resolver': {
+				typescript: {
+					project: './tsconfig.json',
+				},
 			},
 		},
-		'import/ignore': [ 'node_modules' ],
 	},
 	rules: {
+		// React best practices
+		'react/jsx-boolean-value': 'error',
+		'react/jsx-curly-brace-presence': [
+			'error',
+			{ props: 'never', children: 'never' },
+		],
 		'react-hooks/exhaustive-deps': 'error',
 		'react/jsx-fragments': [ 'error', 'syntax' ],
+
+		// WordPress-specific
 		'@wordpress/no-global-active-element': 'warn',
+		'@wordpress/data-no-store-string-literals': 'error',
+		'@wordpress/wp-global-usage': 'error',
+		'@wordpress/react-no-unsafe-timeout': 'error',
+		'@wordpress/i18n-hyphenated-range': 'error',
+		'@wordpress/i18n-no-flanking-whitespace': 'error',
 		'@wordpress/i18n-text-domain': [
 			'error',
 			{
 				allowedTextDomain: [ 'wp-graphql-headless-login' ],
+			},
+		],
+
+		// Import plugin
+		'import/default': 'error',
+		'import/named': 'error',
+		'import/no-extraneous-dependencies': [
+			'error',
+			{
+				devDependencies: [
+					'**/*.@(spec|test).@(j|t)s?(x)',
+					'**/@(webpack|jest).config.@(j|t)s',
+					'**/scripts/**',
+				],
+			},
+		],
+		'no-restricted-imports': [
+			'error',
+			{
+				paths: [
+					{
+						name: 'lodash',
+						message: 'Please use native functionality instead.',
+					},
+					{
+						name: 'classnames',
+						message:
+							"Please use `clsx` instead. It's a lighter and faster drop-in replacement for `classnames`.",
+					},
+					{
+						name: 'redux',
+						importNames: [ 'combineReducers' ],
+						message:
+							'Please use `combineReducers` from `@wordpress/data` instead.',
+					},
+				],
+			},
+		],
+		'no-restricted-syntax': [
+			'error',
+			{
+				selector:
+					'ImportDeclaration[source.value=/^@wordpress\\u002F.+\\u002F/]',
+				message:
+					'Path access on WordPress dependencies is not allowed.',
+			},
+			{
+				selector: 'JSXAttribute[name.name="id"][value.type="Literal"]',
+				message:
+					'Do not use string literals for IDs; use withInstanceId instead.',
+			},
+			{
+				selector:
+					'CallExpression[callee.object.name="Math"][callee.property.name="random"]',
+				message:
+					"Do not use Math.random() to generate unique IDs; use withInstanceId instead. (If you're not generating unique IDs: ignore this message.)",
 			},
 		],
 		camelcase: [
@@ -63,7 +112,7 @@ module.exports = {
 	},
 	overrides: [
 		{
-			files: [ '*.ts', '*.tsx' ],
+			files: [ '**/*.ts?(x)' ],
 			parser: '@typescript-eslint/parser',
 			extends: [ 'plugin:@typescript-eslint/recommended' ],
 			rules: {
@@ -99,15 +148,9 @@ module.exports = {
 						},
 					},
 				],
+				'dot-notation': 'off',
+				'@typescript-eslint/dot-notation': [ 'error' ],
 			},
 		},
-		// {
-		// 	files: ['./packages/admin/mapped-types.ts'],
-		// 	rules: {
-		// 		'@typescript-eslint/no-explicit-any': 'off',
-		// 		'@typescript-eslint/no-shadow': 'off',
-		// 		'no-shadow': 'off',
-		// 	},
-		// },
 	],
 };

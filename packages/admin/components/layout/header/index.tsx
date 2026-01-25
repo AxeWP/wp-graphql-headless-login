@@ -10,7 +10,7 @@ import styles from './styles.module.scss';
  */
 export const Header = () => {
 	return (
-		<header className={ styles.header }>
+		<header className={ styles[ 'header' ] }>
 			<Logo size={ 90 } />
 			<div className={ styles[ 'menu-section' ] }>
 				<h1>

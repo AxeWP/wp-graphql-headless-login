@@ -23,11 +23,15 @@ export const Field = ( {
 	setValue,
 	isConditionMet = true,
 }: {
-	field: FieldSchema;
+	field?: FieldSchema;
 	value: unknown;
 	setValue: ( value: unknown ) => void;
 	isConditionMet?: boolean;
 } ) => {
+	if ( ! field ) {
+		return null;
+	}
+
 	return (
 		<FieldWrapper isAdvanced={ !! field.isAdvanced }>
 			<FieldControl

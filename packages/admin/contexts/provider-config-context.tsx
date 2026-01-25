@@ -33,12 +33,11 @@ const ProviderConfigContext = createContext< {
 	setActiveClient: ( value: string ) => void;
 } >( {
 	activeClient: '',
-	setActiveClient: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-	clientConfig: undefined,
-	setClientConfig: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-	updateClient: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-	setClientOption: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-	setLoginOption: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+	setActiveClient: () => {},
+	setClientConfig: () => {},
+	updateClient: () => {},
+	setClientOption: () => {},
+	setLoginOption: () => {},
 } );
 
 export const ProviderConfigProvider = ( { children }: PropsWithChildren ) => {

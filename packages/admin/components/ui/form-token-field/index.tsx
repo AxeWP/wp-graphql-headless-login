@@ -1,11 +1,12 @@
 import { FormTokenField } from '@wordpress/components';
-import type { FormTokenFieldProps } from '@wordpress/components/build-types/form-token-field/types';
 import { useInstanceId } from '@wordpress/compose';
 import clsx from 'clsx';
 
 import styles from './styles.module.scss';
 
-export type FormTokenFieldControlProps = FormTokenFieldProps & {
+export type FormTokenFieldControlProps = React.ComponentProps<
+	typeof FormTokenField
+> & {
 	help?: string;
 };
 
@@ -28,7 +29,7 @@ export function FormTokenFieldControl( {
 					id={ `components-form-token-additional-help-${ instanceId }` }
 					className={ clsx(
 						'help components-form-token-field__help',
-						styles.help
+						styles[ 'help' ]
 					) }
 					dangerouslySetInnerHTML={ { __html: help } }
 				></p>

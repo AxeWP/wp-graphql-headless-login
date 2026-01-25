@@ -1,45 +1,59 @@
 {
+	"$schema": "https://json.schemastore.org/tsconfig.json",
+
 	"compilerOptions": {
-		"baseUrl": ".",
-		"outDir": "./build",
-		"rootDir": ".",
-		"sourceMap": true,
-		"strictNullChecks": true,
-		"incremental": true,
-		"noErrorTruncation": true,
 		"allowJs": true,
 		"checkJs": true,
-		"allowSyntheticDefaultImports": true,
-		"jsx": "preserve",
-		"target": "ES2022",
-		"module": "preserve",
-		"noEmit": true,
-		"lib": [ "ES2022", "DOM", "DOM.Iterable" ],
-		"isolatedModules": true,
 
-		/* Strict Type-Checking Options */
+		// Type checking.
 		"strict": true,
-
-		/* Additional Checks */
+		"allowSyntheticDefaultImports": true,
+		"allowUnreachableCode": false,
+		"allowUnusedLabels": false,
+		"exactOptionalPropertyTypes": true,
+		"noErrorTruncation": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitThis": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"noImplicitThis": true,
-		"noImplicitReturns": true,
-		"noFallthroughCasesInSwitch": true,
+		"strictFunctionTypes": true,
+		"strictNullChecks": true,
 
-		/* Module Resolution Options */
-		"moduleResolution": "node",
-
-		"esModuleInterop": true,
+		// Modules
+		"module": "nodenext",
 		"resolveJsonModule": true,
 
-		"typeRoots": [ "./node_modules/@types" ],
-		"types": [],
+		// Emit
+		"sourceMap": true,
 
-		/** Skip lib check */
+		// Interop Constraints
+		"esModuleInterop": false,
+		"forceConsistentCasingInFileNames": true,
+		"isolatedModules": true,
+		// @todo: make true when we can use `type: "module"` in package.json
+		"verbatimModuleSyntax": false,
+
+		// Language and Environment
+		"jsx": "react-jsx",
+		"lib": [ "ES2022", "DOM.Iterable", "DOM" ],
+		"moduleDetection": "force",
+		"target": "ES2022",
+
+		// Projects
+		"composite": true,
+		"disableSourceOfProjectReferenceRedirect": true,
+		"incremental": true,
+
+		// Completeness
 		"skipLibCheck": true,
+		"typeRoots": [ "./node_modules/@types" ],
+
+		"noEmit": true
 	},
-	"exclude": [
-		"node_modules"
-	]
+	"include": [ "**/*.cjs", "**/*.mjs", "**/*.ts", "**/*.tsx" ],
+	"exclude": [ "**/build/*", "**/tests/**", "vendor/*", "node_modules/*" ]
 }

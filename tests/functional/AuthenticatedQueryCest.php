@@ -159,7 +159,7 @@ class AuthenticatedQueryCest {
 		$expected_tokens = $I->generateUserTokens( $user_id );
 
 		$query = 'query {
-			viewer { 
+			viewer {
 				databaseId
 				username
 				auth {

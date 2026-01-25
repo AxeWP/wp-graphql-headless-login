@@ -144,13 +144,19 @@ class PasswordLoginCest {
 			// Check the sameSite attribute.
 			$I->assertEquals( 'Lax', $cookie->getSameSite() );
 			// Check the domain attribute.
-			$I->assertEquals( parse_url( get_home_url(), PHP_URL_HOST ), $cookie->getDomain() );
+			$I->assertEquals( 'tests-wordpress', $cookie->getDomain() );
 		}
 		// Test an authenticated query with just the cookie.
 		$I->reset_utils_properties();
-
+		$site_url = 'http://tests-wordpress';
 		$query    = $this->get_query();
-		$response = $I->sendGraphQLRequest( $query );
+		$response = $I->sendGraphQLRequest(
+			$query,
+			null,
+			[
+				'Origin' => $site_url,
+			]
+		);
 
 		// The query is valid and has no errors.
 		$I->assertArrayNotHasKey( 'errors', $response );
@@ -158,6 +164,7 @@ class PasswordLoginCest {
 
 		// The response is properly returning data as expected.
 		$I->assertArrayHasKey( 'data', $response );
+		$I->assertNotEmpty( $response['data']['viewer'] );
 		$I->assertEquals( $user_id, $response['data']['viewer']['databaseId'] );
 		$I->assertEquals( 'testuser', $response['data']['viewer']['username'] );
 		$I->assertNotEmpty( $response['data']['viewer']['auth']['authToken'] );

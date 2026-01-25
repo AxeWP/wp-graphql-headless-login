@@ -26,13 +26,13 @@ export class ErrorBoundary extends Component<
 		return { hasError: true };
 	}
 
-	componentDidCatch( error: Error, errorInfo: ErrorInfo ) {
+	override componentDidCatch( error: Error, errorInfo: ErrorInfo ) {
 		// eslint-disable-next-line no-console
 		console.error( 'Uncaught error:', error, errorInfo );
 		this.setState( { error, errorInfo } );
 	}
 
-	render() {
+	override render() {
 		if ( ! this.state.hasError ) {
 			return this.props.children;
 		}

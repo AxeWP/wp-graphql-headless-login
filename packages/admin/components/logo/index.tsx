@@ -7,13 +7,7 @@ import { SVGIcon } from '@/admin/components/ui/svg-icon';
 export const Logo = ( {
 	size,
 }: {
-	size?: number;
+	size: number;
 } & JSX.IntrinsicElements[ 'svg' ] ) => (
-	<>
-		<SVGIcon
-			icon={ LogoSVG }
-			size={ size }
-			className="headless-login-logo"
-		/>
-	</>
+	<SVGIcon icon={ LogoSVG } size={ size } className="headless-login-logo" />
 );

@@ -9,7 +9,8 @@ import {
 } from '@wordpress/components';
 import { sprintf, __ } from '@wordpress/i18n';
 import { store as coreStore } from '@wordpress/core-data';
-import { useDispatch, dispatch, useSelect } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
+import { store as noticesStore } from '@wordpress/notices';
 import { ClientOptionList } from './ClientOptionList';
 import { useClientContext } from '@/admin/contexts/provider-config-context';
 import { ReactComponent as Logo } from '@/admin/assets/logo.svg';
@@ -27,6 +28,7 @@ export function ClientPanel() {
 		setLoginOption,
 	} = useClientContext();
 	const { saveEditedEntityRecord } = useDispatch( coreStore );
+	const { createNotice, createErrorNotice } = useDispatch( noticesStore );
 
 	const { lastError, isSaving, hasEdits } = useSelect(
 		( select ) => ( {
@@ -51,8 +53,7 @@ export function ClientPanel() {
 
 	useEffect( () => {
 		if ( lastError ) {
-			// @ts-expect-error this isnt typed.
-			dispatch( 'core/notices' ).createErrorNotice(
+			createErrorNotice(
 				sprintf(
 					// translators: %s: Error message.
 					__(
@@ -69,22 +70,21 @@ export function ClientPanel() {
 				}
 			);
 		}
-	}, [ lastError, activeClient ] );
+	}, [ lastError, activeClient, createErrorNotice ] );
 
 	// Disable siteToken if shouldBlockUnauthorizedDomains is false
 	useEffect( () => {
 		const accessControlSettings =
-			settings?.wpgraphql_login_access_control || {};
+			settings?.[ 'wpgraphql_login_access_control' ] || {};
 
 		if (
-			! accessControlSettings?.shouldBlockUnauthorizedDomains &&
+			! accessControlSettings?.[ 'shouldBlockUnauthorizedDomains' ] &&
 			activeClient === 'wpgraphql_login_provider_siteToken' &&
 			clientConfig?.isEnabled
 		) {
 			updateClient( 'isEnabled', false );
 
-			// @ts-expect-error this isnt typed.
-			dispatch( 'core/notices' ).createErrorNotice(
+			createErrorNotice(
 				__(
 					'The Site Token provider can only be enabled if `Access Control Settings: Block unauthorized domains` is enabled.',
 					'wp-graphql-headless-login'
@@ -97,10 +97,11 @@ export function ClientPanel() {
 			);
 		}
 	}, [
-		settings?.wpgraphql_login_access_control,
+		settings,
 		activeClient,
 		clientConfig,
 		updateClient,
+		createErrorNotice,
 	] );
 
 	const saveRecord = async () => {
@@ -109,15 +110,10 @@ export function ClientPanel() {
 		} );
 
 		if ( saved ) {
-			// @ts-expect-error this isnt typed.
-			dispatch( 'core/notices' ).createNotice(
-				'success',
-				'Settings saved',
-				{
-					type: 'snackbar',
-					isDismissible: true,
-				}
-			);
+			createNotice( 'success', 'Settings saved', {
+				type: 'snackbar',
+				isDismissible: true,
+			} );
 		}
 	};
 
@@ -153,7 +149,7 @@ export function ClientPanel() {
 							__( '%s Settings', 'wp-graphql-headless-login' ),
 							wpGraphQLLogin?.settings?.providers?.[
 								activeClient
-							]?.name?.default || 'Provider'
+							]?.[ 'name' ]?.default || 'Provider'
 						) }
 					</h2>
 				</PanelRow>
@@ -165,7 +161,8 @@ export function ClientPanel() {
 					] }
 					values={ clientConfig }
 					fields={
-						wpGraphQLLogin?.settings?.providers?.[ activeClient ]
+						wpGraphQLLogin?.settings?.providers?.[ activeClient ] ??
+						{}
 					}
 					setValue={ ( value ) => {
 						setClientConfig( {

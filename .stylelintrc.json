@@ -15,10 +15,7 @@
 		"selector-pseudo-class-no-unknown": [
 			true,
 			{
-				"ignorePseudoClasses": [
-					"global",
-					"export"
-				]
+				"ignorePseudoClasses": [ "global", "export" ]
 			}
 		]
 	}

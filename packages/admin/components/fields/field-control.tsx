@@ -98,44 +98,62 @@ export const FieldControl = ( {
 	// Fallback to the default value if the value is not set.
 	const value = originalValue ?? rest?.default;
 
-	// Build the component props.
-	let componentProps: ControlComponentPropsMap[ typeof controlType ] = {
-		label: label || description,
-		required: required || false,
-		help: help || undefined,
-		disabled: disabled || false,
-	};
+	// Build the component props based on control type.
+	let componentProps: ControlComponentPropsMap[ typeof controlType ];
 
 	switch ( controlType ) {
 		case 'text':
 			if ( type === 'string' ) {
 				componentProps = {
-					...componentProps,
+					label: label || description,
+					required: required || false,
+					help: help || undefined,
+					disabled: disabled || false,
 					value: ( value as string ) || '',
 					onChange,
+					...( rest?.controlOverrides || {} ),
 				} as TextControlProps;
-				break;
-			}
-			if ( type === 'integer' ) {
+			} else if ( type === 'integer' ) {
 				componentProps = {
-					...componentProps,
+					label: label || description,
+					required: required || false,
+					help: help || undefined,
+					disabled: disabled || false,
 					value: value ? parseInt( value as string ) : '',
 					onChange: ( selected: unknown ) =>
 						onChange( parseInt( selected as string ) ),
 					type: 'number',
+					...( rest?.controlOverrides || {} ),
+				} as TextControlProps;
+			} else {
+				componentProps = {
+					label: label || description,
+					required: required || false,
+					help: help || undefined,
+					disabled: disabled || false,
+					value: ( value as string ) || '',
+					onChange,
+					...( rest?.controlOverrides || {} ),
 				} as TextControlProps;
 			}
 			break;
 		case 'toggle':
 			componentProps = {
-				...componentProps,
+				label: label || description,
+				required: required || false,
+				help: help || undefined,
+				disabled: disabled || false,
 				checked: !! value || false,
 				onChange: ( selected: boolean ) => onChange( !! selected ),
+				...( rest?.controlOverrides || {} ),
 			} as ToggleControlProps;
 			break;
 		case 'select':
 			componentProps = {
-				...componentProps,
+				label: label || description,
+				required: required || false,
+				help: help || undefined,
+				disabled: disabled || false,
 				value: ( value as string ) || '',
 				onChange,
 				options:
@@ -143,22 +161,38 @@ export const FieldControl = ( {
 						label: v.charAt( 0 ).toUpperCase() + v.slice( 1 ),
 						value: v,
 					} ) ) || [],
+				...( rest?.controlOverrides || {} ),
 			} as SelectControlProps;
 			break;
 		case 'formTokenField':
 			componentProps = {
-				...componentProps,
+				label: label || description,
+				required: required || false,
+				help: help || undefined,
+				disabled: disabled || false,
 				onChange,
 				tokenizeOnSpace: true,
-				value: value || [],
+				value: Array.isArray( value ) ? value : [],
+				...( rest?.controlOverrides || {} ),
 			} as FormTokenFieldControlProps;
 			break;
 		case 'jwtSecret':
 			componentProps = {
 				help: help || '',
 				label: label || '',
+				...( rest?.controlOverrides || {} ),
 			} as JwtSecretControlProps;
 			break;
+		default:
+			componentProps = {
+				label: label || description,
+				required: required || false,
+				help: help || undefined,
+				disabled: disabled || false,
+				value: ( value as string ) || '',
+				onChange,
+				...( rest?.controlOverrides || {} ),
+			} as TextControlProps;
 	}
 
 	return <ControlComponent { ...componentProps } />;
