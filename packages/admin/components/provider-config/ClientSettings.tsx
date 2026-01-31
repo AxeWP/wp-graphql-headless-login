@@ -5,11 +5,11 @@ import { ProviderConfigProvider } from '@/admin/contexts/provider-config-context
 
 import styles from './styles.module.scss';
 
-function ClientSettings() {
+export function ClientSettings() {
 	return (
 		<Flex align="flex-start">
 			<ProviderConfigProvider>
-				<FlexItem className={ styles.sidebar }>
+				<FlexItem className={ styles[ 'sidebar' ] }>
 					<ClientMenu />
 				</FlexItem>
 				<FlexBlock>
@@ -21,5 +21,3 @@ function ClientSettings() {
 		</Flex>
 	);
 }
-
-export default ClientSettings;

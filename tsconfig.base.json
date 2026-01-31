@@ -8,18 +8,24 @@
 		// Type checking.
 		"strict": true,
 		"allowSyntheticDefaultImports": true,
+		"allowUnreachableCode": false,
+		"allowUnusedLabels": false,
+		"exactOptionalPropertyTypes": true,
+		"noErrorTruncation": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitThis": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"noImplicitThis": true,
-		"noImplicitReturns": true,
-		"noFallthroughCasesInSwitch": true,
+		"strictFunctionTypes": true,
 		"strictNullChecks": true,
-		"incremental": true,
-		"noErrorTruncation": true,
 
 		// Modules
 		"module": "preserve",
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
 
 		// Emit
@@ -27,14 +33,21 @@
 
 		// Interop Constraints
 		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
 		"isolatedModules": true,
 		// @todo: make true when we can use `type: "module"` in package.json
 		"verbatimModuleSyntax": false,
 
 		// Language and Environment
-		"jsx": "preserve",
-		"lib": [ "ES2022", "DOM", "DOM.Iterable" ],
+		"jsx": "react-jsx",
+		"lib": [ "ES2022", "DOM.Iterable", "DOM" ],
+		"moduleDetection": "force",
 		"target": "ES2022",
+
+		// Projects
+		"composite": true,
+		"disableSourceOfProjectReferenceRedirect": true,
+		"incremental": true,
 
 		// Completeness
 		"skipLibCheck": true,

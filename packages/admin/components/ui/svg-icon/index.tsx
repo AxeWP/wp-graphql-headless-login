@@ -5,7 +5,7 @@ import styles from './styles.module.scss';
 
 interface Props {
 	icon: FunctionComponent< SVGProps< SVGSVGElement > >;
-	name?: string;
+	iconName?: string;
 	classNames?: string;
 	size?: number;
 }
@@ -16,7 +16,7 @@ const SVGIconComponent = forwardRef<
 >( ( props, ref ) => {
 	const {
 		size = 24,
-		name = 'headless-login-logo',
+		iconName: name = 'headless-login-logo',
 		onClick,
 		classNames,
 		icon: Icon,

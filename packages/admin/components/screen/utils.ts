@@ -34,11 +34,15 @@ export const getSettingForScreen = ( screen: string ): string => {
 /**
  * Checks whether a screen is allowed.
  *
- * Allowed screens are the keys defined in the `WPGraphQLLogin.settings` global.
+ * Allowed screens are keys defined in `WPGraphQLLogin.settings` global.
  *
  * @param {string} screen The screen to check.
  */
 export const isAllowedScreen = ( screen: string ): boolean => {
+	if ( ! wpGraphQLLogin?.settings ) {
+		return false;
+	}
+
 	const allowedSettings = Object.keys( wpGraphQLLogin.settings );
 
 	const settingToCheck = getSettingForScreen( screen );

@@ -23,7 +23,7 @@ const clientDefaults: ProviderSettingType = {
 	} satisfies LoginOptionsType,
 };
 
-const ProviderConfigContext = createContext< {
+type ProviderConfigContextType = {
 	activeClient: string;
 	clientConfig?: ProviderSettingType;
 	setClientConfig: ( value: ProviderSettingType ) => void;
@@ -31,14 +31,15 @@ const ProviderConfigContext = createContext< {
 	setClientOption: ( value: ClientOptionsType ) => void;
 	setLoginOption: ( value: LoginOptionsType ) => void;
 	setActiveClient: ( value: string ) => void;
-} >( {
+};
+
+const ProviderConfigContext = createContext< ProviderConfigContextType >( {
 	activeClient: '',
-	setActiveClient: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-	clientConfig: undefined,
-	setClientConfig: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-	updateClient: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-	setClientOption: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-	setLoginOption: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+	setActiveClient: () => {},
+	updateClient: () => {},
+	setClientOption: () => {},
+	setLoginOption: () => {},
+	setClientConfig: () => {},
 } );
 
 export const ProviderConfigProvider = ( { children }: PropsWithChildren ) => {
@@ -91,7 +92,7 @@ export const ProviderConfigProvider = ( { children }: PropsWithChildren ) => {
 		) {
 			setClientConfig( {
 				...clientDefaults,
-				slug: activeClient.replace( 'wpgraphql_login_provider_', '' ),
+				slug: activeClient,
 			} );
 		}
 	}, [ clientConfig, setClientConfig, activeClient ] );

@@ -21,35 +21,41 @@ export class ErrorBoundary extends Component<
 		this.state = { hasError: false };
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	static getDerivedStateFromError( _error: Error ) {
-		return { hasError: true };
+	static getDerivedStateFromError( error: Error ) {
+		return { hasError: true, error };
 	}
 
-	componentDidCatch( error: Error, errorInfo: ErrorInfo ) {
+	override componentDidCatch( error: Error, errorInfo: ErrorInfo ) {
 		// eslint-disable-next-line no-console
 		console.error( 'Uncaught error:', error, errorInfo );
 		this.setState( { error, errorInfo } );
 	}
 
-	render() {
+	override render() {
 		if ( ! this.state.hasError ) {
 			return this.props.children;
 		}
 
+		if ( this.props.fallback ) {
+			return this.props.fallback;
+		}
+
+		// If showErrorInfo is explicitly false, render nothing
+		// This allows complete suppression of error UI
+		if ( this.props.showErrorInfo === false ) {
+			return null;
+		}
+
 		return (
-			this.props.fallback || (
-				<div>
-					<h1>Something went wrong.</h1>
-					{ this.props.showErrorInfo && this.state.errorInfo && (
-						<details style={ { whiteSpace: 'pre-wrap' } }>
-							{ this.state.error && this.state.error.toString() }
-							<br />
-							{ this.state.errorInfo.componentStack }
-						</details>
-					) }
-				</div>
-			)
+			<div>
+				<h1>Something went wrong.</h1>
+				{ this.state.error && (
+					<details open style={ { whiteSpace: 'pre-wrap' } }>
+						<summary>Error: { this.state.error.message }</summary>
+						{ this.state.errorInfo?.componentStack }
+					</details>
+				) }
+			</div>
 		);
 	}
 }

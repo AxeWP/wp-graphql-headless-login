@@ -15,11 +15,11 @@ export const Notices = () => {
 	const { removeNotice } = useDispatch( store );
 
 	if ( ! notices?.length ) {
-		return <></>;
+		return null;
 	}
 
 	return (
-		<div className={ styles.notices }>
+		<div className={ styles[ 'notices' ] }>
 			<SnackbarList
 				className="edit-site-notices"
 				notices={ notices as any } // eslint-disable-line @typescript-eslint/no-explicit-any
