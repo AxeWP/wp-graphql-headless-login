@@ -60,8 +60,11 @@
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.28.6",
-		"@babel/core": "^7.28.6",
+		"@babel/core": "^7.29.0",
 		"@svgr/webpack": "^8.1.0",
+		"@testing-library/jest-dom": "^6.9.1",
+		"@testing-library/react": "^16.3.2",
+		"@testing-library/user-event": "^14.6.1",
 		"@typescript-eslint/eslint-plugin": "^8.54.0",
 		"@typescript-eslint/parser": "^8.54.0",
 		"@types/react": "^18.3.27",
@@ -85,6 +88,8 @@
 		"tsconfig-paths-webpack-plugin": "^4.2.0",
 		"typescript": "^5.9.3",
 		"url-loader": "^4.1.1",
+		"vite-tsconfig-paths": "^6.0.5",
+		"vitest": "^4.0.18",
 		"webpack-remove-empty-scripts": "^1.1.1"
 	},
 	"lint-staged": {

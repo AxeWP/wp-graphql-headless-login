@@ -17,6 +17,15 @@ coverage:
         target: 60%
         informational: true
 
+ignore:
+  - '**/*.test.ts'
+  - '**/*.test.tsx'
+  - '**/*.spec.ts'
+  - '**/*.spec.tsx'
+  - '**/types.d.ts'
+  - 'vitest.config.ts'
+  - 'vitest.setup.ts'
+
 comment:
   layout: 'reach,diff,flags,files'
   behavior: default
