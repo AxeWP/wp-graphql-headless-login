@@ -40,7 +40,7 @@ class GraphQL extends \Codeception\Module {
 		$response = json_decode( $rest->grabResponse(), true );
 
 		// use --debug flag to view
-		codecept_debug( json_encode( $response, JSON_PRETTY_PRINT ) );
+		codecept_debug( $response, JSON_PRETTY_PRINT );
 
 		// Confirm success.
 		$rest->seeResponseCodeIs( 200 );

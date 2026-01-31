@@ -1,20 +1,6 @@
-import { _Hooks } from '@wordpress/hooks/build-types/createHooks';
+/// <reference types="react" />
 
-declare global {
-	const wpGraphQLLogin: {
-		hooks: _Hooks;
-		settings: SettingSchema & {
-			providers: Record< string, Record< string, FieldSchema & {
-				properties: Record< string, FieldSchema >;
-			} > >;
-		};
-		nonce: string;
-		secret: {
-			hasKey: boolean;
-			isConstant: boolean;
-		};
-	};
-}
+import { _Hooks } from '@wordpress/hooks/build-types/createHooks';
 
 type AllowedConditionalLogicOperators = '==' | '!=' | '>' | '<' | '>=' | '<=';
 
@@ -46,7 +32,7 @@ type SettingSchema = {
 		description: string;
 		label: string;
 		fields: Record< string, FieldSchema >;
-	}
+	};
 };
 
 type ProviderSettingType = {
@@ -94,3 +80,27 @@ type OAuth2LoginOptionsType = {
 	createUserIfNoneExists?: boolean;
 	linkExistingUsers?: boolean;
 };
+
+export type WpGraphQLLogin = {
+	hooks: _Hooks;
+	settings: SettingSchema & {
+		providers: Record<
+			string,
+			Record<
+				string,
+				FieldSchema & {
+					properties: Record< string, FieldSchema >;
+				}
+			>
+		>;
+	};
+	nonce: string;
+	secret: {
+		hasKey: boolean;
+		isConstant: boolean;
+	};
+};
+
+declare global {
+	const wpGraphQLLogin: WpGraphQLLogin;
+}

@@ -1,19 +1,21 @@
 ![Headless Login for WPGraphQL Logo](./assets/header.png)
+
 # Headless Login for WPGraphQL
 
 A WordPress plugin that provides headless login and authentication for <a href="https://wpgraphql.com" target="_blank">WPGraphQL</a>, supporting traditional passwords, OAuth2/OpenID Connect, JWT, and more.
 
-* [Join the WPGraphQL community on Discord.](https://discord.gg/55h7WmYZff)
-* [Documentation](#usage)
+- [Join the WPGraphQL community on Discord.](https://discord.gg/55h7WmYZff)
+- [Documentation](#usage)
 
------
+---
 
 ![Packagist License](https://img.shields.io/packagist/l/axepress/wp-graphql-headless-login?color=green) ![Packagist Version](https://img.shields.io/packagist/v/axepress/wp-graphql-headless-login?label=stable) ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/AxeWP/wp-graphql-headless-login/0.4.4) ![GitHub forks](https://img.shields.io/github/forks/AxeWP/wp-graphql-headless-login?style=social) ![GitHub Repo stars](https://img.shields.io/github/stars/AxeWP/wp-graphql-headless-login?style=social)<br />
 ![CodeQuality](https://img.shields.io/github/actions/workflow/status/axewp/wp-graphql-headless-login/code-quality.yml?branch=develop&label=Code%20Quality)
 ![Integration](https://img.shields.io/github/actions/workflow/status/axewp/wp-graphql-headless-login/integration-testing.yml?branch=develop&label=Integration%20Testing)
 ![Coding Standards](https://img.shields.io/github/actions/workflow/status/axewp/wp-graphql-headless-login/code-standard.yml?branch=develop&label=WordPress%20Coding%20Standards)
 [![Coverage Status](https://coveralls.io/repos/github/AxeWP/wp-graphql-headless-login/badge.svg?branch=develop)](https://coveralls.io/github/AxeWP/wp-graphql-headless-login?branch=develop)
------
+
+---
 
 ## Description
 
@@ -23,9 +25,9 @@ This plugin is inspired by and aims to replace <a href="https://github.com/wp-gr
 
 ## System Requirements
 
-* PHP 7.4-8.2+
-* WordPress 6.2+
-* WPGraphQL 1.14.0+
+- PHP 7.4-8.2+
+- WordPress 6.2+
+- WPGraphQL 1.14.0+
 
 ## Quick Install
 
@@ -49,9 +51,9 @@ composer require axepress/wp-graphql-headless-login
 
 Until we hit v1.0, we're using a _modified_ version of [SemVer](https://semver.org/), where:
 
-* v0.**x**: "Major" releases. These releases introduce new features, and _may_ contain breaking changes to either the PHP API or the GraphQL schema
-* v0.x.**y**: "Minor" releases. These releases introduce new features and enhancements and address bugs. They _do not_ contain breaking changes.
-* v0.x.y.**z**: "Patch" releases. These releases are reserved for addressing issue with the previous release only.
+- v0.**x**: "Major" releases. These releases introduce new features, and _may_ contain breaking changes to either the PHP API or the GraphQL schema
+- v0.x.**y**: "Minor" releases. These releases introduce new features and enhancements and address bugs. They _do not_ contain breaking changes.
+- v0.x.y.**z**: "Patch" releases. These releases are reserved for addressing issue with the previous release only.
 
 ## Development and Support
 
@@ -69,16 +71,15 @@ The following functionality is currently supported:
 
 - Authenticate with a [WordPress username and password](./docs/reference/mutations.md#login-with-a-traditional-username-password).
 - Pass and validate [OAuth 2.0 / OpenID Connect provider response](./docs/reference/mutations.md#login-with-an-oauth2openid-authorization-response) from the frontend. <br />
-Supported providers (out of the box):
-  * Facebook
-  * GitHub
-  * Google
-  * Instagram
-  * LinkedIn
-  * OAuth2 - Generic: Any other OAuth 2.0 provider.
-  * SAML authentication and more coming soon!
-- Use a [special Site Token](./docs/reference/mutations.md#login-with-a-site-token-and-user-identity
-) to support WordPress authentication with any externally-authenticated user identity (e.g. [Auth.js](https://authjs.dev/)).
+  Supported providers (out of the box):
+  - Facebook
+  - GitHub
+  - Google
+  - Instagram
+  - LinkedIn
+  - OAuth2 - Generic: Any other OAuth 2.0 provider.
+  - SAML authentication and more coming soon!
+- Use a [special Site Token](./docs/reference/mutations.md#login-with-a-site-token-and-user-identity) to support WordPress authentication with any externally-authenticated user identity (e.g. [Auth.js](https://authjs.dev/)).
 - Add your own Authentication Provider by [extending the `ProviderConfig` class](./docs/recipes/provider-config.md).
 - Authenticate with JWT tokens using a [HTTP Authorization header]().
 - [Set CORS headers](./docs/reference/settings.md) to allow or restrict access to the GraphQL endpoint.
@@ -112,14 +113,26 @@ Supported providers (out of the box):
 - [WordPress Filters](./docs/reference/filters.md)
 
 ### Recipes:
+
 - [Server-side Authentication flow with Next.js](./docs/recipes/server-side-auth-next-api-routes.md) ( [demo](https://github.com/AxeWP/axepress-playground/blob/demo/server-side-auth/HowTo.md) ).
 - [Client-side Authentication flow with NextAuth.js](./docs/recipes/client-side-auth-nextauth.md)
 - [Adding custom `ProviderConfig`s](./docs/recipes/provider-config.md)
 
 ## Testing
 
-1. Copy `.env.dist` to `.env`, and update the file to match your local environment.
-2. Run `composer install` to get the dev-dependencies.
-3. Run `composer install-test-env` to create the test environment.
-4. Run your test suite with [Codeception](https://codeception.com/docs/02-GettingStarted#Running-Tests).
-E.g. `vendor/bin/codecept run wpunit` will run all WPUnit tests.
+1. Copy `.env.dist` to `.env` if you need to override default test behavior.
+2. Run `npm install` to install Node.js dependencies.
+3. Run `npm run build` to build the plugin assets.
+4. Run `npm run wp-env start` to start the WordPress test environment.
+5. Run your test suite with [Codeception](https://codeception.com/docs/02-GettingStarted#Running-Tests) via wp-env.
+
+**Example test commands:**
+
+```bash
+# Run
+npm run test:php -- run wpunit
+npm run test:php -- run tests/functional/SomeFunctionalTest.php -vvv
+
+# Stop the environment when done
+npm run wp-env stop
+```

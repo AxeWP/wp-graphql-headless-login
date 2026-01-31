@@ -17,12 +17,10 @@ use WPGraphQL\Login\Admin\Upgrade\UpgradeRegistry;
  *
  * @since 0.0.1
  */
-function activation_callback(): callable {
-	return static function (): void {
-		// Runs when the plugin is activated.
-		do_action( 'graphql_login_activate' );
+function activation_callback(): void {
+	// Runs when the plugin is activated.
+	do_action( 'graphql_login_activate' );
 
-		// Run any upgrade routines.
-		UpgradeRegistry::do_upgrades();
-	};
+	// Run any upgrade routines.
+	UpgradeRegistry::do_upgrades();
 }

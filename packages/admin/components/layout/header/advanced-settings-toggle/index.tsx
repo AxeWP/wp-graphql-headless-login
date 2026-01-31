@@ -1,6 +1,6 @@
+import { useEffect, useState } from 'react';
 import { useSettings } from '@/admin/contexts/settings-context';
 import { ToggleControl } from '@wordpress/components';
-import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 /**

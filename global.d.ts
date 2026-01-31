@@ -1,6 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-declare let __webpack_public_path__: string;
+/// <reference types="react" />
 
 declare module '*.svg' {
 	import * as React from 'react';
@@ -13,7 +11,7 @@ declare module '*.svg' {
 	export default src;
 }
 
-declare module '*.scss' {
-	const content: Record< string, string >;
-	export default content;
+declare module '*.module.scss' {
+	const styles: { [ key: string ]: string };
+	export default styles;
 }

@@ -1,102 +1,112 @@
 {
 	"name": "wp-graphql-headless-login",
-	"description": "A WordPress plugin that provides headless login and authentication for WPGraphQL",
-	"homepage": "https://github.com/AxeWP/wp-graphql-headless-login",
-	"author": "AxePress Development <support@axepress.dev> (https://axepress.dev)",
-	"license": "GPL-3.0",
-	"email": "support@axepress.dev",
-	"directories": {
-		"doc": "docs",
-		"test": "tests"
+	"engines": {
+		"node": ">=22.21.1",
+		"npm": ">=10.9.4"
 	},
+	"files": [
+		"build",
+		"src",
+		"vendor",
+		"vendor-prefixed",
+		"access-functions.php",
+		"activation.php",
+		"deactivation.php",
+		"LICENSE",
+		"README.md",
+		"readme.txt",
+		"wp-graphql-headless-login.php"
+	],
 	"scripts": {
-		"analyze-bundles": "npm run build --webpack-bundle-analyzer",
-		"build": "rimraf build/* && cross-env BABEL_ENV=default NODE_ENV=production webpack",
-		"build:check-assets": "rimraf build/* && cross-env ASSET_CHECK=true BABEL_ENV=default NODE_ENV=production webpack",
-		"dev": "rimraf build/* && cross-env BABEL_ENV=default NODE_ENV=development webpack",
-		"lint": "npm run lint:php && npm run lint:css && npm run lint:js",
-		"lint:css": "stylelint '**/*.scss'",
-		"lint:css-fix": "stylelint '**/*.scss' --fix",
-		"lint:js": "wp-scripts lint-js --ext=js,ts,tsx",
-		"lint:js:report": "npm run lint:js -- --output-file eslint_report.json --ext=js,ts,tsx --format json",
-		"lint:js-fix": "eslint packages/admin --ext=js,jsx,ts,tsx --fix",
-		"lint:php": "composer run-script check-cs",
-		"lint:php-fix": "composer run-script fix-cs",
-		"lint:phpstan": "composer run-script phpstan",
-		"start": "rimraf build/* && cross-env BABEL_ENV=default CHECK_CIRCULAR_DEPS=true webpack --watch",
-		"ts:check": "tsc --build tsconfig.json",
-		"packages-update": "wp-scripts packages-update --dist-tag=wp-6.2",
+		"prepare": "husky",
+		"analyze-bundles": "npm run build:prod --webpack-bundle-analyzer",
+		"build:dev": "cross-env NODE_ENV=development npm-run-all build:js 'build:php'",
+		"build:prod": "npm run clean && cross-env NODE_ENV=production npm-run-all 'build:js' 'build:php -- --optimize-autoloader --no-dev' ",
+		"build:js": "wp-scripts build --config ./webpack.config.js",
+		"build:php": "wp-env run cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ -- composer install",
+		"clean": "rimraf build",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:css:fix": "npm run lint:css -- --fix",
+		"lint:js": "wp-scripts lint-js",
+		"lint:js:fix": "npm run lint:js -- --fix",
+		"lint:js:types": "tsc --noEmit",
+		"lint:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ -- composer run-script lint",
+		"lint:php:fix": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ -- composer run-script format",
+		"lint:php:stan": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ -- composer run-script phpstan",
+		"test:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ -- vendor/bin/codecept",
+		"test:js": "vitest run",
+		"test:js:coverage": "vitest run --coverage",
+		"test:js:watch": "vitest watch",
+		"test:js:ui": "vitest --ui",
+		"plugin-zip": "wp-scripts plugin-zip",
+		"start:js": "wp-scripts start --config ./webpack.config.js",
 		"wp-env": "wp-env"
 	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/AxeWP/wp-graphql-headless-login.git"
-	},
-	"keywords": [
-		"WordPress",
-		"GraphQL"
-	],
-	"bugs": {
-		"url": "https://github.com/AxeWP/wp-graphql-headless-login/issues"
-	},
-	"lint-staged": {
-		"*.php": "composer run check-cs"
-	},
-	"wp-env": {
-		"plugins": [
-			"."
-		]
-	},
 	"dependencies": {
-		"@wordpress/api-fetch": "^7.21.0",
-		"@wordpress/components": "^29.7.0",
-		"@wordpress/compose": "^7.21.0",
-		"@wordpress/core-data": "^7.21.0",
-		"@wordpress/data": "^10.21.0",
-		"@wordpress/dom-ready": "^4.21.0",
-		"@wordpress/element": "^6.21.0",
-		"@wordpress/hooks": "^4.21.0",
-		"@wordpress/i18n": "^5.21.0",
-		"@wordpress/icons": "^10.21.0",
-		"@wordpress/notices": "^5.21.0",
-		"clsx": "^2.1.1"
+		"@wordpress/api-fetch": "^7.39.0",
+		"@wordpress/components": "^29.12.0",
+		"@wordpress/compose": "^7.39.0",
+		"@wordpress/core-data": "^7.39.0",
+		"@wordpress/data": "^10.39.0",
+		"@wordpress/dom-ready": "^4.39.0",
+		"@wordpress/hooks": "^4.39.0",
+		"@wordpress/i18n": "^6.12.0",
+		"@wordpress/icons": "^11.6.0",
+		"@wordpress/notices": "^5.39.0",
+		"clsx": "^2.1.1",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1"
 	},
 	"devDependencies": {
-		"@babel/cli": "^7.27.2",
-		"@babel/core": "^7.27.4",
-		"@babel/plugin-syntax-jsx": "^7.27.1",
+		"@babel/cli": "^7.28.6",
+		"@babel/core": "^7.28.6",
 		"@svgr/webpack": "^8.1.0",
-		"@typescript-eslint/eslint-plugin": "^8.33.1",
-		"@typescript-eslint/parser": "^8.33.1",
-		"@wordpress/babel-plugin-import-jsx-pragma": "^5.25.0",
-		"@wordpress/babel-preset-default": "^8.25.0",
-		"@wordpress/env": "^10.25.0",
-		"@wordpress/eslint-plugin": "^22.11.0",
-		"@wordpress/prettier-config": "^4.25.0",
-		"@wordpress/readable-js-assets-webpack-plugin": "^3.25.0",
-		"@wordpress/scripts": "^30.18.0",
-		"@wordpress/stylelint-config": "^23.17.0",
-		"babel-loader": "^9.2.1",
-		"babel-plugin-inline-json-import": "^0.3.2",
-		"cross-env": "^7.0.3",
-		"eslint-import-resolver-node": "^0.3.9",
+		"@typescript-eslint/eslint-plugin": "^8.54.0",
+		"@typescript-eslint/parser": "^8.54.0",
+		"@types/react": "^18.3.1",
+		"@types/react-dom": "^18.3.1",
+		"@wordpress/babel-preset-default": "^8.39.0",
+		"@wordpress/env": "^10.39.0",
+		"@wordpress/eslint-plugin": "^24.1.0",
+		"@wordpress/prettier-config": "^4.39.0",
+		"@wordpress/scripts": "^31.4.0",
+		"@wordpress/stylelint-config": "^23.31.0",
+		"cross-env": "^10.1.0",
+		"eslint-import-resolver-typescript": "^4.4.4",
 		"eslint-import-resolver-webpack": "^0.13.10",
 		"eslint-plugin-eslint-comments": "^3.2.0",
-		"eslint-plugin-import": "^2.31.0",
+		"eslint-plugin-import": "^2.32.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.2.7",
+		"npm-run-all": "^4.1.5",
 		"prettier": "npm:wp-prettier@3",
-		"rimraf": "^6.0.1",
-		"terser-webpack-plugin": "^5.3.14",
+		"rimraf": "^6.1.2",
 		"tsconfig-paths-webpack-plugin": "^4.2.0",
-		"typescript": "^5.8.3",
+		"typescript": "^5.9.3",
 		"url-loader": "^4.1.1",
-		"webpack": "^5.99.9",
-		"webpack-bundle-analyzer": "^4.10.2",
-		"webpack-cli": "^5.1.4"
+		"webpack-remove-empty-scripts": "^1.1.1"
+	},
+	"lint-staged": {
+		"**/*.{js,jsx,ts,tsx}": [
+			"wp-scripts lint-js --fix"
+		],
+		"**/*.{css,scss}": [
+			"wp-scripts lint-style --fix"
+		],
+		"src/**/*.php": [
+			"composer format --"
+		],
+		"**/*.{json,md,css,scss,js,jsx,ts,tsx}": [
+			"wp-scripts format --"
+		]
 	},
 	"overrides": {
-		"react": "18.3.0",
-		"react-dom": "18.3.0",
-		"@typescript-eslint/eslint-plugin": "^8.33.1",
-		"@typescript-eslint/parser": "^8.33.1"
+		"@babel/runtime": "^7.27.6",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
+		"webpack-dev-server@<=5.2.0": ">=5.2.1",
+		"@typescript-eslint/eslint-plugin": "^8.54.0",
+		"@typescript-eslint/parser": "^8.54.0"
 	}
 }

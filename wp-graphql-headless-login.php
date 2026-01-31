@@ -44,18 +44,6 @@ if ( ! \WPGraphQL\Login\Autoloader::autoload() ) {
 	return;
 }
 
-// Run this function when the plugin is activated.
-if ( file_exists( __DIR__ . '/activation.php' ) ) {
-	require_once __DIR__ . '/activation.php';
-	register_activation_hook( __FILE__, 'WPGraphQL\Login\activation_callback' );
-}
-
-// Run this function when the plugin is deactivated.
-if ( file_exists( __DIR__ . '/deactivation.php' ) ) {
-	require_once __DIR__ . '/deactivation.php';
-	register_deactivation_hook( __FILE__, 'WPGraphQL\Login\deactivation_callback' );
-}
-
 /**
  * Define plugin constants.
  *
@@ -134,8 +122,6 @@ function plugin_conflicts(): array {
  * @since 0.0.1
  */
 function init(): void {
-	constants();
-
 	// Get the dependencies that are not ready.
 	$not_ready = dependencies_not_ready();
 
@@ -194,8 +180,22 @@ function init(): void {
 	}
 }
 
+constants();
+
 // Initialize the plugin.
 add_action( 'graphql_init', 'WPGraphQL\Login\init' );
+
+// Run this function when the plugin is activated.
+if ( file_exists( __DIR__ . '/activation.php' ) ) {
+	require_once __DIR__ . '/activation.php';
+	register_activation_hook( __FILE__, 'WPGraphQL\Login\activation_callback' );
+}
+
+// Run this function when the plugin is deactivated.
+if ( file_exists( __DIR__ . '/deactivation.php' ) ) {
+	require_once __DIR__ . '/deactivation.php';
+	register_deactivation_hook( __FILE__, 'WPGraphQL\Login\deactivation_callback' );
+}
 
 // Some plugins may rely on authentication even before our plugin is initialized.
 if ( class_exists( 'WPGraphQL\Login\Auth\ServerAuthentication' ) ) {

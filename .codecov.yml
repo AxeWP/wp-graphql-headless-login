@@ -1,0 +1,25 @@
+# Codecov configuration
+# https://docs.codecov.com/docs/codecov-yaml
+
+# Fix path prefixes from Docker container paths to repo-relative paths
+fixes:
+  - '/var/www/html/wp-content/plugins/wp-graphql-headless-login/'
+
+coverage:
+  status:
+    project:
+      default:
+        target: 70%
+        threshold: 5%
+        informational: true
+    patch:
+      default:
+        target: 60%
+        informational: true
+
+comment:
+  layout: 'reach,diff,flags,files'
+  behavior: default
+  require_base: false
+  require_head: true
+  require_changes: true

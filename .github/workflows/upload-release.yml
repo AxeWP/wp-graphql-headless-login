@@ -2,7 +2,7 @@ name: Upload Release Package
 
 on:
   release:
-    types: [ published ]
+    types: [published]
 
 jobs:
   tag:
@@ -10,51 +10,49 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          show-progress: ${{ runner.debug == '1' && 'true' || 'false' }}
+          persist-credentials: false
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - name: Set up PHP
+        uses: shivammathur/setup-php@ec406be512d7077f68eed36e63f4d91bc006edc4 # v2.35.4
         with:
           php-version: 7.4
-          coverage: none
           extensions: mbstring, intl
-          tools: composer:v2
+          tools: composer
 
       - name: Install Composer dependencies
-        uses: ramsey/composer-install@v3
+        uses: ramsey/composer-install@3cf229dc2919194e9e36783941438d17239e8520 # v3.1.1
         with:
-          composer-options: "--no-progress"
+          composer-options: '--no-progress --no-dev --optimize-autoloader'
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
-          node-version: 20
+          cache: 'npm'
+          node-version-file: '.nvmrc'
 
-      - name: Install Node.js dependencies
+      - name: Install NPM dependencies
         run: npm ci
+
+      - name: Build and zip
         env:
-          CI: true
-
-      - name: Build assets
+          NODE_ENV: production
         run: |
-          npm run build
-
-      - name: Create Artifact
-        run: |
-          composer install --no-dev --optimize-autoloader
-          mkdir plugin-build
-          composer archive -vvv --format=zip --file="plugin-build/wp-graphql-headless-login"
+          npm run build:js
+          npm run plugin-zip
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: wp-graphql-headless-login
-          path: plugin-build/wp-graphql-headless-login.zip
+          path: wp-graphql-headless-login.zip
 
       - name: Upload release asset
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
         with:
-          files: plugin-build/wp-graphql-headless-login.zip
+          files: wp-graphql-headless-login.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
