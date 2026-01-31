@@ -12,7 +12,6 @@ declare module '*.svg' {
 }
 
 declare module '*.module.scss' {
-	// Enforce dot accessible class names
 	const styles: { [ key: string ]: string };
 	export default styles;
 }

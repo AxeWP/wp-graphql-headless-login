@@ -42,7 +42,7 @@ jobs:
   # - Installs Composer dependencies.
   # - Sets up Node.js.
   # - Installs npm dependencies.
-  # - Starts the WordPress Docker testing environment (with or without pcov coverage).
+  # - Starts the WordPress testing environment with wp-env (with or without pcov coverage).
   # - Logs PHP and WordPress versions from the container.
   # - Runs Codeception tests (with coverage if enabled).
   # - Uploads code coverage report to Codecov.io (if coverage is enabled).
