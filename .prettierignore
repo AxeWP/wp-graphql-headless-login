@@ -1,1 +1,7 @@
-*.scss
+build
+vendor
+vendor-prefixed
+node_modules
+tests/_output
+package-lock.json
+composer.lock

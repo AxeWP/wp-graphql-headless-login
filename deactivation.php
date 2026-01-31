@@ -13,28 +13,26 @@ namespace WPGraphQL\Login;
 use WPGraphQL\Login\Admin\SettingsRegistry;
 use WPGraphQL\Login\Admin\Upgrade\AbstractUpgrade;
 
-	/**
-	 * Runs when WPGraphQL is de-activated.
-	 *
-	 * This cleans up data that WPGraphQL stores.
-	 *
-	 * @since 0.0.1
-	 */
-function deactivation_callback(): callable {
-	return static function (): void {
-		// Fire an action when WPGraphQL is de-activating.
-		do_action( 'graphql_login_deactivate' );
+/**
+ * Runs when WPGraphQL is de-activated.
+ *
+ * This cleans up data that WPGraphQL stores.
+ *
+ * @since 0.0.1
+ */
+function deactivation_callback(): void {
+	// Fire an action when WPGraphQL is de-activating.
+	do_action( 'graphql_login_deactivate' );
 
-		// Delete data during activation.
-		delete_data();
-	};
+	// Delete data during activation.
+	delete_data();
 }
 
-	/**
-	 * Delete data on deactivation.
-	 *
-	 * @since 0.0.1
-	 */
+/**
+ * Delete data on deactivation.
+ *
+ * @since 0.0.1
+ */
 function delete_data(): void {
 
 	// Check if the plugin is set to delete data or not.

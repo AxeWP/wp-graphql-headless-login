@@ -227,7 +227,7 @@ class TokenManager {
 	 * @return string[]
 	 */
 	public static function get_token_allowed_domains(): array {
-		$allowed_domains = [ get_bloginfo( 'url' ) ];
+		$allowed_domains = [ home_url() ];
 
 		/**
 		 * Filter the allowed domains for the token.
@@ -285,7 +285,7 @@ class TokenManager {
 		$expiration = apply_filters( 'graphql_login_token_expiration_timestamp', self::get_expiration(), $user );
 
 		$token = [
-			'iss'  => get_bloginfo( 'url' ),
+			'iss'  => home_url(),
 			'iat'  => self::get_issued_at(),
 			'nbf'  => $nbf,
 			'exp'  => $expiration,

@@ -4,6 +4,6 @@
 
 class_name: UnitTester
 modules:
-    enabled:
-        - Asserts
-        - \Tests\WPGraphQL\Login\Helper\Unit
+  enabled:
+    - Asserts
+    - \Tests\WPGraphQL\Login\Helper\Unit

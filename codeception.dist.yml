@@ -1,102 +1,106 @@
 paths:
-    tests: tests
-    output: tests/_output
-    data: tests/_data
-    support: tests/_support
-    envs: tests/_envs
+  tests: tests
+  output: tests/_output
+  data: tests/_data
+  support: tests/_support
+  envs: tests/_envs
 actor_suffix: Tester
 params:
-    - .env
+  - env
+  - .env
+bootstrap: bootstrap.php
 settings:
-    colors: true
-    memory_limit: 1024M
-extensions:
-    enabled:
-        - Codeception\Extension\RunFailed
-    commands:
-        - lucatume\WPBrowser\Command\DbExport
-        - lucatume\WPBrowser\Command\DbImport
-        - lucatume\WPBrowser\Command\DevInfo
-        - lucatume\WPBrowser\Command\DevRestart
-        - lucatume\WPBrowser\Command\DevStart
-        - lucatume\WPBrowser\Command\DevStop
-        - lucatume\WPBrowser\Command\GenerateWPAjax
-        - lucatume\WPBrowser\Command\GenerateWPCanonical
-        - lucatume\WPBrowser\Command\GenerateWPRestApi
-        - lucatume\WPBrowser\Command\GenerateWPRestController
-        - lucatume\WPBrowser\Command\GenerateWPRestPostTypeController
-        - lucatume\WPBrowser\Command\GenerateWPUnit
-        - lucatume\WPBrowser\Command\GenerateWPXMLRPC
-        - lucatume\WPBrowser\Command\MonkeyCacheClear
-        - lucatume\WPBrowser\Command\MonkeyCachePath
-        - lucatume\WPBrowser\Command\RunAll
-        - lucatume\WPBrowser\Command\RunOriginal
+  colors: true
+  memory_limit: 1024M
 coverage:
-    enabled: true
-    remote: false
-    c3_url: "%WORDPRESS_URL%/wp-content/plugins/wp-graphql-headless-login/wp-graphql-headless-login.php"
-    include:
-        - src/*
-        - /access-functions.php
-        - /activation.php
-        - /deactivation.php
-    exclude:
-        - /bin/*
-        - /docs/*
-        - /node_modules/*
-        - /packages/*
-        - /tests/*
-        - /vendor-prefixed/*
-        - /vendor/*
-    show_only_summary: false
+  enabled: true
+  remote: false
+  c3_url: '%TEST_WP_URL%/wp-content/plugins/wp-graphql-headless-login/wp-graphql-headless-login.php'
+  include:
+    - src/*
+    - /access-functions.php
+    - /activation.php
+    - /deactivation.php
+  exclude:
+    - wp-graphql-headless-login.php
+    - /bin/*
+    - /docs/*
+    - /node_modules/*
+    - /packages/*
+    - /phpstan/*
+    - /tests/*
+    - /vendor/*
+    - /vendor-prefixed/*
+  show_only_summary: false
+extensions:
+  enabled:
+    - Codeception\Extension\RunFailed
+    - lucatume\WPBrowser\Extension\IsolationSupport
+  commands:
+    - lucatume\WPBrowser\Command\RunOriginal
+    - lucatume\WPBrowser\Command\RunAll
+    - lucatume\WPBrowser\Command\DbExport
+    - lucatume\WPBrowser\Command\DbImport
+    - lucatume\WPBrowser\Command\MonkeyCachePath
+    - lucatume\WPBrowser\Command\MonkeyCacheClear
+    - lucatume\WPBrowser\Command\GenerateWPUnit
+    - lucatume\WPBrowser\Command\GenerateWPRestApi
+    - lucatume\WPBrowser\Command\GenerateWPRestController
+    - lucatume\WPBrowser\Command\GenerateWPRestPostTypeController
+    - lucatume\WPBrowser\Command\GenerateWPAjax
+    - lucatume\WPBrowser\Command\GenerateWPCanonical
+    - lucatume\WPBrowser\Command\GenerateWPXMLRPC
 modules:
-    config:
-        REST:
-            depends: lucatume\WPBrowser\Module\WPBrowser
-            url: "%WORDPRESS_URL%"
-        lucatume\WPBrowser\Module\WPFilesystem:
-            wpRootFolder: '%WORDPRESS_ROOT_DIR%'
-            themes: '/wp-content/themes'
-            plugins: '/wp-content/plugins'
-            mu-plugins: '/wp-content/mu-plugins'
-            uploads: '/wp-content/uploads'
-        lucatume\WPBrowser\Module\WPBrowser:
-            url: '%WORDPRESS_URL%'
-            adminUsername: '%WORDPRESS_ADMIN_USER%'
-            adminPassword: '%WORDPRESS_ADMIN_PASSWORD%'
-            adminPath: '/wp-admin'
-            headers:
-                X_WPBROWSER_REQUEST: 1
-                X_TEST_REQUEST: 1
-                X_APM_REQUEST: 1
-            connect_timeout: 3
-            cookies: false
-        lucatume\WPBrowser\Module\WPDb:
-            dsn: "%TEST_DB_DSN%"
-            user: "%TEST_DB_USER%"
-            password: "%TEST_DB_PASSWORD%"
-            populator: 'mysql -u $user -p$password -h $host $dbname < $dump'
-            dump: 'tests/_data/dump.sql'
-            populate: true
-            cleanup: true
-            waitlock: 0
-            url: "%WORDPRESS_URL%"
-            urlReplacement: true
-            tablePrefix: "%WORDPRESS_TABLE_PREFIX%"
-        lucatume\WPBrowser\Module\WPLoader:
-            wpRootFolder: "%WORDPRESS_ROOT_DIR%"
-            dbName: "%TEST_DB_NAME%"
-            dbHost: "%TEST_DB_HOST%"
-            dbUser: "%TEST_DB_USER%"
-            dbPassword: "%TEST_DB_PASSWORD%"
-            tablePrefix: "%TEST_TABLE_PREFIX%"
-            domain: "%WORDPRESS_DOMAIN%"
-            adminEmail: "%WORDPRESS_ADMIN_EMAIL%"
-            title: 'Test'
-            plugins:
-                - wp-graphql/wp-graphql.php
-                - wp-graphql-headless-login/wp-graphql-headless-login.php
-            activatePlugins:
-                - wp-graphql/wp-graphql.php
-                - wp-graphql-headless-login/wp-graphql-headless-login.php
-            configFile: 'tests/_data/config.php'
+  config:
+    REST:
+      depends: lucatume\WPBrowser\Module\WPBrowser
+      url: '%TEST_WP_URL%'
+    lucatume\WPBrowser\Module\WPCLI:
+      path: '%TEST_WP_ROOT_FOLDER%'
+      timeout: 30
+    lucatume\WPBrowser\Module\WPDb:
+      dsn: 'mysql:host=%TEST_DB_HOST%;dbname=%TEST_DB_NAME%'
+      user: '%TEST_DB_USER%'
+      password: '%TEST_DB_PASSWORD%'
+      populator: 'mysql -u $user -p$password -h $host $dbname < $dump'
+      dump: 'tests/_data/dump.sql'
+      populate: false
+      cleanup: true
+      waitlock: 0
+      url: '%TEST_WP_URL%'
+      urlReplacement: true
+      tablePrefix: '%TEST_WP_TABLE_PREFIX%'
+    lucatume\WPBrowser\Module\WPBrowser:
+      url: '%TEST_WP_URL%'
+      adminUsername: '%TEST_ADMIN_USERNAME%'
+      adminPassword: '%TEST_ADMIN_PASSWORD%'
+      adminPath: '%TEST_ADMIN_PATH%'
+      headers:
+        X_WPBROWSER_REQUEST: 1
+        X_TEST_REQUEST: 1
+        X_APM_REQUEST: 1
+      connect_timeout: 3
+      cookies: false
+    lucatume\WPBrowser\Module\WPFilesystem:
+      wpRootFolder: '%TEST_WP_ROOT_FOLDER%'
+      plugins: '/wp-content/plugins'
+      mu-plugins: '/wp-content/mu-plugins'
+      themes: '/wp-content/themes'
+      uploads: '/wp-content/uploads'
+    lucatume\WPBrowser\Module\WPLoader:
+      wpRootFolder: '%TEST_WP_ROOT_FOLDER%'
+      dbName: '%TEST_DB_NAME%'
+      dbHost: '%TEST_DB_HOST%'
+      dbUser: '%TEST_DB_USER%'
+      dbPassword: '%TEST_DB_PASSWORD%'
+      tablePrefix: '%TEST_WP_TABLE_PREFIX%'
+      domain: '%TEST_WP_DOMAIN%'
+      adminEmail: '%TEST_ADMIN_EMAIL%'
+      title: 'Test'
+      plugins:
+        - wp-graphql/wp-graphql.php
+        - wp-graphql-headless-login/wp-graphql-headless-login.php
+      activatePlugins:
+        - wp-graphql/wp-graphql.php
+        - wp-graphql-headless-login/wp-graphql-headless-login.php
+      configFile: 'tests/_data/config.php'

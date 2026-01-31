@@ -45,8 +45,6 @@
 	<!-- Rules: WPGraphQL Coding Standards -->
 	<!-- https://github.com/AxeWP/WPGraphQL-Coding-Standards/WPGraphQL/ruleset.xml -->
 	<rule ref="WPGraphQL">
-		<!-- @todo remove after PHPCS v4-->
-		<exclude name="WordPressVIPMinimum.JS" />
 		<exclude name="Generic.Functions.CallTimePassByReference" />
 	</rule>
 
@@ -64,7 +62,7 @@
 		<properties>
 			<property name="text_domain" type="array">
 				<element value="wp-graphql-headless-login"/>
-			</property>	
+			</property>
 		</properties>
 	</rule>
 

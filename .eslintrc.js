@@ -1,47 +1,27 @@
 module.exports = {
 	extends: [ 'plugin:@wordpress/eslint-plugin/recommended' ],
-	globals: {
-		fetchMock: true,
-		IntersectionObserver: 'readonly',
-		// @todo Move E2E related ESLint configuration into custom config.
-		//
-		// We should have linting properties only included for files that they
-		// are specific to as opposed to globally.
-		page: 'readonly',
-		browser: 'readonly',
-		context: 'readonly',
+	plugins: [ 'import' ],
+	parserOptions: {
+		sourceType: 'module',
+		ecmaFeatures: {
+			jsx: true,
+		},
+		project: './tsconfig.json',
+	},
+	env: {
+		browser: true,
+		es6: true,
+		node: true,
 	},
 	settings: {
 		jsdoc: { mode: 'typescript' },
-		// List of modules that are externals in our webpack config.
-		// This helps the `import/no-extraneous-dependencies` and
-		//`import/no-unresolved` rules account for them.
-		'import/core-modules': [
-			'@wordpress/block-editor',
-			'@wordpress/a11y',
-			'@wordpress/api-fetch',
-			'@wordpress/compose',
-			'@wordpress/data',
-			'@wordpress/escape-html',
-			'@wordpress/hooks',
-			'@wordpress/keycodes',
-			'@wordpress/url',
-			'babel-jest',
-			'dotenv',
-			'jest-environment-puppeteer',
-			'lodash/kebabCase',
-			'lodash',
-			'prop-types',
-			'react',
-			'requireindex',
-		],
-		'import/resolver': {
-			node: {},
-			webpack: {
-				config: 'webpack.config.js',
+		settings: {
+			'import/resolver': {
+				typescript: {
+					project: './tsconfig.json',
+				},
 			},
 		},
-		'import/ignore': [ 'node_modules' ],
 	},
 	rules: {
 		'react-hooks/exhaustive-deps': 'error',
@@ -63,7 +43,7 @@ module.exports = {
 	},
 	overrides: [
 		{
-			files: [ '*.ts', '*.tsx' ],
+			files: [ '**/*.ts?(x)' ],
 			parser: '@typescript-eslint/parser',
 			extends: [ 'plugin:@typescript-eslint/recommended' ],
 			rules: {
@@ -101,13 +81,5 @@ module.exports = {
 				],
 			},
 		},
-		// {
-		// 	files: ['./packages/admin/mapped-types.ts'],
-		// 	rules: {
-		// 		'@typescript-eslint/no-explicit-any': 'off',
-		// 		'@typescript-eslint/no-shadow': 'off',
-		// 		'no-shadow': 'off',
-		// 	},
-		// },
 	],
 };

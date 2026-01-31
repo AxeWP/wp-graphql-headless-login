@@ -1,4 +1,4 @@
-# Hidden files
+# macOS/IDE
 .DS_Store
 Thumbs.db
 
@@ -7,49 +7,56 @@ Thumbs.db
 .devcontainer.json
 .vscode
 .idea
+*.sublime-project
+*.sublime-workspace
 
-# Environment variables for testing
+# Log files
+*.log
+/tests/logs
+
+# Dependencies
+/vendor/
+/vendor-prefixed/
+/node_modules/
+
+# Build output
+build/
+build-module/
+build-types/
+build/tsconfig.tsbuildinfo
+wp-graphql-headless-login.zip
+
+# Environment
 .env
 .env.*
 !.env.dist
-!.docker/.env.ci
 
 # Strauss
 bin/strauss.phar
 
-# Ruleset Overrides
-phpcs.xml
-phpstan.neon
-rector.php
+# AI files
+.gemini/
+.claude/
+AGENTS.md
+GEMINI.md
+CLAUDE.md
 
-# Directory to generate the dist zipfile
-plugin-build
+# Test output
+/tests/_output/*
+!/tests/_output/.gitkeep
+/tests/e2e/artifacts
+tests/*.suite.yml
+c3.php
 
-# Composer auth
-auth.json
+# Configs
+/phpcs.xml
+/phpstan.neon
 
-# Composer deps
-vendor
-vendor-prefixed
+# WP ENV
+/.wp-env.override.json
 
-# NPM deps
-node_modules
-
-# Built assets - enable once this is on wpackagist
-# build
-build/tsconfig.tsbuildinfo
+# TypeScript
+*.tsbuildinfo
 
 # Generated Schema used in some tooling. Versioned Schema is uploaded as a Release artifact to Github.
 schema.graphql
-
-# WP CLI config overrides
-wp-cli.local.yml
-
-# Tests
-*.sql
-*.tar.gz
-!tests
-tests/*.suite.yml
-coverage/*
-.log/
-c3.php

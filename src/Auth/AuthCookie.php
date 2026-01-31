@@ -30,7 +30,7 @@ class AuthCookie {
 		$expire     = $remember ? $expiration + ( 12 * HOUR_IN_SECONDS ) : 0;
 
 		$secure                  = is_ssl();
-		$secure_logged_in_cookie = $secure && 'https' === wp_parse_url( get_option( 'home' ), PHP_URL_SCHEME );
+		$secure_logged_in_cookie = $secure && 'https' === wp_parse_url( home_url(), PHP_URL_SCHEME );
 
 		$secure                  = apply_filters( 'secure_auth_cookie', $secure, $user_id ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		$secure_logged_in_cookie = apply_filters( 'secure_logged_in_cookie', $secure_logged_in_cookie, $user_id, $secure ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
