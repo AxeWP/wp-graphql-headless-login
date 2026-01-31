@@ -28,6 +28,11 @@ const mainConfig = {
 		],
 	},
 
+	output: {
+		...defaultConfig.output,
+		clean: false, // Don't clean for multi-config setup
+	},
+
 	plugins: [
 		...defaultConfig.plugins.filter(
 			( plugin ) => plugin.constructor.name !== 'CleanWebpackPlugin'
