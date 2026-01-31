@@ -20,10 +20,8 @@ Thumbs.db
 /node_modules/
 
 # Build output
-build/
-build-module/
-build-types/
-build/tsconfig.tsbuildinfo
+# build/ -- @todo reactivate when we're serving via .org and don't need to build.
+*.tsbuildinfo
 wp-graphql-headless-login.zip
 
 # Environment
@@ -54,9 +52,6 @@ c3.php
 
 # WP ENV
 /.wp-env.override.json
-
-# TypeScript
-*.tsbuildinfo
 
 # Generated Schema used in some tooling. Versioned Schema is uploaded as a Release artifact to Github.
 schema.graphql
