@@ -43,9 +43,8 @@ const ProviderConfigContext = createContext< ProviderConfigContextType >( {
 } );
 
 export const ProviderConfigProvider = ( { children }: PropsWithChildren ) => {
-	const providers = wpGraphQLLogin?.settings?.providers || {};
 	const [ activeClient, setActiveClient ] = useState(
-		`wpgraphql_login_provider_${ Object.keys( providers )?.[ 0 ] || '' }`
+		Object.keys( wpGraphQLLogin?.settings.providers )?.[ 0 ] || ''
 	);
 
 	const [ clientConfig, setClientConfig ] = useEntityProp(
@@ -93,7 +92,7 @@ export const ProviderConfigProvider = ( { children }: PropsWithChildren ) => {
 		) {
 			setClientConfig( {
 				...clientDefaults,
-				slug: activeClient.replace( 'wpgraphql_login_provider_', '' ),
+				slug: activeClient,
 			} );
 		}
 	}, [ clientConfig, setClientConfig, activeClient ] );
@@ -117,14 +116,4 @@ export const ProviderConfigProvider = ( { children }: PropsWithChildren ) => {
 	);
 };
 
-export const useClientContext = () => {
-	const context = useContext( ProviderConfigContext );
-
-	if ( context === undefined ) {
-		throw new Error(
-			'useClientContext must be used within a ProviderConfigProvider'
-		);
-	}
-
-	return context;
-};
+export const useClientContext = () => useContext( ProviderConfigContext );
