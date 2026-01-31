@@ -22,7 +22,7 @@ export function StatusBadge( { provider }: { provider: string } ) {
 	return (
 		<div className={ styles[ 'status-badge' ] }>
 			<span
-				className={ isEnabled ? styles?.enabled : undefined }
+				className={ isEnabled ? styles?.[ 'enabled' ] : undefined }
 				aria-label={ title }
 				title={ title }
 			></span>
@@ -42,13 +42,13 @@ export function ClientMenu() {
 				{ providers.length > 0 &&
 					providers.map( ( provider ) => (
 						<NavigationItem
-							className={ styles.menuItem }
+							className={ styles?.[ 'menuItem' ] ?? '' }
 							key={ provider }
 							item={ provider }
 							title={
 								wpGraphQLLogin?.settings?.providers?.[
 									provider
-								]?.name?.default as string
+								]?.[ 'name' ]?.default as string
 							}
 							icon={ <StatusBadge provider={ provider } /> }
 							onClick={ () => setActiveClient( provider ) }

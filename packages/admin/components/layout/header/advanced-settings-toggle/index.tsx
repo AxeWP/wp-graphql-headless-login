@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
 import { useSettings } from '@/admin/contexts/settings-context';
 import { ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { useEffect, useState } from 'react';
 
 /**
  * The advanced settings toggle.
@@ -34,7 +34,7 @@ export const AdvancedSettingsToggle = () => {
 		await updateSettings( {
 			slug: 'wpgraphql_login_settings',
 			values: {
-				...settings?.wpgraphql_login_settings,
+				...settings?.[ 'wpgraphql_login_settings' ],
 				show_advanced_settings: value,
 			},
 		} );

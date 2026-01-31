@@ -1,4 +1,5 @@
-import { dispatch } from '@wordpress/data';
+import { useDispatch } from '@wordpress/data';
+import { store as noticesStore } from '@wordpress/notices';
 import { __, sprintf } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Button, PanelBody, Spinner } from '@wordpress/components';
@@ -17,6 +18,8 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 		isConditionMet,
 	} = useSettings();
 
+	const { createNotice, createErrorNotice } = useDispatch( noticesStore );
+
 	const optionsSchema =
 		wpGraphQLLogin?.settings?.[ settingKey ]?.fields || undefined;
 
@@ -24,8 +27,7 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 
 	useEffect( () => {
 		if ( errorMessage && ! isSaving ) {
-			// @ts-expect-error this isnt typed.
-			dispatch( 'core/notices' ).createErrorNotice(
+			createErrorNotice(
 				sprintf(
 					// translators: %s: Error message.
 					__(
@@ -40,7 +42,7 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 				}
 			);
 		}
-	}, [ errorMessage, isSaving ] );
+	}, [ errorMessage, isSaving, createErrorNotice ] );
 
 	const save = async () => {
 		// Prevent multiple save requests
@@ -51,8 +53,7 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 		await saveSettings( settingKey );
 
 		if ( isComplete && ! errorMessage ) {
-			// @ts-expect-error this isnt typed.
-			dispatch( 'core/notices' ).createNotice(
+			createNotice(
 				'success',
 				__( 'Settings saved', 'wp-graphql-headless-login' ),
 				{
@@ -88,7 +89,6 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 					fields={ optionsSchema }
 					values={ localValues }
 					setValue={ setValue }
-					excludedProperties={ undefined }
 					validateConditionalLogic={ validateConditionalLogic }
 				/>
 			</PanelBody>

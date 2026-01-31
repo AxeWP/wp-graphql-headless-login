@@ -23,7 +23,7 @@ const clientDefaults: ProviderSettingType = {
 	} satisfies LoginOptionsType,
 };
 
-const ProviderConfigContext = createContext< {
+type ProviderConfigContextType = {
 	activeClient: string;
 	clientConfig?: ProviderSettingType;
 	setClientConfig: ( value: ProviderSettingType ) => void;
@@ -31,19 +31,21 @@ const ProviderConfigContext = createContext< {
 	setClientOption: ( value: ClientOptionsType ) => void;
 	setLoginOption: ( value: LoginOptionsType ) => void;
 	setActiveClient: ( value: string ) => void;
-} >( {
+};
+
+const ProviderConfigContext = createContext< ProviderConfigContextType >( {
 	activeClient: '',
-	setActiveClient: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-	clientConfig: undefined,
-	setClientConfig: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-	updateClient: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-	setClientOption: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-	setLoginOption: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+	setActiveClient: () => {},
+	updateClient: () => {},
+	setClientOption: () => {},
+	setLoginOption: () => {},
+	setClientConfig: () => {},
 } );
 
 export const ProviderConfigProvider = ( { children }: PropsWithChildren ) => {
+	const providers = wpGraphQLLogin?.settings?.providers || {};
 	const [ activeClient, setActiveClient ] = useState(
-		Object.keys( wpGraphQLLogin?.settings.providers )?.[ 0 ] || ''
+		`wpgraphql_login_provider_${ Object.keys( providers )?.[ 0 ] || '' }`
 	);
 
 	const [ clientConfig, setClientConfig ] = useEntityProp(
@@ -115,4 +117,14 @@ export const ProviderConfigProvider = ( { children }: PropsWithChildren ) => {
 	);
 };
 
-export const useClientContext = () => useContext( ProviderConfigContext );
+export const useClientContext = () => {
+	const context = useContext( ProviderConfigContext );
+
+	if ( context === undefined ) {
+		throw new Error(
+			'useClientContext must be used within a ProviderConfigProvider'
+		);
+	}
+
+	return context;
+};

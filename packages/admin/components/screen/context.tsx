@@ -8,13 +8,13 @@ import {
 } from 'react';
 import { isAllowedScreen } from './utils';
 
-const ScreenContext = createContext< {
-	currentScreen: string;
-	setCurrentScreen: ( screen: string ) => void;
-} >( {
-	currentScreen: 'providers',
-	setCurrentScreen: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-} );
+const ScreenContext = createContext<
+	| {
+			currentScreen: string;
+			setCurrentScreen: ( screen: string ) => void;
+	  }
+	| undefined
+>( undefined );
 
 export const ScreenProvider = ( { children }: PropsWithChildren ) => {
 	const [ currentScreen, setCurrentScreen ] =

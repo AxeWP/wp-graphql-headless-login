@@ -1,17 +1,14 @@
 import { Panel, PanelBody, PanelRow } from '@wordpress/components';
 import clsx from 'clsx';
-import { lazy, Suspense, type PropsWithChildren } from 'react';
-import { Loading } from '@/admin/components/ui/loading';
+import { Suspense, type PropsWithChildren } from 'react';
 import { useCurrentScreen } from './context';
 import { SettingsScreen } from './setting-screen';
-
-import styles from './styles.module.scss';
 import { getSettingForScreen } from './utils';
 import { __ } from '@wordpress/i18n';
+import { Loading } from '../ui/loading';
+import { ClientSettings as ClientSettingsScreen } from '../provider-config/ClientSettings';
 
-const ClientSettingsScreen = lazy(
-	() => import( '../provider-config/ClientSettings' )
-);
+import styles from './styles.module.scss';
 
 const Wrapper = ( {
 	title,
@@ -23,7 +20,7 @@ const Wrapper = ( {
 	description?: string;
 	className?: string;
 } > ) => {
-	const classes = clsx( styles.wrapper, className );
+	const classes = clsx( styles[ 'wrapper' ], className );
 
 	return (
 		<Panel className={ classes }>
@@ -47,24 +44,26 @@ export const Screen = () => {
 
 	// @todo get provider context from global.
 	const title =
-		wpGraphQLLogin?.settings[ settingKey ]?.title ||
+		wpGraphQLLogin?.settings?.[ settingKey ]?.title ||
 		__( 'Login Providers', 'wp-graphql-headless-login' );
 	const description =
-		wpGraphQLLogin?.settings[ settingKey ]?.description ||
+		wpGraphQLLogin?.settings?.[ settingKey ]?.description ||
 		__(
-			'Configure the Authentication Providers that are available to users.',
+			'Configure Authentication Providers that are available to users.',
 			'wp-graphql-headless-login'
 		);
 
 	return (
 		<Suspense fallback={ <Loading /> }>
-			<Wrapper title={ title } description={ description }>
-				{ currentScreen === 'providers' ? (
-					<ClientSettingsScreen />
-				) : (
-					<SettingsScreen settingKey={ settingKey } />
-				) }
-			</Wrapper>
+			<main role="main">
+				<Wrapper title={ title } description={ description }>
+					{ currentScreen === 'providers' ? (
+						<ClientSettingsScreen />
+					) : (
+						<SettingsScreen settingKey={ settingKey } />
+					) }
+				</Wrapper>
+			</main>
 		</Suspense>
 	);
 };

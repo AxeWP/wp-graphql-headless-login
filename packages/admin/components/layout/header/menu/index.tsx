@@ -21,7 +21,9 @@ export const DOCS_URL =
 	'https://github.com/AxeWP/wp-graphql-headless-login/blob/main/docs/reference/settings.md';
 
 const LinkIcon = () => {
-	return <Icon icon={ LinkSVG } className={ styles.linkIcon } size={ 16 } />;
+	return (
+		<Icon icon={ LinkSVG } className={ styles[ 'linkIcon' ] } size={ 16 } />
+	);
 };
 
 /**
@@ -37,7 +39,7 @@ const getMenuObject = (): Record< string, string > => {
 	for ( const key in settings ) {
 		// @todo get providers from global after the refactor.
 		const menuTitle =
-			settings[ key ].label ||
+			settings[ key ]?.label ||
 			__( 'Providers', 'wp-graphql-headless-login' );
 		const screen = getScreenForSetting( key );
 
@@ -65,7 +67,7 @@ const MenuItem = ( {
 	<li key={ screen } role="menuitem">
 		<Button
 			key={ screen }
-			className={ currentScreen === screen ? styles.active : '' }
+			className={ currentScreen === screen ? styles[ 'active' ] : '' }
 			variant="tertiary"
 			onClick={ () => handleMenuClick( screen ) }
 			disabled={ isSaving }
@@ -73,7 +75,7 @@ const MenuItem = ( {
 			{ title }
 			{ isDirty && screen === currentScreen && (
 				<span
-					className={ styles.dirtyIndicator }
+					className={ styles[ 'dirtyIndicator' ] }
 					aria-label={ __(
 						'Unsaved changes',
 						'wp-graphql-headless-login'
@@ -149,7 +151,7 @@ export const Menu = () => {
 	return (
 		<>
 			<NavigableMenu orientation="horizontal">
-				<ul role="menubar" className={ styles.menu }>
+				<ul role="menubar" className={ styles[ 'menu' ] }>
 					{
 						// Loop through the screen titles and create a button for each one.
 						Object.entries( menuItems ).map(

@@ -64,8 +64,8 @@
 		"@svgr/webpack": "^8.1.0",
 		"@typescript-eslint/eslint-plugin": "^8.54.0",
 		"@typescript-eslint/parser": "^8.54.0",
-		"@types/react": "^18.3.1",
-		"@types/react-dom": "^18.3.1",
+		"@types/react": "^18.3.27",
+		"@types/react-dom": "^18.3.7",
 		"@wordpress/babel-preset-default": "^8.39.0",
 		"@wordpress/env": "^10.39.0",
 		"@wordpress/eslint-plugin": "^24.1.0",
@@ -92,7 +92,7 @@
 			"wp-scripts lint-js --fix"
 		],
 		"**/*.{css,scss}": [
-			"wp-scripts lint-style --fix"
+			"wp-scripts lint-style --allow-empty-input --fix"
 		],
 		"src/**/*.php": [
 			"composer format --"

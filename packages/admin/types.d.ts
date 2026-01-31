@@ -2,9 +2,15 @@
 
 import { _Hooks } from '@wordpress/hooks/build-types/createHooks';
 
-type AllowedConditionalLogicOperators = '==' | '!=' | '>' | '<' | '>=' | '<=';
+export type AllowedConditionalLogicOperators =
+	| '=='
+	| '!='
+	| '>'
+	| '<'
+	| '>='
+	| '<=';
 
-type FieldSchema = {
+export type FieldSchema = {
 	description: string;
 	label: string;
 	type: string;
@@ -26,7 +32,7 @@ type FieldSchema = {
 	required?: boolean;
 };
 
-type SettingSchema = {
+export type SettingSchema = {
 	[ key: string ]: {
 		title: string;
 		description: string;
@@ -35,7 +41,7 @@ type SettingSchema = {
 	};
 };
 
-type ProviderSettingType = {
+export type ProviderSettingType = {
 	name: string;
 	order: number;
 	slug?: string;
@@ -45,9 +51,11 @@ type ProviderSettingType = {
 	loginOptions: LoginOptionsType;
 };
 
-type ClientOptionsType = OAuth2ClientOptionsType | SiteTokenClientOptionsType;
+export type ClientOptionsType =
+	| OAuth2ClientOptionsType
+	| SiteTokenClientOptionsType;
 
-type OAuth2ClientOptionsType = Record<
+export type OAuth2ClientOptionsType = Record<
 	string,
 	{
 		redirectUri: string;
@@ -57,7 +65,7 @@ type OAuth2ClientOptionsType = Record<
 	}
 >;
 
-type SiteTokenClientOptionsType = Record<
+export type SiteTokenClientOptionsType = Record<
 	string,
 	{
 		headerKey: string;
@@ -66,17 +74,17 @@ type SiteTokenClientOptionsType = Record<
 	}
 >;
 
-type LoginOptionsType = {
+export type LoginOptionsType = {
 	useAuthenticationCookie?: boolean;
 	[ key: string ]: any;
 } & ( OAuth2LoginOptionsType | SiteTokenLoginOptionsType );
 
-type SiteTokenLoginOptionsType = {
+export type SiteTokenLoginOptionsType = {
 	metaKey?: string;
 	[ key: string ]: any;
 };
 
-type OAuth2LoginOptionsType = {
+export type OAuth2LoginOptionsType = {
 	createUserIfNoneExists?: boolean;
 	linkExistingUsers?: boolean;
 };

@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
 import { BaseControl, Button } from '@wordpress/components';
-import { dispatch } from '@wordpress/data';
+import { useDispatch } from '@wordpress/data';
+import { store as noticesStore } from '@wordpress/notices';
 import { __, sprintf } from '@wordpress/i18n';
+import { useInstanceId } from '@wordpress/compose';
 import { useSettings } from '@/admin/contexts/settings-context';
 import type { FieldSchema } from '@/admin/types';
 
@@ -9,10 +11,12 @@ export function JwtSecretControl( { label, help }: FieldSchema ) {
 	const { updateSettings, saveSettings, errorMessage, isSaving } =
 		useSettings();
 
+	const { createNotice, createErrorNotice } = useDispatch( noticesStore );
+	const instanceId = useInstanceId( JwtSecretControl );
+
 	useEffect( () => {
 		if ( ! isSaving && errorMessage ) {
-			// @ts-expect-error this isnt typed.
-			dispatch( 'core/notices' ).createErrorNotice(
+			createErrorNotice(
 				sprintf(
 					// translators: %s: error message
 					__(
@@ -27,7 +31,7 @@ export function JwtSecretControl( { label, help }: FieldSchema ) {
 				}
 			);
 		}
-	}, [ isSaving, errorMessage ] );
+	}, [ isSaving, errorMessage, createErrorNotice ] );
 
 	const regenerateJwtSecret = async () => {
 		await updateSettings( {
@@ -40,8 +44,7 @@ export function JwtSecretControl( { label, help }: FieldSchema ) {
 		const success = await saveSettings( 'wpgraphql_login_settings' );
 
 		if ( success ) {
-			// @ts-expect-error this isnt typed.
-			dispatch( 'core/notices' ).createNotice(
+			createNotice(
 				'success',
 				__(
 					'The old JWT secret has been invalidated.',
@@ -61,7 +64,7 @@ export function JwtSecretControl( { label, help }: FieldSchema ) {
 		<>
 			<BaseControl
 				className="wp-graphql-headless-login__secret"
-				id="wp-graphql-headless-login__secret--control"
+				id={ `wp-graphql-headless-login__secret--control-${ instanceId }` }
 				help={ help }
 			>
 				<Button

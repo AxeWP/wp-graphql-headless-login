@@ -24,13 +24,84 @@ module.exports = {
 		},
 	},
 	rules: {
+		// React best practices
+		'react/jsx-boolean-value': 'error',
+		'react/jsx-curly-brace-presence': [
+			'error',
+			{ props: 'never', children: 'never' },
+		],
 		'react-hooks/exhaustive-deps': 'error',
 		'react/jsx-fragments': [ 'error', 'syntax' ],
+
+		// WordPress-specific
 		'@wordpress/no-global-active-element': 'warn',
+		'@wordpress/data-no-store-string-literals': 'error',
+		'@wordpress/wp-global-usage': 'error',
+		'@wordpress/react-no-unsafe-timeout': 'error',
+		'@wordpress/i18n-hyphenated-range': 'error',
+		'@wordpress/i18n-no-flanking-whitespace': 'error',
 		'@wordpress/i18n-text-domain': [
 			'error',
 			{
 				allowedTextDomain: [ 'wp-graphql-headless-login' ],
+			},
+		],
+
+		// Import plugin
+		'import/default': 'error',
+		'import/named': 'error',
+		'import/no-extraneous-dependencies': [
+			'error',
+			{
+				devDependencies: [
+					'**/*.@(spec|test).@(j|t)s?(x)',
+					'**/vitest.config.@(j|t)s',
+					'**/vitest.setup.@(j|t)s',
+					'**/@(webpack|jest|vite|vitest).config.@(j|t)s',
+					'**/scripts/**',
+				],
+			},
+		],
+		'no-restricted-imports': [
+			'error',
+			{
+				paths: [
+					{
+						name: 'lodash',
+						message: 'Please use native functionality instead.',
+					},
+					{
+						name: 'classnames',
+						message:
+							"Please use `clsx` instead. It's a lighter and faster drop-in replacement for `classnames`.",
+					},
+					{
+						name: 'redux',
+						importNames: [ 'combineReducers' ],
+						message:
+							'Please use `combineReducers` from `@wordpress/data` instead.',
+					},
+				],
+			},
+		],
+		'no-restricted-syntax': [
+			'error',
+			{
+				selector:
+					'ImportDeclaration[source.value=/^@wordpress\\u002F.+\\u002F/]',
+				message:
+					'Path access on WordPress dependencies is not allowed.',
+			},
+			{
+				selector: 'JSXAttribute[name.name="id"][value.type="Literal"]',
+				message:
+					'Do not use string literals for IDs; use withInstanceId instead.',
+			},
+			{
+				selector:
+					'CallExpression[callee.object.name="Math"][callee.property.name="random"]',
+				message:
+					"Do not use Math.random() to generate unique IDs; use withInstanceId instead. (If you're not generating unique IDs: ignore this message.)",
 			},
 		],
 		camelcase: [
@@ -79,6 +150,7 @@ module.exports = {
 						},
 					},
 				],
+				'dot-notation': 'off',
 			},
 		},
 	],

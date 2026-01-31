@@ -75,10 +75,10 @@ export function ClientPanel() {
 	// Disable siteToken if shouldBlockUnauthorizedDomains is false
 	useEffect( () => {
 		const accessControlSettings =
-			settings?.wpgraphql_login_access_control || {};
+			settings?.[ 'wpgraphql_login_access_control' ] || {};
 
 		if (
-			! accessControlSettings?.shouldBlockUnauthorizedDomains &&
+			! accessControlSettings?.[ 'shouldBlockUnauthorizedDomains' ] &&
 			activeClient === 'wpgraphql_login_provider_siteToken' &&
 			clientConfig?.isEnabled
 		) {
@@ -147,9 +147,9 @@ export function ClientPanel() {
 						{ sprintf(
 							// translators: %s: Client slug.
 							__( '%s Settings', 'wp-graphql-headless-login' ),
-							wpGraphQLLogin?.settings?.providers?.[
+							( wpGraphQLLogin?.settings?.providers?.[
 								activeClient
-							]?.name?.default || 'Provider'
+							]?.[ 'name' ]?.default as string ) || 'Provider'
 						) }
 					</h2>
 				</PanelRow>
@@ -161,7 +161,8 @@ export function ClientPanel() {
 					] }
 					values={ clientConfig }
 					fields={
-						wpGraphQLLogin?.settings?.providers?.[ activeClient ]
+						wpGraphQLLogin?.settings?.providers?.[ activeClient ] ??
+						{}
 					}
 					setValue={ ( value ) => {
 						setClientConfig( {

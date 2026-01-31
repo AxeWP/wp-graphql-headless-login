@@ -6,15 +6,20 @@ import type { FieldSchema } from '@/admin/types';
 
 const FieldWrapper = ( {
 	isAdvanced,
+	isConditionMet,
 	children,
-}: PropsWithChildren< { isAdvanced: boolean } > ) => {
+}: PropsWithChildren< { isAdvanced: boolean; isConditionMet: boolean } > ) => {
 	const { showAdvancedSettings } = useSettings();
 
 	if ( ! showAdvancedSettings && isAdvanced ) {
 		return null;
 	}
 
-	return <PanelRow>{ children }</PanelRow>;
+	return (
+		<PanelRow data-condition-met={ isConditionMet.toString() }>
+			{ children }
+		</PanelRow>
+	);
 };
 
 export const Field = ( {
@@ -23,13 +28,20 @@ export const Field = ( {
 	setValue,
 	isConditionMet = true,
 }: {
-	field: FieldSchema;
+	field?: FieldSchema;
 	value: unknown;
 	setValue: ( value: unknown ) => void;
 	isConditionMet?: boolean;
 } ) => {
+	if ( ! field ) {
+		return null;
+	}
+
 	return (
-		<FieldWrapper isAdvanced={ !! field.isAdvanced }>
+		<FieldWrapper
+			isAdvanced={ !! field.isAdvanced }
+			isConditionMet={ isConditionMet }
+		>
 			<FieldControl
 				{ ...field }
 				value={ value }

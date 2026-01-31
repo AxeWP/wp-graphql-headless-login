@@ -97,45 +97,46 @@ export const FieldControl = ( {
 
 	// Fallback to the default value if the value is not set.
 	const value = originalValue ?? rest?.default;
-
-	// Build the component props.
-	let componentProps: ControlComponentPropsMap[ typeof controlType ] = {
+	// Build base props shared by most controls
+	const baseProps = {
 		label: label || description,
 		required: required || false,
 		help: help || undefined,
 		disabled: disabled || false,
+		...( rest?.controlOverrides || {} ),
 	};
+
+	// Build the component props based on control type.
+	let componentProps: ControlComponentPropsMap[ typeof controlType ];
 
 	switch ( controlType ) {
 		case 'text':
-			if ( type === 'string' ) {
-				componentProps = {
-					...componentProps,
-					value: ( value as string ) || '',
-					onChange,
-				} as TextControlProps;
-				break;
-			}
 			if ( type === 'integer' ) {
 				componentProps = {
-					...componentProps,
+					...baseProps,
 					value: value ? parseInt( value as string ) : '',
 					onChange: ( selected: unknown ) =>
 						onChange( parseInt( selected as string ) ),
 					type: 'number',
 				} as TextControlProps;
+			} else {
+				componentProps = {
+					...baseProps,
+					value: ( value as string ) || '',
+					onChange,
+				} as TextControlProps;
 			}
 			break;
 		case 'toggle':
 			componentProps = {
-				...componentProps,
+				...baseProps,
 				checked: !! value || false,
 				onChange: ( selected: boolean ) => onChange( !! selected ),
 			} as ToggleControlProps;
 			break;
 		case 'select':
 			componentProps = {
-				...componentProps,
+				...baseProps,
 				value: ( value as string ) || '',
 				onChange,
 				options:
@@ -147,18 +148,25 @@ export const FieldControl = ( {
 			break;
 		case 'formTokenField':
 			componentProps = {
-				...componentProps,
+				...baseProps,
 				onChange,
 				tokenizeOnSpace: true,
-				value: value || [],
+				value: Array.isArray( value ) ? value : [],
 			} as FormTokenFieldControlProps;
 			break;
 		case 'jwtSecret':
 			componentProps = {
 				help: help || '',
 				label: label || '',
+				...( rest?.controlOverrides || {} ),
 			} as JwtSecretControlProps;
 			break;
+		default:
+			componentProps = {
+				...baseProps,
+				value: ( value as string ) || '',
+				onChange,
+			} as TextControlProps;
 	}
 
 	return <ControlComponent { ...componentProps } />;
