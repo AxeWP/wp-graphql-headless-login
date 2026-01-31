@@ -5,6 +5,7 @@ import {
 	useState,
 	useCallback,
 	useEffect,
+	useMemo,
 	type PropsWithChildren,
 } from 'react';
 import type {
@@ -42,9 +43,44 @@ const ProviderConfigContext = createContext< ProviderConfigContextType >( {
 	setClientConfig: () => {},
 } );
 
+const PROVIDER_PREFIX = 'wpgraphql_login_provider_';
+
 export const ProviderConfigProvider = ( { children }: PropsWithChildren ) => {
-	const [ activeClient, setActiveClient ] = useState(
-		Object.keys( wpGraphQLLogin?.settings.providers )?.[ 0 ] || ''
+	const providers = useMemo(
+		() => wpGraphQLLogin?.settings?.providers || {},
+		[]
+	);
+	const providerKeys = Object.keys( providers );
+	const firstProviderKey = providerKeys[ 0 ] || '';
+
+	const [ activeClient, setActiveClientInternal ] = useState(
+		`${ PROVIDER_PREFIX }${ firstProviderKey }`
+	);
+
+	/**
+	 * Sets the active client, automatically adding the prefix if needed.
+	 * Throws an error if the client doesn't exist in the provider settings.
+	 */
+	const setActiveClient = useCallback(
+		( slug: string ) => {
+			// If already has prefix, extract the base slug for validation
+			const baseSlug = slug.startsWith( PROVIDER_PREFIX )
+				? slug.replace( PROVIDER_PREFIX, '' )
+				: slug;
+
+			// Validate the provider exists
+			if ( baseSlug && ! providers[ baseSlug ] ) {
+				throw new Error( 'Client not found' );
+			}
+
+			// Always store with prefix for useEntityProp compatibility
+			const prefixedSlug = slug.startsWith( PROVIDER_PREFIX )
+				? slug
+				: `${ PROVIDER_PREFIX }${ slug }`;
+
+			setActiveClientInternal( prefixedSlug );
+		},
+		[ providers ]
 	);
 
 	const [ clientConfig, setClientConfig ] = useEntityProp(
