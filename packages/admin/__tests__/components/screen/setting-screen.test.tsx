@@ -388,10 +388,12 @@ describe( 'SettingsScreen Component', () => {
 				</SettingsProvider>
 			);
 
-			const fieldsComponent = container.querySelector(
-				'[data-testid="fields-component"]'
-			);
-			expect( fieldsComponent ).not.toBeInTheDocument();
+			await waitFor( () => {
+				const fieldsComponent = container.querySelector(
+					'[data-testid="fields-component"]'
+				);
+				expect( fieldsComponent ).not.toBeInTheDocument();
+			} );
 		} );
 	} );
 
@@ -412,10 +414,12 @@ describe( 'SettingsScreen Component', () => {
 				</SettingsProvider>
 			);
 
-			const fieldsComponent = container.querySelector(
-				'[data-testid="fields-component"]'
-			);
-			expect( fieldsComponent ).not.toBeInTheDocument();
+			await waitFor( () => {
+				const fieldsComponent = container.querySelector(
+					'[data-testid="fields-component"]'
+				);
+				expect( fieldsComponent ).not.toBeInTheDocument();
+			} );
 		} );
 
 		it( 'returns null when settingKey exists but has no fields', async () => {
@@ -438,10 +442,12 @@ describe( 'SettingsScreen Component', () => {
 				</SettingsProvider>
 			);
 
-			const fieldsComponent = container.querySelector(
-				'[data-testid="fields-component"]'
-			);
-			expect( fieldsComponent ).not.toBeInTheDocument();
+			await waitFor( () => {
+				const fieldsComponent = container.querySelector(
+					'[data-testid="fields-component"]'
+				);
+				expect( fieldsComponent ).not.toBeInTheDocument();
+			} );
 		} );
 	} );
 

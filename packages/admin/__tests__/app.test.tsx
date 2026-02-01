@@ -1,4 +1,5 @@
 import { vi } from 'vitest';
+import { waitFor, render, screen } from '@testing-library/react';
 
 // Mock @wordpress/blocks to avoid JSON import errors
 vi.mock( '@wordpress/blocks', () => ( {} ) );
@@ -25,108 +26,137 @@ vi.mock( '@wordpress/notices', () => ( {
 } ) );
 
 import App from '../app';
-import { render, screen } from '@testing-library/react';
 
 describe( 'App Component', () => {
 	describe( 'Provider Hierarchy', () => {
-		it( 'renders ErrorBoundary wrapper', () => {
+		it( 'renders ErrorBoundary wrapper', async () => {
 			const { container } = render( <App /> );
 
-			expect( container.firstChild ).toBeInTheDocument();
+			await waitFor( () => {
+				expect( container.firstChild ).toBeInTheDocument();
+			} );
 		} );
 
-		it( 'renders SettingsProvider', () => {
+		it( 'renders SettingsProvider', async () => {
 			render( <App /> );
 
-			expect( screen.getByRole( 'banner' ) ).toBeInTheDocument();
+			await waitFor( () => {
+				expect( screen.getByRole( 'banner' ) ).toBeInTheDocument();
+			} );
 		} );
 
-		it( 'renders ScreenProvider', () => {
+		it( 'renders ScreenProvider', async () => {
 			render( <App /> );
 
-			expect( screen.getByRole( 'banner' ) ).toBeInTheDocument();
-			expect( screen.getByRole( 'main' ) ).toBeInTheDocument();
+			await waitFor( () => {
+				expect( screen.getByRole( 'banner' ) ).toBeInTheDocument();
+				expect( screen.getByRole( 'main' ) ).toBeInTheDocument();
+			} );
 		} );
 
-		it( 'has correct component hierarchy', () => {
+		it( 'has correct component hierarchy', async () => {
 			const { container } = render( <App /> );
 
-			const noticesContainer = container.querySelector(
-				'.wp-graphql-headless-login__notices'
-			);
-			expect( noticesContainer ).toBeInTheDocument();
+			await waitFor( () => {
+				const noticesContainer = container.querySelector(
+					'.wp-graphql-headless-login__notices'
+				);
+				expect( noticesContainer ).toBeInTheDocument();
 
-			expect( screen.getByRole( 'banner' ) ).toBeInTheDocument();
-			expect( screen.getByRole( 'main' ) ).toBeInTheDocument();
+				expect( screen.getByRole( 'banner' ) ).toBeInTheDocument();
+				expect( screen.getByRole( 'main' ) ).toBeInTheDocument();
+			} );
 		} );
 	} );
 
 	describe( 'Component Rendering', () => {
-		it( 'renders Header component', () => {
+		it( 'renders Header component', async () => {
 			render( <App /> );
 
-			expect( screen.getByRole( 'banner' ) ).toBeInTheDocument();
+			await waitFor( () => {
+				expect( screen.getByRole( 'banner' ) ).toBeInTheDocument();
+			} );
 		} );
 
-		it( 'renders Screen component', () => {
+		it( 'renders Screen component', async () => {
 			render( <App /> );
 
-			expect( screen.getByRole( 'main' ) ).toBeInTheDocument();
+			await waitFor( () => {
+				expect( screen.getByRole( 'main' ) ).toBeInTheDocument();
+			} );
 		} );
 
-		it( 'renders Notices component in a dedicated container', () => {
+		it( 'renders Notices component in a dedicated container', async () => {
 			const { container } = render( <App /> );
 
-			const noticesContainer = container.querySelector(
-				'.wp-graphql-headless-login__notices'
-			);
-			expect( noticesContainer ).toBeInTheDocument();
+			await waitFor( () => {
+				const noticesContainer = container.querySelector(
+					'.wp-graphql-headless-login__notices'
+				);
+				expect( noticesContainer ).toBeInTheDocument();
+			} );
 		} );
 	} );
 
 	describe( 'Context Provider Availability', () => {
-		it( 'tests pass when all context providers are available', () => {
-			expect( () => {
-				render( <App /> );
-			} ).not.toThrow();
+		it( 'tests pass when all context providers are available', async () => {
+			await waitFor( () => {
+				expect( () => {
+					render( <App /> );
+				} ).not.toThrow();
+			} );
 		} );
 
-		it( 'renders all components without default props issues', () => {
+		it( 'renders all components without default props issues', async () => {
 			const { container } = render( <App /> );
 
-			expect( screen.getByRole( 'banner' ) ).toBeInTheDocument();
-			expect( screen.getByRole( 'main' ) ).toBeInTheDocument();
-			expect(
-				container.querySelector( '.wp-graphql-headless-login__notices' )
-			).toBeInTheDocument();
+			await waitFor( () => {
+				expect( screen.getByRole( 'banner' ) ).toBeInTheDocument();
+				expect( screen.getByRole( 'main' ) ).toBeInTheDocument();
+				expect(
+					container.querySelector(
+						'.wp-graphql-headless-login__notices'
+					)
+				).toBeInTheDocument();
+			} );
 		} );
 	} );
 
 	describe( 'Integration Tests', () => {
-		it( 'renders with all providers', () => {
+		it( 'renders with all providers', async () => {
 			render( <App /> );
 
-			expect( screen.getByRole( 'main' ) ).toBeInTheDocument();
+			await waitFor( () => {
+				expect( screen.getByRole( 'main' ) ).toBeInTheDocument();
+			} );
 		} );
 
-		it( 'renders header', () => {
+		it( 'renders header', async () => {
 			render( <App /> );
 
-			expect( screen.getByRole( 'banner' ) ).toBeInTheDocument();
+			await waitFor( () => {
+				expect( screen.getByRole( 'banner' ) ).toBeInTheDocument();
+			} );
 		} );
 
-		it( 'renders screen', () => {
+		it( 'renders screen', async () => {
 			render( <App /> );
 
-			expect( screen.getByRole( 'main' ) ).toBeInTheDocument();
+			await waitFor( () => {
+				expect( screen.getByRole( 'main' ) ).toBeInTheDocument();
+			} );
 		} );
 
-		it( 'renders notices', () => {
+		it( 'renders notices', async () => {
 			const { container } = render( <App /> );
 
-			expect(
-				container.querySelector( '.wp-graphql-headless-login__notices' )
-			).toBeInTheDocument();
+			await waitFor( () => {
+				expect(
+					container.querySelector(
+						'.wp-graphql-headless-login__notices'
+					)
+				).toBeInTheDocument();
+			} );
 		} );
 	} );
 } );

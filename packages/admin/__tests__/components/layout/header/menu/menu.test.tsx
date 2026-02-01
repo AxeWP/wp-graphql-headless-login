@@ -53,7 +53,7 @@ describe( 'Menu Component', () => {
 	} );
 
 	describe( 'getMenuObject utility function', () => {
-		it( 'builds menu object from settings', () => {
+		it( 'builds menu object from settings', async () => {
 			vi.mocked( apiFetch ).mockResolvedValue( {} );
 
 			(
@@ -72,11 +72,17 @@ describe( 'Menu Component', () => {
 
 			renderWithProviders( <Menu /> );
 
-			expect( screen.getByText( 'Test Setting' ) ).toBeInTheDocument();
-			expect( screen.getByText( 'Another Setting' ) ).toBeInTheDocument();
+			await waitFor( () => {
+				expect(
+					screen.getByText( 'Test Setting' )
+				).toBeInTheDocument();
+				expect(
+					screen.getByText( 'Another Setting' )
+				).toBeInTheDocument();
+			} );
 		} );
 
-		it( 'includes providers as first menu item', () => {
+		it( 'includes providers as first menu item', async () => {
 			vi.mocked( apiFetch ).mockResolvedValue( {} );
 
 			(
@@ -95,11 +101,13 @@ describe( 'Menu Component', () => {
 
 			renderWithProviders( <Menu /> );
 
-			const providersItem = screen.getByText( 'Providers' );
-			expect( providersItem ).toBeInTheDocument();
+			await waitFor( () => {
+				const providersItem = screen.getByText( 'Providers' );
+				expect( providersItem ).toBeInTheDocument();
+			} );
 		} );
 
-		it( 'handles empty settings object', () => {
+		it( 'handles empty settings object', async () => {
 			vi.mocked( apiFetch ).mockResolvedValue( {} );
 
 			(
@@ -111,10 +119,12 @@ describe( 'Menu Component', () => {
 
 			renderWithProviders( <Menu /> );
 
-			expect( screen.getByText( 'Providers' ) ).toBeInTheDocument();
+			await waitFor( () => {
+				expect( screen.getByText( 'Providers' ) ).toBeInTheDocument();
+			} );
 		} );
 
-		it( 'uses default label for providers when not defined', () => {
+		it( 'uses default label for providers when not defined', async () => {
 			vi.mocked( apiFetch ).mockResolvedValue( {} );
 
 			(
@@ -130,10 +140,12 @@ describe( 'Menu Component', () => {
 
 			renderWithProviders( <Menu /> );
 
-			expect( screen.getByText( 'Providers' ) ).toBeInTheDocument();
+			await waitFor( () => {
+				expect( screen.getByText( 'Providers' ) ).toBeInTheDocument();
+			} );
 		} );
 
-		it( 'converts setting keys to screen names', () => {
+		it( 'converts setting keys to screen names', async () => {
 			vi.mocked( apiFetch ).mockResolvedValue( {} );
 
 			(
@@ -149,12 +161,16 @@ describe( 'Menu Component', () => {
 
 			renderWithProviders( <Menu /> );
 
-			expect( screen.getByText( 'Access Control' ) ).toBeInTheDocument();
+			await waitFor( () => {
+				expect(
+					screen.getByText( 'Access Control' )
+				).toBeInTheDocument();
+			} );
 		} );
 	} );
 
 	describe( 'MenuItem component rendering', () => {
-		it( 'renders all menu items from settings', () => {
+		it( 'renders all menu items from settings', async () => {
 			vi.mocked( apiFetch ).mockResolvedValue( {} );
 
 			(
@@ -173,12 +189,16 @@ describe( 'Menu Component', () => {
 
 			renderWithProviders( <Menu /> );
 
-			expect( screen.getByText( 'Providers' ) ).toBeInTheDocument();
-			expect( screen.getByText( 'Settings' ) ).toBeInTheDocument();
-			expect( screen.getByText( 'Access Control' ) ).toBeInTheDocument();
+			await waitFor( () => {
+				expect( screen.getByText( 'Providers' ) ).toBeInTheDocument();
+				expect( screen.getByText( 'Settings' ) ).toBeInTheDocument();
+				expect(
+					screen.getByText( 'Access Control' )
+				).toBeInTheDocument();
+			} );
 		} );
 
-		it( 'renders Docs link button', () => {
+		it( 'renders Docs link button', async () => {
 			vi.mocked( apiFetch ).mockResolvedValue( {} );
 
 			(
@@ -190,23 +210,25 @@ describe( 'Menu Component', () => {
 
 			renderWithProviders( <Menu /> );
 
-			const docsLink = screen.getByText( 'Docs' );
-			expect( docsLink ).toBeInTheDocument();
-			expect( docsLink.closest( 'a' ) ).toHaveAttribute(
-				'href',
-				'https://github.com/AxeWP/wp-graphql-headless-login/blob/main/docs/reference/settings.md'
-			);
-			expect( docsLink.closest( 'a' ) ).toHaveAttribute(
-				'target',
-				'_blank'
-			);
-			expect( docsLink.closest( 'a' ) ).toHaveAttribute(
-				'rel',
-				'noreferrer'
-			);
+			await waitFor( () => {
+				const docsLink = screen.getByText( 'Docs' );
+				expect( docsLink ).toBeInTheDocument();
+				expect( docsLink.closest( 'a' ) ).toHaveAttribute(
+					'href',
+					'https://github.com/AxeWP/wp-graphql-headless-login/blob/main/docs/reference/settings.md'
+				);
+				expect( docsLink.closest( 'a' ) ).toHaveAttribute(
+					'target',
+					'_blank'
+				);
+				expect( docsLink.closest( 'a' ) ).toHaveAttribute(
+					'rel',
+					'noreferrer'
+				);
+			} );
 		} );
 
-		it( 'active menu item has active styling', () => {
+		it( 'active menu item has active styling', async () => {
 			vi.mocked( apiFetch ).mockResolvedValue( {} );
 
 			(
@@ -222,16 +244,18 @@ describe( 'Menu Component', () => {
 
 			const { container } = renderWithProviders( <Menu /> );
 
-			const buttons = container.querySelectorAll(
-				'.components-button.is-tertiary'
-			);
-			const providersButton = Array.from( buttons ).find(
-				( button ) => button.textContent?.includes( 'Providers' )
-			);
+			await waitFor( () => {
+				const buttons = container.querySelectorAll(
+					'.components-button.is-tertiary'
+				);
+				const providersButton = Array.from( buttons ).find(
+					( button ) => button.textContent?.includes( 'Providers' )
+				);
 
-			expect( providersButton?.classList.contains( 'active' ) ).toBe(
-				true
-			);
+				expect( providersButton?.classList.contains( 'active' ) ).toBe(
+					true
+				);
+			} );
 		} );
 
 		it( 'dirty indicator shows for current screen when dirty', async () => {
@@ -630,7 +654,7 @@ describe( 'Menu Component', () => {
 	} );
 
 	describe( 'Providers menu item (special case)', () => {
-		it( 'renders providers as first menu item', () => {
+		it( 'renders providers as first menu item', async () => {
 			vi.mocked( apiFetch ).mockResolvedValue( {} );
 
 			(
@@ -649,15 +673,17 @@ describe( 'Menu Component', () => {
 
 			const { container } = renderWithProviders( <Menu /> );
 
-			const buttons = container.querySelectorAll(
-				'.components-button.is-tertiary'
-			);
+			await waitFor( () => {
+				const buttons = container.querySelectorAll(
+					'.components-button.is-tertiary'
+				);
 
-			expect( buttons.length ).toBeGreaterThan( 0 );
-			expect( buttons[ 0 ]?.textContent ).toContain( 'Providers' );
+				expect( buttons.length ).toBeGreaterThan( 0 );
+				expect( buttons[ 0 ]?.textContent ).toContain( 'Providers' );
+			} );
 		} );
 
-		it( 'providers has correct screen name', () => {
+		it( 'providers has correct screen name', async () => {
 			vi.mocked( apiFetch ).mockResolvedValue( {} );
 
 			(
@@ -669,12 +695,14 @@ describe( 'Menu Component', () => {
 
 			renderWithProviders( <Menu /> );
 
-			expect( screen.getByText( 'Providers' ) ).toBeInTheDocument();
+			await waitFor( () => {
+				expect( screen.getByText( 'Providers' ) ).toBeInTheDocument();
+			} );
 		} );
 	} );
 
 	describe( 'Empty settings object', () => {
-		it( 'handles empty settings gracefully', () => {
+		it( 'handles empty settings gracefully', async () => {
 			vi.mocked( apiFetch ).mockResolvedValue( {} );
 
 			(
@@ -686,8 +714,10 @@ describe( 'Menu Component', () => {
 
 			renderWithProviders( <Menu /> );
 
-			expect( screen.getByText( 'Providers' ) ).toBeInTheDocument();
-			expect( screen.getByText( 'Docs' ) ).toBeInTheDocument();
+			await waitFor( () => {
+				expect( screen.getByText( 'Providers' ) ).toBeInTheDocument();
+				expect( screen.getByText( 'Docs' ) ).toBeInTheDocument();
+			} );
 		} );
 	} );
 } );
