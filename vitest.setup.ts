@@ -7,8 +7,7 @@ setupWpGraphQLLoginMock();
 
 vi.mock( '@wordpress/blocks', () => ( {} ) );
 
-const MockLogoSVG = () =>
-	'<?xml version="1.0" encoding="UTF-8"?><svg data-testid="logo-svg"></svg>';
+const MockLogoSVG = () => '<svg data-testid="logo-svg" />';
 
 vi.mock( '@/admin/assets/logo.svg', () => ( {
 	ReactComponent: MockLogoSVG,

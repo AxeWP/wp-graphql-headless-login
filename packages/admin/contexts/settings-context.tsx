@@ -85,7 +85,7 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 				} else {
 					setErrorMessage(
 						__(
-							'Unable to save settings. An unknown error occurred',
+							'Unable to fetch settings. An unknown error occurred',
 							'wp-graphql-headless-login'
 						)
 					);
