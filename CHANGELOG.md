@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - chore: Update NPM and Composer deps.
 - dev: Refactor repository structure and scaffold.
 - dev: Improve typescript code quality and edge cases.
+- tests: Implement vitest and backfill tests.
 - fix: Ensure constants are available for plugin Activation/Deactivation hooks.
 
 ## [0.4.4] - 2025-09-19
