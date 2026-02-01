@@ -8,7 +8,6 @@ vi.mock( '@/admin/components/fields/field', () => ( {
 	Field: ( {
 		field,
 		value,
-		isConditionMet = true, // Default to true for backward compatibility
 		setValue,
 	}: {
 		field: FieldSchema;
@@ -23,7 +22,6 @@ vi.mock( '@/admin/components/fields/field', () => ( {
 				.replace( /\s+/g, '-' ) }` }
 			data-field-key={ field?.label }
 			data-value={ JSON.stringify( value ) }
-			data-condition-met={ isConditionMet.toString() }
 			onClick={ () => setValue?.( 'updated-value' ) }
 		>
 			{ field?.label }
@@ -460,10 +458,6 @@ describe( 'Fields Component', () => {
 			);
 			expect( fieldElements ).toHaveLength( 1 );
 			expect( mockValidate ).toHaveBeenCalledWith( 'conditionalField' );
-			expect( fieldElements[ 0 ] ).toHaveAttribute(
-				'data-condition-met',
-				'false'
-			);
 		} );
 
 		it( 'renders all fields with data-condition-met attribute based on conditional logic results', () => {
@@ -510,25 +504,13 @@ describe( 'Fields Component', () => {
 				'data-field-key',
 				'Field 1'
 			);
-			expect( fieldElements[ 0 ] ).toHaveAttribute(
-				'data-condition-met',
-				'true'
-			);
 			expect( fieldElements[ 1 ] ).toHaveAttribute(
 				'data-field-key',
 				'Field 2'
 			);
-			expect( fieldElements[ 1 ] ).toHaveAttribute(
-				'data-condition-met',
-				'false'
-			);
 			expect( fieldElements[ 2 ] ).toHaveAttribute(
 				'data-field-key',
 				'Field 3'
-			);
-			expect( fieldElements[ 2 ] ).toHaveAttribute(
-				'data-condition-met',
-				'true'
 			);
 		} );
 

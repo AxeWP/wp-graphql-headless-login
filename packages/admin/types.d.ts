@@ -27,7 +27,7 @@ export type FieldSchema = {
 	enum?: string[]; // @todo Not sure if this is the correct type
 	help?: string;
 	hidden?: boolean;
-	isAdvanced?: boolean;
+	advanced?: boolean;
 	order?: number;
 	required?: boolean;
 };

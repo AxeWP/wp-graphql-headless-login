@@ -95,7 +95,7 @@ export const defaultProvidersSchema: Record<
 		}
 	>
 > = {
-	oauth2: {
+	wpgraphql_login_provider_oauth2: {
 		name: {
 			description: 'The display name of the provider.',
 			label: 'Provider Name',
@@ -148,7 +148,7 @@ export const defaultProvidersSchema: Record<
 			},
 		},
 	},
-	siteToken: {
+	wpgraphql_login_provider_siteToken: {
 		name: {
 			description: 'The display name of the provider.',
 			label: 'Provider Name',
