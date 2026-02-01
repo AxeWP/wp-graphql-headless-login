@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 import { vi, beforeEach, afterEach } from 'vitest';
 import { Fields } from '@/admin/components/fields';
+import * as SettingsContext from '@/admin/contexts/settings-context';
 import type { FieldSchema } from '@/admin/types';
 
 // Mock the Field component
@@ -9,24 +10,41 @@ vi.mock( '@/admin/components/fields/field', () => ( {
 		field,
 		value,
 		setValue,
+		isConditionMet = true,
 	}: {
 		field: FieldSchema;
 		value: unknown;
 		isConditionMet?: boolean;
 		setValue?: ( value: unknown ) => void;
-	} ) => (
-		<button
-			type="button"
-			data-testid={ `field-${ field?.label
-				?.toLowerCase()
-				.replace( /\s+/g, '-' ) }` }
-			data-field-key={ field?.label }
-			data-value={ JSON.stringify( value ) }
-			onClick={ () => setValue?.( 'updated-value' ) }
-		>
-			{ field?.label }
-		</button>
-	),
+	} ) => {
+		// Read the test-imported SettingsContext so tests can spyOn/mock its return
+		// and the mock will respect `showAdvancedSettings`.
+		const { showAdvancedSettings } = SettingsContext.useSettings?.() || {
+			showAdvancedSettings: false,
+		};
+
+		if ( ! isConditionMet ) {
+			return null;
+		}
+
+		if ( ! showAdvancedSettings && !! field?.advanced ) {
+			return null;
+		}
+
+		return (
+			<button
+				type="button"
+				data-testid={ `field-${ field?.label
+					?.toLowerCase()
+					.replace( /\s+/g, '-' ) }` }
+				data-field-key={ field?.label }
+				data-value={ JSON.stringify( value ) }
+				onClick={ () => setValue?.( 'updated-value' ) }
+			>
+				{ field?.label }
+			</button>
+		);
+	},
 } ) );
 
 describe( 'Fields Component', () => {
@@ -391,6 +409,92 @@ describe( 'Fields Component', () => {
 		} );
 	} );
 
+	describe( 'Advanced fields visibility', () => {
+		it( 'hides advanced fields when showAdvancedSettings is false', () => {
+			vi.spyOn( SettingsContext, 'useSettings' ).mockReturnValue( {
+				showAdvancedSettings: false,
+			} as any );
+
+			const mockFields: Record< string, FieldSchema > = {
+				advField: {
+					label: 'Adv Field',
+					description: 'Advanced description',
+					type: 'string',
+					advanced: true,
+				},
+				normalField: {
+					label: 'Normal Field',
+					description: 'Normal description',
+					type: 'string',
+				},
+			};
+
+			const mockValues = {
+				advField: 'a',
+				normalField: 'b',
+			};
+
+			const { container } = render(
+				<Fields
+					fields={ mockFields }
+					values={ mockValues }
+					setValue={ mockSetValue }
+				/>
+			);
+
+			expect(
+				container.querySelector( '[data-testid="field-adv-field"]' )
+			).toBeNull();
+			expect(
+				container.querySelector( '[data-testid="field-normal-field"]' )
+			).not.toBeNull();
+
+			vi.restoreAllMocks();
+		} );
+
+		it( 'shows advanced fields when showAdvancedSettings is true', () => {
+			vi.spyOn( SettingsContext, 'useSettings' ).mockReturnValue( {
+				showAdvancedSettings: true,
+			} as any );
+
+			const mockFields: Record< string, FieldSchema > = {
+				advField: {
+					label: 'Adv Field',
+					description: 'Advanced description',
+					type: 'string',
+					advanced: true,
+				},
+				normalField: {
+					label: 'Normal Field',
+					description: 'Normal description',
+					type: 'string',
+				},
+			};
+
+			const mockValues = {
+				advField: 'a',
+				normalField: 'b',
+			};
+
+			const { container } = render(
+				<Fields
+					fields={ mockFields }
+					values={ mockValues }
+					setValue={ mockSetValue }
+				/>
+			);
+
+			expect(
+				container.querySelector( '[data-testid="field-adv-field"]' )
+			).not.toBeNull();
+			expect(
+				container.querySelector( '[data-testid="field-normal-field"]' )
+			).not.toBeNull();
+
+			vi.restoreAllMocks();
+		} );
+	} );
+
 	describe( 'Conditional logic filtering', () => {
 		it( 'renders fields when validateConditionalLogic returns true', () => {
 			const mockFields: Record< string, FieldSchema > = {
@@ -429,7 +533,7 @@ describe( 'Fields Component', () => {
 			expect( mockValidate ).toHaveBeenCalledTimes( 2 );
 		} );
 
-		it( 'renders fields with data-condition-met attribute when validateConditionalLogic returns false', () => {
+		it( 'calls validateConditionalLogic and respects its result', () => {
 			const mockFields: Record< string, FieldSchema > = {
 				conditionalField: {
 					label: 'Conditional Field',
@@ -456,11 +560,11 @@ describe( 'Fields Component', () => {
 			const fieldElements = container.querySelectorAll(
 				'[data-testid^="field-"]'
 			);
-			expect( fieldElements ).toHaveLength( 1 );
+			expect( fieldElements ).toHaveLength( 0 );
 			expect( mockValidate ).toHaveBeenCalledWith( 'conditionalField' );
 		} );
 
-		it( 'renders all fields with data-condition-met attribute based on conditional logic results', () => {
+		it( 'calls validateConditionalLogic for each field and renders fields accordingly', () => {
 			const mockFields: Record< string, FieldSchema > = {
 				field1: {
 					label: 'Field 1',
@@ -499,16 +603,12 @@ describe( 'Fields Component', () => {
 			const fieldElements = container.querySelectorAll(
 				'[data-testid^="field-"]'
 			);
-			expect( fieldElements ).toHaveLength( 3 );
+			expect( fieldElements ).toHaveLength( 2 );
 			expect( fieldElements[ 0 ] ).toHaveAttribute(
 				'data-field-key',
 				'Field 1'
 			);
 			expect( fieldElements[ 1 ] ).toHaveAttribute(
-				'data-field-key',
-				'Field 2'
-			);
-			expect( fieldElements[ 2 ] ).toHaveAttribute(
 				'data-field-key',
 				'Field 3'
 			);
@@ -931,30 +1031,14 @@ describe( 'Fields Component', () => {
 			const fieldElements = container.querySelectorAll(
 				'[data-testid^="field-"]'
 			);
-			expect( fieldElements ).toHaveLength( 3 );
+			expect( fieldElements ).toHaveLength( 2 );
 			expect( fieldElements[ 0 ] ).toHaveAttribute(
-				'data-field-key',
-				'Conditional False Field'
-			);
-			expect( fieldElements[ 0 ] ).toHaveAttribute(
-				'data-condition-met',
-				'false'
-			);
-			expect( fieldElements[ 1 ] ).toHaveAttribute(
 				'data-field-key',
 				'Visible Field 1'
 			);
 			expect( fieldElements[ 1 ] ).toHaveAttribute(
-				'data-condition-met',
-				'true'
-			);
-			expect( fieldElements[ 2 ] ).toHaveAttribute(
 				'data-field-key',
 				'Visible Field 2'
-			);
-			expect( fieldElements[ 2 ] ).toHaveAttribute(
-				'data-condition-met',
-				'true'
 			);
 		} );
 	} );
@@ -997,8 +1081,8 @@ describe( 'Fields Component', () => {
 				'[data-testid="field-field-2"]'
 			);
 
-			expect( field1 ).toHaveAttribute( 'data-condition-met', 'true' );
-			expect( field2 ).toHaveAttribute( 'data-condition-met', 'false' );
+			expect( field1 ).not.toBeNull();
+			expect( field2 ).toBeNull();
 		} );
 
 		it( 'defaults isConditionMet to true when validateConditionalLogic is not provided', () => {
@@ -1025,7 +1109,7 @@ describe( 'Fields Component', () => {
 			const field1 = container.querySelector(
 				'[data-testid="field-field-1"]'
 			);
-			expect( field1 ).toHaveAttribute( 'data-condition-met', 'true' );
+			expect( field1 ).not.toBeNull();
 		} );
 	} );
 } );

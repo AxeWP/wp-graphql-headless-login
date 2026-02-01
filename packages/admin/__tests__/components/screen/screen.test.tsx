@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { vi } from 'vitest';
 import { Screen } from '@/admin/components/screen/screen';
 import { ScreenProvider } from '@/admin/components/screen/context';
@@ -51,17 +51,22 @@ vi.mock( '@/admin/components/screen/setting-screen', () => ( {
 	) ),
 } ) );
 
-function renderScreen() {
+async function renderScreen() {
 	vi.mocked( apiFetch ).mockResolvedValue( {
 		wpgraphql_login_settings: {},
 	} );
-	return render(
-		<SettingsProvider>
-			<ScreenProvider>
-				<Screen />
-			</ScreenProvider>
-		</SettingsProvider>
-	);
+	let result: ReturnType< typeof render >;
+	await act( async () => {
+		result = render(
+			<SettingsProvider>
+				<ScreenProvider>
+					<Screen />
+				</ScreenProvider>
+			</SettingsProvider>
+		);
+	} );
+	// @ts-expect-error result is assigned in act
+	return result;
 }
 
 describe( 'Screen Component', () => {
@@ -98,8 +103,8 @@ describe( 'Screen Component', () => {
 	} );
 
 	describe( 'Rendering with correct active tab', () => {
-		it( 'renders with default "providers" screen', () => {
-			renderScreen();
+		it( 'renders with default "providers" screen', async () => {
+			await renderScreen();
 
 			const title = screen.queryByText( 'Login Providers' );
 			expect( title ).toBeInTheDocument();
@@ -122,15 +127,15 @@ describe( 'Screen Component', () => {
 				configurable: true,
 			} );
 
-			renderScreen();
+			await renderScreen();
 
 			// Wait for component to render the title (either providers or settings)
 			const title = await screen.findByRole( 'heading', { level: 2 } );
 			expect( title ).toBeInTheDocument();
 		} );
 
-		it( 'renders screen description from global config', () => {
-			renderScreen();
+		it( 'renders screen description from global config', async () => {
+			await renderScreen();
 
 			const description = screen.queryByText(
 				'Configure Authentication Providers that are available to users.'
@@ -148,13 +153,13 @@ describe( 'Screen Component', () => {
 				};
 			}
 
-			renderScreen();
+			await renderScreen();
 
 			const title = await screen.findByText( 'Custom Title' );
 			expect( title ).toBeInTheDocument();
 		} );
 
-		it( 'uses default title when custom title is not defined', () => {
+		it( 'uses default title when custom title is not defined', async () => {
 			const loginSettings = getWpGraphQLLogin()?.settings;
 			if ( loginSettings ) {
 				loginSettings[ 'wpgraphql_login_providers' ] = {
@@ -163,7 +168,7 @@ describe( 'Screen Component', () => {
 				};
 			}
 
-			renderScreen();
+			await renderScreen();
 
 			const title = screen.queryByText( 'Login Providers' );
 			expect( title ).toBeInTheDocument();
@@ -172,7 +177,7 @@ describe( 'Screen Component', () => {
 
 	describe( 'Screen navigation between tabs', () => {
 		it( 'renders ProvidersScreen when currentScreen is "providers"', async () => {
-			renderScreen();
+			await renderScreen();
 
 			// ClientSettingsScreen component should be in document
 			// This is tested by ensuring the wrapper is rendered with proper context
@@ -197,7 +202,7 @@ describe( 'Screen Component', () => {
 				configurable: true,
 			} );
 
-			renderScreen();
+			await renderScreen();
 
 			// SettingsScreen should be rendered
 			const panel = screen.getByRole( 'main' );
@@ -205,7 +210,7 @@ describe( 'Screen Component', () => {
 		} );
 
 		it( 'handles multiple screen transitions', async () => {
-			const { rerender } = renderScreen();
+			const { rerender } = await renderScreen();
 
 			// Initial render with providers screen
 			const panel = screen.getByRole( 'main' );
@@ -243,14 +248,12 @@ describe( 'Screen Component', () => {
 			} ).toThrow();
 		} );
 
-		it( 'integrates with SettingsProvider', () => {
-			expect( () => {
-				renderScreen();
-			} ).not.toThrow();
+		it( 'integrates with SettingsProvider', async () => {
+			await renderScreen();
 		} );
 
-		it( 'receives currentScreen from context', () => {
-			renderScreen();
+		it( 'receives currentScreen from context', async () => {
+			await renderScreen();
 
 			// Screen should render without errors
 			const panel = screen.getByRole( 'main' );
@@ -259,7 +262,7 @@ describe( 'Screen Component', () => {
 	} );
 
 	describe( 'Edge cases', () => {
-		it( 'handles invalid screen id gracefully', () => {
+		it( 'handles invalid screen id gracefully', async () => {
 			// Set URL with invalid screen
 			Object.defineProperty( window, 'location', {
 				value: { href: 'http://example.com?screen=invalid-screen' },
@@ -267,27 +270,27 @@ describe( 'Screen Component', () => {
 				configurable: true,
 			} );
 
-			renderScreen();
+			await renderScreen();
 
 			// Should default to providers screen
 			const title = screen.queryByText( 'Login Providers' );
 			expect( title ).toBeInTheDocument();
 		} );
 
-		it( 'handles empty settings configuration', () => {
+		it( 'handles empty settings configuration', async () => {
 			const wpGraphQLLogin = getWpGraphQLLogin();
 			if ( wpGraphQLLogin ) {
 				wpGraphQLLogin.settings = {};
 			}
 
-			renderScreen();
+			await renderScreen();
 
 			// Should still render with default values
 			const title = screen.queryByText( 'Login Providers' );
 			expect( title ).toBeInTheDocument();
 		} );
 
-		it( 'handles missing wpGraphQLLogin global', () => {
+		it( 'handles missing wpGraphQLLogin global', async () => {
 			(
 				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
 			 ).wpGraphQLLogin = {
@@ -296,11 +299,11 @@ describe( 'Screen Component', () => {
 			} as unknown as WpGraphQLLoginGlobal;
 
 			// Component should still render
-			const { container } = renderScreen();
+			const { container } = await renderScreen();
 			expect( container ).toBeInTheDocument();
 		} );
 
-		it( 'handles screen with no fields defined', () => {
+		it( 'handles screen with no fields defined', async () => {
 			const wpGraphQLLogin = getWpGraphQLLogin();
 			if ( wpGraphQLLogin?.settings ) {
 				wpGraphQLLogin.settings[ 'test_screen' ] = {
@@ -316,7 +319,7 @@ describe( 'Screen Component', () => {
 				configurable: true,
 			} );
 
-			renderScreen();
+			await renderScreen();
 
 			const panel = screen.getByRole( 'main' );
 			expect( panel ).toBeInTheDocument();
@@ -325,14 +328,14 @@ describe( 'Screen Component', () => {
 		it( 'handles loading state with Suspense fallback', async () => {
 			setDefaultSettingsResponse( {} );
 
-			renderScreen();
+			await renderScreen();
 
 			// Screen should render
 			const panel = screen.getByRole( 'main' );
 			expect( panel ).toBeInTheDocument();
 		} );
 
-		it( 'handles null or undefined description', () => {
+		it( 'handles null or undefined description', async () => {
 			const wpGraphQLLogin = getWpGraphQLLogin();
 			if ( wpGraphQLLogin?.settings ) {
 				wpGraphQLLogin.settings[ 'wpgraphql_login_providers' ] = {
@@ -342,7 +345,7 @@ describe( 'Screen Component', () => {
 				};
 			}
 
-			renderScreen();
+			await renderScreen();
 
 			// Should render without crashing
 			const title = screen.queryByText( 'Test Title' );
@@ -351,15 +354,15 @@ describe( 'Screen Component', () => {
 	} );
 
 	describe( 'Component structure', () => {
-		it( 'renders Panel component', () => {
-			const { container } = renderScreen();
+		it( 'renders Panel component', async () => {
+			const { container } = await renderScreen();
 
 			const panel = container.querySelector( '.components-panel' );
 			expect( panel ).toBeInTheDocument();
 		} );
 
-		it( 'renders PanelBody component', () => {
-			const { container } = renderScreen();
+		it( 'renders PanelBody component', async () => {
+			const { container } = await renderScreen();
 
 			const panelBody = container.querySelector(
 				'.components-panel__body'
@@ -367,8 +370,8 @@ describe( 'Screen Component', () => {
 			expect( panelBody ).toBeInTheDocument();
 		} );
 
-		it( 'renders title in panel header', () => {
-			renderScreen();
+		it( 'renders title in panel header', async () => {
+			await renderScreen();
 
 			const title = screen.getByRole( 'heading', { level: 2 } );
 			expect( title ).toBeInTheDocument();
@@ -376,8 +379,8 @@ describe( 'Screen Component', () => {
 	} );
 
 	describe( 'Explicit component rendering', () => {
-		it( 'renders ClientSettingsScreen when currentScreen is "providers"', () => {
-			renderScreen();
+		it( 'renders ClientSettingsScreen when currentScreen is "providers"', async () => {
+			await renderScreen();
 
 			const clientSettingsScreen = screen.queryByTestId(
 				'client-settings-screen'
@@ -385,7 +388,7 @@ describe( 'Screen Component', () => {
 			expect( clientSettingsScreen ).toBeInTheDocument();
 		} );
 
-		it( 'renders SettingsScreen when currentScreen is not "providers"', () => {
+		it( 'renders SettingsScreen when currentScreen is not "providers"', async () => {
 			const loginSettings = getWpGraphQLLogin()?.settings;
 			if ( loginSettings ) {
 				loginSettings[ 'wpgraphql_login_settings' ] = {
@@ -401,13 +404,13 @@ describe( 'Screen Component', () => {
 				configurable: true,
 			} );
 
-			renderScreen();
+			await renderScreen();
 
 			const settingsScreen = screen.queryByTestId( 'settings-screen' );
 			expect( settingsScreen ).toBeInTheDocument();
 		} );
 
-		it( 'passes correct settingKey to SettingsScreen for "settings" screen', () => {
+		it( 'passes correct settingKey to SettingsScreen for "settings" screen', async () => {
 			const loginSettings = getWpGraphQLLogin()?.settings;
 			if ( loginSettings ) {
 				loginSettings[ 'wpgraphql_login_settings' ] = {
@@ -423,7 +426,7 @@ describe( 'Screen Component', () => {
 				configurable: true,
 			} );
 
-			renderScreen();
+			await renderScreen();
 
 			const settingsScreen = screen.queryByTestId( 'settings-screen' );
 			expect( settingsScreen ).toBeInTheDocument();
@@ -433,7 +436,7 @@ describe( 'Screen Component', () => {
 			);
 		} );
 
-		it( 'passes correct settingKey to SettingsScreen for custom screen', () => {
+		it( 'passes correct settingKey to SettingsScreen for custom screen', async () => {
 			const loginSettings = getWpGraphQLLogin()?.settings;
 			if ( loginSettings ) {
 				loginSettings[ 'wpgraphql_login_access_control' ] = {
@@ -449,7 +452,7 @@ describe( 'Screen Component', () => {
 				configurable: true,
 			} );
 
-			renderScreen();
+			await renderScreen();
 
 			const settingsScreen = screen.queryByTestId( 'settings-screen' );
 			expect( settingsScreen ).toBeInTheDocument();
@@ -461,8 +464,8 @@ describe( 'Screen Component', () => {
 	} );
 
 	describe( 'Edge cases - currentScreen', () => {
-		it( 'handles undefined currentScreen by rendering default providers screen', () => {
-			const { container } = renderScreen();
+		it( 'handles undefined currentScreen by rendering default providers screen', async () => {
+			const { container } = await renderScreen();
 
 			const clientSettingsScreen = screen.queryByTestId(
 				'client-settings-screen'
@@ -471,7 +474,7 @@ describe( 'Screen Component', () => {
 			expect( container ).toBeInTheDocument();
 		} );
 
-		it( 'handles invalid screen name by rendering default providers screen', () => {
+		it( 'handles invalid screen name by rendering default providers screen', async () => {
 			Object.defineProperty( window, 'location', {
 				value: {
 					href: 'http://example.com?screen=invalid-screen-name',
@@ -480,7 +483,7 @@ describe( 'Screen Component', () => {
 				configurable: true,
 			} );
 
-			renderScreen();
+			await renderScreen();
 
 			const clientSettingsScreen = screen.queryByTestId(
 				'client-settings-screen'
@@ -488,14 +491,14 @@ describe( 'Screen Component', () => {
 			expect( clientSettingsScreen ).toBeInTheDocument();
 		} );
 
-		it( 'handles empty screen parameter by rendering default providers screen', () => {
+		it( 'handles empty screen parameter by rendering default providers screen', async () => {
 			Object.defineProperty( window, 'location', {
 				value: { href: 'http://example.com?screen=' },
 				writable: true,
 				configurable: true,
 			} );
 
-			renderScreen();
+			await renderScreen();
 
 			const clientSettingsScreen = screen.queryByTestId(
 				'client-settings-screen'

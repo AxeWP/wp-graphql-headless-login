@@ -20,6 +20,7 @@ export const Field = ( {
 		return null;
 	}
 
+	// @todo migrate advanced property to isAdvanced as per FieldSchema.
 	if ( ! showAdvancedSettings && !! field.advanced ) {
 		return null;
 	}

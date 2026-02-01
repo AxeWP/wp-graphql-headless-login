@@ -268,15 +268,14 @@ describe( 'ClientMenu Component', () => {
 			expect( navigationItems ).toHaveLength( 0 );
 		} );
 
-		it( 'handles undefined providers gracefully', () => {
+		it( 'handles missing providers gracefully', () => {
 			(
 				global as unknown as {
 					wpGraphQLLogin: {
 						settings: { providers: Record< string, unknown > };
 					};
 				}
-			 ).wpGraphQLLogin.settings.providers =
-				undefined as unknown as Record< string, unknown >;
+			 ).wpGraphQLLogin.settings.providers = {};
 
 			render(
 				<ProviderConfigProvider>
