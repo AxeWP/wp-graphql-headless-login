@@ -27,9 +27,11 @@ export type FieldSchema = {
 	enum?: string[]; // @todo Not sure if this is the correct type
 	help?: string;
 	hidden?: boolean;
-	isAdvanced?: boolean;
 	order?: number;
 	required?: boolean;
+	isAdvanced?: boolean;
+	// Used by Provider configs. needs to be migrated to the uniform schema.
+	advanced?: boolean;
 };
 
 export type SettingSchema = {

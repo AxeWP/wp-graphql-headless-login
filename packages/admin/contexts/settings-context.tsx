@@ -72,27 +72,28 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 
 	// Fetch settings from the REST API
 	useEffect( () => {
-		try {
-			apiFetch< SettingType >( {
-				path: REST_ENDPOINT,
-			} ).then( ( response ) => {
+		apiFetch< SettingType >( {
+			path: REST_ENDPOINT,
+		} )
+			.then( ( response ) => {
 				setServerSettings( response );
 				setSettings( response ); // Initialize settings
+			} )
+			.catch( ( error: unknown ) => {
+				if ( error instanceof Error ) {
+					setErrorMessage( error.message );
+				} else {
+					setErrorMessage(
+						__(
+							'Unable to fetch settings. An unknown error occurred',
+							'wp-graphql-headless-login'
+						)
+					);
+				}
+			} )
+			.finally( () => {
+				setStatus( 'complete' );
 			} );
-		} catch ( error ) {
-			if ( error instanceof Error ) {
-				setErrorMessage( error.message );
-			} else {
-				setErrorMessage(
-					__(
-						'Unable to save settings. An unknown error occurred',
-						'wp-graphql-headless-login'
-					)
-				);
-			}
-		} finally {
-			setStatus( 'complete' );
-		}
 	}, [] );
 
 	/**

@@ -1,26 +1,7 @@
 import { FieldControl } from './field-control';
 import { PanelRow } from '@wordpress/components';
 import { useSettings } from '@/admin/contexts/settings-context';
-import type { PropsWithChildren } from 'react';
 import type { FieldSchema } from '@/admin/types';
-
-const FieldWrapper = ( {
-	isAdvanced,
-	isConditionMet,
-	children,
-}: PropsWithChildren< { isAdvanced: boolean; isConditionMet: boolean } > ) => {
-	const { showAdvancedSettings } = useSettings();
-
-	if ( ! showAdvancedSettings && isAdvanced ) {
-		return null;
-	}
-
-	return (
-		<PanelRow data-condition-met={ isConditionMet.toString() }>
-			{ children }
-		</PanelRow>
-	);
-};
 
 export const Field = ( {
 	field,
@@ -33,15 +14,19 @@ export const Field = ( {
 	setValue: ( value: unknown ) => void;
 	isConditionMet?: boolean;
 } ) => {
-	if ( ! field ) {
+	const { showAdvancedSettings } = useSettings();
+
+	if ( ! field || ! isConditionMet ) {
+		return null;
+	}
+
+	// @todo migrate advanced property to isAdvanced as per FieldSchema.
+	if ( ! showAdvancedSettings && !! field.advanced ) {
 		return null;
 	}
 
 	return (
-		<FieldWrapper
-			isAdvanced={ !! field.isAdvanced }
-			isConditionMet={ isConditionMet }
-		>
+		<PanelRow>
 			<FieldControl
 				{ ...field }
 				value={ value }
@@ -50,6 +35,6 @@ export const Field = ( {
 				} }
 				disabled={ ! isConditionMet }
 			/>
-		</FieldWrapper>
+		</PanelRow>
 	);
 };

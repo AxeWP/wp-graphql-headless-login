@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
 	Button,
 	Icon,
@@ -17,6 +17,8 @@ import { ReactComponent as Logo } from '@/admin/assets/logo.svg';
 import { Fields } from '@/admin/components/fields';
 import { useSettings } from '@/admin/contexts/settings-context';
 
+const PROVIDER_PREFIX = 'wpgraphql_login_provider_';
+
 export function ClientPanel() {
 	const { settings } = useSettings();
 	const {
@@ -29,6 +31,12 @@ export function ClientPanel() {
 	} = useClientContext();
 	const { saveEditedEntityRecord } = useDispatch( coreStore );
 	const { createNotice, createErrorNotice } = useDispatch( noticesStore );
+
+	// Strip the prefix from activeClient for looking up provider settings
+	const providerSlug = useMemo(
+		() => activeClient?.replace( PROVIDER_PREFIX, '' ) || '',
+		[ activeClient ]
+	);
 
 	const { lastError, isSaving, hasEdits } = useSelect(
 		( select ) => ( {
@@ -148,7 +156,7 @@ export function ClientPanel() {
 							// translators: %s: Client slug.
 							__( '%s Settings', 'wp-graphql-headless-login' ),
 							( wpGraphQLLogin?.settings?.providers?.[
-								activeClient
+								providerSlug
 							]?.[ 'name' ]?.default as string ) || 'Provider'
 						) }
 					</h2>
@@ -161,7 +169,7 @@ export function ClientPanel() {
 					] }
 					values={ clientConfig }
 					fields={
-						wpGraphQLLogin?.settings?.providers?.[ activeClient ] ??
+						wpGraphQLLogin?.settings?.providers?.[ providerSlug ] ??
 						{}
 					}
 					setValue={ ( value ) => {

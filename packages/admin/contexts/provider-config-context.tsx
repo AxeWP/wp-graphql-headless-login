@@ -42,10 +42,41 @@ const ProviderConfigContext = createContext< ProviderConfigContextType >( {
 	setClientConfig: () => {},
 } );
 
+const PROVIDER_PREFIX = 'wpgraphql_login_provider_';
+
 export const ProviderConfigProvider = ( { children }: PropsWithChildren ) => {
-	const [ activeClient, setActiveClient ] = useState(
-		Object.keys( wpGraphQLLogin?.settings.providers )?.[ 0 ] || ''
-	);
+	const providerKeys = Object.keys( wpGraphQLLogin?.settings?.providers );
+	let initialActive = PROVIDER_PREFIX;
+	if ( providerKeys.length > 0 ) {
+		const first = providerKeys[ 0 ]!;
+		initialActive = first.startsWith( PROVIDER_PREFIX )
+			? first
+			: `${ PROVIDER_PREFIX }${ first }`;
+	}
+
+	const [ activeClient, setActiveClientInternal ] = useState( initialActive );
+
+	/**
+	 * Sets the active client, automatically adding the prefix if needed.
+	 * Throws an error if the client doesn't exist in the provider settings.
+	 */
+	const setActiveClient = ( slug: string ) => {
+		const baseSlug = slug.startsWith( PROVIDER_PREFIX )
+			? slug.replace( PROVIDER_PREFIX, '' )
+			: slug;
+
+		const prefixedKey = `${ PROVIDER_PREFIX }${ baseSlug }`;
+
+		if (
+			! wpGraphQLLogin?.settings?.providers?.[ baseSlug ] &&
+			! wpGraphQLLogin?.settings?.providers?.[ prefixedKey ]
+		) {
+			throw new Error( 'Client not found' );
+		}
+
+		// Always store the prefixed key for consistency
+		setActiveClientInternal( prefixedKey );
+	};
 
 	const [ clientConfig, setClientConfig ] = useEntityProp(
 		'root',

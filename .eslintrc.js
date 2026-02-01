@@ -151,6 +151,18 @@ module.exports = {
 					},
 				],
 				'dot-notation': 'off',
+				'@typescript-eslint/dot-notation': [ 'error' ],
+			},
+		},
+		{
+			files: [
+				'**/*.test.{ts,tsx}',
+				'**/*.spec.{ts,tsx}',
+				'**/__tests__/**',
+			],
+			rules: {
+				'@typescript-eslint/no-explicit-any': 'off',
+				'@typescript-eslint/no-unused-vars': 'off',
 			},
 		},
 	],

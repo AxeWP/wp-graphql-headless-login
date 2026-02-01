@@ -33,7 +33,7 @@ const getMenuObject = (): Record< string, string > => {
 	const settings = wpGraphQLLogin.settings;
 
 	const menu: Record< string, string > = {
-		providers: '', // We want this as the first key.
+		providers: __( 'Providers', 'wp-graphql-headless-login' ), // Default label for providers
 	};
 
 	for ( const key in settings ) {
