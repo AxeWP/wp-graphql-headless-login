@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 
 - chore: Update NPM and Composer deps.
+- ci: Test compatibility with WordPress 6.9.1, WPGraphQL 2.7.1, PHP 8.4.
 - dev: Refactor repository structure and scaffold.
 - dev: Improve typescript code quality and edge cases.
 - tests: Implement vitest and backfill tests.
