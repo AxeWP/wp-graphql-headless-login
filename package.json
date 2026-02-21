@@ -89,7 +89,7 @@
 		"tsconfig-paths-webpack-plugin": "^4.2.0",
 		"typescript": "^5.9.3",
 		"url-loader": "^4.1.1",
-		"vite-tsconfig-paths": "^6.1.0",
+		"vite-tsconfig-paths": "^6.1.1",
 		"vitest": "^4.0.18",
 		"webpack-remove-empty-scripts": "^1.1.1"
 	},
