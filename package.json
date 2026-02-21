@@ -45,7 +45,7 @@
 	},
 	"dependencies": {
 		"@wordpress/api-fetch": "^7.39.0",
-		"@wordpress/components": "^29.12.0",
+		"@wordpress/components": "^32.0.0",
 		"@wordpress/compose": "^7.39.0",
 		"@wordpress/core-data": "^7.39.0",
 		"@wordpress/data": "^10.39.0",
