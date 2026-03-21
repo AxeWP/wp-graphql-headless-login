@@ -3693,16 +3693,16 @@
         },
         {
             "name": "php-stubs/woocommerce-stubs",
-            "version": "v10.5.3",
+            "version": "v10.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/woocommerce-stubs.git",
-                "reference": "722870ef75c60bc6779f93c021a253c8f78c25b4"
+                "reference": "ef96143054f60a2f0b2cfe8351f5d78448729e98"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/722870ef75c60bc6779f93c021a253c8f78c25b4",
-                "reference": "722870ef75c60bc6779f93c021a253c8f78c25b4",
+                "url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/ef96143054f60a2f0b2cfe8351f5d78448729e98",
+                "reference": "ef96143054f60a2f0b2cfe8351f5d78448729e98",
                 "shasum": ""
             },
             "require": {
@@ -3731,9 +3731,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/woocommerce-stubs/issues",
-                "source": "https://github.com/php-stubs/woocommerce-stubs/tree/v10.5.3"
+                "source": "https://github.com/php-stubs/woocommerce-stubs/tree/v10.6.1"
             },
-            "time": "2026-03-03T01:27:09+00:00"
+            "time": "2026-03-12T19:28:12+00:00"
         },
         {
             "name": "php-stubs/wordpress-stubs",
