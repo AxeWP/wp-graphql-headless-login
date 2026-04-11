@@ -14,9 +14,6 @@ updates:
       composer-dev-minor-patch:
         dependency-type: 'development'
         update-types: [minor, patch]
-      composer-dev-major:
-        dependency-type: 'development'
-        update-types: [major]
       composer-minor-patch:
         dependency-type: 'production'
         update-types: [minor, patch]
@@ -43,9 +40,6 @@ updates:
       npm-prod-minor-patch:
         dependency-type: 'production'
         update-types: [minor, patch]
-      npm-dev-major:
-        dependency-type: 'development'
-        update-types: [major]
 
   # GitHub Actions: 1x weekly.
   - package-ecosystem: 'github-actions'
