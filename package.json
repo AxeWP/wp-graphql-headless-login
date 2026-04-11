@@ -71,7 +71,7 @@
 		"@typescript-eslint/parser": "^8.54.0",
 		"@vitest/coverage-v8": "^4.1.0",
 		"@wordpress/babel-preset-default": "^8.41.0",
-		"@wordpress/env": "^10.39.0",
+		"@wordpress/env": "^11.1.0",
 		"@wordpress/eslint-plugin": "^24.3.0",
 		"@wordpress/prettier-config": "^4.39.0",
 		"@wordpress/scripts": "^31.6.0",
