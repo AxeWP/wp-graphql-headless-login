@@ -116,7 +116,7 @@ jobs:
           timeout_minutes: 10
           max_attempts: 3
           command: |
-            npm run wp-env start -- ${{ secrets.ACTIONS_STEP_DEBUG && '--debug' || '' }}
+            npm run wp-env start -- ${{ runner.debug == '1' && '--debug' || '' }}
 
       - name: Run PHP static analysis tests
         id: phpstan

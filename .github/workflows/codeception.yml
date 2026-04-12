@@ -125,7 +125,7 @@ jobs:
           timeout_minutes: 10
           max_attempts: 3
           command: |
-            ${{ matrix.coverage && 'PCOV_ENABLED=1 ' || '' }}npm run wp-env start -- ${{ secrets.ACTIONS_STEP_DEBUG && '--debug' || '' }}
+            ${{ matrix.coverage && 'PCOV_ENABLED=1 ' || '' }}npm run wp-env start -- ${{ runner.debug == '1' && '--debug' || '' }}
 
       - name: Log versions
         run: |
@@ -135,15 +135,15 @@ jobs:
       # @todo These are broken by woo.
       # - name: Run Acceptance Tests
       #   run: |
-      #     npm run test:php -- run acceptance ${{ secrets.ACTIONS_STEP_DEBUG && '--debug' || '' }}
+      #     npm run test:php -- run acceptance ${{ runner.debug == '1' && '--debug' || '' }}
 
       - name: Run Functional Tests
         run: |
-          npm run test:php -- run functional ${{ secrets.ACTIONS_STEP_DEBUG && '--debug' || '' }}
+          npm run test:php -- run functional ${{ runner.debug == '1' && '--debug' || '' }}
 
       - name: Run WPUnit Tests ${{ matrix.coverage && ' with coverage report' || '' }}
         run: |
-          npm run test:php -- run wpunit ${{ secrets.ACTIONS_STEP_DEBUG && '--debug' || '' }} ${{ matrix.coverage && '--coverage --coverage-xml --coverage-html' || '' }}
+          npm run test:php -- run wpunit ${{ runner.debug == '1' && '--debug' || '' }} ${{ matrix.coverage && '--coverage --coverage-xml --coverage-html' || '' }}
 
       - name: Upload test failure artifacts
         if: failure()
