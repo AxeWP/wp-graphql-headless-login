@@ -44,10 +44,10 @@
 		"wp-env": "wp-env"
 	},
 	"dependencies": {
-		"@wordpress/api-fetch": "^7.43.0",
+		"@wordpress/api-fetch": "^7.47.0",
 		"@wordpress/components": "^29.12.0",
-		"@wordpress/compose": "^7.43.0",
-		"@wordpress/core-data": "^7.43.0",
+		"@wordpress/compose": "^7.46.0",
+		"@wordpress/core-data": "^7.47.0",
 		"@wordpress/data": "^10.43.0",
 		"@wordpress/dom-ready": "^4.43.0",
 		"@wordpress/hooks": "^4.43.0",
