@@ -22,8 +22,7 @@ mutation login(
       # The authenticated WordPress user.
       ...MyUserFrag
     }
-    # The following fields are available if WPGraphQL for WooCommerce is installed.
-    wooSessionToken
+    # Available with WPGraphQL for WooCommerce.
     customer {
       ...MyCustomerFrag
     }
@@ -53,8 +52,7 @@ mutation loginWithPassword($username: String!, $password: String!) {
       # The authenticated WordPress user.
       ...MyUserFrag
     }
-    # The following fields are available if WPGraphQL for WooCommerce is installed.
-    wooSessionToken
+    # Available with WPGraphQL for WooCommerce.
     customer {
       ...MyCustomerFrag
     }
@@ -86,8 +84,7 @@ mutation loginAsIdentity(
       # The authenticated WordPress user.
       ...MyUserFrag
     }
-    # The following fields are available if WPGraphQL for WooCommerce is installed.
-    wooSessionToken
+    # Available with WPGraphQL for WooCommerce.
     customer {
       ...MyCustomerFrag
     }

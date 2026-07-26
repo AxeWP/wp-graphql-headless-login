@@ -177,7 +177,8 @@ class ProviderSettings {
 				$defaults = [];
 
 				foreach ( $config[ self::$settings_prefix . $slug ] as $setting_key => $setting_args ) {
-					$defaults[ $setting_key ] = $setting_args['default'] ?? null;
+					// A null default fails its own `object` schema, which makes WP's settings endpoint null out the entire option.
+					$defaults[ $setting_key ] = $setting_args['default'] ?? ( 'object' === ( $setting_args['type'] ?? '' ) ? [] : null );
 
 					// Remove excluded keys from args.
 					$config[ self::$settings_prefix . $slug ][ $setting_key ] = array_diff_key( $setting_args, array_flip( $excluded_keys ) );

@@ -14,7 +14,7 @@ use WPGraphQL\Login\Auth\ProviderRegistry;
 use WPGraphQL\Login\Model\Client as ClientModel;
 use WPGraphQL\Login\Type\Enum\ProviderEnum;
 use WPGraphQL\Login\Type\WPObject\Client;
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\FieldsType;
+use WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Abstracts\FieldsType;
 
 /**
  * Class - RootQuery

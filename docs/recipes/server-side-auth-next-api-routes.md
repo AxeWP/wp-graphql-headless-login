@@ -642,33 +642,4 @@ export function usePasswordLogin() {
 
 ## 8. (Optional) Add Support for WPGraphQL for WooCommerce
 
-If you're using [WPGraphQL for WooCommerce](https://github.com/wp-graphql/wp-graphql-woocommerce), you can add support for the customer's [Session Token](https://woographql.com/guides/understanding-the-user-session) to handle things like guest checkout.
-
-When that plugin is enabled, a `woocommerce-session` header is added to every GraphQL response where an existing session header isn't provided. To reuse the same session token for future requests, we can just grab it from the response in our [Session Handler function](#3b-the-sessionhandler-function) and store it in the user's session, and then add it to future requests.
-
-We can then update our [fetch requests](#6-use-the-authtoken-in-your-graphql-requests) to include the session token header.
-
-```jsx
-// utils/fetchAPI.js
-
-export default async function fetchAPI( query, { variables } = {} ) {
-  const currentUser = await fetch('/api/auth/user').then( res => res.json() );
-
-  const headers = { 'Content-Type': 'application/json' };
-
-  if ( currentUser?.authToken ) {
-    headers.Authorization = `Bearer ${currentUser.authToken}`;
-  }
-
-  /**
-   * This is the code we're adding. It adds the session token if it exists.
-   */
-  if ( currentUser?.wooSessionToken ) {
-    headers['woocommerce-session']: `Session ${currentUser.wooSessionToken}`;
-  }
-
-  try ...// The rest of the function.
-}
-```
-
-**Note:** You can also get a _new_ `wooSessionToken` from the `login` mutation payload when the user logs in. However, this will be a _new_ session token, and will not be associated with the user's existing session. This means that any items in the user's cart will not be transferred to the new session. If you want to transfer the user's cart to the new session, it's best to rely solely on the `woocommerce-session` header, and forget about the `LoginPayload.wooSessionToken` GraphQL field altogether.
+If you're using [WPGraphQL for WooCommerce](https://github.com/wp-graphql/wp-graphql-woocommerce) (v1.0.0+), you'll want to carry the shopper's WooCommerce session (`sessionToken` or `cartToken`) across requests, so their cart survives logging in. See https://woographql.com/docs/wp-graphql-woocommerce/handling-user-authentication for more information.

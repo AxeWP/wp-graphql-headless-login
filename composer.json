@@ -25,7 +25,7 @@
 			"phpstan/extension-installer": true
 		},
 		"platform": {
-			"php": "7.4"
+			"php": "8.2"
 		},
 		"preferred-install": "dist",
 		"process-timeout": 0,
@@ -43,7 +43,7 @@
 			"update_call_sites": false,
 			"include_modified_date": false,
 			"packages": [
-				"axepress/wp-graphql-plugin-boilerplate",
+				"axepress/axewp-common",
 				"firebase/php-jwt",
 				"league/oauth2-client",
 				"league/oauth2-facebook",
@@ -53,7 +53,9 @@
 				"league/oauth2-linkedin"
 			],
 			"exclude_from_prefix": {
-				"namespaces": [],
+				"namespaces": [
+					"WPGraphQL\\"
+				],
 				"file_patterns": []
 			}
 		}
@@ -71,26 +73,27 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Tests\\WPGraphQL\\Login\\Helper\\": "tests/_support/Helper"
+			"Tests\\WPGraphQL\\Login\\": "tests/phpunit/"
 		}
 	},
 	"require": {
-		"php": ">=7.4",
-		"axepress/wp-graphql-plugin-boilerplate": "0.1.1",
+		"php": ">=8.2",
+		"axepress/axewp-common": "^0.1.0",
 		"league/oauth2-facebook": "^2.2",
 		"league/oauth2-github": "^3.0",
-		"firebase/php-jwt": "^6.3",
-		"league/oauth2-google": "^4.0",
+		"firebase/php-jwt": "^7.0.5",
+		"league/oauth2-google": "^5.0",
 		"league/oauth2-instagram": "^3.1",
 		"league/oauth2-linkedin": "^5.1"
 	},
 	"require-dev": {
 		"axepress/wp-graphql-cs": "^2.0.0",
 		"axepress/wp-graphql-stubs": "^2.3",
-		"codeception/module-rest": "^2.0",
-		"lucatume/wp-browser": "^3.7",
 		"mockery/mockery": "^1.5",
+		"wp-phpunit/wp-phpunit": "^7.0",
+		"yoast/phpunit-polyfills": "^4.0",
 		"php-stubs/woocommerce-stubs": "^10.0",
+		"php-stubs/wordpress-stubs": "7.0.1 as 6.9.4",
 		"phpstan/extension-installer": "^1.1",
 		"phpstan/phpstan-deprecation-rules": "^2.0",
 		"phpstan/phpstan": "^2.0",
@@ -102,6 +105,7 @@
 		"lint": "vendor/bin/phpcs",
 		"format": "vendor/bin/phpcbf",
 		"phpstan": "vendor/bin/phpstan analyze --ansi --memory-limit=1G",
+		"test": "vendor/bin/phpunit -c phpunit.xml.dist",
 		"strauss-install": [
 			"test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.26.3/strauss.phar"
 		],

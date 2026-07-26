@@ -32,4 +32,4 @@ parameters:
 		scanFiles:
 			- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
 			- vendor/axepress/wp-graphql-stubs/wp-graphql-stubs.php
-			- phpstan/woographql-stubs.php
+			- tools/phpstan/woographql-stubs.php

@@ -16,7 +16,7 @@ use WPGraphQL\Login\Utils\Utils;
  * Trait - ProviderConfigStaticTrait
  *
  * @phpstan-import-type Setting from \WPGraphQL\Login\Admin\Settings\AbstractSettings
- * @phpstan-import-type FieldConfig from \AxeWP\GraphQL\Interfaces\TypeWithFields
+ * @phpstan-import-type FieldConfig from \WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Interfaces\TypeWithFields
  */
 trait ProviderConfigStaticTrait {
 	/**

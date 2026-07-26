@@ -14,7 +14,7 @@ use GraphQL\Type\Definition\ResolveInfo;
 use WPGraphQL\AppContext;
 use WPGraphQL\Login\Auth\TokenManager;
 use WPGraphQL\Login\Auth\User;
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationType;
+use WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Abstracts\MutationType;
 /**
  * Class - RefreshToken
  */

@@ -10,12 +10,10 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Admin\Upgrade;
 
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\Registrable;
-
 /**
  * Class UpgradeRegistry
  */
-class UpgradeRegistry implements Registrable {
+class UpgradeRegistry {
 	/**
 	 * {@inheritDoc}
 	 */

@@ -10,12 +10,10 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Auth;
 
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\Registrable;
-
 /**
  * Class - ServerAuthentication
  */
-class ServerAuthentication implements Registrable {
+class ServerAuthentication {
 	/**
 	 * The singleton instance of this class.
 	 *
@@ -44,7 +42,7 @@ class ServerAuthentication implements Registrable {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Initializes the instance and registers the authentication hooks.
 	 */
 	public static function init(): void {
 		if ( ! self::$instance ) {

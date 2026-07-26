@@ -26,7 +26,7 @@ As follows is a _brief_ overview of how the plugin works.
 
 - Authentication tokens should be passed in the Authorization Headers of future GraphQL requests.
 - Refresh tokens can be exchanged for a new auth token without requiring the user to reauthenticate.
-- **WooCommerce** - If you're using [WPGraphQL for WooCommerce](https://github.com/wp-graphql/wp-graphql-woocommerce), you should store and pass the `wooSessionToken` to the `woocommerce-session` header.
+- **WooCommerce** - If you're using [WPGraphQL for WooCommerce](https://github.com/wp-graphql/wp-graphql-woocommerce), store its `cartToken` or `sessionToken` too and send it on every request, or the shopper's cart won't survive login. See https://woographql.com/docs/wp-graphql-woocommerce/handling-user-authentication.
 
 5. You can get a new `authToken` and `refreshToken` for the user in the response of an authenticated query by querying for the `RootQuery.viewer.auth.authToken`, or exchanged a stored `refreshToken` for a new `authToken` using the `refreshToken` mutation.
 6. You can log the user out of all other devices by using `refreshUserSecret` or `revokeUserSecret` mutations.

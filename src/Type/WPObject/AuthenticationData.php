@@ -9,8 +9,7 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Type\WPObject;
 
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\ObjectType;
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Helper\Compat;
+use WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Abstracts\ObjectType;
 use WPGraphQL\Model\User;
 
 /**
@@ -20,7 +19,7 @@ class AuthenticationData extends ObjectType {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function register(): void {
+	public function register(): void {
 		parent::register();
 
 		/**
@@ -34,23 +33,20 @@ class AuthenticationData extends ObjectType {
 			register_graphql_field(
 				$type,
 				'auth',
-				// @todo remove Compat wrapper when WPGraphQL v2.3.0+ is required.
-				Compat::resolve_graphql_config(
-					[
-						'type'        => self::get_type_name(),
-						'description' => static fn () => __( 'Headless Login authentication data.', 'wp-graphql-headless-login' ),
-						'resolve'     => static function ( $source ) {
-							if ( ! $source instanceof User && isset( $source->ID ) ) {
-								$user = get_user_by( 'ID', $source->ID );
+				[
+					'type'        => self::get_type_name(),
+					'description' => static fn () => __( 'Headless Login authentication data.', 'wp-graphql-headless-login' ),
+					'resolve'     => static function ( $source ) {
+						if ( ! $source instanceof User && isset( $source->ID ) ) {
+							$user = get_user_by( 'ID', $source->ID );
 
-								if ( $user instanceof \WP_User ) {
-									return new User( $user );
-								}
+							if ( $user instanceof \WP_User ) {
+								return new User( $user );
 							}
-							return $source;
-						},
-					]
-				)
+						}
+						return $source;
+					},
+				]
 			);
 		}
 	}

@@ -17,9 +17,3 @@ namespace WPGraphQL\WooCommerce\Utils {
 		}
 	}
 }
-
-namespace WPGraphQL\WooCommerce\Model {
-	class Customer {
-		public function __construct( int $id ) {}
-	}
-}

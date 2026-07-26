@@ -11,41 +11,41 @@ import { __ } from '@wordpress/i18n';
 const REST_ENDPOINT = 'wp-graphql-login/v1/settings';
 
 type AllowedStatuses = 'saving' | 'complete' | undefined;
-type SettingType = Record<string, Record<string, unknown>>;
+type SettingType = Record< string, Record< string, unknown > >;
 
-const SettingsContext = createContext<{
+const SettingsContext = createContext< {
 	settings: SettingType | undefined;
-	updateSettings: ({
+	updateSettings: ( {
 		slug,
 		values,
 	}: {
 		slug: keyof SettingType;
-		values: Record<string, unknown>;
-	}) => void;
+		values: Record< string, unknown >;
+	} ) => void;
 	saveSettings: (
 		slug: keyof SettingType,
-		valuesOverride?: Record<string, unknown>
-	) => Promise<boolean>;
-	isConditionMet: ({
+		valuesOverride?: Record< string, unknown >
+	) => Promise< boolean >;
+	isConditionMet: ( {
 		settingKey,
 		field,
 	}: {
 		settingKey: string;
 		field: string;
-	}) => boolean;
-	getUnmetCondition: ({
+	} ) => boolean;
+	getUnmetCondition: ( {
 		settingKey,
 		field,
 	}: {
 		settingKey: string;
 		field: string;
-	}) => { settingKey: string; field: string } | undefined;
+	} ) => { settingKey: string; field: string } | undefined;
 	isComplete: boolean;
 	isDirty: boolean;
 	isSaving: boolean;
 	errorMessage: string | undefined;
 	showAdvancedSettings: boolean;
-}>({
+} >( {
 	isConditionMet: () => true,
 	getUnmetCondition: () => undefined,
 	settings: undefined,
@@ -56,41 +56,43 @@ const SettingsContext = createContext<{
 	isComplete: false,
 	errorMessage: undefined,
 	showAdvancedSettings: false,
-});
+} );
 
-export const SettingsProvider = ({ children }: PropsWithChildren) => {
-	const [status, setStatus] = useState<AllowedStatuses>(undefined);
-	const [errorMessage, setErrorMessage] = useState<string | undefined>();
-	const [settings, setSettings] = useState<SettingType | undefined>(
+export const SettingsProvider = ( { children }: PropsWithChildren ) => {
+	const [ status, setStatus ] = useState< AllowedStatuses >( undefined );
+	const [ errorMessage, setErrorMessage ] = useState< string | undefined >();
+	const [ settings, setSettings ] = useState< SettingType | undefined >(
 		undefined
 	);
 
 	// Cached server state. This is used to determine if the settings are dirty
-	const [serverSettings, setServerSettings] = useState<
+	const [ serverSettings, setServerSettings ] = useState<
 		SettingType | undefined
-	>(undefined);
+	>( undefined );
 
 	const isDirty =
-		(settings &&
-			JSON.stringify(settings) !== JSON.stringify(serverSettings)) ||
+		( settings &&
+			JSON.stringify( settings ) !== JSON.stringify( serverSettings ) ) ||
 		false;
 	const isSaving = status === 'saving';
 	const isComplete = status === 'complete';
 	const showAdvancedSettings =
-		!!settings?.['wpgraphql_login_settings']?.['show_advanced_settings'];
+		!! settings?.[ 'wpgraphql_login_settings' ]?.[
+			'show_advanced_settings'
+		];
 
 	// Fetch settings from the REST API
-	useEffect(() => {
-		apiFetch<SettingType>({
+	useEffect( () => {
+		apiFetch< SettingType >( {
 			path: REST_ENDPOINT,
-		})
-			.then((response) => {
-				setServerSettings(response);
-				setSettings(response); // Initialize settings
-			})
-			.catch((error: unknown) => {
-				if (error instanceof Error) {
-					setErrorMessage(error.message);
+		} )
+			.then( ( response ) => {
+				setServerSettings( response );
+				setSettings( response ); // Initialize settings
+			} )
+			.catch( ( error: unknown ) => {
+				if ( error instanceof Error ) {
+					setErrorMessage( error.message );
 				} else {
 					setErrorMessage(
 						__(
@@ -99,34 +101,34 @@ export const SettingsProvider = ({ children }: PropsWithChildren) => {
 						)
 					);
 				}
-			})
-			.finally(() => {
-				setStatus('complete');
-			});
-	}, []);
+			} )
+			.finally( () => {
+				setStatus( 'complete' );
+			} );
+	}, [] );
 
 	/**
 	 * Update the settings state with new values
 	 */
-	const updateSettings = ({
+	const updateSettings = ( {
 		slug,
 		values,
 	}: {
 		slug: keyof SettingType;
-		values: Record<string, unknown>;
-	}) => {
-		setSettings((prevSettings) => {
-			if (!prevSettings) {
+		values: Record< string, unknown >;
+	} ) => {
+		setSettings( ( prevSettings ) => {
+			if ( ! prevSettings ) {
 				return {
-					[slug]: values,
+					[ slug ]: values,
 				};
 			}
 
 			return {
 				...prevSettings,
-				[slug]: values,
+				[ slug ]: values,
 			};
-		});
+		} );
 	};
 
 	/**
@@ -134,30 +136,30 @@ export const SettingsProvider = ({ children }: PropsWithChildren) => {
 	 */
 	const saveSettings = async (
 		slug: keyof SettingType,
-		valuesOverride?: Record<string, unknown>
-	): Promise<boolean> => {
-		setStatus('saving');
+		valuesOverride?: Record< string, unknown >
+	): Promise< boolean > => {
+		setStatus( 'saving' );
 		try {
-			const response = await apiFetch<SettingType>({
+			const response = await apiFetch< SettingType >( {
 				path: REST_ENDPOINT,
 				method: 'POST',
 				data: {
 					slug,
-					values: valuesOverride ?? settings?.[slug],
+					values: valuesOverride ?? settings?.[ slug ],
 				},
-			});
-			setServerSettings(response);
-			setSettings(response);
-			setErrorMessage(undefined);
-			setStatus('complete');
+			} );
+			setServerSettings( response );
+			setSettings( response );
+			setErrorMessage( undefined );
+			setStatus( 'complete' );
 
 			return true;
-		} catch (error) {
-			if (error instanceof Error) {
-				setErrorMessage(error.message);
+		} catch ( error ) {
+			if ( error instanceof Error ) {
+				setErrorMessage( error.message );
 			}
 
-			setStatus('complete');
+			setStatus( 'complete' );
 			return false;
 		}
 	};
@@ -168,62 +170,62 @@ export const SettingsProvider = ({ children }: PropsWithChildren) => {
 	 * When a rule's target is itself blocked, the root cause is returned so
 	 * callers can point the user at the setting they actually need to change.
 	 */
-	const getUnmetCondition = ({
+	const getUnmetCondition = ( {
 		settingKey,
 		field,
 	}: {
 		settingKey: string;
 		field: string;
-	}): { settingKey: string; field: string } | undefined => {
+	} ): { settingKey: string; field: string } | undefined => {
 		// Get the logic rule.
 		const conditionalLogic =
-			wpGraphQLLogin?.settings?.[settingKey]?.fields?.[field]
+			wpGraphQLLogin?.settings?.[ settingKey ]?.fields?.[ field ]
 				?.conditionalLogic;
 
-		if (!conditionalLogic) {
+		if ( ! conditionalLogic ) {
 			return undefined;
 		}
 
-		const conditionalLogicArray = Array.isArray(conditionalLogic)
+		const conditionalLogicArray = Array.isArray( conditionalLogic )
 			? conditionalLogic
-			: [conditionalLogic];
+			: [ conditionalLogic ];
 
 		// Check if the condition is met by comparing the current field value to the rule.
-		for (const rule of conditionalLogicArray) {
+		for ( const rule of conditionalLogicArray ) {
 			const { slug, operator, value } = rule;
 
 			// Parse the slug to get the setting and field. If there is no dot, the field is on the current setting.
-			const [targetSetting, targetField] = slug.includes('.')
-				? slug.split('.')
-				: [settingKey, slug];
+			const [ targetSetting, targetField ] = slug.includes( '.' )
+				? slug.split( '.' )
+				: [ settingKey, slug ];
 
-			if (!targetSetting || !targetField) {
+			if ( ! targetSetting || ! targetField ) {
 				return { settingKey, field };
 			}
 
 			const target = { settingKey: targetSetting, field: targetField };
 
-			const fieldValue = settings?.[targetSetting as string]?.[
+			const fieldValue = settings?.[ targetSetting as string ]?.[
 				targetField
 			] as string | undefined;
 
-			if (!fieldValue) {
+			if ( ! fieldValue ) {
 				return target;
 			}
 
 			// If the field schema has a condition, we need to check if the condition is met.
-			const unmetParent = wpGraphQLLogin?.settings?.[targetSetting]
-				?.fields?.[targetField]?.conditionalLogic
-				? getUnmetCondition(target)
+			const unmetParent = wpGraphQLLogin?.settings?.[ targetSetting ]
+				?.fields?.[ targetField ]?.conditionalLogic
+				? getUnmetCondition( target )
 				: undefined;
 
-			if (unmetParent) {
+			if ( unmetParent ) {
 				return unmetParent;
 			}
 
 			let isMet: boolean;
 
-			switch (operator) {
+			switch ( operator ) {
 				case '==':
 					isMet = fieldValue === value;
 					break;
@@ -246,7 +248,7 @@ export const SettingsProvider = ({ children }: PropsWithChildren) => {
 					isMet = true;
 			}
 
-			if (!isMet) {
+			if ( ! isMet ) {
 				return target;
 			}
 		}
@@ -257,17 +259,17 @@ export const SettingsProvider = ({ children }: PropsWithChildren) => {
 	/**
 	 * Checks whether the condition for a field is met.
 	 */
-	const isConditionMet = ({
+	const isConditionMet = ( {
 		settingKey,
 		field,
 	}: {
 		settingKey: string;
 		field: string;
-	}) => !getUnmetCondition({ settingKey, field });
+	} ) => ! getUnmetCondition( { settingKey, field } );
 
 	return (
 		<SettingsContext.Provider
-			value={{
+			value={ {
 				settings,
 				isConditionMet,
 				getUnmetCondition,
@@ -278,18 +280,18 @@ export const SettingsProvider = ({ children }: PropsWithChildren) => {
 				isSaving,
 				errorMessage,
 				showAdvancedSettings,
-			}}
+			} }
 		>
-			{children}
+			{ children }
 		</SettingsContext.Provider>
 	);
 };
 
 export const useSettings = () => {
-	const contextValue = useContext(SettingsContext);
-	if (!contextValue) {
-		throw new Error('useSettings must be used within a SettingsProvider');
+	const contextValue = useContext( SettingsContext );
+	if ( ! contextValue ) {
+		throw new Error( 'useSettings must be used within a SettingsProvider' );
 	}
 
-	return useContext(SettingsContext);
+	return useContext( SettingsContext );
 };

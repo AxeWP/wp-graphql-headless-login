@@ -396,7 +396,7 @@ class TokenManager {
 			return new WP_Error( 'graphql-headless-login-no-permissions', __( 'Users can only issue new secrets for themselves.', 'wp-graphql-headless-login' ) );
 		}
 
-		$secret = uniqid( 'graphql_login_secret_', true );
+		$secret = wp_generate_password( 64, false, false );
 
 		// Update the user meta.
 		User::set_secret( $user_id, $secret );
@@ -494,7 +494,7 @@ class TokenManager {
 				return new WP_Error( 'invalid-jwt', __( 'User secret is revoked.', 'wp-graphql-headless-login' ) );
 			}
 			// the secret in the token doesnt match the user secret.
-			if ( User::get_secret( $token->data->user->id ) !== $token->data->user->user_secret ) {
+			if ( ! hash_equals( (string) User::get_secret( $token->data->user->id ), (string) $token->data->user->user_secret ) ) {
 				self::set_status( 401 );
 				return new WP_Error( 'invalid-jwt', __( 'User secret does not match.', 'wp-graphql-headless-login' ) );
 			}

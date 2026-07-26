@@ -90,12 +90,11 @@ abstract class AbstractSettings {
 	 *
 	 * @return array{
 	 *  type: string,
-	 *  default?: mixed,
-	 *  description?: string,
-	 *  default?: array<string,mixed>,
+	 *  description: string,
+	 *  default: array<string,mixed>,
 	 *  label: string,
-	 *  sanitize_callback?: callable(mixed): mixed,
-	 *  show_in_rest?: bool|array<string,mixed>,
+	 *  sanitize_callback: callable(mixed): mixed,
+	 *  show_in_rest: bool|array<string,mixed>,
 	 * }
 	 */
 	public function get_register_setting_config(): array {
