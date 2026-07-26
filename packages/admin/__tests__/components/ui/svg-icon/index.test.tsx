@@ -121,7 +121,7 @@ describe( 'SVG Icon Component', () => {
 			const svg = container.querySelector( 'svg' );
 			expect( svg ).toHaveStyle( {
 				color: 'rgb(255, 0, 0)',
-				fill: 'blue',
+				fill: 'rgb(0, 0, 255)',
 			} );
 		} );
 

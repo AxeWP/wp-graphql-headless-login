@@ -972,6 +972,7 @@ describe( 'FieldControl Component', () => {
 			expect( rest ).toEqual( {
 				placeholder: 'Enter value',
 				maxLength: 100,
+				__next40pxDefaultSize: true,
 			} );
 		} );
 
@@ -1055,6 +1056,7 @@ describe( 'FieldControl Component', () => {
 			);
 			expect( rest ).toEqual( {
 				maxLength: 5,
+				__next40pxDefaultSize: true,
 			} );
 		} );
 
