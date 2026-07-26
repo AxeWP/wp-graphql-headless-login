@@ -10,28 +10,36 @@ export const hooks = createHooks();
 const CONTAINER_SELECTOR =
 	'#wpgraphql_login_settings, #wp-graphql-headless-login-settings';
 
+/** Mounts the app, returning whether the container is in the DOM. */
 const mount = () => {
 	const container =
 		document.querySelector< HTMLElement >( CONTAINER_SELECTOR );
 
-	if ( ! container || container.dataset[ 'wpglMounted' ] ) {
-		return;
+	if ( ! container ) {
+		return false;
 	}
 
-	container.dataset[ 'wpglMounted' ] = 'true';
+	if ( ! container.dataset[ 'wpglMounted' ] ) {
+		container.dataset[ 'wpglMounted' ] = 'true';
 
-	createRoot( container ).render(
-		<StrictMode>
-			<App />
-		</StrictMode>
-	);
+		createRoot( container ).render(
+			<StrictMode>
+				<App />
+			</StrictMode>
+		);
+	}
+
+	return true;
 };
 
 // Render the app.
 domReady( () => {
-	mount();
+	// On the settings screen the container is already server-rendered, so there's nothing to watch for.
+	if ( mount() ) {
+		return;
+	}
 
-	// The IDE mounts its Settings tab on demand, so watch for the container.
+	// Elsewhere, it's loaded on-demand.
 	new MutationObserver( mount ).observe( document.body, {
 		childList: true,
 		subtree: true,

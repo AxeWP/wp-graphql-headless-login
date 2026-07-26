@@ -80,6 +80,7 @@
 		"cross-env": "^10.1.0",
 		"eslint-plugin-jest": "^29.16.0",
 		"graphql": "^16.14.2",
+		"graphql-inspector": "^0.5.1",
 		"graphql-schema-linter": "^3.0.1",
 		"jsdom": "^29.1.1",
 		"lefthook": "^2.1.10",
@@ -96,9 +97,10 @@
 		"prettier": "npm:wp-prettier@3",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
-		"@babel/runtime@<=7.27.5": "^7.27.6",
-		"serialize-javascript@<=7.0.3": "^7.0.4",
-		"webpack-dev-server@<=5.2.0": "^5.2.1"
+		"@babel/runtime@<7.27.6": "^7.27.6",
+		"protobufjs@<7.5.5": "^7.5.5",
+		"serialize-javascript@<7.0.5": "^7.0.4",
+		"webpack-dev-server@<5.2.1": "^5.2.1"
 	},
 	"allowScripts": {
 		"core-js@3.49.0": true,
