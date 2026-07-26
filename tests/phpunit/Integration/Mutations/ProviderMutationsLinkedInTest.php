@@ -5,57 +5,12 @@
  * @package Tests\WPGraphQL\Login\Integration\Mutations
  */
 
-use Mockery as m;
-use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\LinkedIn as OAuth2LinkedIn;
-use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\OAuth2Config;
+declare( strict_types = 1 );
+
+namespace Tests\WPGraphQL\Login\Integration\Mutations;
+
+use Tests\WPGraphQL\Login\Fixtures\FooLinkedInProviderConfig;
 use WPGraphQL\Login\Auth\User;
-use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\LinkedIn;
-
-/**
- * A LinkedIn provider with mocked resource owner details.
- */
-class FooLinkedInProvider extends LinkedIn {
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function fetchResourceOwnerDetails( $token ) {
-		return json_decode( '{"id": 12345, "firstName": "mock_first_name", "lastName": "mock_last_name", "vanityName": "mock_username"}', true );
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getResourceOwnerEmail( $token ) {
-		return 'mock_email@email.com';
-	}
-}
-
-/**
- * A LinkedIn provider config wired to the mocked provider and HTTP client.
- */
-class FooLinkedInProviderConfig extends OAuth2LinkedIn {
-	/**
-	 * {@inheritDoc}
-	 */
-	public function __construct() {
-		OAuth2Config::__construct( FooLinkedInProvider::class );
-
-		// Mock and set the http client on the provider.
-		$response = m::mock( 'WPGraphQL\Login\Vendor\Psr\Http\Message\ResponseInterface' );
-		$response->shouldReceive( 'getBody' )
-			->andReturn(
-				\WPGraphQL\Login\Vendor\GuzzleHttp\Psr7\Utils::streamFor( '{"access_token":"mock_access_token", "scope":"repo,gist", "token_type":"bearer"}' )
-			);
-		$response->shouldReceive( 'getHeader' )
-			->andReturn( [ 'Content-Type' => 'application/json' ] );
-		$response->shouldReceive( 'getStatusCode' )
-			->andReturn( 200 );
-
-		$http_client = m::mock( 'WPGraphQL\Login\Vendor\GuzzleHttp\ClientInterface' );
-		$http_client->shouldReceive( 'send' )->times( 1 )->andReturn( $response );
-		$this->provider->setHttpClient( $http_client );
-	}
-}
 
 /**
  * Tests the LinkedIn provider mutations.

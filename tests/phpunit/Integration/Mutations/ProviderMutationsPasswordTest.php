@@ -1,5 +1,15 @@
 <?php
 /**
+ * Tests the login mutation for the Password provider.
+ *
+ * @package Tests\WPGraphQL\Login\Integration\Mutations
+ */
+
+declare( strict_types = 1 );
+
+namespace Tests\WPGraphQL\Login\Integration\Mutations;
+
+/**
  * Tests the Password provider mutations.
  */
 class ProviderMutationsPasswordTest extends \Tests\WPGraphQL\Login\TestCase {

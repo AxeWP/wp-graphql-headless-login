@@ -5,6 +5,10 @@
  * @package Tests\WPGraphQL\Login\Integration\Mutations
  */
 
+declare( strict_types = 1 );
+
+namespace Tests\WPGraphQL\Login\Integration\Mutations;
+
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 use WPGraphQL\Login\Auth\User;
 
