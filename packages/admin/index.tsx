@@ -2,7 +2,6 @@ import domReady from '@wordpress/dom-ready';
 import { createRoot } from 'react-dom/client';
 import { createHooks } from '@wordpress/hooks';
 import { StrictMode } from 'react';
-
 import App from './app';
 
 export const hooks = createHooks();

@@ -638,11 +638,7 @@ describe( 'ClientOptionList Component', () => {
 			);
 
 			const fieldsContainer = screen.queryByTestId( 'fields-container' );
-			if ( fieldsContainer ) {
-				expect( fieldsContainer.children ).toHaveLength( 0 );
-			} else {
-				expect( fieldsContainer ).toBeNull();
-			}
+			expect( fieldsContainer?.children ?? [] ).toHaveLength( 0 );
 		} );
 
 		it( 'handles missing optionsKey in provider settings', () => {
@@ -679,11 +675,7 @@ describe( 'ClientOptionList Component', () => {
 			);
 
 			const fieldsContainer = screen.queryByTestId( 'fields-container' );
-			if ( fieldsContainer ) {
-				expect( fieldsContainer.children ).toHaveLength( 0 );
-			} else {
-				expect( fieldsContainer ).toBeNull();
-			}
+			expect( fieldsContainer?.children ?? [] ).toHaveLength( 0 );
 		} );
 
 		it( 'handles missing provider in settings', () => {
@@ -720,11 +712,7 @@ describe( 'ClientOptionList Component', () => {
 			);
 
 			const fieldsContainer = screen.queryByTestId( 'fields-container' );
-			if ( fieldsContainer ) {
-				expect( fieldsContainer.children ).toHaveLength( 0 );
-			} else {
-				expect( fieldsContainer ).toBeNull();
-			}
+			expect( fieldsContainer?.children ?? [] ).toHaveLength( 0 );
 		} );
 	} );
 

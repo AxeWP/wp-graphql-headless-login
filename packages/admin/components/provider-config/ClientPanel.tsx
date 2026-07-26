@@ -40,17 +40,14 @@ export function ClientPanel() {
 
 	const { lastError, isSaving, hasEdits } = useSelect(
 		( select ) => ( {
-			// @ts-expect-error this isnt typed.
 			lastError: select( coreStore )?.getLastEntitySaveError(
 				'root',
 				'site'
 			),
-			// @ts-expect-error this isnt typed.
 			isSaving: select( coreStore )?.isSavingEntityRecord(
 				'root',
 				'site'
 			),
-			// @ts-expect-error this isnt typed.
 			hasEdits: select( coreStore )?.hasEditsForEntityRecord(
 				'root',
 				'site'

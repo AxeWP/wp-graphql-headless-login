@@ -1,18 +1,26 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig.json",
-	"extends": "./tsconfig.base.json",
+	// Point this to your TS ruleset.
+	"extends": "@axepress/plugin-infra/tsconfig",
+
+	// Project-specific config.
+	"compilerOptions": {
+		"noEmit": true,
+		"rootDir": ".",
+		"paths": { "@/admin/*": [ "./packages/admin/*" ] },
+		"types": [ "node", "vitest/globals" ]
+	},
 	"include": [
 		"global.d.ts",
 		"packages/admin",
 		"vitest.config.ts",
 		"vitest.setup.ts"
 	],
-	"compilerOptions": {
-		"rootDir": ".",
-		"baseUrl": ".",
-		"outDir": "./build",
-		"paths": {
-			"@/admin/*": [ "packages/admin/*" ]
-		}
-	}
+	"exclude": [
+		"build/*",
+		"vendor/*",
+		"vendor-prefixed/*",
+		"node_modules/*",
+		"tests/_output/*"
+	]
 }

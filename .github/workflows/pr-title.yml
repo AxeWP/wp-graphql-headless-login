@@ -1,0 +1,32 @@
+name: PR Title Validation
+
+on:
+  pull_request_target:
+    branches:
+      - develop
+      - main
+      - release/**
+    types: [opened, synchronize, edited, reopened, ready_for_review]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request_target' && github.head_ref || github.sha }}
+  cancel-in-progress: true
+
+permissions:
+  pull-requests: write
+  statuses: write
+
+jobs:
+  run:
+    name: Validate PR title
+    if: github.event_name == 'pull_request_target' && github.event.pull_request.draft == false
+    runs-on: ubuntu-slim
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Validate pull request title
+        uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          wip: true

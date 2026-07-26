@@ -9,7 +9,9 @@ export const Notices = () => {
 		( select ) =>
 			select( store )
 				?.getNotices()
-				.filter( ( notice ) => notice.type === 'snackbar' ),
+				.filter(
+					( notice: { type: string } ) => notice.type === 'snackbar'
+				),
 		[]
 	);
 	const { removeNotice } = useDispatch( store );
@@ -22,7 +24,7 @@ export const Notices = () => {
 		<div className={ styles[ 'notices' ] }>
 			<SnackbarList
 				className="edit-site-notices"
-				notices={ notices as any } // eslint-disable-line @typescript-eslint/no-explicit-any
+				notices={ notices as any }
 				onRemove={ removeNotice }
 			/>
 		</div>

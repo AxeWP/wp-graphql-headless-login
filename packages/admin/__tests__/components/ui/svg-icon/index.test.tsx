@@ -136,10 +136,11 @@ describe( 'SVG Icon Component', () => {
 			);
 
 			const svg = container.querySelector( 'svg' );
-			if ( svg ) {
-				fireEvent.click( svg );
-				expect( handleClick ).toHaveBeenCalledTimes( 1 );
+			if ( ! svg ) {
+				throw new Error( 'SVG element not found' );
 			}
+			fireEvent.click( svg );
+			expect( handleClick ).toHaveBeenCalledTimes( 1 );
 		} );
 
 		it( 'passes through viewBox attribute', () => {

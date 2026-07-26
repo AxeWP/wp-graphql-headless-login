@@ -16,7 +16,9 @@ interface WpGraphQLLoginGlobal {
 
 vi.mock( '@wordpress/api-fetch' );
 
-vi.mock( '@wordpress/i18n', () => ( {
+// Partial mock: `@wordpress/components` imports many i18n functions at import time, so pass through everything except what the tests control.
+vi.mock( '@wordpress/i18n', async ( importOriginal ) => ( {
+	...( await importOriginal< typeof import('@wordpress/i18n') >() ),
 	__: ( text: string ) => text,
 } ) );
 

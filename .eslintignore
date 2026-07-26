@@ -1,8 +1,0 @@
-!.eslintrc.js
-build
-phpstan
-coverage
-languages
-node_modules
-vendor
-vendor-prefixed

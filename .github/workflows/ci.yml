@@ -1,0 +1,152 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
+      - release/**
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  detect:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      # Used to determine what version of PHP to use for the single-version jobs.
+      php-version: '8.4'
+      php: ${{ steps.filter.outputs.php }}
+      phpcs: ${{ steps.filter.outputs.phpcs }}
+      phpstan: ${{ steps.filter.outputs.phpstan }}
+      phpunit: ${{ steps.filter.outputs.phpunit }}
+      js: ${{ steps.filter.outputs.js }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          show-progress: ${{ runner.debug == '1' && 'true' || 'false' }}
+          persist-credentials: false
+
+      - name: Detect file changes
+        id: filter
+        uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v4.0.2
+        with:
+          filters: |
+            js:
+              - '.nvmrc'
+              - '**.json'
+              - '**.*js'
+              - '**.ts'
+              - '**.ts*'
+              - 'package*.json'
+            php:
+              - '**.php'
+              - 'composer.*'
+            phpcs:
+              - '.github/workflows/ci.yml'
+              - '.phpcs.xml.dist'
+            phpstan:
+              - '.github/workflows/ci.yml'
+              - 'phpstan.neon.dist'
+            phpunit:
+              - '.github/workflows/ci.yml'
+              - 'tests/**/*.php'
+              - 'phpunit.xml.dist'
+              - '.wp-env.test.json'
+
+  phpcs:
+    name: PHPCS
+    needs: detect
+    if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpcs == 'true'
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpcs.yml@c1201b2a13344c68c0b0c651a8dfc6b6265f22b7 # v0.1.0
+    permissions:
+      contents: read
+    with:
+      php-version: ${{ needs.detect.outputs.php-version }}
+    secrets: inherit
+
+  phpstan:
+    name: PHPStan
+    needs: detect
+    if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpstan == 'true'
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpstan.yml@c1201b2a13344c68c0b0c651a8dfc6b6265f22b7 # v0.1.0
+    permissions:
+      contents: read
+    with:
+      php-version: ${{ needs.detect.outputs.php-version }}
+    secrets: inherit
+
+  phpunit:
+    name: PHPUnit (PHP ${{ matrix.php }}, WP ${{ matrix.wp }})
+    needs: detect
+    if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpunit == 'true'
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-phpunit.yml@c1201b2a13344c68c0b0c651a8dfc6b6265f22b7 # v0.1.0
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.4', '8.3', '8.2']
+        wp: ['latest', '6.9']
+        include: # Track coverage on the latest version only.
+          - php: '8.4'
+            wp: 'latest'
+            coverage: true
+    with:
+      php-version: ${{ matrix.php }}
+      wp-version: ${{ matrix.wp }}
+      coverage: ${{ matrix.coverage || false }}
+    secrets: inherit
+
+  js:
+    name: JS Checks
+    needs: detect
+    if: needs.detect.outputs.js == 'true'
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-js-lints.yml@c1201b2a13344c68c0b0c651a8dfc6b6265f22b7 # v0.1.0
+    with:
+      eslint: true
+      prettier: true
+      stylelint: true
+      tsc: true
+    secrets: inherit
+
+  jest:
+    name: JS Unit Tests
+    needs: detect
+    if: needs.detect.outputs.js == 'true'
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-jest.yml@c1201b2a13344c68c0b0c651a8dfc6b6265f22b7 # v0.1.0
+    permissions:
+      contents: read
+    with:
+      coverage: true
+    secrets: inherit
+
+  graphql:
+    name: GraphQL Schema Linter
+    needs: detect
+    if: needs.detect.outputs.php == 'true' || needs.detect.outputs.phpunit == 'true'
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-graphql-schema-linter.yml@c1201b2a13344c68c0b0c651a8dfc6b6265f22b7 # v0.1.0
+    permissions:
+      contents: read
+    with:
+      php-version: ${{ needs.detect.outputs.php-version }}
+      plugin-slug: 'wp-graphql-headless-login'
+      previous-schema-url: https://github.com/AxeWP/wp-graphql-headless-login/releases/latest/download/schema.graphql
+    secrets: inherit

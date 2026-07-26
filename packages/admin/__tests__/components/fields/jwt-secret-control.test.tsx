@@ -17,6 +17,9 @@ import {
 	resetWpGraphQLLoginMocks,
 } from '@/admin/__tests__/mocks/wordpress-global.mock';
 import type { FieldSchema } from '@/admin/types';
+import apiFetch from '@wordpress/api-fetch';
+
+vi.mock( '@wordpress/api-fetch' );
 
 const mockCreateNotice = vi.fn();
 const mockCreateErrorNotice = vi.fn();
@@ -85,6 +88,9 @@ vi.mock( '@wordpress/data', () => ( {
 		createNotice: mockCreateNotice,
 		createErrorNotice: mockCreateErrorNotice,
 	} ),
+	// Required by `@wordpress/notices` at import time.
+	createReduxStore: vi.fn( () => ( {} ) ),
+	register: vi.fn(),
 } ) );
 
 vi.mock( '@wordpress/i18n', () => ( {
@@ -124,6 +130,8 @@ describe( 'JwtSecretControl Component', () => {
 	beforeEach( () => {
 		setupWpGraphQLLoginMock();
 		vi.clearAllMocks();
+		// The SettingsProvider fetches settings on mount.
+		vi.mocked( apiFetch ).mockResolvedValue( {} );
 	} );
 
 	afterEach( () => {
@@ -470,6 +478,73 @@ describe( 'JwtSecretControl Component', () => {
 
 			expect( mockCreateNotice ).toBeDefined();
 			expect( mockCreateErrorNotice ).toBeDefined();
+		} );
+	} );
+
+	describe( 'Regenerating the JWT secret', () => {
+		const props: FieldSchema = {
+			label: 'Regenerate JWT Secret',
+			description: 'JWT Secret description',
+			type: 'string',
+			help: 'Help text',
+		};
+
+		beforeEach( () => {
+			(
+				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
+			 ).wpGraphQLLogin = {
+				...(
+					global as unknown as {
+						wpGraphQLLogin: WpGraphQLLoginGlobal;
+					}
+				 ).wpGraphQLLogin,
+				secret: {},
+			};
+		} );
+
+		it( 'POSTs an explicitly empty jwt_secret_key and shows the success notice', async () => {
+			renderWithSettingsProvider( <JwtSecretControl { ...props } /> );
+
+			fireEvent.click( screen.getByTestId( 'jwt-secret-button' ) );
+
+			// The empty string (not the masked placeholder) must reach the
+			// server — it is what triggers server-side regeneration.
+			await waitFor( () => {
+				expect( apiFetch ).toHaveBeenCalledWith( {
+					path: 'wp-graphql-login/v1/settings',
+					method: 'POST',
+					data: {
+						slug: 'wpgraphql_login_settings',
+						values: { jwt_secret_key: '' },
+					},
+				} );
+			} );
+
+			await waitFor( () => {
+				expect( mockCreateNotice ).toHaveBeenCalledWith(
+					'success',
+					'The old JWT secret has been invalidated.',
+					{ type: 'snackbar', isDismissible: true }
+				);
+			} );
+		} );
+
+		it( 'does not show the success notice when saving fails', async () => {
+			vi.mocked( apiFetch )
+				// Initial GET on mount.
+				.mockResolvedValueOnce( {} )
+				// The regenerate POST.
+				.mockRejectedValueOnce( new Error( 'Request failed' ) );
+
+			renderWithSettingsProvider( <JwtSecretControl { ...props } /> );
+
+			fireEvent.click( screen.getByTestId( 'jwt-secret-button' ) );
+
+			await waitFor( () => {
+				expect( mockCreateErrorNotice ).toHaveBeenCalled();
+			} );
+
+			expect( mockCreateNotice ).not.toHaveBeenCalled();
 		} );
 	} );
 } );

@@ -2,40 +2,40 @@
 
 ## Table of Contents
 
-* [GraphQL Type Registration](#graphql-type-registration)
-	* [`graphql_login_registered_{type}_classes`](#graphql_login_registered_type_classes)
-* [Authentication](#authentication)
-	* [`graphql_login_authenticated_user_data`](#graphql_login_authenticated_user_data)
-	* [`graphql_login_pre_get_user_from_data`](#graphql_login_pre_get_user_from_data)
-	* [`graphql_login_create_user_data`](#graphql_login_create_user_data)
-	* [`graphql_login_payload`](#graphql_login_payload)
-* [Secrets & Tokens](#secrets--tokens)
-	* [`graphql_login_jwt_secret_key`](#graphql_login_jwt_secret_key)
-	* [`graphql_login_refresh_token_validity`](#graphql_login_refresh_token_validity)
-	* [`graphql_login_refresh_token_expiration_timestamp`](#graphql_login_refresh_token_expiration_timestamp)
-	* [`graphql_login_user_secret`](#graphql_login_user_secret)
-	* [`graphql_login_iss_allowed_domains`](#graphql_login_iss_allowed_domains)
-	* [`graphql_login_edit_jwt_capability`](#graphql_login_edit_jwt_capability)
-	* [`graphql_login_token_not_before_timestamp`](#graphql_login_token_not_before_timestamp)
-	* [`graphql_login_token_expiration_timestamp`](#graphql_login_token_expiration_timestamp)
-	* [`graphql_login_token_before_sign`](#graphql_login_token_before_sign)
-	* [`graphql_login_signed_token`](#graphql_login_signed_token)
-	* [`graphql_login_token_validity`](#graphql_login_token_validity)
-* [Authorization Headers](#authorization-headers)
-	* [`graphql_login_auth_header`](#graphql_login_auth_header)
-	* [`graphql_login_refresh_header`](#graphql_login_refresh_header)
-* [Client & Provider Configuration](#client--provider-configuration)
-	* [`graphql_login_registered_provider_configs`](#graphql_login_registered_provider_configs)
-	* [`graphql_login_provider_config_instances`](#graphql_login_client_settings)
-	* [`graphql_login_client_options_fields](#graphql_login_client_options_fields)
-	* [`graphql_login_client_options_schema`](#graphql_login_client_options_schema)
-	* [`graphql_login_setting`](#graphql_login_setting)
-	* [`graphql_login_access_control_settings`](#graphql_login_access_control_settings)
-	* [`graphql_login_provider_settings`](#graphql_login_provider_settings)
-	* [`graphql_login_login_options_fields`](#graphql_login_login_options_fields)
-	* [`graphql_login_login_options_schema`](#graphql_login_login_options_schema)
-	* [`graphql_login_client_options`](#graphql_login_client_options)
-	* [`graphql_login_user_types](#graphql_login_user_types)
+- [GraphQL Type Registration](#graphql-type-registration)
+  - [`graphql_login_registered_{type}_classes`](#graphql_login_registered_type_classes)
+- [Authentication](#authentication)
+  - [`graphql_login_authenticated_user_data`](#graphql_login_authenticated_user_data)
+  - [`graphql_login_pre_get_user_from_data`](#graphql_login_pre_get_user_from_data)
+  - [`graphql_login_create_user_data`](#graphql_login_create_user_data)
+  - [`graphql_login_payload`](#graphql_login_payload)
+- [Secrets & Tokens](#secrets--tokens)
+  - [`graphql_login_jwt_secret_key`](#graphql_login_jwt_secret_key)
+  - [`graphql_login_refresh_token_validity`](#graphql_login_refresh_token_validity)
+  - [`graphql_login_refresh_token_expiration_timestamp`](#graphql_login_refresh_token_expiration_timestamp)
+  - [`graphql_login_user_secret`](#graphql_login_user_secret)
+  - [`graphql_login_iss_allowed_domains`](#graphql_login_iss_allowed_domains)
+  - [`graphql_login_edit_jwt_capability`](#graphql_login_edit_jwt_capability)
+  - [`graphql_login_token_not_before_timestamp`](#graphql_login_token_not_before_timestamp)
+  - [`graphql_login_token_expiration_timestamp`](#graphql_login_token_expiration_timestamp)
+  - [`graphql_login_token_before_sign`](#graphql_login_token_before_sign)
+  - [`graphql_login_signed_token`](#graphql_login_signed_token)
+  - [`graphql_login_token_validity`](#graphql_login_token_validity)
+- [Authorization Headers](#authorization-headers)
+  - [`graphql_login_auth_header`](#graphql_login_auth_header)
+  - [`graphql_login_refresh_header`](#graphql_login_refresh_header)
+- [Client & Provider Configuration](#client--provider-configuration)
+  - [`graphql_login_registered_provider_configs`](#graphql_login_registered_provider_configs)
+  - [`graphql_login_provider_config_instances`](#graphql_login_client_settings)
+  - [`graphql_login_client_options_fields](#graphql_login_client_options_fields)
+  - [`graphql_login_client_options_schema`](#graphql_login_client_options_schema)
+  - [`graphql_login_setting`](#graphql_login_setting)
+  - [`graphql_login_access_control_settings`](#graphql_login_access_control_settings)
+  - [`graphql_login_provider_settings`](#graphql_login_provider_settings)
+  - [`graphql_login_login_options_fields`](#graphql_login_login_options_fields)
+  - [`graphql_login_login_options_schema`](#graphql_login_login_options_schema)
+  - [`graphql_login_client_options`](#graphql_login_client_options)
+  - [`graphql_login_user_types](#graphql_login_user_types)
 
 ## GraphQL Type Registration
 
@@ -57,7 +57,7 @@ apply_filters( 'graphql_login_registered_object_classes', $classes );
 
 #### Parameters
 
-* **`$classes`** _(array)_ : The list of PHP classes that are registered as GraphQL Types. These classes must extend the `WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\GraphQLType` interface.
+- **`$classes`** _(array)_ : The list of PHP classes that are registered as GraphQL Types. These classes must extend the `WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\GraphQLType` interface.
 
 ## Authentication
 
@@ -71,12 +71,12 @@ apply_filters( 'graphql_login_authenticated_user_data', $user_data, $slug, $inpu
 
 #### Parameters
 
-* **`$user_data`** _(array|\WP_User|\WP_Error|false)_ : The user data returned from the Authentication provider.
-* **`$slug`** _(string)_ : The provider slug.
-* **`$input`** _(array)_ : The mutation input data.
-* **`$settings`** _(array)_ : The client settings.
-* **`$provider_config`** _(\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig)_ : The instance of the ProviderConfig.
-* **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The authentication client.
+- **`$user_data`** _(array|\WP_User|\WP_Error|false)_ : The user data returned from the Authentication provider.
+- **`$slug`** _(string)_ : The provider slug.
+- **`$input`** _(array)_ : The mutation input data.
+- **`$settings`** _(array)_ : The client settings.
+- **`$provider_config`** _(\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig)_ : The instance of the ProviderConfig.
+- **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The authentication client.
 
 ### `graphql_login_pre_get_user_from_data`
 
@@ -89,12 +89,12 @@ apply_filters( 'graphql_login_pre_get_user_from_data', null, $user_data, $slug, 
 
 #### Parameters
 
-* **`$user`** _(WP_User|null)_ : The user that was matched from the provider user data. If null, the default matching logic will be used.
-* **`$user_data`** _(array|\WP_User|\WP_Error|false)_ : The user data returned from the Authentication provider.
-* **`$slug`** _(string)_ : The provider slug.
-* **`$settings`** _(array)_ : The client settings.
-* **`$provider_config`** _(\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig)_ : The instance of the ProviderConfig.
-* **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The authentication client.
+- **`$user`** _(WP_User|null)_ : The user that was matched from the provider user data. If null, the default matching logic will be used.
+- **`$user_data`** _(array|\WP_User|\WP_Error|false)_ : The user data returned from the Authentication provider.
+- **`$slug`** _(string)_ : The provider slug.
+- **`$settings`** _(array)_ : The client settings.
+- **`$provider_config`** _(\WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig)_ : The instance of the ProviderConfig.
+- **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The authentication client.
 
 ### `graphql_login_create_user_data`
 
@@ -107,8 +107,8 @@ apply_filters( 'graphql_login_create_user_data', $user_data, $client );
 
 #### Parameters
 
-* **`$user_data`** _(array)_ : The user data returned from the Authentication provider.
-* **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The authentication client.
+- **`$user_data`** _(array)_ : The user data returned from the Authentication provider.
+- **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The authentication client.
 
 ### `graphql_login_payload`
 
@@ -120,10 +120,10 @@ apply_filters( 'graphql_login_payload', $payload, $user, $user_data, $client );
 
 #### Parameters
 
-* **`$payload`** _(array)_ : The Login mutation payload.
-* **`$user`** _(WP_User)_ : The authenticated user.
-* **`$user_data`** _(array)_ : The user data returned from the authentication provider.
-* **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The authentication client.
+- **`$payload`** _(array)_ : The Login mutation payload.
+- **`$user`** _(WP_User)_ : The authenticated user.
+- **`$user_data`** _(array)_ : The user data returned from the authentication provider.
+- **`$client`** _(WPGraphQL\Login\Auth\Client)_ : The authentication client.
 
 ## Secrets & Tokens
 
@@ -137,7 +137,7 @@ apply_filters( 'graphql_login_jwt_secret_key', $secret );
 
 #### Parameters
 
-* **`$secret`** _(string)_ : The secret key.
+- **`$secret`** _(string)_ : The secret key.
 
 ### `graphql_login_refresh_token_validity`
 
@@ -149,7 +149,7 @@ apply_filters( 'graphql_login_refresh_token_validity', $validity );
 
 #### Parameters
 
-* **`$validity`** _(int)_ : The validity in seconds. Defaults to 1 year.
+- **`$validity`** _(int)_ : The validity in seconds. Defaults to 1 year.
 
 ### `graphql_login_refresh_token_expiration_timestamp`
 
@@ -161,7 +161,7 @@ apply_filters( 'graphql_login_refresh_token_expiration_timestamp', $timestamp );
 
 #### Parameters
 
-* **`$timestamp`** _(int)_ : The expiration timestamp.
+- **`$timestamp`** _(int)_ : The expiration timestamp.
 
 ### `graphql_login_user_secret`
 
@@ -173,8 +173,8 @@ apply_filters( 'graphql_login_user_secret', $secret, $user_id );
 
 #### Parameters
 
-* **`$secret`** _(string|WP_Error)_ : The user secret.
-* **`$user_id`** _(int)_ : The user ID.
+- **`$secret`** _(string|WP_Error)_ : The user secret.
+- **`$user_id`** _(int)_ : The user ID.
 
 ### `graphql_login_iss_allowed_domains`
 
@@ -186,7 +186,7 @@ apply_filters( 'graphql_login_iss_allowed_domains', $allowed_domains );
 
 #### Parameters
 
-* **`$allowed_domains`** _(string[])_ : An array of allowed domains.
+- **`$allowed_domains`** _(string[])_ : An array of allowed domains.
 
 ### `graphql_login_edit_jwt_capability`
 
@@ -198,7 +198,7 @@ apply_filters( 'graphql_login_edit_jwt_capability', $capability );
 
 #### Parameters
 
-* **`$capability`** _(string)_ : The user capability. Defaults to `'edit_users'`.
+- **`$capability`** _(string)_ : The user capability. Defaults to `'edit_users'`.
 
 ### `graphql_login_token_not_before_timestamp`
 
@@ -210,8 +210,8 @@ apply_filters( 'graphql_login_token_not_before_timestamp', $issued, $user );
 
 #### Parameters
 
-* **`$issued`** _(int)_ : The timestamp of the authentication used in the token`.
-* **`$user`** _(WP_User)_ : The authenticated user.
+- **`$issued`** _(int)_ : The timestamp of the authentication used in the token`.
+- **`$user`** _(WP_User)_ : The authenticated user.
 
 ### `graphql_login_token_expiration_timestamp`
 
@@ -223,8 +223,8 @@ apply_filters( 'graphql_login_token_expiration_timestamp', $issued, $user );
 
 #### Parameters
 
-* **`$issued`** _(int)_ : The timestamp of the authentication used in the token`.
-* **`$user`** _(WP_User)_ : The authenticated user.
+- **`$issued`** _(int)_ : The timestamp of the authentication used in the token`.
+- **`$user`** _(WP_User)_ : The authenticated user.
 
 ### `graphql_login_token_before_sign`
 
@@ -236,8 +236,8 @@ apply_filters( 'graphql_login_token_before_sign', $token, $user );
 
 #### Parameters
 
-* **`$token`** _(array)_ : The token array that will be encoded.
-* **`$user`** _(WP_User)_ : The authenticated user.
+- **`$token`** _(array)_ : The token array that will be encoded.
+- **`$user`** _(WP_User)_ : The authenticated user.
 
 ### `graphql_login_signed_token`
 
@@ -250,8 +250,8 @@ apply_filters( 'graphql_login_signed_token', $token, $user_id );
 
 #### Parameters
 
-* **`$token`** _(string)_ : The signed JWT token that will be returned.
-* **`$user_id`** _(int)_ : The ID of the user the JWT is associated with.
+- **`$token`** _(string)_ : The signed JWT token that will be returned.
+- **`$user_id`** _(int)_ : The ID of the user the JWT is associated with.
 
 ### `graphql_login_token_validity`
 
@@ -263,7 +263,7 @@ apply_filters( 'graphql_login_token_validity', $validity );
 
 #### Parameters
 
-* **`$validity`** _(int)_ : The validity length (in seconds)
+- **`$validity`** _(int)_ : The validity length (in seconds)
 
 ## Authorization Headers
 
@@ -277,7 +277,7 @@ apply_filters( 'graphql_login_auth_header', $auth_header );
 
 #### Parameters
 
-* **`$auth_header`** _(string)_ : The header used to authenticate a user's HTTP request.
+- **`$auth_header`** _(string)_ : The header used to authenticate a user's HTTP request.
 
 ### `graphql_login_refresh_header`
 
@@ -289,7 +289,7 @@ apply_filters( 'graphql_login_refresh_header', $refresh_header );
 
 #### Parameters
 
-* **`$refresh_header`** _(string)_ : The refresh header.
+- **`$refresh_header`** _(string)_ : The refresh header.
 
 ## Client & Provider Configuration
 
@@ -304,7 +304,7 @@ apply_filters( 'graphql_login_registered_provider_configs', $provider_configs);
 
 #### Parameters
 
-* **`$provider_configs`** _(array)_ : The registered `ProviderConfig` classes, keyed to their slug.
+- **`$provider_configs`** _(array)_ : The registered `ProviderConfig` classes, keyed to their slug.
 
 ### `graphql_login_provider_config_instances`
 
@@ -316,7 +316,7 @@ apply_filters( `graphql_login_provider_config_instances', $provider_configs );
 
 #### Parameters
 
-* **`$provider_configs`** _(WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig[])_ : The list of enabled ProviderConfig instances.
+- **`$provider_configs`** _(WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig[])_ : The list of enabled ProviderConfig instances.
 
 ### `graphql_login_client_options_fields`
 
@@ -329,8 +329,8 @@ apply_filters( 'graphql_login_{$slug}_client_options_fields', $fields );
 
 #### Parameters
 
-* **`$fields`** _(array)_ : An array of WPGraphQL field $configs.
-* **`$slug`** _(string)_ : The Authentication provider slug.
+- **`$fields`** _(array)_ : An array of WPGraphQL field $configs.
+- **`$slug`** _(string)_ : The Authentication provider slug.
 
 ### `graphql_login_client_options_schema`
 
@@ -343,8 +343,8 @@ apply_filters( 'graphql_login_{$slug}_client_options_fields', $settings );
 
 #### Parameters
 
-* **`$settings`** _(array)_ : The WP REST [schema config](https://developer.wordpress.org/rest-api/extending-the-rest-api/schema), with the addition of the 'help' and 'required' key/values used when displaying the settings in the Admin. 
-* **`$slug`** _(string)_ : The Authentication provider slug.
+- **`$settings`** _(array)_ : The WP REST [schema config](https://developer.wordpress.org/rest-api/extending-the-rest-api/schema), with the addition of the 'help' and 'required' key/values used when displaying the settings in the Admin.
+- **`$slug`** _(string)_ : The Authentication provider slug.
 
 ### `graphql_login_setting`
 
@@ -356,9 +356,9 @@ apply_filters( 'graphql_login_setting', $value, $option_name, $default );
 
 #### Parameters
 
-* **`$value`** _(mixed)_ : The value of the setting.
-* **`$option_name`** _(string)_ : The name of the setting. In the database, this is prefixed with `wpgraphql_login_settings`
-* **`$default`** _(mixed)_ : The default value of the setting.
+- **`$value`** _(mixed)_ : The value of the setting.
+- **`$option_name`** _(string)_ : The name of the setting. In the database, this is prefixed with `wpgraphql_login_settings`
+- **`$default`** _(mixed)_ : The default value of the setting.
 
 ### `graphql_login_access_control_settings`
 
@@ -370,8 +370,8 @@ apply_filters( 'graphql_login_access_control_settings', $settings, $slug );
 
 #### Parameters
 
-* **`$settings`** _(array)_ : The access control settings.
-* **`$default`** _(string)_ : The default value if none is set.
+- **`$settings`** _(array)_ : The access control settings.
+- **`$default`** _(string)_ : The default value if none is set.
 
 ### `graphql_login_provider_settings`
 
@@ -383,8 +383,8 @@ apply_filters( 'graphql_login_provider_settings', $settings, $slug );
 
 #### Parameters
 
-* **`$settings`** _(array)_ : The settings for the provider.
-* **`$slug`** _(string)_ : The provider slug.
+- **`$settings`** _(array)_ : The settings for the provider.
+- **`$slug`** _(string)_ : The provider slug.
 
 ### `graphql_login_login_options_fields`
 
@@ -397,8 +397,8 @@ apply_filters( 'graphql_login_{$slug}_login_options_fields', $fields );
 
 #### Parameters
 
-* **`$fields`** _(array)_ : An array of WPGraphQL field $configs.
-* **`$slug`** _(string)_ : The Authentication provider slug.
+- **`$fields`** _(array)_ : An array of WPGraphQL field $configs.
+- **`$slug`** _(string)_ : The Authentication provider slug.
 
 ### `graphql_login_login_options_schema`
 
@@ -411,8 +411,8 @@ apply_filters( 'graphql_login_{$slug}_login_options_fields', $settings );
 
 #### Parameters
 
-* **`$settings`** _(array)_ : The WP REST [schema config](https://developer.wordpress.org/rest-api/extending-the-rest-api/schema), with the addition of the 'help' and 'required' key/values used when displaying the settings in the Admin. 
-* **`$slug`** _(string)_ : The Authentication provider slug.
+- **`$settings`** _(array)_ : The WP REST [schema config](https://developer.wordpress.org/rest-api/extending-the-rest-api/schema), with the addition of the 'help' and 'required' key/values used when displaying the settings in the Admin.
+- **`$slug`** _(string)_ : The Authentication provider slug.
 
 ### `graphql_login_client_options`
 
@@ -424,8 +424,8 @@ apply_filters( 'graphql_login_client_options', $options, $slug );
 
 #### Parameters
 
-* **`$options`** _(array)_ : The provider options stored in the database.
-* **`$slug`** _(string)_ : The authentication provider slug.
+- **`$options`** _(array)_ : The provider options stored in the database.
+- **`$slug`** _(string)_ : The authentication provider slug.
 
 ### `graphql_login_user_types`
 
@@ -437,7 +437,7 @@ apply_filters( 'graphql_login_user_types', $type_names);
 
 #### Parameters
 
-* **`$type_names`** _(string[])_ : The names of the GraphQL 'user' types. Defaults to 'User'
+- **`$type_names`** _(string[])_ : The names of the GraphQL 'user' types. Defaults to 'User'
 
 ## Reference
 

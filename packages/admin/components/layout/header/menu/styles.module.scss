@@ -10,7 +10,12 @@
 :global(.components-button) {
 	&.active {
 		border-bottom: 2px solid;
-		border-image: linear-gradient(to right, transparent 0%, var(--wp-admin-theme-color-darker-20) 100%) 1;
+		border-image: linear-gradient(
+				to right,
+				transparent 0%,
+				var(--wp-admin-theme-color-darker-20) 100%
+			)
+			1;
 
 		&:global(.is-tertiary) {
 			color: var(--wp-admin-theme-color-darker-20);
@@ -26,8 +31,8 @@
 	background-color: #3c434a;
 	border-color: 1px solid var(--wp-admin-theme-color-darker-20);
 	border-radius: 50%;
-	height: .5em;
-	width: .5em;
+	height: 0.5em;
+	width: 0.5em;
 	display: inline-block;
-	margin-left: .5em;
+	margin-left: 0.5em;
 }

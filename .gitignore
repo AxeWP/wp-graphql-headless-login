@@ -12,7 +12,6 @@ Thumbs.db
 
 # Log files
 *.log
-/tests/logs
 
 # Dependencies
 /vendor/
@@ -20,20 +19,14 @@ Thumbs.db
 /node_modules/
 
 # Build output
-# build/ -- @todo reactivate when we're serving via .org and don't need to build.
+/build
 *.tsbuildinfo
 wp-graphql-headless-login.zip
-
-# Environment
-.env
-.env.*
-!.env.dist
 
 # Strauss
 bin/strauss.phar
 
 # AI files
-.gemini/
 .claude/
 AGENTS.md
 GEMINI.md
@@ -42,16 +35,15 @@ CLAUDE.md
 # Test output
 /tests/_output/*
 !/tests/_output/.gitkeep
-/tests/e2e/artifacts
-tests/*.suite.yml
-c3.php
 
 # Configs
 /phpcs.xml
 /phpstan.neon
+/phpunit.xml
 
 # WP ENV
 /.wp-env.override.json
+/.wp-env.test.override.json
 
 # Generated Schema used in some tooling. Versioned Schema is uploaded as a Release artifact to Github.
 schema.graphql

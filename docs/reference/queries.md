@@ -5,20 +5,23 @@
 ```graphql
 query getClients {
   # @todo add sort/filtering
-  loginClients { # The list of enabled Clients
+  loginClients {
+    # The list of enabled Clients
     authorizationUrl # The authorizationUrl for the Provider
     clientOptions {
       clientId
       clientSecret
       redirectUri # The provider will redirect to this URI after authorization
-      ... on FacebookClientOptions { # Provider-specific options
+      ... on FacebookClientOptions {
+        # Provider-specific options
         enableBetaTier
         graphApiVersion
         scope
       }
     }
     isEnabled # Disabled Providers will not create a Client instance
-    loginOptions { # Options regarding how to handle user matching and creation.
+    loginOptions {
+      # Options regarding how to handle user matching and creation.
       createUserIfNoneExists
       useAuthenticationCookie # Whether to set the WordPress authentication cookie on successful login.
       ... on FacebookLoginOptions {
@@ -31,21 +34,23 @@ query getClients {
     provider # The Provider used to generate the client.
   }
 }
-
 ```
+
 ## Querying user authentication data
 
 ```graphql
-query getUserWithAuthenticationData( $id: ID!, $idType: UserNodeIdTypeEnum ) {
-  user( id: $id, idType: $idType ) {
+query getUserWithAuthenticationData($id: ID!, $idType: UserNodeIdTypeEnum) {
+  user(id: $id, idType: $idType) {
     username
     email
     # other user fields
-    auth { # The Authentication data object.
+    auth {
+      # The Authentication data object.
       authToken # A new JWT auth token that can be used for future requests.
       authTokenExpiration
       isUserSecretRevoked # Whether or not the user secret has been revoked.
-      linkedIdentities { # The list of linked identities.
+      linkedIdentities {
+        # The list of linked identities.
         id # The Provider's Resource Owner ID
         provider # The Provider
       }

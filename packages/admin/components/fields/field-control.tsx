@@ -118,12 +118,14 @@ export const FieldControl = ( {
 					onChange: ( selected: unknown ) =>
 						onChange( parseInt( selected as string ) ),
 					type: 'number',
+					__next40pxDefaultSize: true, // @todo remove in 7.1
 				} as TextControlProps;
 			} else {
 				componentProps = {
 					...baseProps,
 					value: ( value as string ) || '',
 					onChange,
+					__next40pxDefaultSize: true, // @todo remove in 7.1
 				} as TextControlProps;
 			}
 			break;
@@ -152,6 +154,7 @@ export const FieldControl = ( {
 				onChange,
 				tokenizeOnSpace: true,
 				value: Array.isArray( value ) ? value : [],
+				__next40pxDefaultSize: true, // @todo remove in 7.1
 			} as FormTokenFieldControlProps;
 			break;
 		case 'jwtSecret':

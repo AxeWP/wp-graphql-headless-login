@@ -1,45 +1,35 @@
 # Automatically normalize line endings.
 * text=auto
 
-# Files and directories to exclude from the generated archive (export-ignore).
-# These will be omitted from GitHub/Packagist ZIP archives to keep packages small.
-/bin export-ignore
-/docker export-ignore
-/docs export-ignore
-/phpstan export-ignore
-
-# Tests and test fixtures
+# Files and directories to exclude from `composer require`.
+/assets/ export-ignore
+/bin/ export-ignore
+/packages/ export-ignore
+/tools/ export-ignore
 /tests/ export-ignore
-codecov.yml export-ignore
-codeception.dist.yml export-ignore
-
-# PHP unit / static analysis configs.
-/phpstan.neon.dist export-ignore
-/phpunit.xml.dist export-ignore
-
-# Continuous Integration configs.
-/.github export-ignore
-/.wordpress-org export-ignore
-
-# Node and build artifacts.
-/babel.config.js export-ignore
-package.json export-ignore
-package-lock.json export-ignore
-/composer.lock export-ignore
-/tsconfig.base.json export-ignore
-/tsconfig.json export-ignore
-/webpack.config.js export-ignore
 
 # Don't include the dotfiles for distribution.
 /.* export-ignore
 
+# Root files that are not needed for distribution.
+/composer.lock export-ignore
+/eslint.config.mjs export-ignore
+/global.d.ts export-ignore
+/package-lock.json export-ignore
+/package.json export-ignore
+/phpstan.neon.dist export-ignore
+/phpunit.xml.dist export-ignore
+/release-please-config.json export-ignore
+/tsconfig.json export-ignore
+/vitest.config.ts export-ignore
+/vitest.setup.ts export-ignore
+/webpack.config.js export-ignore
+
 # Mark docs as documentation for GitHub Linguist.
 /docs/ linguist-documentation export-ignore
 /CHANGELOG.md linguist-documentation export-ignore
-/CONTRIBUTING.md linguist-documentation export-ignore
-/SECURITY.md linguist-documentation export-ignore
 
 # Keep license and readme files.
-/LICENSE.md linguist-documentation
+/LICENSE linguist-documentation
 /README.md linguist-documentation
-/README.txt linguist-documentation
+/readme.txt linguist-documentation
