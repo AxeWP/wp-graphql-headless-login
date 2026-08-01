@@ -1,6 +1,7 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { vi, beforeEach, afterEach } from 'vitest';
 import { ClientPanel } from '@/admin/components/provider-config/ClientPanel';
+import { Fields } from '@/admin/components/fields';
 import { ProviderConfigProvider } from '@/admin/contexts/provider-config-context';
 import { SettingsProvider } from '@/admin/contexts/settings-context';
 import {
@@ -160,6 +161,29 @@ describe( 'ClientPanel Component', () => {
 					screen.getByText( 'GitHub Settings' )
 				).toBeInTheDocument();
 			} );
+		} );
+
+		// The localized schema is keyed by option name, which is how PHP sends it.
+		it( 'resolves the schema from the prefixed option name', async () => {
+			wpGlobal.wpGraphQLLogin!.settings!.providers = {
+				wpgraphql_login_provider_github: {
+					name: { default: 'GitHub' },
+					isEnabled: { label: 'Enable Provider' },
+				},
+			};
+			render( <ClientPanel />, { wrapper } );
+			await waitFor( () => {
+				expect(
+					screen.getByText( 'GitHub Settings' )
+				).toBeInTheDocument();
+			} );
+			expect(
+				vi.mocked( Fields ).mock.calls[ 0 ]?.[ 0 ]?.fields
+			).toEqual(
+				expect.objectContaining( {
+					isEnabled: { label: 'Enable Provider' },
+				} )
+			);
 		} );
 	} );
 

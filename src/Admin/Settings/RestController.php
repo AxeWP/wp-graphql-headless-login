@@ -76,7 +76,7 @@ class RestController extends \WP_REST_Controller {
 	 *
 	 * @param \WP_REST_Request<mixed[]> $request The request object.
 	 */
-	public function get_item_permissions_check( $request ) {
+	public function get_item_permissions_check( $request ): bool|\WP_Error {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return new \WP_Error(
 				'rest_forbidden',

@@ -13,14 +13,12 @@ use GraphQL\Error\UserError;
 use WPGraphQL\Login\Auth\Request;
 use WPGraphQL\Login\Auth\TokenManager;
 use WPGraphQL\Login\Model\User;
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\Registrable;
-
 /**
  * Class - CoreSchemaFilters
  */
-class CoreSchemaFilters implements Registrable {
+class CoreSchemaFilters {
 	/**
-	 * {@inheritDoc}
+	 * Registers the filters that adapt the core WPGraphQL schema.
 	 */
 	public static function init(): void {
 		// Prefix the GraphQL type names.

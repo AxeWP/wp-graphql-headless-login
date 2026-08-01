@@ -10,7 +10,7 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Type\Enum;
 
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\EnumType;
+use WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Abstracts\EnumType;
 
 /**
  * Class - GoogleProviderPromptTypeEnum

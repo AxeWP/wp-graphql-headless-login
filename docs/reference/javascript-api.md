@@ -11,7 +11,7 @@ The object contains the following properties:
 ```tsx
 wpGraphQLLogin {
   secret {
-    hasKey: Boolean // Whether a JWT secret key has been set. 
+    hasKey: Boolean // Whether a JWT secret key has been set.
     isConstant: Boolean // Whether the JWT secret key is defined with a Environment constant.
   },
   settings {
@@ -60,8 +60,8 @@ Filters the OAuth Client's custom plugin options. Useful for adding additional p
 ```js
 wpGraphQLLogin.hooks.applyFilters(
   'graphql_login_custom_plugin_options',
-  CustomFragment,
-)
+  CustomFragment
+);
 ```
 
 ## Reference

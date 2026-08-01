@@ -22,7 +22,10 @@ const SettingsContext = createContext< {
 		slug: keyof SettingType;
 		values: Record< string, unknown >;
 	} ) => void;
-	saveSettings: ( slug: keyof SettingType ) => Promise< boolean >;
+	saveSettings: (
+		slug: keyof SettingType,
+		valuesOverride?: Record< string, unknown >
+	) => Promise< boolean >;
 	isConditionMet: ( {
 		settingKey,
 		field,
@@ -30,6 +33,13 @@ const SettingsContext = createContext< {
 		settingKey: string;
 		field: string;
 	} ) => boolean;
+	getUnmetCondition: ( {
+		settingKey,
+		field,
+	}: {
+		settingKey: string;
+		field: string;
+	} ) => { settingKey: string; field: string } | undefined;
 	isComplete: boolean;
 	isDirty: boolean;
 	isSaving: boolean;
@@ -37,6 +47,7 @@ const SettingsContext = createContext< {
 	showAdvancedSettings: boolean;
 } >( {
 	isConditionMet: () => true,
+	getUnmetCondition: () => undefined,
 	settings: undefined,
 	updateSettings: () => {},
 	saveSettings: async () => false,
@@ -124,7 +135,8 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 	 * Save the settings to the REST API
 	 */
 	const saveSettings = async (
-		slug: keyof SettingType
+		slug: keyof SettingType,
+		valuesOverride?: Record< string, unknown >
 	): Promise< boolean > => {
 		setStatus( 'saving' );
 		try {
@@ -133,7 +145,7 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 				method: 'POST',
 				data: {
 					slug,
-					values: settings?.[ slug ],
+					values: valuesOverride ?? settings?.[ slug ],
 				},
 			} );
 			setServerSettings( response );
@@ -153,22 +165,25 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 	};
 
 	/**
-	 * Checks whether the condition for a field is met.
+	 * Finds the field blocking a setting from being displayed, if there is one.
+	 *
+	 * When a rule's target is itself blocked, the root cause is returned so
+	 * callers can point the user at the setting they actually need to change.
 	 */
-	const isConditionMet = ( {
+	const getUnmetCondition = ( {
 		settingKey,
 		field,
 	}: {
 		settingKey: string;
 		field: string;
-	} ) => {
+	} ): { settingKey: string; field: string } | undefined => {
 		// Get the logic rule.
 		const conditionalLogic =
 			wpGraphQLLogin?.settings?.[ settingKey ]?.fields?.[ field ]
 				?.conditionalLogic;
 
 		if ( ! conditionalLogic ) {
-			return true;
+			return undefined;
 		}
 
 		const conditionalLogicArray = Array.isArray( conditionalLogic )
@@ -176,7 +191,7 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 			: [ conditionalLogic ];
 
 		// Check if the condition is met by comparing the current field value to the rule.
-		return conditionalLogicArray.every( ( rule ) => {
+		for ( const rule of conditionalLogicArray ) {
 			const { slug, operator, value } = rule;
 
 			// Parse the slug to get the setting and field. If there is no dot, the field is on the current setting.
@@ -185,55 +200,79 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 				: [ settingKey, slug ];
 
 			if ( ! targetSetting || ! targetField ) {
-				return false;
+				return { settingKey, field };
 			}
+
+			const target = { settingKey: targetSetting, field: targetField };
 
 			const fieldValue = settings?.[ targetSetting as string ]?.[
 				targetField
 			] as string | undefined;
 
 			if ( ! fieldValue ) {
-				return false;
+				return target;
 			}
 
 			// If the field schema has a condition, we need to check if the condition is met.
-			const isParentConditionMet = wpGraphQLLogin?.settings?.[
-				targetSetting
-			]?.fields?.[ targetField ]?.conditionalLogic
-				? isConditionMet( {
-						settingKey: targetSetting,
-						field: targetField,
-				  } )
-				: true;
+			const unmetParent = wpGraphQLLogin?.settings?.[ targetSetting ]
+				?.fields?.[ targetField ]?.conditionalLogic
+				? getUnmetCondition( target )
+				: undefined;
 
-			if ( ! isParentConditionMet ) {
-				return false;
+			if ( unmetParent ) {
+				return unmetParent;
 			}
+
+			let isMet: boolean;
 
 			switch ( operator ) {
 				case '==':
-					return fieldValue === value;
+					isMet = fieldValue === value;
+					break;
 				case '!=':
-					return fieldValue !== value;
+					isMet = fieldValue !== value;
+					break;
 				case '>':
-					return fieldValue > value;
+					isMet = fieldValue > value;
+					break;
 				case '<':
-					return fieldValue < value;
+					isMet = fieldValue < value;
+					break;
 				case '>=':
-					return fieldValue >= value;
+					isMet = fieldValue >= value;
+					break;
 				case '<=':
-					return fieldValue <= value;
+					isMet = fieldValue <= value;
+					break;
 				default:
-					return true;
+					isMet = true;
 			}
-		} );
+
+			if ( ! isMet ) {
+				return target;
+			}
+		}
+
+		return undefined;
 	};
+
+	/**
+	 * Checks whether the condition for a field is met.
+	 */
+	const isConditionMet = ( {
+		settingKey,
+		field,
+	}: {
+		settingKey: string;
+		field: string;
+	} ) => ! getUnmetCondition( { settingKey, field } );
 
 	return (
 		<SettingsContext.Provider
 			value={ {
 				settings,
 				isConditionMet,
+				getUnmetCondition,
 				updateSettings,
 				saveSettings,
 				isComplete,

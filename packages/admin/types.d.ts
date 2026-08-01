@@ -1,6 +1,6 @@
 /// <reference types="react" />
 
-import { _Hooks } from '@wordpress/hooks/build-types/createHooks';
+import type { createHooks } from '@wordpress/hooks';
 
 export type AllowedConditionalLogicOperators =
 	| '=='
@@ -92,7 +92,7 @@ export type OAuth2LoginOptionsType = {
 };
 
 export type WpGraphQLLogin = {
-	hooks: _Hooks;
+	hooks: ReturnType< typeof createHooks >;
 	settings: SettingSchema & {
 		providers: Record<
 			string,

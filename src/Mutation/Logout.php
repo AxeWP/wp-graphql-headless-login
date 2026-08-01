@@ -13,7 +13,7 @@ namespace WPGraphQL\Login\Mutation;
 use GraphQL\Type\Definition\ResolveInfo;
 use WPGraphQL\AppContext;
 use WPGraphQL\Login\Utils\Utils;
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\MutationType;
+use WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Abstracts\MutationType;
 
 /**
  * Class - Logout
@@ -31,7 +31,7 @@ class Logout extends MutationType {
 	 *
 	 * Overloaded to register the mutation conditionally.
 	 */
-	public static function register(): void {
+	public function register(): void {
 		// Only register the mutation if the setting is enabled.
 		if ( ! Utils::get_cookie_setting( 'hasLogoutMutation' ) ) {
 			return;

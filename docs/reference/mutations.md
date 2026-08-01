@@ -1,30 +1,28 @@
 # GraphQL Mutations
 
 ## Login with an OAuth2/OpenID authorization response
+
 ```graphql
 mutation login(
-  $provider: LoginProviderEnum!, # One of the enabled Authentication Provider types. e.g. FACEBOOK, or OAUTH2_GENERIC
-  $code:     String!,            # The Authorization Code sent by the Authentication Provider to the frontend's callback URI.
-  $state:    String,             # A randomly-generated string used to verify the authenticity of the response sent by the Provider.
+  $provider: LoginProviderEnum! # One of the enabled Authentication Provider types. e.g. FACEBOOK, or OAUTH2_GENERIC
+  $code: String! # The Authorization Code sent by the Authentication Provider to the frontend's callback URI.
+  $state: String # A randomly-generated string used to verify the authenticity of the response sent by the Provider.
 ) {
   login(
     input: {
       provider: $provider
-      oauthResponse: {
-        state: $state,
-        code: $code, 
-      }
+      oauthResponse: { state: $state, code: $code }
     }
   ) {
     authToken
     authTokenExpiration
     refreshToken
     refreshTokenExpiration
-    user { # The authenticated WordPress user.
+    user {
+      # The authenticated WordPress user.
       ...MyUserFrag
     }
-    # The following fields are available if WPGraphQL for WooCommerce is installed.
-    wooSessionToken
+    # Available with WPGraphQL for WooCommerce.
     customer {
       ...MyCustomerFrag
     }
@@ -33,17 +31,16 @@ mutation login(
 ```
 
 ## Login with a traditional WordPress username/password
+
 ```graphql
-mutation loginWithPassword(
-  $username: String!,
-  $password: String!,
-) {
+mutation loginWithPassword($username: String!, $password: String!) {
   login(
     input: {
-      provider: PASSWORD, # This tells the mutation to use the WordPress username/password authentication method.
-      credentials: {      # This is the input required for the PASSWORD provider.
-        username: $username,
-        password: $password,
+      provider: PASSWORD # This tells the mutation to use the WordPress username/password authentication method.
+      credentials: {
+        # This is the input required for the PASSWORD provider.
+        username: $username
+        password: $password
       }
     }
   ) {
@@ -51,11 +48,11 @@ mutation loginWithPassword(
     authTokenExpiration
     refreshToken
     refreshTokenExpiration
-    user { # The authenticated WordPress user.
+    user {
+      # The authenticated WordPress user.
       ...MyUserFrag
     }
-    # The following fields are available if WPGraphQL for WooCommerce is installed.
-    wooSessionToken
+    # Available with WPGraphQL for WooCommerce.
     customer {
       ...MyCustomerFrag
     }
@@ -75,7 +72,7 @@ mutation loginAsIdentity(
 ) {
   login(
     input: {
-      provider: SITETOKEN, # This tells the mutation to use the Site Token provider.
+      provider: SITETOKEN # This tells the mutation to use the Site Token provider.
       identity: $identity
     }
   ) {
@@ -83,11 +80,11 @@ mutation loginAsIdentity(
     authTokenExpiration
     refreshToken
     refreshTokenExpiration
-    user { # The authenticated WordPress user.
+    user {
+      # The authenticated WordPress user.
       ...MyUserFrag
     }
-    # The following fields are available if WPGraphQL for WooCommerce is installed.
-    wooSessionToken
+    # Available with WPGraphQL for WooCommerce.
     customer {
       ...MyCustomerFrag
     }
@@ -96,11 +93,12 @@ mutation loginAsIdentity(
 ```
 
 ## Exchange the Refresh Token for a new Auth Token
+
 ```graphql
 mutation refreshToken(
   $token: String! # The user's refreshToken.
 ) {
-  refreshToken( input: {refreshToken: $token} ) {
+  refreshToken(input: { refreshToken: $token }) {
     authToken # The new auth token for the user.
     authTokenExpiration # The expiration time of the new auth token.
     success
@@ -114,7 +112,7 @@ mutation refreshToken(
 mutation linkUserIdentity(
   $provider: LoginProviderEnum!, # One of the enabled Authentication Provider types.
   $userId:   ID!                 # The user ID, accepts either a global or database ID.
-  $code:     String!,            # The Authorization Code sent by the OAuth2 Provider to the frontend's callback URI. 
+  $code:     String!,            # The Authorization Code sent by the OAuth2 Provider to the frontend's callback URI.
   $state:    String,             # A randomly-generated string used to verify the authenticity of the response.
  {
   linkUserIdentity(
@@ -123,7 +121,7 @@ mutation linkUserIdentity(
       userId: $userId
       oauthResponse: {
         state: $state,
-        code: $code, 
+        code: $code,
       }
     }
   ) {
@@ -142,13 +140,13 @@ mutation linkUserIdentity(
 }
 ```
 
-
 ## Revoke the User Secret
+
 ```graphql
 mutation revokeUserSecret(
   $userId: ID! # Either the global or database ID.
 ) {
-  revokeUserSecret(input: {userId: $userId}) {
+  revokeUserSecret(input: { userId: $userId }) {
     revokedUserSecret # The previous user secret.
     success
   }
@@ -156,19 +154,31 @@ mutation revokeUserSecret(
 ```
 
 ## Refresh the User Secret
+
 ```graphql
 mutation refreshUserSecret(
   $userId: ID! # Either the global or database ID.
 ) {
-  refreshUserSecret(input: {userId: $userId}) {
-    authToken         # The new auth token
-    refreshToken      # the new Refresh token
-    userSecret        # the new user secret.
+  refreshUserSecret(input: { userId: $userId }) {
+    authToken # The new auth token
+    refreshToken # the new Refresh token
+    userSecret # the new user secret.
     revokedUserSecret # the old user secret.
     success
   }
 }
+```
 
+## Log out
+
+**Note**: the `logout` mutation is only exposed when the `Enable Logout Mutation` [setting](/docs/reference/settings.md) is enabled.
+
+```graphql
+mutation logout {
+  logout(input: {}) {
+    success # Whether the user was successfully logged out. Will return null if the user is not logged in.
+  }
+}
 ```
 
 ## Reference

@@ -10,8 +10,8 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login\Type\WPInterface;
 
 use WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig;
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\InterfaceType;
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Traits\TypeResolverTrait;
+use WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Abstracts\InterfaceType;
+use WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Traits\TypeResolverTrait;
 
 /**
  * Class - LoginOptions

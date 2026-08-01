@@ -1,5 +1,5 @@
-#wpgraphql_login_settings { // stylelint-disable-line selector-id-pattern
-
+#wpgraphql_login_settings, // stylelint-disable-line selector-id-pattern
+#wp-graphql-headless-login-settings {
 	.components-placeholder {
 		background: #f1f1f1;
 	}
@@ -9,8 +9,7 @@
 	}
 
 	.components-panel__row {
-
-		>div {
+		> div {
 			flex-grow: 1;
 			margin-right: 1rem;
 

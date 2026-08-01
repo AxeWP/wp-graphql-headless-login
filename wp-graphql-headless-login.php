@@ -9,12 +9,11 @@
  * Update URI: https://github.com/AxeWP/wp-graphql-headless-login
  * Version: 0.4.4
  * Text Domain: wp-graphql-headless-login
- * Domain Path: /languages
- * Requires at least: 6.2
- * Requires PHP: 7.4
+ * Requires at least: 6.9
+ * Requires PHP: 8.2
  * Requires Plugins: wp-graphql
- * WPGraphQL requires at least: 1.14.0
- * WPGraphQL tested up to: 2.7.1
+ * WPGraphQL requires at least: 2.14.1
+ * WPGraphQL tested up to: 2.16.0
  * License: GPL-3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  *
@@ -30,12 +29,6 @@ namespace WPGraphQL\Login;
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-}
-
-// If the codeception remote coverage file exists, require it.
-// This file should only exist locally or when CI bootstraps the environment for testing.
-if ( file_exists( __DIR__ . '/c3.php' ) ) {
-	require_once __DIR__ . '/c3.php';
 }
 
 // Load the autoloader.
@@ -84,7 +77,7 @@ function constants(): void {
  * @return array<string,string>
  */
 function dependencies_not_ready(): array {
-	$wpgraphql_version = '1.14.0';
+	$wpgraphql_version = '2.14.1';
 
 	$deps = [];
 

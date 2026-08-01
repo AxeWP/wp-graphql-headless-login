@@ -20,7 +20,7 @@ use WPGraphQL\Login\Auth\User;
  */
 class UserProfile {
 	/**
-	 * {@inheritDoc}
+	 * Registers the user-profile admin hooks.
 	 */
 	public static function init(): void {
 		add_action( 'show_user_profile', [ self::class, 'user_identity_fields' ] );

@@ -15,7 +15,7 @@ use WPGraphQL\Login\Type\Enum;
 use WPGraphQL\Login\Type\Input;
 use WPGraphQL\Login\Type\WPInterface;
 use WPGraphQL\Login\Type\WPObject;
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\GraphQLType;
+use WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Interfaces\GraphQLType;
 
 /**
  * Class - TypeRegistry
@@ -246,11 +246,12 @@ class TypeRegistry {
 		foreach ( $classes_to_register as $class ) {
 			if ( ! is_a( $class, GraphQLType::class, true ) ) {
 				// translators: PHP class.
-				throw new Exception( sprintf( esc_html__( 'To be registered to the WPGraphQL schema, %s needs to implement \WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\GraphQLType.', 'wp-graphql-headless-login' ), esc_html( $class ) ) );
+				throw new Exception( sprintf( esc_html__( 'To be registered to the WPGraphQL schema, %s needs to implement \WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Interfaces\GraphQLType.', 'wp-graphql-headless-login' ), esc_html( $class ) ) );
 			}
 
 			// Register the type to the GraphQL schema.
-			$class::register();
+			$instance = new $class();
+			$instance->register();
 
 			// Store the type in the local registry.
 			self::$registry[] = $class;

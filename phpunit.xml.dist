@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
+	bootstrap="tests/phpunit/bootstrap.php"
+	backupGlobals="false"
+	cacheDirectory="tests/_output/.phpunit.cache"
+	colors="true"
+	beStrictAboutTestsThatDoNotTestAnything="true"
+	displayDetailsOnTestsThatTriggerErrors="true"
+	displayDetailsOnTestsThatTriggerWarnings="true"
+	displayDetailsOnTestsThatTriggerNotices="true"
+	displayDetailsOnTestsThatTriggerDeprecations="true"
+	displayDetailsOnPhpunitDeprecations="true"
+	failOnWarning="true"
+	failOnNotice="true"
+	failOnDeprecation="true"
+	failOnPhpunitDeprecation="false"
+>
+	<testsuites>
+		<testsuite name="integration">
+			<directory suffix="Test.php">tests/phpunit/Integration</directory>
+		</testsuite>
+	</testsuites>
+	<source>
+		<include>
+			<directory suffix=".php">src</directory>
+			<file>access-functions.php</file>
+			<file>activation.php</file>
+			<file>deactivation.php</file>
+		</include>
+	</source>
+	<coverage includeUncoveredFiles="true">
+		<report>
+			<clover outputFile="tests/_output/php-coverage.xml" />
+			<html outputDirectory="tests/_output/html" />
+			<text outputFile="php://stdout" showOnlySummary="true" />
+		</report>
+	</coverage>
+</phpunit>

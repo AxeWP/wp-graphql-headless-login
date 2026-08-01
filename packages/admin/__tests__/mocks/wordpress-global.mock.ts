@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { vi } from 'vitest';
 import type { WpGraphQLLogin, SettingSchema, FieldSchema } from '../../types.d';
 
@@ -207,13 +206,26 @@ const createMockHooks = () => ( {
 	doingFilter: vi.fn( () => false ),
 	currentAction: vi.fn( () => null ),
 	currentFilter: vi.fn( () => null ),
+	removeAllActions: vi.fn(),
+	removeAllFilters: vi.fn(),
+	doActionAsync: vi.fn( async () => {} ),
+	applyFiltersAsync: vi.fn(
+		async < T >(
+			_hookName: string,
+			value: T,
+			..._args: unknown[]
+		): Promise< T > => value
+	),
+	didAction: vi.fn( () => 0 ),
+	didFilter: vi.fn( () => 0 ),
 	actions: {},
 	filters: {},
 } );
 
 // Default wpGraphQLLogin object
 export const createDefaultWpGraphQLLogin = (): WpGraphQLLogin => ( {
-	hooks: createMockHooks(),
+	// The mock is structurally close enough; `_Hooks` has private internals.
+	hooks: createMockHooks() as unknown as WpGraphQLLogin[ 'hooks' ],
 	settings: {
 		...defaultSettingsSchema,
 		providers: defaultProvidersSchema,

@@ -45,24 +45,4 @@ const mainConfig = {
 	],
 };
 
-const reactJSXRuntimePolyfill = {
-	entry: {
-		'react-jsx-runtime': {
-			import: 'react/jsx-runtime',
-		},
-	},
-	output: {
-		path: path.resolve( __dirname, 'build' ),
-		filename: 'react-jsx-runtime.js',
-		library: {
-			name: 'ReactJSXRuntime',
-			type: 'window',
-		},
-	},
-	externals: {
-		react: 'React',
-	},
-	plugins: [],
-};
-
-module.exports = [ mainConfig, reactJSXRuntimePolyfill ];
+module.exports = [ mainConfig ];

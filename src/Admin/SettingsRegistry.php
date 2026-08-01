@@ -10,12 +10,10 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Admin;
 
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\Registrable;
-
 /**
  * Class SettingsRegistry
  */
-class SettingsRegistry implements Registrable {
+class SettingsRegistry {
 	/**
 	 * The instantiated settings.
 	 *
@@ -24,7 +22,7 @@ class SettingsRegistry implements Registrable {
 	protected static ?array $settings;
 
 	/**
-	 * {@inheritDoc}
+	 * Instantiates the settings classes for the registry.
 	 */
 	public static function init(): void {
 		if ( isset( self::$settings ) ) {

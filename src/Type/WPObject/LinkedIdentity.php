@@ -10,7 +10,7 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login\Type\WPObject;
 
 use WPGraphQL\Login\Type\Enum\ProviderEnum;
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\ObjectType;
+use WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Abstracts\ObjectType;
 
 /**
  * Class - LinkedIdentity

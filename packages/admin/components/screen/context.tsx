@@ -1,5 +1,5 @@
 import {
-	PropsWithChildren,
+	type PropsWithChildren,
 	useState,
 	createContext,
 	useEffect,

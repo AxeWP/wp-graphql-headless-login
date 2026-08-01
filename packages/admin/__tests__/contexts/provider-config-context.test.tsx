@@ -221,6 +221,8 @@ describe( 'ProviderConfigContext', () => {
 						name: '',
 						order: 0,
 						isEnabled: false,
+						// The bare slug, not the prefixed option name — the REST schema only accepts registered provider slugs.
+						slug: 'oauth2',
 						loginOptions: {
 							useAuthenticationCookie: false,
 						},

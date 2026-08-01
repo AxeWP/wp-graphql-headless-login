@@ -8,6 +8,7 @@
 	<file>./activation.php</file>
 	<file>./deactivation.php</file>
 	<file>./src/</file>
+	<file>./tests/phpunit/</file>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>/vendor-prefixed/</exclude-pattern>
 	<exclude-pattern>/node_modules/</exclude-pattern>
@@ -22,7 +23,7 @@
 	<arg name="colors"/>
 	<arg name="extensions" value="php"/>
 	<!-- Whenever possible, cache the scan results and re-use those for unchanged files on the next scan. -->
-	<arg name="cache" value="tests/_output/cache.json" />
+	<arg name="cache" value="tests/_output/phpcs-cache.json" />
 	<!-- Enables parallel processing when available for faster results. -->
 	<arg name="parallel" value="20"/>
 	<!-- Set severity to 1 to see everything that isn't effectively turned off. -->
@@ -34,13 +35,13 @@
 		Tests for PHP version compatibility.
 		https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards#Recomended-additional-rulesets
 	-->
-	<config name="testVersion" value="7.4-"/>
+	<config name="testVersion" value="8.2-"/>
 
 	<!--
 		Tests for WordPress version compatibility.
 		https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties
 	-->
-	<config name="minimum_wp_version" value="6.2"/>
+	<config name="minimum_wp_version" value="6.9"/>
 
 	<!-- Rules: WPGraphQL Coding Standards -->
 	<!-- https://github.com/AxeWP/WPGraphQL-Coding-Standards/WPGraphQL/ruleset.xml -->
@@ -48,8 +49,84 @@
 		<exclude name="Generic.Functions.CallTimePassByReference" />
 	</rule>
 
+	<!-- Exclude unnecessary and noisy rules from tests -->
+	<rule ref="Generic.CodeAnalysis.UselessOverridingMethod">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="Generic.Files.OneObjectStructurePerFile.MultipleFound">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="SlevomatCodingStandard.Exceptions.DisallowNonCapturingCatch">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.Commenting.ClassComment">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.Commenting.FileComment">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.Commenting.FunctionComment">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.Commenting.InlineComment">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.Commenting.VariableComment">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.PHP.CommentedOutCode">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="Universal.NamingConventions.NoReservedKeywordParameterNames">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.DB.DirectDatabaseQuery">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.Security.ValidatedSanitizedInput">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.WP.AlternativeFunctions">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.WP.GlobalVariablesOverride">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="WordPressVIPMinimum.Variables.RestrictedVariables">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="Generic.PHP.NoSilencedErrors">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.PHP.DiscouragedPHPFunctions">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.PHP.NoSilencedErrors">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.WP.EnqueuedResources.NonEnqueuedScript">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="WordPressVIPMinimum.Functions.RestrictedFunctions">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+	<rule ref="WordPressVIPMinimum.Files.IncludingFile.UsingVariable">
+		<exclude-pattern>**/tests/**</exclude-pattern>
+	</rule>
+
 	<!-- Individual rule configuration -->
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<!-- Exclude test files from prefix sniffing -->
+		<exclude-pattern>**/tests/**</exclude-pattern>
 		<properties>
 			<property name="prefixes" type="array">
 				<element value="WPGraphQL\Login" />

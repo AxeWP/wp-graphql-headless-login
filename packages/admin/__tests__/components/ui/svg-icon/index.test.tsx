@@ -121,7 +121,7 @@ describe( 'SVG Icon Component', () => {
 			const svg = container.querySelector( 'svg' );
 			expect( svg ).toHaveStyle( {
 				color: 'rgb(255, 0, 0)',
-				fill: 'blue',
+				fill: 'rgb(0, 0, 255)',
 			} );
 		} );
 
@@ -136,10 +136,11 @@ describe( 'SVG Icon Component', () => {
 			);
 
 			const svg = container.querySelector( 'svg' );
-			if ( svg ) {
-				fireEvent.click( svg );
-				expect( handleClick ).toHaveBeenCalledTimes( 1 );
+			if ( ! svg ) {
+				throw new Error( 'SVG element not found' );
 			}
+			fireEvent.click( svg );
+			expect( handleClick ).toHaveBeenCalledTimes( 1 );
 		} );
 
 		it( 'passes through viewBox attribute', () => {

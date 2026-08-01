@@ -9,7 +9,7 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Type\Input;
 
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Abstracts\InputType;
+use WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Abstracts\InputType;
 
 /**
  * Class - PasswordProviderResponseInput

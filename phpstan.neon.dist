@@ -1,5 +1,8 @@
 parameters:
 		level: 8
+		phpVersion:
+			min: 80200
+			max: 80500
 		treatPhpDocTypesAsCertain: false
 		inferPrivatePropertyTypeFromConstructor: true
 		checkExplicitMixedMissingReturn: true
@@ -12,7 +15,7 @@ parameters:
 		reportStaticMethodSignatures: true
 		reportWrongPhpDocTypeInVarTag: true
 		bootstrapFiles:
-			- phpstan/constants.php
+			- tools/phpstan/constants.php
 		dynamicConstantNames:
 			- ADMIN_COOKIE_PATH
 			- COOKIEPATH
@@ -29,5 +32,4 @@ parameters:
 		scanFiles:
 			- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
 			- vendor/axepress/wp-graphql-stubs/wp-graphql-stubs.php
-		scanDirectories:
-			- ../wp-graphql-woocommerce/includes
+			- tools/phpstan/woographql-stubs.php

@@ -8,6 +8,10 @@ vi.mock( '@wordpress/data', () => ( {
 	useDispatch: vi.fn(),
 } ) );
 
+vi.mock( '@wordpress/notices', () => ( {
+	store: {},
+} ) );
+
 vi.mock( '@wordpress/components', () => ( {
 	SnackbarList: ( {
 		notices,
