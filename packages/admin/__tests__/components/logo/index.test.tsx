@@ -7,12 +7,15 @@ vi.mock( '@/admin/components/ui/svg-icon', () => ( {
 		className,
 		onClick,
 		icon: _icon,
+		// Consumed by the real SVGIcon, so it must not reach the DOM.
+		iconName: _iconName,
 		...rest
 	}: {
 		size: number;
 		className: string;
 		onClick?: () => void;
 		icon?: unknown;
+		iconName?: string;
 		[ key: string ]: unknown;
 	} ) => (
 		<svg

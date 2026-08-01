@@ -116,14 +116,17 @@ interface WpGraphQLLoginGlobal {
 	};
 }
 
-function renderWithSettingsProvider( ui: React.ReactElement ) {
+async function renderWithSettingsProvider( ui: React.ReactElement ) {
 	const wrapper = ( { children }: { children: React.ReactNode } ) => (
 		<SettingsProvider>{ children }</SettingsProvider>
 	);
 
-	return {
-		...render( ui, { wrapper } ),
-	};
+	const result = render( ui, { wrapper } );
+
+	// Flush the SettingsProvider settings fetch so its state updates land inside act().
+	await act( async () => {} );
+
+	return result;
 }
 
 describe( 'JwtSecretControl Component', () => {
@@ -140,7 +143,7 @@ describe( 'JwtSecretControl Component', () => {
 	} );
 
 	describe( 'Basic rendering', () => {
-		it( 'renders button with correct label', () => {
+		it( 'renders button with correct label', async () => {
 			(
 				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
 			 ).wpGraphQLLogin = {
@@ -159,7 +162,9 @@ describe( 'JwtSecretControl Component', () => {
 				help: 'This will invalidate all existing tokens',
 			};
 
-			renderWithSettingsProvider( <JwtSecretControl { ...props } /> );
+			await renderWithSettingsProvider(
+				<JwtSecretControl { ...props } />
+			);
 
 			const button = screen.getByTestId( 'jwt-secret-button' );
 			expect( button ).toBeInTheDocument();
@@ -169,7 +174,7 @@ describe( 'JwtSecretControl Component', () => {
 			);
 		} );
 
-		it( 'help text displays correctly', () => {
+		it( 'help text displays correctly', async () => {
 			(
 				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
 			 ).wpGraphQLLogin = {
@@ -188,7 +193,9 @@ describe( 'JwtSecretControl Component', () => {
 				help: 'This will invalidate all existing tokens',
 			};
 
-			renderWithSettingsProvider( <JwtSecretControl { ...props } /> );
+			await renderWithSettingsProvider(
+				<JwtSecretControl { ...props } />
+			);
 
 			const baseControl = screen.getByTestId( 'base-control' );
 			expect( baseControl ).toHaveAttribute(
@@ -197,7 +204,7 @@ describe( 'JwtSecretControl Component', () => {
 			);
 		} );
 
-		it( 'button is destructive (red variant)', () => {
+		it( 'button is destructive (red variant)', async () => {
 			(
 				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
 			 ).wpGraphQLLogin = {
@@ -216,13 +223,15 @@ describe( 'JwtSecretControl Component', () => {
 				help: 'Help text',
 			};
 
-			renderWithSettingsProvider( <JwtSecretControl { ...props } /> );
+			await renderWithSettingsProvider(
+				<JwtSecretControl { ...props } />
+			);
 
 			const button = screen.getByTestId( 'jwt-secret-button' );
 			expect( button ).toHaveAttribute( 'data-is-destructive', 'true' );
 		} );
 
-		it( 'button has correct icon and variant', () => {
+		it( 'button has correct icon and variant', async () => {
 			(
 				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
 			 ).wpGraphQLLogin = {
@@ -241,7 +250,9 @@ describe( 'JwtSecretControl Component', () => {
 				help: 'Help text',
 			};
 
-			renderWithSettingsProvider( <JwtSecretControl { ...props } /> );
+			await renderWithSettingsProvider(
+				<JwtSecretControl { ...props } />
+			);
 
 			const button = screen.getByTestId( 'jwt-secret-button' );
 			expect( button ).toHaveAttribute( 'data-icon', 'admin-network' );
@@ -251,7 +262,7 @@ describe( 'JwtSecretControl Component', () => {
 	} );
 
 	describe( 'Disabled state', () => {
-		it( 'button is disabled when secret.isConstant is true', () => {
+		it( 'button is disabled when secret.isConstant is true', async () => {
 			(
 				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
 			 ).wpGraphQLLogin = {
@@ -272,13 +283,15 @@ describe( 'JwtSecretControl Component', () => {
 				help: 'Help text',
 			};
 
-			renderWithSettingsProvider( <JwtSecretControl { ...props } /> );
+			await renderWithSettingsProvider(
+				<JwtSecretControl { ...props } />
+			);
 
 			const button = screen.getByTestId( 'jwt-secret-button' );
 			expect( button ).toHaveAttribute( 'data-disabled', 'true' );
 		} );
 
-		it( 'renders warning message when secret.isConstant', () => {
+		it( 'renders warning message when secret.isConstant', async () => {
 			(
 				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
 			 ).wpGraphQLLogin = {
@@ -299,7 +312,9 @@ describe( 'JwtSecretControl Component', () => {
 				help: 'Help text',
 			};
 
-			renderWithSettingsProvider( <JwtSecretControl { ...props } /> );
+			await renderWithSettingsProvider(
+				<JwtSecretControl { ...props } />
+			);
 
 			const warningText = screen.queryByText(
 				/The JWT secret is set in wp-config\.php and cannot be changed on the backend\./
@@ -307,7 +322,7 @@ describe( 'JwtSecretControl Component', () => {
 			expect( warningText ).toBeInTheDocument();
 		} );
 
-		it( 'button is enabled when secret.isConstant is false', () => {
+		it( 'button is enabled when secret.isConstant is false', async () => {
 			(
 				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
 			 ).wpGraphQLLogin = {
@@ -328,13 +343,15 @@ describe( 'JwtSecretControl Component', () => {
 				help: 'Help text',
 			};
 
-			renderWithSettingsProvider( <JwtSecretControl { ...props } /> );
+			await renderWithSettingsProvider(
+				<JwtSecretControl { ...props } />
+			);
 
 			const button = screen.getByTestId( 'jwt-secret-button' );
 			expect( button ).toHaveAttribute( 'data-disabled', 'false' );
 		} );
 
-		it( 'button click only works when not disabled', () => {
+		it( 'button click only works when not disabled', async () => {
 			(
 				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
 			 ).wpGraphQLLogin = {
@@ -355,7 +372,9 @@ describe( 'JwtSecretControl Component', () => {
 				help: 'Help text',
 			};
 
-			renderWithSettingsProvider( <JwtSecretControl { ...props } /> );
+			await renderWithSettingsProvider(
+				<JwtSecretControl { ...props } />
+			);
 
 			const button = screen.getByTestId( 'jwt-secret-button' );
 
@@ -370,7 +389,7 @@ describe( 'JwtSecretControl Component', () => {
 	} );
 
 	describe( 'Secret state variations', () => {
-		it( 'handles undefined secret (empty object)', () => {
+		it( 'handles undefined secret (empty object)', async () => {
 			(
 				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
 			 ).wpGraphQLLogin = {
@@ -389,14 +408,16 @@ describe( 'JwtSecretControl Component', () => {
 				help: 'Help text',
 			};
 
-			renderWithSettingsProvider( <JwtSecretControl { ...props } /> );
+			await renderWithSettingsProvider(
+				<JwtSecretControl { ...props } />
+			);
 
 			const button = screen.getByTestId( 'jwt-secret-button' );
 			expect( button ).toBeInTheDocument();
 			expect( button ).toHaveAttribute( 'data-disabled', 'false' );
 		} );
 
-		it( 'handles secret without isConstant property', () => {
+		it( 'handles secret without isConstant property', async () => {
 			(
 				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
 			 ).wpGraphQLLogin = {
@@ -417,7 +438,9 @@ describe( 'JwtSecretControl Component', () => {
 				help: 'Help text',
 			};
 
-			renderWithSettingsProvider( <JwtSecretControl { ...props } /> );
+			await renderWithSettingsProvider(
+				<JwtSecretControl { ...props } />
+			);
 
 			const button = screen.getByTestId( 'jwt-secret-button' );
 			expect( button ).toBeInTheDocument();
@@ -455,7 +478,7 @@ describe( 'JwtSecretControl Component', () => {
 			expect( typeof result.current.saveSettings ).toBe( 'function' );
 		} );
 
-		it( 'useDispatch is called for notices', () => {
+		it( 'useDispatch is called for notices', async () => {
 			(
 				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
 			 ).wpGraphQLLogin = {
@@ -474,7 +497,9 @@ describe( 'JwtSecretControl Component', () => {
 				help: 'Help text',
 			};
 
-			renderWithSettingsProvider( <JwtSecretControl { ...props } /> );
+			await renderWithSettingsProvider(
+				<JwtSecretControl { ...props } />
+			);
 
 			expect( mockCreateNotice ).toBeDefined();
 			expect( mockCreateErrorNotice ).toBeDefined();
@@ -503,7 +528,9 @@ describe( 'JwtSecretControl Component', () => {
 		} );
 
 		it( 'POSTs an explicitly empty jwt_secret_key and shows the success notice', async () => {
-			renderWithSettingsProvider( <JwtSecretControl { ...props } /> );
+			await renderWithSettingsProvider(
+				<JwtSecretControl { ...props } />
+			);
 
 			fireEvent.click( screen.getByTestId( 'jwt-secret-button' ) );
 
@@ -536,7 +563,9 @@ describe( 'JwtSecretControl Component', () => {
 				// The regenerate POST.
 				.mockRejectedValueOnce( new Error( 'Request failed' ) );
 
-			renderWithSettingsProvider( <JwtSecretControl { ...props } /> );
+			await renderWithSettingsProvider(
+				<JwtSecretControl { ...props } />
+			);
 
 			fireEvent.click( screen.getByTestId( 'jwt-secret-button' ) );
 

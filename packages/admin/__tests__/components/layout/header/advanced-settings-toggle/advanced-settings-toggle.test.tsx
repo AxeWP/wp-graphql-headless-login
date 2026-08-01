@@ -49,14 +49,31 @@ vi.mock( '@wordpress/i18n', () => ( {
 	__: ( text: string ) => text,
 } ) );
 
-function renderWithSettingsProvider( ui: React.ReactElement ) {
+// Echo saved values back so a POST round-trip reflects the new setting, the way the REST endpoint does.
+vi.mock( '@wordpress/api-fetch', () => ( {
+	default: vi.fn(
+		async ( {
+			method,
+			data,
+		}: {
+			method?: string;
+			data?: { slug: string; values: Record< string, unknown > };
+		} ) =>
+			method === 'POST' && data ? { [ data.slug ]: data.values } : {}
+	),
+} ) );
+
+async function renderWithSettingsProvider( ui: React.ReactElement ) {
 	const wrapper = ( { children }: { children: React.ReactNode } ) => (
 		<SettingsProvider>{ children }</SettingsProvider>
 	);
 
-	return {
-		...render( ui, { wrapper } ),
-	};
+	const result = render( ui, { wrapper } );
+
+	// Flush the SettingsProvider settings fetch so its state updates land inside act().
+	await act( async () => {} );
+
+	return result;
 }
 
 describe( 'AdvancedSettingsToggle Component', () => {
@@ -71,15 +88,15 @@ describe( 'AdvancedSettingsToggle Component', () => {
 	} );
 
 	describe( 'Basic rendering', () => {
-		it( 'renders toggle button', () => {
-			renderWithSettingsProvider( <AdvancedSettingsToggle /> );
+		it( 'renders toggle button', async () => {
+			await renderWithSettingsProvider( <AdvancedSettingsToggle /> );
 
 			const toggle = screen.getByTestId( 'toggle-control' );
 			expect( toggle ).toBeInTheDocument();
 		} );
 
-		it( 'shows correct label', () => {
-			renderWithSettingsProvider( <AdvancedSettingsToggle /> );
+		it( 'shows correct label', async () => {
+			await renderWithSettingsProvider( <AdvancedSettingsToggle /> );
 
 			const toggle = screen.getByTestId( 'toggle-control' );
 			expect( toggle ).toHaveAttribute(
@@ -88,8 +105,8 @@ describe( 'AdvancedSettingsToggle Component', () => {
 			);
 		} );
 
-		it( 'has correct className', () => {
-			renderWithSettingsProvider( <AdvancedSettingsToggle /> );
+		it( 'has correct className', async () => {
+			await renderWithSettingsProvider( <AdvancedSettingsToggle /> );
 
 			const toggle = screen.getByTestId( 'toggle-control' );
 			expect( toggle ).toHaveAttribute(
@@ -100,8 +117,8 @@ describe( 'AdvancedSettingsToggle Component', () => {
 	} );
 
 	describe( 'Initial state', () => {
-		it( 'initial state is false', () => {
-			renderWithSettingsProvider( <AdvancedSettingsToggle /> );
+		it( 'initial state is false', async () => {
+			await renderWithSettingsProvider( <AdvancedSettingsToggle /> );
 
 			const toggle = screen.getByTestId( 'toggle-control' );
 			expect( toggle ).toHaveAttribute( 'data-checked', 'false' );
@@ -117,25 +134,19 @@ describe( 'AdvancedSettingsToggle Component', () => {
 			} );
 
 			await waitFor( () => {
-				expect( result.current ).toBeDefined();
+				expect( result.current.isComplete ).toBe( true );
 			} );
 
-			const { rerender } = renderWithSettingsProvider(
-				<AdvancedSettingsToggle />
-			);
+			await renderWithSettingsProvider( <AdvancedSettingsToggle /> );
 
 			const toggle = screen.getByTestId( 'toggle-control' );
 			expect( toggle ).toHaveAttribute( 'data-checked', 'false' );
 
-			act( () => {
+			await act( async () => {
 				fireEvent.click( toggle );
 			} );
 
-			rerender(
-				<SettingsProvider>
-					<AdvancedSettingsToggle />
-				</SettingsProvider>
-			);
+			expect( toggle ).toHaveAttribute( 'data-checked', 'true' );
 		} );
 
 		it( 'calls updateSettings with correct value on toggle', async () => {
@@ -146,10 +157,10 @@ describe( 'AdvancedSettingsToggle Component', () => {
 			} );
 
 			await waitFor( () => {
-				expect( result.current ).toBeDefined();
+				expect( result.current.isComplete ).toBe( true );
 			} );
 
-			renderWithSettingsProvider( <AdvancedSettingsToggle /> );
+			await renderWithSettingsProvider( <AdvancedSettingsToggle /> );
 
 			const toggle = screen.getByTestId( 'toggle-control' );
 			const updateSettingsSpy = vi.spyOn(
@@ -157,7 +168,7 @@ describe( 'AdvancedSettingsToggle Component', () => {
 				'updateSettings'
 			);
 
-			act( () => {
+			await act( async () => {
 				fireEvent.click( toggle );
 			} );
 
@@ -174,10 +185,10 @@ describe( 'AdvancedSettingsToggle Component', () => {
 			} );
 
 			await waitFor( () => {
-				expect( result.current ).toBeDefined();
+				expect( result.current.isComplete ).toBe( true );
 			} );
 
-			renderWithSettingsProvider( <AdvancedSettingsToggle /> );
+			await renderWithSettingsProvider( <AdvancedSettingsToggle /> );
 
 			const toggle = screen.getByTestId( 'toggle-control' );
 
@@ -194,7 +205,7 @@ describe( 'AdvancedSettingsToggle Component', () => {
 			} );
 
 			await waitFor( () => {
-				expect( result.current ).toBeDefined();
+				expect( result.current.isComplete ).toBe( true );
 			} );
 
 			expect( result.current.updateSettings ).toBeDefined();
@@ -213,10 +224,10 @@ describe( 'AdvancedSettingsToggle Component', () => {
 			} );
 
 			await waitFor( () => {
-				expect( result.current ).toBeDefined();
+				expect( result.current.isComplete ).toBe( true );
 			} );
 
-			renderWithSettingsProvider( <AdvancedSettingsToggle /> );
+			await renderWithSettingsProvider( <AdvancedSettingsToggle /> );
 
 			const toggle = screen.getByTestId( 'toggle-control' );
 			expect( toggle ).toHaveAttribute( 'data-checked', 'false' );

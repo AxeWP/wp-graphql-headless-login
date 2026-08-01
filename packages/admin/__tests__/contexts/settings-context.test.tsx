@@ -134,6 +134,23 @@ describe( 'SettingsContext', () => {
 			expect( result.current.errorMessage ).toBe( 'API Error' );
 		} );
 
+		it( 'API fetch rejections that are not Errors fall back to a generic message', async () => {
+			vi.mocked( apiFetch ).mockRejectedValue( 'just a string' );
+
+			const { wrapper } = renderWithSettingsProvider();
+			const { result } = renderHook( () => useSettings(), {
+				wrapper,
+			} );
+
+			await waitFor( () => {
+				expect( result.current.isComplete ).toBe( true );
+			} );
+
+			expect( result.current.errorMessage ).toBe(
+				'Unable to fetch settings. An unknown error occurred'
+			);
+		} );
+
 		it( 'Empty settings object handled correctly', async () => {
 			vi.mocked( apiFetch ).mockResolvedValue( {} );
 
@@ -280,6 +297,30 @@ describe( 'SettingsContext', () => {
 
 			expect( resultValue ).toBe( false );
 			expect( result.current.errorMessage ).toBe( 'Save failed' );
+		} );
+
+		it( 'save rejections that are not Errors leave errorMessage unset', async () => {
+			vi.mocked( apiFetch ).mockResolvedValueOnce( mockSettings );
+			vi.mocked( apiFetch ).mockRejectedValueOnce( 'just a string' );
+
+			const { wrapper } = renderWithSettingsProvider();
+			const { result } = renderHook( () => useSettings(), {
+				wrapper,
+			} );
+
+			await waitFor( () => {
+				expect( result.current.settings ).toEqual( mockSettings );
+			} );
+
+			const resultValue = await act( async () => {
+				return await result.current.saveSettings(
+					'wpgraphql_login_settings'
+				);
+			} );
+
+			expect( resultValue ).toBe( false );
+			expect( result.current.errorMessage ).toBeUndefined();
+			expect( result.current.isComplete ).toBe( true );
 		} );
 	} );
 

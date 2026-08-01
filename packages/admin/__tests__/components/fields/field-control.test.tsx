@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { vi, describe, it, expect } from 'vitest';
 import { FieldControl } from '@/admin/components/fields/field-control';
 import { SettingsProvider } from '@/admin/contexts/settings-context';
@@ -144,6 +144,19 @@ vi.mock( '@/admin/components/fields/jwt-secret-control', () => ( {
 vi.mock( '@wordpress/api-fetch', () => ( {
 	default: vi.fn().mockResolvedValue( {} ),
 } ) );
+
+async function renderWithSettingsProvider( ui: React.ReactElement ) {
+	const wrapper = ( { children }: { children: React.ReactNode } ) => (
+		<SettingsProvider>{ children }</SettingsProvider>
+	);
+
+	const result = render( ui, { wrapper } );
+
+	// Flush the SettingsProvider settings fetch so its state updates land inside act().
+	await act( async () => {} );
+
+	return result;
+}
 
 describe( 'FieldControl Component', () => {
 	const mockOnChange = vi.fn() as ( value: unknown ) => void;
@@ -687,7 +700,7 @@ describe( 'FieldControl Component', () => {
 	} );
 
 	describe( 'JwtSecret control rendering', () => {
-		it( 'renders jwtSecret control with correct props', () => {
+		it( 'renders jwtSecret control with correct props', async () => {
 			const props: FieldSchema & {
 				value: unknown;
 				onChange: ( value: unknown ) => void;
@@ -703,11 +716,7 @@ describe( 'FieldControl Component', () => {
 				onChange: ( value: unknown ) => void;
 			};
 
-			render(
-				<SettingsProvider>
-					<FieldControl { ...props } />
-				</SettingsProvider>
-			);
+			await renderWithSettingsProvider( <FieldControl { ...props } /> );
 
 			const jwtSecretControl = screen.getByTestId( 'jwt-secret-control' );
 			expect( jwtSecretControl ).toBeInTheDocument();
@@ -717,7 +726,7 @@ describe( 'FieldControl Component', () => {
 			);
 		} );
 
-		it( 'passes help text to jwtSecret', () => {
+		it( 'passes help text to jwtSecret', async () => {
 			const props: FieldSchema & {
 				value: unknown;
 				onChange: ( value: unknown ) => void;
@@ -734,11 +743,7 @@ describe( 'FieldControl Component', () => {
 				onChange: ( value: unknown ) => void;
 			};
 
-			render(
-				<SettingsProvider>
-					<FieldControl { ...props } />
-				</SettingsProvider>
-			);
+			await renderWithSettingsProvider( <FieldControl { ...props } /> );
 
 			const jwtSecretControl = screen.getByTestId( 'jwt-secret-control' );
 			expect( jwtSecretControl ).toHaveAttribute(
@@ -747,7 +752,7 @@ describe( 'FieldControl Component', () => {
 			);
 		} );
 
-		it( 'applies controlOverrides correctly for jwtSecret', () => {
+		it( 'applies controlOverrides correctly for jwtSecret', async () => {
 			const props: FieldSchema & {
 				value: unknown;
 				onChange: ( value: unknown ) => void;
@@ -766,11 +771,7 @@ describe( 'FieldControl Component', () => {
 				onChange: ( value: unknown ) => void;
 			} & { controlOverrides: Record< string, unknown > };
 
-			render(
-				<SettingsProvider>
-					<FieldControl { ...props } />
-				</SettingsProvider>
-			);
+			await renderWithSettingsProvider( <FieldControl { ...props } /> );
 
 			const jwtSecretControl = screen.getByTestId( 'jwt-secret-control' );
 			const rest = JSON.parse(
