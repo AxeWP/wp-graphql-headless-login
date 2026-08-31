@@ -6,6 +6,7 @@ import {
 	PanelRow,
 	Placeholder,
 	Spinner,
+	ToggleControl,
 } from '@wordpress/components';
 import { sprintf, __ } from '@wordpress/i18n';
 import { store as coreStore } from '@wordpress/core-data';
@@ -163,6 +164,7 @@ export function ClientPanel() {
 				</PanelRow>
 				<Fields
 					excludedProperties={ [
+						'isEnabled',
 						'loginOptions',
 						'clientOptions',
 						'order',
@@ -179,6 +181,18 @@ export function ClientPanel() {
 						} );
 					} }
 				/>
+				<PanelRow>
+					<ToggleControl
+						label={ __(
+							'Enable Provider',
+							'wp-graphql-headless-login'
+						) }
+						checked={ !! clientConfig.isEnabled }
+						onChange={ ( isEnabled ) => {
+							updateClient( 'isEnabled', isEnabled );
+						} }
+					/>
+				</PanelRow>
 				<ClientOptionList
 					clientSlug={ activeClient }
 					optionsKey="clientOptions"
