@@ -90,7 +90,7 @@
 		"typescript": "^5.9.3",
 		"url-loader": "^4.1.1",
 		"vite-tsconfig-paths": "^6.1.1",
-		"vitest": "^4.1.4",
+		"vitest": "^4.1.11",
 		"webpack-remove-empty-scripts": "^1.1.1"
 	},
 	"lint-staged": {
