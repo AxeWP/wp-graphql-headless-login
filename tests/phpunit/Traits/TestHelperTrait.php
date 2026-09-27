@@ -56,20 +56,6 @@ trait TestHelperTrait {
 	}
 
 	/**
-	 * Registers the given provider config class on the ProviderRegistry.
-	 */
-	public function mock_provider_config( string $provider_class ): void {
-		$reflection = new ReflectionClass( 'WPGraphQL\Login\Auth\ProviderRegistry' );
-		$property   = $reflection->getProperty( 'providers' );
-		$property->setAccessible( true );
-		$providers = $property->getValue();
-
-		$mocked_provider                           = new $provider_class();
-		$providers[ $mocked_provider->get_slug() ] = $mocked_provider;
-		$property->setValue( null, $providers );
-	}
-
-	/**
 	 * Sets the provider settings for the given slug.
 	 */
 	public function set_client_config( string $slug, array $config ): void {
@@ -112,5 +98,47 @@ trait TestHelperTrait {
 			'auth_token'    => $auth_token,
 			'refresh_token' => $refresh_token,
 		];
+	}
+
+	/**
+	 * Runs the callback, returning its response along with the auth cookie events it fired.
+	 *
+	 * @return array{response:mixed,events:array{set_auth_cookie:list<array<int,mixed>>,set_logged_in_cookie:list<array<int,mixed>>}}
+	 */
+	public function capture_auth_cookie_events( callable $callback ): array {
+		$events           = [
+			'set_auth_cookie'      => [],
+			'set_logged_in_cookie' => [],
+		];
+		$auth_cookie_hook = static function ( ...$args ) use ( &$events ): void {
+			$events['set_auth_cookie'][] = $args;
+		};
+		$logged_in_hook   = static function ( ...$args ) use ( &$events ): void {
+			$events['set_logged_in_cookie'][] = $args;
+		};
+
+		add_action( 'set_auth_cookie', $auth_cookie_hook, 10, 6 );
+		add_action( 'set_logged_in_cookie', $logged_in_hook, 10, 6 );
+
+		try {
+			$response = $callback();
+		} finally {
+			remove_action( 'set_auth_cookie', $auth_cookie_hook );
+			remove_action( 'set_logged_in_cookie', $logged_in_hook );
+		}
+
+		return [
+			'response' => $response,
+			'events'   => $events,
+		];
+	}
+
+	/**
+	 * Returns the debug messages from a GraphQL response.
+	 *
+	 * @return string[]
+	 */
+	public function get_debug_messages( array $response ): array {
+		return array_values( wp_list_pluck( $response['extensions']['debug'] ?? [], 'message' ) );
 	}
 }

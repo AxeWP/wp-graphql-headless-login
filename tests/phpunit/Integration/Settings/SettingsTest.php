@@ -20,6 +20,23 @@ use WPGraphQL\Login\Auth\ProviderRegistry;
  */
 class SettingsTest extends TestCase {
 	/**
+	 * Tests that options.php can't overwrite the plugin settings with the section's empty form.
+	 */
+	public function testOptionsPageCannotSaveSettings(): void {
+		// Core's `option_update_filter()` adds registered settings back at priority 10.
+		$this->assertGreaterThan( 10, has_filter( 'allowed_options', [ Settings::class, 'disallow_options_page_saves' ] ) );
+
+		$allowed = Settings::disallow_options_page_saves(
+			[
+				'general'               => [ 'blogname' ],
+				Settings::$option_group => [ Settings::$option_group ],
+			]
+		);
+
+		$this->assertSame( [ 'general' => [ 'blogname' ] ], $allowed );
+	}
+
+	/**
 	 * Tests that the Settings tab is registered.
 	 */
 	public function testGetSettingsData(): void {

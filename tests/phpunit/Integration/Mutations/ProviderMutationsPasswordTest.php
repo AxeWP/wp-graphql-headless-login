@@ -77,9 +77,6 @@ class ProviderMutationsPasswordTest extends \Tests\WPGraphQL\Login\TestCase {
 		parent::tearDown();
 	}
 
-	/**
-	 * The `login` mutation.
-	 */
 	public function login_query(): string {
 		return '
 			mutation Login( $username: String!, $password: String! ) {
@@ -110,9 +107,6 @@ class ProviderMutationsPasswordTest extends \Tests\WPGraphQL\Login\TestCase {
 		';
 	}
 
-	/**
-	 * The `linkUserIdentity` mutation.
-	 */
 	public function link_query(): string {
 		return '
 			mutation LinkUser( $input: LinkUserIdentityInput! ) {
@@ -134,9 +128,6 @@ class ProviderMutationsPasswordTest extends \Tests\WPGraphQL\Login\TestCase {
 		';
 	}
 
-	/**
-	 * Tests logging in with user provisioning disabled.
-	 */
 	public function testLoginWithNoProvisioning(): void {
 		$query = $this->login_query();
 
@@ -212,9 +203,6 @@ class ProviderMutationsPasswordTest extends \Tests\WPGraphQL\Login\TestCase {
 		);
 	}
 
-	/**
-	 * Tests linking an identity to the user.
-	 */
 	public function testLinkUserIdentity(): void {
 		$query = $this->link_query();
 

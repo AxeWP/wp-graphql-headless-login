@@ -1,3 +1,5 @@
+
+
 #wpgraphql_login_settings, // stylelint-disable-line selector-id-pattern
 #wp-graphql-headless-login-settings {
 	.components-placeholder {
@@ -18,4 +20,18 @@
 			}
 		}
 	}
+}
+
+/**
+* WPGraphQL's "Save Changes" button can't save this section, so it is hidden until the app replaces the form.
+*
+* @see \WPGraphQL\Login\Admin\Settings::disallow_options_page_saves()
+*/
+// stylelint-disable-next-line selector-id-pattern
+#wpgraphql_login_settings > form .submit {
+	display: none;
+}
+.wpgraphql-ide-settings-pane:has(#wp-graphql-headless-login-settings)
+	.wpgraphql-ide-settings-pane-actions {
+	display: none;
 }

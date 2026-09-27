@@ -205,14 +205,6 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 
 			const target = { settingKey: targetSetting, field: targetField };
 
-			const fieldValue = settings?.[ targetSetting as string ]?.[
-				targetField
-			] as string | undefined;
-
-			if ( ! fieldValue ) {
-				return target;
-			}
-
 			// If the field schema has a condition, we need to check if the condition is met.
 			const unmetParent = wpGraphQLLogin?.settings?.[ targetSetting ]
 				?.fields?.[ targetField ]?.conditionalLogic
@@ -221,6 +213,14 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 
 			if ( unmetParent ) {
 				return unmetParent;
+			}
+
+			const fieldValue = settings?.[ targetSetting as string ]?.[
+				targetField
+			] as string | undefined;
+
+			if ( ! fieldValue ) {
+				return target;
 			}
 
 			let isMet: boolean;

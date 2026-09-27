@@ -145,26 +145,13 @@ class LoginClientQueriesTest extends TestCase {
 		$this->assertEquals( $this->client_config['clientOptions']['clientId'], $query_params['client_id'] );
 		$this->assertEquals(
 			$this->client_config['clientOptions']['redirectUri'],
-			call_user_func(
-				'esc_url',
-				$query_params['redirect_uri']
-			)
+			esc_url( $query_params['redirect_uri'] )
 		);
 		$this->assertArrayHasKey( 'state', $query_params );
 		$this->assertArrayHasKey( 'scope', $query_params );
 		$this->assertArrayHasKey( 'response_type', $query_params );
 	}
 
-	/**
-	 * Test the `loginClients` query with an authenticated admin user.
-	 *
-	 * Note: The authenticated clientOptions/loginOptions resolution is affected by
-	 * a pre-existing upstream issue where TypeResolverTrait::resolve_type() is
-	 * protected, causing WPGraphQL's is_callable() check in WPInterfaceType to fail.
-	 * This test documents the expected behavior once that issue is resolved.
-	 *
-	 * @see https://github.com/AxeWP/wp-graphql-headless-login/issues/XXX
-	 */
 	public function testClientsQueryWithAuthenticatedUser(): void {
 		$query = '
 			query LoginClientQuery {
@@ -187,51 +174,41 @@ class LoginClientQueriesTest extends TestCase {
 			}
 		';
 
-		// Test with providers and logged-in admin
 		$this->set_client_config( 'facebook', $this->client_config );
-		\wp_set_current_user( $this->admin );
+		wp_set_current_user( $this->admin );
 
 		$actual = $this->graphql( compact( 'query' ) );
 
-		// @todo: Uncomment the following assertions once the upstream TypeResolverTrait issue is fixed.
-		// $this->assertArrayNotHasKey( 'errors', $actual );
-		// $this->assertCount( 1, $actual['data']['loginClients'] );
-		// $this->assertQuerySuccessful(
-		//     $actual,
-		//     [
-		//         $this->expectedNode(
-		//             'loginClients',
-		//             [
-		//                 $this->expectedObject(
-		//                     'clientOptions',
-		//                     [
-		//                         $this->expectedField( 'clientId', $this->client_config['clientOptions']['clientId'] ),
-		//                         $this->expectedField( 'clientSecret', $this->client_config['clientOptions']['clientSecret'] ),
-		//                         $this->expectedField( 'redirectUri', $this->client_config['clientOptions']['redirectUri'] ),
-		//                     ]
-		//                 ),
-		//                 $this->expectedObject(
-		//                     'loginOptions',
-		//                     [
-		//                         $this->expectedField( 'linkExistingUsers', $this->client_config['loginOptions']['linkExistingUsers'] ),
-		//                         $this->expectedField( 'createUserIfNoneExists', $this->client_config['loginOptions']['createUserIfNoneExists'] ),
-		//                     ]
-		//                 ),
-		//             ],
-		//             0
-		//         ),
-		//     ]
-		// );
-
-		// Verify the admin user is set correctly.
-		$this->assertTrue( \current_user_can( 'manage_options' ) );
-		// Document that the interface type resolution currently fails for authenticated users.
-		$this->assertArrayHasKey( 'errors', $actual, 'Authenticated clientOptions/loginOptions resolution is broken due to upstream TypeResolverTrait visibility issue.' );
+		$this->assertArrayNotHasKey( 'errors', $actual );
+		$this->assertCount( 1, $actual['data']['loginClients'] );
+		$this->assertQuerySuccessful(
+			$actual,
+			[
+				$this->expectedNode(
+					'loginClients',
+					[
+						$this->expectedObject(
+							'clientOptions',
+							[
+								$this->expectedField( 'clientId', $this->client_config['clientOptions']['clientId'] ),
+								$this->expectedField( 'clientSecret', $this->client_config['clientOptions']['clientSecret'] ),
+								$this->expectedField( 'redirectUri', $this->client_config['clientOptions']['redirectUri'] ),
+							]
+						),
+						$this->expectedObject(
+							'loginOptions',
+							[
+								$this->expectedField( 'linkExistingUsers', $this->client_config['loginOptions']['linkExistingUsers'] ),
+								$this->expectedField( 'createUserIfNoneExists', $this->client_config['loginOptions']['createUserIfNoneExists'] ),
+							]
+						),
+					],
+					0
+				),
+			]
+		);
 	}
 
-	/**
-	 * Tests the `loginClient` query.
-	 */
 	public function testClientQuery(): void {
 		$query = '
 			query LoginClientQuery( $provider: LoginProviderEnum! ) {
@@ -299,11 +276,6 @@ class LoginClientQueriesTest extends TestCase {
 		);
 	}
 
-	/**
-	 * Test the `loginClient` query with an authenticated admin user.
-	 *
-	 * @see testClientsQueryWithAuthenticatedUser() for context on the upstream issue.
-	 */
 	public function testClientQueryWithAuthenticatedUser(): void {
 		$query = '
 			query LoginClientQuery( $provider: LoginProviderEnum! ) {
@@ -330,43 +302,36 @@ class LoginClientQueriesTest extends TestCase {
 			'provider' => 'FACEBOOK',
 		];
 
-		// Test with providers and logged-in admin
 		$this->set_client_config( 'facebook', $this->client_config );
-		\wp_set_current_user( $this->admin );
+		wp_set_current_user( $this->admin );
 
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
-		// @todo: Uncomment the following assertions once the upstream TypeResolverTrait issue is fixed.
-		// $this->assertArrayNotHasKey( 'errors', $actual );
-		// $this->assertQuerySuccessful(
-		//     $actual,
-		//     [
-		//         $this->expectedObject(
-		//             'loginClient',
-		//             [
-		//                 $this->expectedObject(
-		//                     'clientOptions',
-		//                     [
-		//                         $this->expectedField( 'clientId', $this->client_config['clientOptions']['clientId'] ),
-		//                         $this->expectedField( 'clientSecret', $this->client_config['clientOptions']['clientSecret'] ),
-		//                         $this->expectedField( 'redirectUri', $this->client_config['clientOptions']['redirectUri'] ),
-		//                     ]
-		//                 ),
-		//                 $this->expectedObject(
-		//                     'loginOptions',
-		//                     [
-		//                         $this->expectedField( 'linkExistingUsers', $this->client_config['loginOptions']['linkExistingUsers'] ),
-		//                         $this->expectedField( 'createUserIfNoneExists', $this->client_config['loginOptions']['createUserIfNoneExists'] ),
-		//                     ]
-		//                 ),
-		//             ]
-		//         ),
-		//     ]
-		// );
-
-		// Verify the admin user is set correctly.
-		$this->assertTrue( \current_user_can( 'manage_options' ) );
-		// Document that the interface type resolution currently fails for authenticated users.
-		$this->assertArrayHasKey( 'errors', $actual, 'Authenticated clientOptions/loginOptions resolution is broken due to upstream TypeResolverTrait visibility issue.' );
+		$this->assertArrayNotHasKey( 'errors', $actual );
+		$this->assertQuerySuccessful(
+			$actual,
+			[
+				$this->expectedObject(
+					'loginClient',
+					[
+						$this->expectedObject(
+							'clientOptions',
+							[
+								$this->expectedField( 'clientId', $this->client_config['clientOptions']['clientId'] ),
+								$this->expectedField( 'clientSecret', $this->client_config['clientOptions']['clientSecret'] ),
+								$this->expectedField( 'redirectUri', $this->client_config['clientOptions']['redirectUri'] ),
+							]
+						),
+						$this->expectedObject(
+							'loginOptions',
+							[
+								$this->expectedField( 'linkExistingUsers', $this->client_config['loginOptions']['linkExistingUsers'] ),
+								$this->expectedField( 'createUserIfNoneExists', $this->client_config['loginOptions']['createUserIfNoneExists'] ),
+							]
+						),
+					]
+				),
+			]
+		);
 	}
 }

@@ -68,6 +68,9 @@ class Settings {
 		// The IDE loads its settings screen anywhere it's available - including the admin bar drawer.
 		add_action( 'wpgraphql_ide_enqueue_script', [ self::class, 'enqueue_settings_app' ] );
 
+		// After core's `option_update_filter()`, which adds registered settings back to the list.
+		add_filter( 'allowed_options', [ self::class, 'disallow_options_page_saves' ], 11 );
+
 		// Handle upgrades.
 		UpgradeRegistry::init();
 	}
@@ -117,6 +120,23 @@ class Settings {
 				},
 			]
 		);
+	}
+
+	/**
+	 * Prevents `options.php` from saving the plugin's option group.
+	 *
+	 * Registering the app's mount point as a field makes WPGraphQL render a "Save Changes" button for the section, but the form has no inputs, so submitting it would overwrite every plugin setting with an empty value. The app saves through the REST API instead.
+	 *
+	 * @todo figure out a better way to integrate with WPGraphQLs new settings UI.
+	 *
+	 * @param array<string,string[]> $allowed_options The allowed options, keyed by option group.
+	 *
+	 * @return array<string,string[]>
+	 */
+	public static function disallow_options_page_saves( array $allowed_options ): array {
+		unset( $allowed_options[ self::$option_group ] );
+
+		return $allowed_options;
 	}
 
 	/**
@@ -172,7 +192,7 @@ class Settings {
 	private static function register_asset_js( string $handle, string $asset_name ): void {
 		$script_asset_path = WPGRAPHQL_LOGIN_PLUGIN_DIR . 'build/' . $asset_name . '.asset.php';
 		if ( ! file_exists( $script_asset_path ) ) {
-			throw new \Exception( esc_html__( 'You need to run `npm start` or `npm run build` for Headless Login for WPGraphQL to work.', 'wp-graphql-headless-login' ) );
+			throw new \Exception( esc_html__( 'The Headless Login for WPGraphQL admin assets are missing. Install the plugin from the release zip, or run `npm run build:prod` if you are working from source.', 'wp-graphql-headless-login' ) );
 		}
 
 		$script_asset = require_once $script_asset_path; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable

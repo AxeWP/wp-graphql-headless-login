@@ -9,7 +9,7 @@ A WordPress plugin that provides headless login and authentication for <a href="
 
 ---
 
-![Packagist License](https://img.shields.io/packagist/l/axepress/wp-graphql-headless-login?color=green) ![Packagist Version](https://img.shields.io/packagist/v/axepress/wp-graphql-headless-login?label=stable) ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/AxeWP/wp-graphql-headless-login/latest) ![GitHub forks](https://img.shields.io/github/forks/AxeWP/wp-graphql-headless-login?style=social) ![GitHub Repo stars](https://img.shields.io/github/stars/AxeWP/wp-graphql-headless-login?style=social)<br />
+![Packagist License](https://img.shields.io/packagist/l/axepress/wp-graphql-headless-login?color=green) ![GitHub Release](https://img.shields.io/github/v/release/AxeWP/wp-graphql-headless-login?label=stable) ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/AxeWP/wp-graphql-headless-login/latest) ![GitHub forks](https://img.shields.io/github/forks/AxeWP/wp-graphql-headless-login?style=social) ![GitHub Repo stars](https://img.shields.io/github/stars/AxeWP/wp-graphql-headless-login?style=social)<br />
 ![CI](https://img.shields.io/github/actions/workflow/status/axewp/wp-graphql-headless-login/ci.yml?branch=develop&label=CI)
 [![Coverage Status](https://codecov.io/gh/AxeWP/wp-graphql-headless-login/branch/develop/graph/badge.svg)](https://codecov.io/gh/AxeWP/wp-graphql-headless-login)
 
@@ -30,19 +30,13 @@ This plugin is inspired by and aims to replace <a href="https://github.com/wp-gr
 ## Quick Install
 
 1. Install & activate [WPGraphQL](https://www.wpgraphql.com/).
-2. Download the [latest release](https://github.com/AxeWP/wp-graphql-headless-login/releases) `.zip` file, upload it to your WordPress install, and activate the plugin.
+2. Download `wp-graphql-headless-login.zip` from the [latest release](https://github.com/AxeWP/wp-graphql-headless-login/releases/latest) (not the "Source code" archive), upload it to your WordPress install, and activate the plugin.
 3. Enable and configure the authentication providers you want to use in GraphQL > Settings > Headless Login.
 
 ### With WP-CLI
 
 ```bash
 wp plugin install https://github.com/AxeWP/wp-graphql-headless-login/releases/latest/download/wp-graphql-headless-login.zip --activate
-```
-
-### With Composer
-
-```bash
-composer require axepress/wp-graphql-headless-login
 ```
 
 ## Updating and Versioning

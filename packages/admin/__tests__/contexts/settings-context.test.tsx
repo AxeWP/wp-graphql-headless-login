@@ -1176,4 +1176,97 @@ describe( 'SettingsContext', () => {
 			expect( isMet ).toBe( false );
 		} );
 	} );
+
+	describe( 'getUnmetCondition', () => {
+		const nestedSchema = {
+			settings: {
+				access_control: {
+					fields: {
+						shouldBlock: {},
+					},
+				},
+				cookies: {
+					fields: {
+						allowCredentials: {
+							conditionalLogic: {
+								slug: 'access_control.shouldBlock',
+								operator: '==',
+								value: true,
+							},
+						},
+						sameSite: {
+							conditionalLogic: {
+								slug: 'allowCredentials',
+								operator: '==',
+								value: true,
+							},
+						},
+					},
+				},
+			},
+			providers: {},
+		};
+
+		it( 'returns undefined when every condition is met', async () => {
+			vi.mocked( apiFetch ).mockResolvedValue( {
+				access_control: { shouldBlock: true },
+				cookies: { allowCredentials: true },
+			} );
+
+			(
+				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
+			 ).wpGraphQLLogin = nestedSchema;
+
+			const { wrapper } = renderWithSettingsProvider();
+			const { result } = renderHook( () => useSettings(), {
+				wrapper,
+			} );
+
+			await waitFor( () => {
+				expect( result.current.settings ).toBeDefined();
+			} );
+
+			expect(
+				result.current.getUnmetCondition( {
+					settingKey: 'cookies',
+					field: 'sameSite',
+				} )
+			).toBeUndefined();
+		} );
+
+		it.each( [ true, false ] )(
+			'returns the root blocker when the parent field is itself hidden (parent value: %s)',
+			async ( allowCredentials ) => {
+				vi.mocked( apiFetch ).mockResolvedValue( {
+					access_control: { shouldBlock: false },
+					cookies: { allowCredentials },
+				} );
+
+				(
+					global as unknown as {
+						wpGraphQLLogin: WpGraphQLLoginGlobal;
+					}
+				 ).wpGraphQLLogin = nestedSchema;
+
+				const { wrapper } = renderWithSettingsProvider();
+				const { result } = renderHook( () => useSettings(), {
+					wrapper,
+				} );
+
+				await waitFor( () => {
+					expect( result.current.settings ).toBeDefined();
+				} );
+
+				expect(
+					result.current.getUnmetCondition( {
+						settingKey: 'cookies',
+						field: 'sameSite',
+					} )
+				).toEqual( {
+					settingKey: 'access_control',
+					field: 'shouldBlock',
+				} );
+			}
+		);
+	} );
 } );

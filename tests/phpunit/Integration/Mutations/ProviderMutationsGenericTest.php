@@ -94,9 +94,6 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\Login\TestCase {
 		parent::tearDown();
 	}
 
-	/**
-	 * The `login` mutation.
-	 */
 	public function login_query(): string {
 		return '
 			mutation Login( $input: LoginInput! ) {
@@ -127,9 +124,6 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\Login\TestCase {
 		';
 	}
 
-	/**
-	 * The `linkUserIdentity` mutation.
-	 */
 	public function link_query(): string {
 		return '
 			mutation LinkUser( $input : LinkUserIdentityInput! ) {
@@ -151,9 +145,6 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\Login\TestCase {
 		';
 	}
 
-	/**
-	 * Tests logging in with user provisioning disabled.
-	 */
 	public function testLoginWithNoProvisioning(): void {
 		$query = $this->login_query();
 
@@ -369,18 +360,12 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\Login\TestCase {
 	 */
 	public function testLoginWithAuthCookie(): void {
 		$did_filter = false;
-		add_filter(
-			'send_auth_cookies',
-			static function () use ( &$did_filter ) {
-				$did_filter = true;
+		$filter     = static function () use ( &$did_filter ) {
+			$did_filter = true;
 
-				// Prevent the actual setcookie() call, which warns about
-				// already-sent headers in CLI. The assertion below only cares
-				// that the cookie path was taken.
-				return false;
-			},
-			99
-		);
+			return true;
+		};
+		add_filter( 'send_auth_cookies', $filter, 99 );
 
 		// Test with user to match.
 		User::link_user_identity( $this->test_user, 'oauth2-generic', '12345' );
@@ -443,8 +428,7 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\Login\TestCase {
 
 		$this->assertTrue( $did_filter );
 
-		// Cleanup.
-		remove_all_filters( 'send_auth_cookies' );
+		remove_filter( 'send_auth_cookies', $filter, 99 );
 	}
 
 	/**
@@ -535,9 +519,6 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\Login\TestCase {
 		$this->assertNotEquals( $this->test_user, $actual['data']['login']['user']['databaseId'] );
 	}
 
-	/**
-	 * Tests linking an identity without the required permissions.
-	 */
 	public function testLinkUserIdentityWithNoPermissions(): void {
 		$query = $this->link_query();
 
@@ -625,9 +606,6 @@ class ProviderMutationsGenericTest extends \Tests\WPGraphQL\Login\TestCase {
 		$this->assertEquals( 'This identity is already linked to another account.', $actual['errors'][0]['message'] );
 	}
 
-	/**
-	 * Tests linking an identity to the user.
-	 */
 	public function testLinkUserIdentity(): void {
 		$query = $this->link_query();
 

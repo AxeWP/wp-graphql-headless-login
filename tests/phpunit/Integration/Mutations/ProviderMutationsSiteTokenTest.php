@@ -90,6 +90,7 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\Login\TestCase {
 	 * {@inheritDoc}
 	 */
 	public function tearDown(): void {
+		unset( $_SERVER['HTTP_ORIGIN'] );
 		delete_option( AccessControlSettings::get_slug() );
 		$this->reset_utils_properties();
 		wp_delete_user( $this->test_user );
@@ -98,9 +99,6 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\Login\TestCase {
 		parent::tearDown();
 	}
 
-	/**
-	 * The `login` mutation.
-	 */
 	public function login_query(): string {
 		return '
 			mutation LoginWithSiteToken( $input: LoginInput! ) {
@@ -129,9 +127,6 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\Login\TestCase {
 		';
 	}
 
-	/**
-	 * The `linkUserIdentity` mutation.
-	 */
 	public function link_query(): string {
 		return '
 			mutation LinkUser( $input: LinkUserIdentityInput! ) {
@@ -178,9 +173,6 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\Login\TestCase {
 		$this->assertEquals( 'Provider siteToken is not enabled.', $debug_message );
 	}
 
-	/**
-	 * Tests logging in with user provisioning disabled.
-	 */
 	public function testLoginWithNoProvisioning(): void {
 		$query = $this->login_query();
 
@@ -333,9 +325,6 @@ class ProviderMutationsSiteTokenTest extends \Tests\WPGraphQL\Login\TestCase {
 		unset( $_SERVER['HTTP_X_MY_SECRET_AUTH_TOKEN'] );
 	}
 
-	/**
-	 * Tests linking an identity to the user.
-	 */
 	public function testLinkUserIdentity(): void {
 		$query = $this->link_query();
 

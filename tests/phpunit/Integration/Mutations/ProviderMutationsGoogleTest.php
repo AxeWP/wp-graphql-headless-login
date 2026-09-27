@@ -92,9 +92,6 @@ class ProviderMutationsGoogleTest extends \Tests\WPGraphQL\Login\TestCase {
 		parent::tearDown();
 	}
 
-	/**
-	 * The `login` mutation.
-	 */
 	public function login_query(): string {
 		return '
 			mutation Login( $code: String!, $state: String ) {
@@ -125,9 +122,6 @@ class ProviderMutationsGoogleTest extends \Tests\WPGraphQL\Login\TestCase {
 		';
 	}
 
-	/**
-	 * The `linkUserIdentity` mutation.
-	 */
 	public function link_query(): string {
 		return '
 			mutation LinkUser( $code: String!, $state: String, $userId: ID! ) {
@@ -149,9 +143,6 @@ class ProviderMutationsGoogleTest extends \Tests\WPGraphQL\Login\TestCase {
 		';
 	}
 
-	/**
-	 * Tests logging in with user provisioning disabled.
-	 */
 	public function testLoginWithNoProvisioning(): void {
 		$query = $this->login_query();
 
@@ -377,9 +368,6 @@ class ProviderMutationsGoogleTest extends \Tests\WPGraphQL\Login\TestCase {
 		$this->assertNotEquals( $this->test_user, $actual['data']['login']['user']['databaseId'] );
 	}
 
-	/**
-	 * Tests linking an identity without the required permissions.
-	 */
 	public function testLinkUserIdentityWithNoPermissions(): void {
 		$query = $this->link_query();
 
@@ -455,9 +443,6 @@ class ProviderMutationsGoogleTest extends \Tests\WPGraphQL\Login\TestCase {
 		$this->assertEquals( 'This identity is already linked to another account.', $actual['errors'][0]['message'] );
 	}
 
-	/**
-	 * Tests linking an identity to the user.
-	 */
 	public function testLinkUserIdentity(): void {
 		$query = $this->link_query();
 
