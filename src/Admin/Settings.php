@@ -139,7 +139,7 @@ class Settings {
 		$script_asset = require_once $script_asset_path; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
 		$js           = 'build/' . $asset_name . '.js';
 
-		/** @var non-empty-string $script_url */
+		/** @var non-empty-string $asset_url */
 		$asset_url = plugins_url( $js, WPGRAPHQL_LOGIN_PLUGIN_FILE );
 
 		wp_register_script(
