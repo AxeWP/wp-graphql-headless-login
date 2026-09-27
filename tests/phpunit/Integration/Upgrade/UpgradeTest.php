@@ -27,7 +27,7 @@ class MockUpgrade extends AbstractUpgrade {
 	 * {@inheritDoc}
 	 */
 	public function upgrade(): void {
-		\update_option( 'WP_GRAPHQL_LOGIN_MOCK_UPGRADE', true );
+		update_option( 'WP_GRAPHQL_LOGIN_MOCK_UPGRADE', true );
 	}
 }
 
@@ -63,7 +63,7 @@ class MockedSkippedUpgrade extends AbstractUpgrade {
 	 * {@inheritDoc}
 	 */
 	public function upgrade(): void {
-		\update_option( 'WP_GRAPHQL_LOGIN_MOCK_SKIPPED_UPGRADE', true );
+		update_option( 'WP_GRAPHQL_LOGIN_MOCK_SKIPPED_UPGRADE', true );
 	}
 }
 
@@ -91,9 +91,9 @@ class MockFailedUpgradeRegistry extends UpgradeRegistry {
 	 */
 	public static function get_upgrade_classes(): array {
 		return [
-			MockedSkippedUpgrade::class,
-			MockFailedUpgrade::class,
-			MockUpgrade::class,
+			MockedSkippedUpgrade::class, // This upgrade should be skipped.
+			MockFailedUpgrade::class, // This upgrade should fail.
+			MockUpgrade::class, // This upgrade should not run.
 		];
 	}
 }
@@ -124,38 +124,41 @@ class UpgradeTest extends TestCase {
 	 * Test that the upgrade process runs successfully.
 	 */
 	public function testUpgradeSuccess(): void {
+		// Test with no version set.
 		$upgrade = new MockUpgrade();
 		$success = $upgrade->run();
 
 		$this->assertTrue( $success, 'The upgrade process should run successfully.' );
-		$this->assertTrue( $this->getOption( 'WP_GRAPHQL_LOGIN_MOCK_UPGRADE' ), 'The AbstractUpgrade::upgrade() method should run if the version is not set.' );
-		$this->assertFalse( $this->getTransient( AbstractUpgrade::ERROR_TRANSIENT_KEY ), 'The error transient should not be set if the upgrade is successful.' );
-		$this->assertEquals( '0.0.2', $this->getOption( AbstractUpgrade::VERSION_OPTION_KEY ), 'The version should be updated if the upgrade is successful.' );
+		$this->assertTrue( get_option( 'WP_GRAPHQL_LOGIN_MOCK_UPGRADE' ), 'The AbstractUpgrade::upgrade() method should run if the version is not set.' );
+		$this->assertFalse( get_transient( AbstractUpgrade::ERROR_TRANSIENT_KEY ), 'The error transient should not be set if the upgrade is successful.' );
+		$this->assertEquals( '0.0.2', get_option( AbstractUpgrade::VERSION_OPTION_KEY ), 'The version should be updated if the upgrade is successful.' );
 
-		$this->updateOption( AbstractUpgrade::VERSION_OPTION_KEY, '0.0.1' );
-
-		$upgrade = new MockUpgrade();
-		$success = $upgrade->run();
-
-		$this->assertTrue( $success, 'The upgrade process should run successfully.' );
-		$this->assertTrue( $this->getOption( 'WP_GRAPHQL_LOGIN_MOCK_UPGRADE' ), 'The AbstractUpgrade::upgrade() method should run if the version is set.' );
-		$this->assertFalse( $this->getTransient( AbstractUpgrade::ERROR_TRANSIENT_KEY ), 'The error transient should not be set if the upgrade is successful.' );
-		$this->assertEquals( '0.0.2', $this->getOption( AbstractUpgrade::VERSION_OPTION_KEY ), 'The version should be updated if the upgrade is successful.' );
+		// Test with a version set.
+		update_option( AbstractUpgrade::VERSION_OPTION_KEY, '0.0.1' );
 
 		$upgrade = new MockUpgrade();
 		$success = $upgrade->run();
 
 		$this->assertTrue( $success, 'The upgrade process should run successfully.' );
-		$this->assertTrue( $this->getOption( 'WP_GRAPHQL_LOGIN_MOCK_UPGRADE' ), 'The AbstractUpgrade::upgrade() method should not run if the version is not set.' );
-		$this->assertFalse( $this->getTransient( AbstractUpgrade::ERROR_TRANSIENT_KEY ), 'The error transient should not be set if the upgrade is successful.' );
-		$this->assertEquals( '0.0.2', $this->getOption( AbstractUpgrade::VERSION_OPTION_KEY ), 'The version should not be updated if the upgrade is successful.' );
+		$this->assertTrue( get_option( 'WP_GRAPHQL_LOGIN_MOCK_UPGRADE' ), 'The AbstractUpgrade::upgrade() method should run if the version is set.' );
+		$this->assertFalse( get_transient( AbstractUpgrade::ERROR_TRANSIENT_KEY ), 'The error transient should not be set if the upgrade is successful.' );
+		$this->assertEquals( '0.0.2', get_option( AbstractUpgrade::VERSION_OPTION_KEY ), 'The version should be updated if the upgrade is successful.' );
+
+		// Running the upgrade again should not run the upgrade method.
+		$upgrade = new MockUpgrade();
+		$success = $upgrade->run();
+
+		$this->assertTrue( $success, 'The upgrade process should run successfully.' );
+		$this->assertTrue( get_option( 'WP_GRAPHQL_LOGIN_MOCK_UPGRADE' ), 'The AbstractUpgrade::upgrade() method should not run if the version is not set.' );
+		$this->assertFalse( get_transient( AbstractUpgrade::ERROR_TRANSIENT_KEY ), 'The error transient should not be set if the upgrade is successful.' );
+		$this->assertEquals( '0.0.2', get_option( AbstractUpgrade::VERSION_OPTION_KEY ), 'The version should not be updated if the upgrade is successful.' );
 	}
 
 	/**
 	 * Test that the upgrade process fails.
 	 */
 	public function testUpgradeFailure(): void {
-		$this->updateOption( AbstractUpgrade::VERSION_OPTION_KEY, '0.0.1' );
+		update_option( AbstractUpgrade::VERSION_OPTION_KEY, '0.0.1' );
 
 		$expected = [
 			'message' => 'Upgrade failed.',
@@ -167,60 +170,66 @@ class UpgradeTest extends TestCase {
 
 		$this->assertFalse( $success );
 
-		$actual = $this->getTransient( AbstractUpgrade::ERROR_TRANSIENT_KEY );
+		$actual = get_transient( AbstractUpgrade::ERROR_TRANSIENT_KEY );
 
 		$this->assertIsArray( $actual );
 		$this->assertEquals( $expected, $actual );
 
+		// Test that the error message is output on the admin_notices hook.
 		$this->expectOutputRegex( '/Upgrade failed./' );
 		UpgradeRegistry::failed_upgrade_notice();
 
+		// Test that the error message is cleared.
 		$upgrade = new MockUpgrade();
 		$success = $upgrade->run();
 
 		$this->assertTrue( $success );
 
-		$actual = $this->getTransient( AbstractUpgrade::ERROR_TRANSIENT_KEY );
+		$actual = get_transient( AbstractUpgrade::ERROR_TRANSIENT_KEY );
 
 		$this->assertFalse( $actual );
 
+		// Failed upgrade notice should not be displayed.
 		$this->expectOutputString( '' );
 		UpgradeRegistry::failed_upgrade_notice();
 
-		$this->deleteTransient( AbstractUpgrade::ERROR_TRANSIENT_KEY );
+		// Cleanup.
+		delete_transient( AbstractUpgrade::ERROR_TRANSIENT_KEY );
 	}
 
 	/**
 	 * Test that the upgrade process skips upgrades that are not needed.
 	 */
 	public function testUpgradeSkipped(): void {
-		$this->updateOption( AbstractUpgrade::VERSION_OPTION_KEY, '0.0.2' );
+		update_option( AbstractUpgrade::VERSION_OPTION_KEY, '0.0.2' );
 
 		$upgrade = new MockedSkippedUpgrade();
 		$success = $upgrade->run();
 
 		$this->assertTrue( $success );
-		$this->assertFalse( $this->getOption( 'WP_GRAPHQL_LOGIN_MOCK_SKIPPED_UPGRADE' ) );
+		$this->assertFalse( get_option( 'WP_GRAPHQL_LOGIN_MOCK_SKIPPED_UPGRADE' ) );
 	}
 
 	/**
 	 * Test that the upgrade process runs all upgrades.
 	 */
 	public function testDoUpgrades(): void {
+		// If the version is not set, no upgrades should run.
 		MockUpgradeRegistry::do_upgrades();
 
-		$this->assertTrue( $this->getOption( 'WP_GRAPHQL_LOGIN_MOCK_UPGRADE' ) );
-		$this->assertFalse( $this->getOption( 'WP_GRAPHQL_LOGIN_MOCK_SKIPPED_UPGRADE' ) );
-		$this->assertFalse( $this->getTransient( AbstractUpgrade::ERROR_TRANSIENT_KEY ) );
+		$this->assertTrue( get_option( 'WP_GRAPHQL_LOGIN_MOCK_UPGRADE' ) );
+		$this->assertFalse( get_option( 'WP_GRAPHQL_LOGIN_MOCK_SKIPPED_UPGRADE' ) );
+		$this->assertFalse( get_transient( AbstractUpgrade::ERROR_TRANSIENT_KEY ) );
 
+		// Test with a version set.
 		$this->cleanup_upgrade_state();
-		$this->updateOption( AbstractUpgrade::VERSION_OPTION_KEY, '0.0.1' );
+		update_option( AbstractUpgrade::VERSION_OPTION_KEY, '0.0.1' );
 
 		MockUpgradeRegistry::do_upgrades();
 
-		$this->assertTrue( $this->getOption( 'WP_GRAPHQL_LOGIN_MOCK_UPGRADE' ) );
-		$this->assertFalse( $this->getOption( 'WP_GRAPHQL_LOGIN_MOCK_SKIPPED_UPGRADE' ) );
-		$this->assertEquals( WPGRAPHQL_LOGIN_VERSION, $this->getOption( AbstractUpgrade::VERSION_OPTION_KEY ), 'The version should be updated to the plugin version if the upgrade is successful.' );
+		$this->assertTrue( get_option( 'WP_GRAPHQL_LOGIN_MOCK_UPGRADE' ) );
+		$this->assertFalse( get_option( 'WP_GRAPHQL_LOGIN_MOCK_SKIPPED_UPGRADE' ) );
+		$this->assertEquals( WPGRAPHQL_LOGIN_VERSION, get_option( AbstractUpgrade::VERSION_OPTION_KEY ), 'The version should be updated to the plugin version if the upgrade is successful.' );
 	}
 
 	/**
@@ -229,9 +238,10 @@ class UpgradeTest extends TestCase {
 	public function testV0_4_0Upgrade(): void {
 		global $wpdb;
 
-		$this->updateOption( 'wp_graphql_login_settings_show_advanced_settings', true );
-		$this->updateOption( 'wp_graphql_login_settings_delete_data_on_deactivate', true );
-		$this->updateOption( 'wp_graphql_login_settings_jwt_secret_key', 'secret' );
+		// Set the old settings.
+		update_option( 'wp_graphql_login_settings_show_advanced_settings', true );
+		update_option( 'wp_graphql_login_settings_delete_data_on_deactivate', true );
+		update_option( 'wp_graphql_login_settings_jwt_secret_key', 'secret' );
 
 		$wpdb->insert(
 			$wpdb->options,
@@ -241,78 +251,39 @@ class UpgradeTest extends TestCase {
 			]
 		);
 
-		$this->updateOption( AbstractUpgrade::VERSION_OPTION_KEY, '0.3.0' );
+		// Set the version to < 0.4.0.
+		update_option( AbstractUpgrade::VERSION_OPTION_KEY, '0.3.0' );
 
 		$upgrade = new \WPGraphQL\Login\Admin\Upgrade\V0_4_0();
 		$upgrade->run();
 
+		// Check the new settings.
 		$this->assertEquals(
 			[
 				'show_advanced_settings'    => true,
 				'delete_data_on_deactivate' => true,
 				'jwt_secret_key'            => 'secret',
 			],
-			$this->getOption( PluginSettings::get_slug() )
+			get_option( PluginSettings::get_slug() )
 		);
 		$this->assertTrue(
-			$this->getOption( CookieSettings::get_slug() )['hasAccessControlAllowCredentials']
+			get_option( CookieSettings::get_slug() )['hasAccessControlAllowCredentials']
 		);
 
-		$this->assertFalse( $this->getOption( 'wp_graphql_login_settings_show_advanced_settings' ) );
-		$this->assertFalse( $this->getOption( 'wp_graphql_login_settings_delete_data_on_deactivate' ) );
-		$this->assertFalse( $this->getOption( 'wp_graphql_login_settings_jwt_secret_key' ) );
-		$this->assertArrayNotHasKey( 'hasAccessControlAllowCredentials', $this->getOption( AccessControlSettings::get_slug(), [] ) );
+		// Check the old settings.
+		$this->assertFalse( get_option( 'wp_graphql_login_settings_show_advanced_settings' ) );
+		$this->assertFalse( get_option( 'wp_graphql_login_settings_delete_data_on_deactivate' ) );
+		$this->assertFalse( get_option( 'wp_graphql_login_settings_jwt_secret_key' ) );
+		$this->assertArrayNotHasKey( 'hasAccessControlAllowCredentials', get_option( AccessControlSettings::get_slug(), [] ) );
 	}
 
 	/**
 	 * Cleans up the options and transients used during the upgrade process.
 	 */
 	private function cleanup_upgrade_state(): void {
-		$this->deleteOption( AbstractUpgrade::VERSION_OPTION_KEY );
-		$this->deleteOption( 'WP_GRAPHQL_LOGIN_MOCK_UPGRADE' );
-		$this->deleteOption( 'WP_GRAPHQL_LOGIN_MOCK_SKIPPED_UPGRADE' );
-		$this->deleteTransient( AbstractUpgrade::ERROR_TRANSIENT_KEY );
-	}
-
-	/**
-	 * Wrapper for `get_option()`.
-	 */
-	private function getOption( string $key, $default = false ) {
-		$get_option = '\\get_option';
-
-		return $get_option( $key, $default );
-	}
-
-	/**
-	 * Wrapper for `update_option()`.
-	 */
-	private function updateOption( string $key, $value ): void {
-		$update_option = '\\update_option';
-		$update_option( $key, $value );
-	}
-
-	/**
-	 * Wrapper for `delete_option()`.
-	 */
-	private function deleteOption( string $key ): void {
-		$delete_option = '\\delete_option';
-		$delete_option( $key );
-	}
-
-	/**
-	 * Wrapper for `get_transient()`.
-	 */
-	private function getTransient( string $key ) {
-		$get_transient = '\\get_transient';
-
-		return $get_transient( $key );
-	}
-
-	/**
-	 * Wrapper for `delete_transient()`.
-	 */
-	private function deleteTransient( string $key ): void {
-		$delete_transient = '\\delete_transient';
-		$delete_transient( $key );
+		delete_option( AbstractUpgrade::VERSION_OPTION_KEY );
+		delete_option( 'WP_GRAPHQL_LOGIN_MOCK_UPGRADE' );
+		delete_option( 'WP_GRAPHQL_LOGIN_MOCK_SKIPPED_UPGRADE' );
+		delete_transient( AbstractUpgrade::ERROR_TRANSIENT_KEY );
 	}
 }

@@ -16,16 +16,10 @@ use WPGraphQL\Login\Admin\SettingsRegistry;
  * A SettingsRegistry that exposes and resets its registered settings.
  */
 class MockSettings extends SettingsRegistry {
-	/**
-	 * Resets the registered settings.
-	 */
 	public static function reset(): void {
 		static::$settings = null;
 	}
 
-	/**
-	 * Returns the registered settings.
-	 */
 	public static function get_settings_property(): ?array {
 		return static::$settings;
 	}
@@ -53,15 +47,10 @@ class SettingsRegistryTest extends TestCase {
 		parent::tearDown();
 	}
 
-	/**
-	 * Tests `SettingsRegistry::init()`.
-	 */
 	public function testInit(): void {
-		$has_action = '\\has_action';
-		$has_action = $has_action( 'init', [ SettingsRegistry::class, 'register_settings' ] );
+		$has_action = has_action( 'init', [ SettingsRegistry::class, 'register_settings' ] );
 
 		// Must run after WPGraphQL's `init_registry()` at priority 11.
-		// @see self::testUnsavedOptionResolvesToRegisteredDefault()
 		$this->assertSame( 12, $has_action );
 	}
 
@@ -79,10 +68,12 @@ class SettingsRegistryTest extends TestCase {
 	 * Test the get_all method.
 	 */
 	public function testGetAll(): void {
+		// Test before init should initialize the settings.
 		$settings = MockSettings::get_all();
 
 		$this->assertValidSettings( $settings );
 
+		// Test after init should return the settings.
 		$expected = $settings;
 		$settings = MockSettings::get_all();
 
@@ -94,6 +85,7 @@ class SettingsRegistryTest extends TestCase {
 	 * Test the get method.
 	 */
 	public function testGet(): void {
+		// Test before init should initialize the settings.
 		$slug = AccessControlSettings::get_slug();
 
 		$actual = MockSettings::get( $slug );
@@ -109,6 +101,7 @@ class SettingsRegistryTest extends TestCase {
 			$this->assertInstanceOf( AbstractSettings::class, $instance );
 		}
 
+		// Test after init should return the settings.
 		$expected = $actual;
 		$actual   = MockSettings::get( $slug );
 

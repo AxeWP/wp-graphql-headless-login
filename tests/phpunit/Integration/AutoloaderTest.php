@@ -14,9 +14,6 @@ use WPGraphQL\Login\Autoloader;
  * An Autoloader that can reset its loaded state between tests.
  */
 class MockAutoloader extends Autoloader {
-	/**
-	 * Resets the loaded state.
-	 */
 	public static function reset() {
 		self::$is_loaded = false;
 	}
@@ -53,9 +50,6 @@ class AutoloaderTest extends TestCase {
 		parent::tearDown();
 	}
 
-	/**
-	 * Tests `Autoloader::autoload()`.
-	 */
 	public function testAutoload() {
 		$this->assertTrue( $this->autoloader->autoload() );
 	}
@@ -75,8 +69,9 @@ class AutoloaderTest extends TestCase {
 		$this->assertTrue( $method->invokeArgs( $this->autoloader, [ WPGRAPHQL_LOGIN_PLUGIN_DIR . '/vendor/autoload.php' ] ) );
 		$this->assertFalse( $method->invokeArgs( $this->autoloader, [ '/path/to/invalid/autoload.php' ] ) );
 
+		// Test if there is an error message
 		$this->expectOutputRegex( '/The Composer autoloader was not found/' );
 
-		\call_user_func( 'do_action', 'admin_notices' );
+		do_action( 'admin_notices' );
 	}
 }

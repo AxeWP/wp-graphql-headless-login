@@ -68,19 +68,10 @@
 	<rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
 		<exclude-pattern>**/tests/**</exclude-pattern>
 	</rule>
-	<rule ref="Squiz.Commenting.ClassComment">
-		<exclude-pattern>**/tests/**</exclude-pattern>
-	</rule>
-	<rule ref="Squiz.Commenting.FileComment">
-		<exclude-pattern>**/tests/**</exclude-pattern>
-	</rule>
 	<rule ref="Squiz.Commenting.FunctionComment">
 		<exclude-pattern>**/tests/**</exclude-pattern>
 	</rule>
 	<rule ref="Squiz.Commenting.InlineComment">
-		<exclude-pattern>**/tests/**</exclude-pattern>
-	</rule>
-	<rule ref="Squiz.Commenting.VariableComment">
 		<exclude-pattern>**/tests/**</exclude-pattern>
 	</rule>
 	<rule ref="Squiz.PHP.CommentedOutCode">
@@ -104,22 +95,7 @@
 	<rule ref="WordPressVIPMinimum.Variables.RestrictedVariables">
 		<exclude-pattern>**/tests/**</exclude-pattern>
 	</rule>
-	<rule ref="Generic.PHP.NoSilencedErrors">
-		<exclude-pattern>**/tests/**</exclude-pattern>
-	</rule>
 	<rule ref="WordPress.PHP.DiscouragedPHPFunctions">
-		<exclude-pattern>**/tests/**</exclude-pattern>
-	</rule>
-	<rule ref="WordPress.PHP.NoSilencedErrors">
-		<exclude-pattern>**/tests/**</exclude-pattern>
-	</rule>
-	<rule ref="WordPress.WP.EnqueuedResources.NonEnqueuedScript">
-		<exclude-pattern>**/tests/**</exclude-pattern>
-	</rule>
-	<rule ref="WordPressVIPMinimum.Functions.RestrictedFunctions">
-		<exclude-pattern>**/tests/**</exclude-pattern>
-	</rule>
-	<rule ref="WordPressVIPMinimum.Files.IncludingFile.UsingVariable">
 		<exclude-pattern>**/tests/**</exclude-pattern>
 	</rule>
 

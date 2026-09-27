@@ -15,12 +15,5 @@
 		"packages/admin",
 		"vitest.config.ts",
 		"vitest.setup.ts"
-	],
-	"exclude": [
-		"build/*",
-		"vendor/*",
-		"vendor-prefixed/*",
-		"node_modules/*",
-		"tests/_output/*"
 	]
 }

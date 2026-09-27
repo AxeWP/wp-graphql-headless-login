@@ -19,7 +19,7 @@ class FooGenericProvider extends GenericProvider {
 	 * {@inheritDoc}
 	 */
 	protected function fetchResourceOwnerDetails( $token ) {
-		return json_decode( '{"id": 12345, "name": "mock_name", "username": "mock_username", "first_name": "mock_first_name", "last_name": "mock_last_name", "email": "mock_email@email.com", "email_verified": true}', true );
+		return json_decode( '{"id": 12345, "name": "mock_name", "username": "mock_username", "first_name": "mock_first_name", "last_name": "mock_last_name", "email": "mock_email@email.com"}', true );
 	}
 
 	/**

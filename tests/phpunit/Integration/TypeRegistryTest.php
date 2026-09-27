@@ -47,18 +47,18 @@ class TypeRegistryTest extends TestCase {
 	 * Tests TypeRegistry::init()
 	 */
 	public function testInit() {
-		$actual = \call_user_func( 'did_action', 'graphql_login_before_register_types' );
+		$actual = did_action( 'graphql_login_before_register_types' );
 		$this->assertEquals( 0, $actual, 'Before action should not have been called yet' );
 
-		$actual = \call_user_func( 'did_action', 'graphql_login_after_register_types' );
+		$actual = did_action( 'graphql_login_after_register_types' );
 		$this->assertEquals( 0, $actual, 'After action should not have been called yet' );
 
 		TypeRegistry::init();
 
-		$actual = \call_user_func( 'did_action', 'graphql_login_before_register_types' );
+		$actual = did_action( 'graphql_login_before_register_types' );
 		$this->assertEquals( 1, $actual, 'Before action should have been called once' );
 
-		$actual = \call_user_func( 'did_action', 'graphql_login_after_register_types' );
+		$actual = did_action( 'graphql_login_after_register_types' );
 		$this->assertEquals( 1, $actual, 'After action should have been called once' );
 	}
 }

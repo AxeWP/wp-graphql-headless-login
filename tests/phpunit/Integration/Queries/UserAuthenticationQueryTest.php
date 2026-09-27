@@ -53,6 +53,7 @@ class UserAuthenticationQueryTest extends TestCase {
 				'isEnabled' => true,
 			]
 		);
+		$this->clearSchema();
 
 		$this->admin     = $this->factory()->user->create(
 			[
@@ -110,7 +111,7 @@ class UserAuthenticationQueryTest extends TestCase {
 		];
 
 		// Test as admin
-		\wp_set_current_user( $this->admin );
+		wp_set_current_user( $this->admin );
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
 		$this->assertArrayNotHasKey( 'errors', $actual );
@@ -154,7 +155,7 @@ class UserAuthenticationQueryTest extends TestCase {
 		);
 
 		// Test as actual user
-		\wp_set_current_user( $this->test_user );
+		wp_set_current_user( $this->test_user );
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
 		$this->assertArrayNotHasKey( 'errors', $actual );

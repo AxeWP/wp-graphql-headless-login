@@ -40,10 +40,9 @@ class SettingsTest extends TestCase {
 		$this->assertEquals( $expected_secret, $actual['secret'] );
 
 		$this->assertArrayHasKey( 'nonce', $actual );
-		$nonce           = $actual['nonce'];
-		$wp_verify_nonce = '\\wp_verify_nonce';
+		$nonce = $actual['nonce'];
 
-		$this->assertTrue( (bool) $wp_verify_nonce( $nonce, 'wp_graphql_settings' ) );
+		$this->assertTrue( (bool) wp_verify_nonce( $nonce, 'wp_graphql_settings' ) );
 
 		$this->assertArrayHasKey( 'settings', $actual );
 
@@ -73,8 +72,10 @@ class SettingsTest extends TestCase {
 			'Provider settings should have the same keys as the registered providers.'
 		);
 
+		// Ensure the keys are in ProviderSettings::get_config().
 		$reflection        = new ReflectionClass( ProviderSettings::class );
 		$provider_settings = $reflection->getProperty( 'config' );
+		// Reset the config to force a reload.
 		$provider_settings->setValue( null, [] );
 
 		$provider_settings = ProviderSettings::get_config();

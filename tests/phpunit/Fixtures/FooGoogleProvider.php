@@ -19,6 +19,6 @@ class FooGoogleProvider extends Google {
 	 * {@inheritDoc}
 	 */
 	protected function fetchResourceOwnerDetails( $token ) {
-		return json_decode( '{"sub": 12345, "name": "mock_name", "given_name": "mock_first_name", "family_name": "mock_last_name", "email": "mock_email@mockdomain.com", "email_verified": true, "picture": "mock_image_url", "hd":"mockdomain.com"}', true );
+		return json_decode( '{"sub": 12345, "name": "mock_name", "given_name": "mock_first_name", "family_name": "mock_last_name", "email": "mock_email@mockdomain.com", "picture": "mock_image_url", "hd":"mockdomain.com"}', true );
 	}
 }

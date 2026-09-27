@@ -24,70 +24,16 @@ class ServerAuthenticationTest extends TestCase {
 	public $admin;
 
 	/**
-	 * The `iss` values of the tokens minted during the test.
-	 */
-	private array $token_issuers = [];
-
-	/**
-	 * Returns the `iss` claim from the given token.
-	 */
-	private function getTokenIssuer( string $token ): ?string {
-		$parts = explode( '.', $token );
-
-		if ( 3 !== count( $parts ) ) {
-			return null;
-		}
-
-		$payload = json_decode( (string) base64_decode( strtr( $parts[1], '-_', '+/' ) ) );
-
-		return isset( $payload->iss ) && is_string( $payload->iss ) ? $payload->iss : null;
-	}
-
-	/**
-	 * Adds the test site URLs and minted token issuers to the allowed `iss` domains.
-	 */
-	public function filterAllowedIssDomains( array $allowed_domains ): array {
-		$home_url = (string) call_user_func( 'home_url' );
-
-		return array_values(
-			array_filter(
-				array_unique(
-					array_merge(
-						$allowed_domains,
-						[
-							$home_url,
-							str_replace( 'http://', 'https://', $home_url ),
-							str_replace( 'https://', 'http://', $home_url ),
-							...$this->token_issuers,
-						]
-					)
-				)
-			)
-		);
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public function setUp(): void {
 		parent::setUp();
-
-		add_filter( 'graphql_login_iss_allowed_domains', [ $this, 'filterAllowedIssDomains' ] );
 
 		$this->admin = $this->factory()->user->create(
 			[
 				'role' => 'administrator',
 			]
 		);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function tearDown(): void {
-		call_user_func( 'remove_filter', 'graphql_login_iss_allowed_domains', [ $this, 'filterAllowedIssDomains' ] );
-
-		parent::tearDown();
 	}
 
 	/**
@@ -104,11 +50,6 @@ class ServerAuthenticationTest extends TestCase {
 
 		// Test with valid secret.
 		$tokens = $this->generate_user_tokens( $user_id );
-		$issuer = $this->getTokenIssuer( $tokens['auth_token'] );
-
-		if ( null !== $issuer ) {
-			$this->token_issuers[] = $issuer;
-		}
 
 		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $tokens['auth_token'];
 

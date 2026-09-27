@@ -9,18 +9,7 @@ import base from '@axepress/plugin-infra/eslint';
 
 export default [
 	{
-		ignores: [
-			'**/*.min.js',
-			".claude/**",
-			'build/**',
-			'coverage/**',
-			'languages/**',
-			'node_modules/**',
-			'tools/**',
-			'tests/_output/**',
-			'vendor/**',
-			'vendor-prefixed/**',
-		],
+		ignores: [ '.claude/**', 'tools/**', 'vendor-prefixed/**' ],
 	},
 
 	...base,

@@ -32,13 +32,13 @@ class AccessFunctionsTest extends TestCase {
 	public function testGetSetting(): void {
 		$expected = true;
 
-		\call_user_func( 'update_option', PluginSettings::get_slug(), [ 'delete_data_on_deactivate' => $expected ] );
+		update_option( PluginSettings::get_slug(), [ 'delete_data_on_deactivate' => $expected ] );
 
 		$actual = graphql_login_get_setting( 'delete_data_on_deactivate' );
 
 		$this->assertEquals( $expected, $actual );
 
-		\call_user_func( 'delete_option', PluginSettings::get_slug() );
+		delete_option( PluginSettings::get_slug() );
 	}
 
 	/**
@@ -50,14 +50,15 @@ class AccessFunctionsTest extends TestCase {
 			'isEnabled' => false,
 		];
 
-		\call_user_func( 'update_option', ProviderSettings::$settings_prefix . 'facebook', $expected );
+		update_option( ProviderSettings::$settings_prefix . 'facebook', $expected );
 
+		// reset Utils::providers
 		$this->reset_utils_properties();
 
 		$actual = graphql_login_get_provider_settings( 'facebook' );
 
 		$this->assertEquals( $expected, $actual );
 
-		\call_user_func( 'delete_option', ProviderSettings::$settings_prefix . 'facebook' );
+		delete_option( ProviderSettings::$settings_prefix . 'facebook' );
 	}
 }

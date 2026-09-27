@@ -46,7 +46,7 @@ class UtilsTest extends TestCase {
 
 		// Test db value.
 		$expected = true;
-		\update_option( PluginSettings::get_slug(), [ 'delete_data_on_deactivate' => $expected ] );
+		update_option( PluginSettings::get_slug(), [ 'delete_data_on_deactivate' => $expected ] );
 		$this->reset_utils_properties();
 
 		$actual = Utils::get_setting( 'delete_data_on_deactivate' );
@@ -54,17 +54,17 @@ class UtilsTest extends TestCase {
 		$this->assertEquals( $expected, $actual, 'DB value should be true' );
 
 		// Test filter.
-		\add_filter( 'graphql_login_setting', [ $this, 'setting_filter_callback' ], 10, 2 );
+		add_filter( 'graphql_login_setting', [ $this, 'setting_filter_callback' ], 10, 2 );
 		$this->reset_utils_properties();
 
 		$actual = Utils::get_setting( 'delete_data_on_deactivate' );
 
 		$this->assertFalse( $actual, 'Filter value should be false' );
 
-		call_user_func( 'remove_filter', 'graphql_login_setting', [ $this, 'setting_filter_callback' ], 10 );
+		remove_filter( 'graphql_login_setting', [ $this, 'setting_filter_callback' ], 10 );
 
 		// cleanup db
-		\delete_option( PluginSettings::get_slug() );
+		delete_option( PluginSettings::get_slug() );
 	}
 
 	/**
@@ -81,7 +81,7 @@ class UtilsTest extends TestCase {
 		$this->assertEquals( $expected, $actual, 'DB value should be true' );
 
 		// cleanup db
-		\delete_option( PluginSettings::get_slug() );
+		delete_option( PluginSettings::get_slug() );
 	}
 
 	/**
@@ -97,7 +97,7 @@ class UtilsTest extends TestCase {
 
 		// Test db value.
 		$expected['hasSiteAddressInOrigin'] = true;
-		\update_option( AccessControlSettings::get_slug(), $expected );
+		update_option( AccessControlSettings::get_slug(), $expected );
 		$this->reset_utils_properties();
 
 		$actual = Utils::get_access_control_setting( 'hasSiteAddressInOrigin' );
@@ -105,17 +105,17 @@ class UtilsTest extends TestCase {
 		$this->assertEquals( $expected['hasSiteAddressInOrigin'], $actual, 'DB value should be true' );
 
 		// Test filter.
-		\add_filter( 'graphql_login_access_control_settings', [ $this, 'access_control_settings_filter_callback' ], 10, 2 );
+		add_filter( 'graphql_login_access_control_settings', [ $this, 'access_control_settings_filter_callback' ], 10, 2 );
 		$this->reset_utils_properties();
 
 		$actual = Utils::get_access_control_setting( 'hasSiteAddressInOrigin' );
 
 		$this->assertFalse( $actual, 'Filter value should be false' );
 
-		call_user_func( 'remove_filter', 'graphql_login_access_control_settings', [ $this, 'access_control_settings_filter_callback' ], 10 );
+		remove_filter( 'graphql_login_access_control_settings', [ $this, 'access_control_settings_filter_callback' ], 10 );
 
 		// cleanup db
-		\delete_option( AccessControlSettings::get_slug() );
+		delete_option( AccessControlSettings::get_slug() );
 	}
 
 	/**
@@ -140,17 +140,17 @@ class UtilsTest extends TestCase {
 		$this->assertEquals( $expected, $actual, 'DB value should be true' );
 
 		// Test filter.
-		\add_filter( 'graphql_login_provider_settings', [ $this, 'provider_settings_filter_callback' ], 10, 2 );
+		add_filter( 'graphql_login_provider_settings', [ $this, 'provider_settings_filter_callback' ], 10, 2 );
 		$this->reset_utils_properties();
 
 		$actual = Utils::get_provider_settings( 'facebook' );
 
 		$this->assertTrue( $actual['isEnabled'], 'Filter value should be true' );
 
-		call_user_func( 'remove_filter', 'graphql_login_provider_settings', [ $this, 'provider_settings_filter_callback' ], 10 );
+		remove_filter( 'graphql_login_provider_settings', [ $this, 'provider_settings_filter_callback' ], 10 );
 
 		// cleanup db
-		\delete_option( ProviderSettings::$settings_prefix . 'facebook' );
+		delete_option( ProviderSettings::$settings_prefix . 'facebook' );
 	}
 
 	/**
@@ -174,8 +174,8 @@ class UtilsTest extends TestCase {
 			],
 		];
 
-		\update_option( ProviderSettings::$settings_prefix . 'facebook', $expected['facebook'] );
-		\update_option( ProviderSettings::$settings_prefix . 'google', $expected['google'] );
+		update_option( ProviderSettings::$settings_prefix . 'facebook', $expected['facebook'] );
+		update_option( ProviderSettings::$settings_prefix . 'google', $expected['google'] );
 		$this->reset_utils_properties();
 
 		$actual = Utils::get_all_provider_settings();
@@ -184,18 +184,18 @@ class UtilsTest extends TestCase {
 		$this->assertEquals( $expected['google'], $actual['google'], 'DB value should exist' );
 
 		// Test filter.
-		\add_filter( 'graphql_login_provider_settings', [ $this, 'provider_settings_filter_callback' ], 10, 2 );
+		add_filter( 'graphql_login_provider_settings', [ $this, 'provider_settings_filter_callback' ], 10, 2 );
 		$this->reset_utils_properties();
 
 		$actual = Utils::get_all_provider_settings();
 
 		$this->assertTrue( $actual['facebook']['isEnabled'], 'Filter value should be false' );
 
-		call_user_func( 'remove_filter', 'graphql_login_provider_settings', [ $this, 'provider_settings_filter_callback' ], 10 );
+		remove_filter( 'graphql_login_provider_settings', [ $this, 'provider_settings_filter_callback' ], 10 );
 
 		// cleanup db
-		\delete_option( ProviderSettings::$settings_prefix . 'facebook' );
-		\delete_option( ProviderSettings::$settings_prefix . 'google' );
+		delete_option( ProviderSettings::$settings_prefix . 'facebook' );
+		delete_option( ProviderSettings::$settings_prefix . 'google' );
 	}
 
 	/**
@@ -215,7 +215,7 @@ class UtilsTest extends TestCase {
 		$this->assertFalse( $actual, 'Should be false when logged out' );
 
 		// Test logged in
-		\wp_set_current_user( $user->ID );
+		wp_set_current_user( $user->ID );
 
 		// With bad user id
 		$actual = Utils::is_current_user( 999252 );

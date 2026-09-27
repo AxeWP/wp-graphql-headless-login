@@ -22,7 +22,7 @@
 			<directory suffix="Test.php">tests/phpunit/Integration</directory>
 		</testsuite>
 	</testsuites>
-	<source>
+	<source ignoreIndirectDeprecations="true">
 		<include>
 			<directory suffix=".php">src</directory>
 			<file>access-functions.php</file>

@@ -31,14 +31,16 @@ class ProviderEnumTest extends TestCase {
 	 * Tests ProviderEnum is set to none by default.
 	 */
 	public function testNoProviderEnum(): void {
-		\call_user_func(
-			'add_filter',
+		add_filter(
 			'graphql_login_registered_provider_configs',
 			static function () {
 				return [];
 			}
 		);
 		$this->reset_provider_registry();
+		$this->clearSchema();
+
+		// Introspect LoginProviderEnum type and possible values.
 		$query = '
 			query {
 				__type(name: "LoginProviderEnum") {

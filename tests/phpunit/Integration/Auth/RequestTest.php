@@ -25,16 +25,6 @@ class RequestTest extends TestCase {
 	private ?string $forced_home_url = null;
 
 	/**
-	 * The home URL before the test ran.
-	 */
-	private string $original_home_url;
-
-	/**
-	 * The `iss` values of the tokens minted during the test.
-	 */
-	private array $token_issuers = [];
-
-	/**
 	 * The plugin settings each test starts from.
 	 *
 	 * @var array<string,mixed>
@@ -51,66 +41,6 @@ class RequestTest extends TestCase {
 	];
 
 	/**
-	 * Wrapper for `get_option( 'blog_charset' )`.
-	 */
-	private function getBlogCharset(): string {
-		return (string) call_user_func( 'get_option', 'blog_charset' );
-	}
-
-	/**
-	 * Wrapper for `home_url()`.
-	 */
-	private function getHomeUrl(): string {
-		return (string) call_user_func( 'home_url' );
-	}
-
-	/**
-	 * Wrapper for `site_url()`.
-	 */
-	private function getSiteUrl(): string {
-		return (string) site_url();
-	}
-
-	/**
-	 * Returns the `iss` claim from the given token.
-	 */
-	private function getTokenIssuer( string $token ): ?string {
-		$parts = explode( '.', $token );
-
-		if ( 3 !== count( $parts ) ) {
-			return null;
-		}
-
-		$payload = json_decode( (string) base64_decode( strtr( $parts[1], '-_', '+/' ) ) );
-
-		return isset( $payload->iss ) && is_string( $payload->iss ) ? $payload->iss : null;
-	}
-
-	/**
-	 * Adds the test site URLs and minted token issuers to the allowed `iss` domains.
-	 */
-	public function filterAllowedIssDomains( array $allowed_domains ): array {
-		$home_url = $this->forced_home_url ?? $this->getHomeUrl();
-
-		return array_values(
-			array_filter(
-				array_unique(
-					array_merge(
-						$allowed_domains,
-						[
-							$home_url,
-							$this->getSiteUrl(),
-							str_replace( 'http://', 'https://', $home_url ),
-							str_replace( 'https://', 'http://', $home_url ),
-							...$this->token_issuers,
-						]
-					)
-				)
-			)
-		);
-	}
-
-	/**
 	 * Filters `pre_option_home` to return the forced home URL.
 	 */
 	public function filterHomeOption( $pre_option ) {
@@ -125,12 +55,9 @@ class RequestTest extends TestCase {
 		add_filter( 'pre_option_home', [ $this, 'filterHomeOption' ] );
 	}
 
-	/**
-	 * Stops forcing the home URL.
-	 */
 	private function clearForcedHomeUrl(): void {
 		$this->forced_home_url = null;
-		call_user_func( 'remove_filter', 'pre_option_home', [ $this, 'filterHomeOption' ] );
+		remove_filter( 'pre_option_home', [ $this, 'filterHomeOption' ] );
 	}
 
 	/**
@@ -138,9 +65,6 @@ class RequestTest extends TestCase {
 	 */
 	public function setUp(): void {
 		parent::setUp();
-
-		$this->original_home_url = $this->getHomeUrl();
-		call_user_func( 'add_filter', 'graphql_login_iss_allowed_domains', [ $this, 'filterAllowedIssDomains' ] );
 
 		update_option( AccessControlSettings::get_slug(), $this->default_options['accessControl'] );
 		update_option( CookieSettings::get_slug(), $this->default_options['cookies'] );
@@ -153,8 +77,6 @@ class RequestTest extends TestCase {
 	 */
 	public function tearDown(): void {
 		$this->clearForcedHomeUrl();
-		call_user_func( 'remove_filter', 'graphql_login_iss_allowed_domains', [ $this, 'filterAllowedIssDomains' ] );
-		update_option( 'home', $this->original_home_url );
 		delete_option( AccessControlSettings::get_slug() );
 		delete_option( CookieSettings::get_slug() );
 		unset( $_SERVER['HTTP_AUTHORIZATION'], $_SERVER['HTTP_ORIGIN'], $_SERVER['HTTP_REFERER'] );
@@ -163,9 +85,6 @@ class RequestTest extends TestCase {
 		parent::tearDown();
 	}
 
-	/**
-	 * Tests `Request::authenticate_token_on_request()`.
-	 */
 	public function testAuthenticateTokenOnRequest(): void {
 		$debug_log = new \WPGraphQL\Utils\DebugLog();
 
@@ -192,9 +111,6 @@ class RequestTest extends TestCase {
 		unset( $_SERVER['HTTP_AUTHORIZATION'] );
 	}
 
-	/**
-	 * Tests origin authentication against an unauthorized domain.
-	 */
 	public function testAuthenticateOriginOnRequestWithUnauthorizedDomain() {
 		// Test with no origin set doesnt throw an error.
 		Request::authenticate_origin_on_request();
@@ -281,7 +197,6 @@ class RequestTest extends TestCase {
 		// cleanup
 		unset( $_SERVER['HTTP_ORIGIN'] );
 		$this->clearForcedHomeUrl();
-		unset( $_SERVER['HTTP_AUTHORIZATION'] );
 	}
 
 	/**
@@ -413,9 +328,6 @@ class RequestTest extends TestCase {
 		unset( $_SERVER['HTTP_ORIGIN'] );
 	}
 
-	/**
-	 * Tests `Request::response_headers_to_send()`.
-	 */
 	public function testResponseHeadersToSend(): void {
 		$default_client_config = [
 			'name'          => 'Site Token',
@@ -446,7 +358,7 @@ class RequestTest extends TestCase {
 			'Access-Control-Expose-Headers' => 'X-Custom-Header',
 			'Access-Control-Max-Age'        => 600,
 			// cache the result of preflight requests (600 is the upper limit for Chromium).
-			'Content-Type'                  => 'application/json ; charset=' . $this->getBlogCharset(),
+			'Content-Type'                  => 'application/json ; charset=' . get_option( 'blog_charset' ),
 			'X-Robots-Tag'                  => 'noindex',
 			'X-Content-Type-Options'        => 'nosniff',
 			'X-GraphQL-URL'                 => graphql_get_endpoint_url(),
@@ -587,11 +499,6 @@ class RequestTest extends TestCase {
 		);
 
 		$tokens = $this->generate_user_tokens( $user_id );
-		$issuer = $this->getTokenIssuer( $tokens['auth_token'] );
-
-		if ( null !== $issuer ) {
-			$this->token_issuers[] = $issuer;
-		}
 
 		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $tokens['auth_token'];
 
@@ -634,7 +541,7 @@ class RequestTest extends TestCase {
 			'Access-Control-Expose-Headers' => 'X-Custom-Header',
 			'Access-Control-Max-Age'        => 600,
 			// cache the result of preflight requests (600 is the upper limit for Chromium).
-			'Content-Type'                  => 'application/json ; charset=' . $this->getBlogCharset(),
+			'Content-Type'                  => 'application/json ; charset=' . get_option( 'blog_charset' ),
 			'X-Robots-Tag'                  => 'noindex',
 			'X-Content-Type-Options'        => 'nosniff',
 			'X-GraphQL-URL'                 => graphql_get_endpoint_url(),
@@ -656,7 +563,7 @@ class RequestTest extends TestCase {
 		$actual = Request::response_headers_to_send( $default_headers );
 
 		$this->assertArrayHasKey( 'Access-Control-Allow-Origin', $actual );
-		$this->assertStringContainsString( $this->getSiteUrl(), $actual['Access-Control-Allow-Origin'] );
+		$this->assertStringContainsString( site_url(), $actual['Access-Control-Allow-Origin'] );
 
 		// Test external origin doesnt change ACAO header.
 		$_SERVER['HTTP_ORIGIN'] = 'https://example.com';
@@ -664,7 +571,7 @@ class RequestTest extends TestCase {
 		$actual = Request::response_headers_to_send( $default_headers );
 
 		$this->assertArrayHasKey( 'Access-Control-Allow-Origin', $actual );
-		$this->assertStringContainsString( $this->getSiteUrl(), $actual['Access-Control-Allow-Origin'] );
+		$this->assertStringContainsString( site_url(), $actual['Access-Control-Allow-Origin'] );
 
 		// Test with hasSiteAddressInOrigin set to true.
 		$this->forceHomeUrl( 'https://example.com' );
@@ -683,7 +590,7 @@ class RequestTest extends TestCase {
 		$actual = Request::response_headers_to_send( $default_headers );
 
 		$this->assertArrayHasKey( 'Access-Control-Allow-Origin', $actual );
-		$this->assertStringContainsString( $this->getHomeUrl(), $actual['Access-Control-Allow-Origin'] );
+		$this->assertStringContainsString( home_url(), $actual['Access-Control-Allow-Origin'] );
 
 		// Test with additionalAuthorizedDomains
 		update_option(

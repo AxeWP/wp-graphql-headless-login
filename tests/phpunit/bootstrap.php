@@ -48,5 +48,8 @@ tests_add_filter(
 // Start up the WP testing environment.
 require $_test_root . '/includes/bootstrap.php';
 
+// Record the cookies set by AuthCookie, since they can't be sent from the CLI.
+require_once __DIR__ . '/Fixtures/setcookie.php';
+
 // WPGraphQL registers `graphql_general_settings` without a `default` arg, so we need to seed it.
 update_option( 'graphql_general_settings', [] );

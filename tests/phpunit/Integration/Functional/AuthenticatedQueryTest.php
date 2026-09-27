@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests authenticated GraphQL requests end-to-end.
+ * Tests authenticated GraphQL requests.
  *
  * @package Tests\WPGraphQL\Login\Integration\Functional
  */
@@ -22,6 +22,7 @@ class AuthenticatedQueryTest extends TestCase {
 		parent::setUp();
 
 		update_option( 'graphql_general_settings', [ 'debug_mode_enabled' => 'on' ] );
+		$this->clearSchema();
 	}
 
 	/**
@@ -35,9 +36,6 @@ class AuthenticatedQueryTest extends TestCase {
 		parent::tearDown();
 	}
 
-	/**
-	 * Tests that invalid auth headers return public data along with a debug message.
-	 */
 	public function test_query_with_invalid_headers_returns_public_data_and_debug_message(): void {
 		$this->factory()->user->create(
 			[
@@ -85,15 +83,10 @@ class AuthenticatedQueryTest extends TestCase {
 
 		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer invalid-auth-token';
 
-		$execution = $this->capture_response_headers(
-			function () use ( $query ) {
-				return $this->graphql( [ 'query' => $query ] );
-			}
-		);
+		$response = $this->graphql( [ 'query' => $query ] );
+		$headers  = apply_filters( 'graphql_response_headers_to_send', [] );
 
-		$response = $execution['response'];
-		$headers  = $execution['headers'];
-
+		$this->assertSame( 403, apply_filters( 'graphql_response_status_code', 200 ) );
 		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Token', $headers );
 		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Refresh-Token', $headers );
 		$this->assertSame( [ 'invalid-secret-key | Wrong number of segments' ], $this->get_debug_messages( $response ) );
@@ -105,9 +98,6 @@ class AuthenticatedQueryTest extends TestCase {
 		$this->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['date'] );
 	}
 
-	/**
-	 * Tests that a request without auth headers returns public data and no tokens.
-	 */
 	public function test_query_without_headers_returns_public_data_without_tokens(): void {
 		$this->factory()->post->create(
 			[
@@ -133,14 +123,8 @@ class AuthenticatedQueryTest extends TestCase {
 			}
 		';
 
-		$execution = $this->capture_response_headers(
-			function () use ( $query ) {
-				return $this->graphql( [ 'query' => $query ] );
-			}
-		);
-
-		$response = $execution['response'];
-		$headers  = $execution['headers'];
+		$response = $this->graphql( [ 'query' => $query ] );
+		$headers  = apply_filters( 'graphql_response_headers_to_send', [] );
 
 		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Token', $headers );
 		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Refresh-Token', $headers );
@@ -153,7 +137,7 @@ class AuthenticatedQueryTest extends TestCase {
 	}
 
 	/**
-	 * Tests that a request from an authorized origin refreshes the tokens.
+	 * Tests that a token-authenticated request is only allowed from an authorized origin, which gets refreshed tokens.
 	 */
 	public function test_query_with_authorized_origin_refreshes_tokens(): void {
 		$user_id = $this->factory()->user->create(
@@ -169,11 +153,17 @@ class AuthenticatedQueryTest extends TestCase {
 			[
 				'shouldBlockUnauthorizedDomains' => true,
 				'hasSiteAddressInOrigin'         => true,
+				'additionalAuthorizedDomains'    => [ 'https://example.com' ],
 				'customHeaders'                  => [ 'X-Custom-Header' ],
 			]
 		);
 		$this->reset_utils_properties();
-		wp_set_current_user( $user_id );
+
+		$tokens = $this->generate_user_tokens( $user_id );
+
+		// Authenticate from the auth token alone.
+		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $tokens['auth_token'];
+		$GLOBALS['current_user']       = null;
 
 		$query = '
 			query {
@@ -192,31 +182,30 @@ class AuthenticatedQueryTest extends TestCase {
 			}
 		';
 
-		$unauthorized_headers = [];
-		$filter               = static function ( array $headers ) use ( &$unauthorized_headers ): array {
-			$unauthorized_headers = $headers;
-			return $headers;
-		};
-
-		add_filter( 'graphql_response_headers_to_send', $filter );
-
 		try {
 			$this->graphql( [ 'query' => $query ] );
 			$this->fail( 'Expected an unauthorized origin error.' );
 		} catch ( UserError $error ) {
 			$this->assertSame( 'Unauthorized request origin.', $error->getMessage() );
-		} finally {
-			call_user_func( 'remove_filter', 'graphql_response_headers_to_send', $filter );
 		}
 
-		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Token', $unauthorized_headers );
-		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Refresh-Token', $unauthorized_headers );
+		$headers = apply_filters( 'graphql_response_headers_to_send', [] );
+
+		$this->assertSame( 403, apply_filters( 'graphql_response_status_code', 200 ) );
+		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Token', $headers );
+		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Refresh-Token', $headers );
 
 		$this->reset_utils_properties();
-		$_SERVER['HTTP_ORIGIN'] = site_url();
+		$_SERVER['HTTP_ORIGIN'] = 'https://example.com';
 
 		$response = $this->graphql( [ 'query' => $query ] );
+		$headers  = apply_filters( 'graphql_response_headers_to_send', [] );
+
+		$this->assertNotEmpty( $headers['X-WPGraphQL-Login-Token'] ?? null );
+		$this->assertNotEmpty( $headers['X-WPGraphQL-Login-Refresh-Token'] ?? null );
+
 		$this->assertArrayNotHasKey( 'errors', $response );
+		$this->assertSame( [], $this->get_debug_messages( $response ) );
 		$this->assertSame( $user_id, $response['data']['viewer']['databaseId'] );
 		$this->assertSame( 'testuser', $response['data']['viewer']['username'] );
 		$this->assertNotEmpty( $response['data']['viewer']['auth']['authToken'] );
@@ -225,36 +214,5 @@ class AuthenticatedQueryTest extends TestCase {
 		$this->assertNotEmpty( $response['data']['viewer']['auth']['refreshTokenExpiration'] );
 		$this->assertFalse( $response['data']['viewer']['auth']['isUserSecretRevoked'] );
 		$this->assertNotEmpty( $response['data']['viewer']['auth']['userSecret'] );
-	}
-
-	/**
-	 * Runs the callback, returning its response along with the response headers.
-	 */
-	private function capture_response_headers( callable $callback ): array {
-		$captured_headers = [];
-		$filter           = static function ( array $headers ) use ( &$captured_headers ): array {
-			$captured_headers = $headers;
-			return $headers;
-		};
-
-		add_filter( 'graphql_response_headers_to_send', $filter );
-
-		try {
-			$response = $callback();
-		} finally {
-			call_user_func( 'remove_filter', 'graphql_response_headers_to_send', $filter );
-		}
-
-		return [
-			'response' => $response,
-			'headers'  => $captured_headers,
-		];
-	}
-
-	/**
-	 * Returns the debug messages from a GraphQL response.
-	 */
-	private function get_debug_messages( array $response ): array {
-		return array_values( call_user_func( 'wp_list_pluck', $response['extensions']['debug'] ?? [], 'message' ) );
 	}
 }
