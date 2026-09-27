@@ -1,8 +1,14 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Menu } from '@/admin/components/layout/header/menu';
-import { SettingsProvider } from '@/admin/contexts/settings-context';
-import { ScreenProvider } from '@/admin/components/screen/context';
+import {
+	SettingsProvider,
+	useSettings,
+} from '@/admin/contexts/settings-context';
+import {
+	ScreenProvider,
+	useCurrentScreen,
+} from '@/admin/components/screen/context';
 import {
 	setupWpGraphQLLoginMock,
 	resetWpGraphQLLoginMocks,
@@ -30,6 +36,39 @@ vi.mock( '@/admin/components/layout/header/menu/styles.module.scss', () => ( {
 		linkIcon: 'linkIcon',
 	},
 } ) );
+
+// Edits a setting, making the settings dirty.
+const MakeDirty = () => {
+	const { updateSettings } = useSettings();
+
+	return (
+		<button
+			type="button"
+			onClick={ () =>
+				updateSettings( {
+					slug: 'wpgraphql_login_settings',
+					values: { test: 'changed' },
+				} )
+			}
+		>
+			make-dirty
+		</button>
+	);
+};
+
+const CurrentScreen = () => (
+	<output data-testid="current-screen">
+		{ useCurrentScreen().currentScreen }
+	</output>
+);
+
+const MenuWithProbes = () => (
+	<>
+		<Menu />
+		<MakeDirty />
+		<CurrentScreen />
+	</>
+);
 
 function renderWithProviders( ui: React.ReactElement ) {
 	const wrapper = ( { children }: { children: React.ReactNode } ) => (
@@ -84,19 +123,14 @@ describe( 'Menu Component', () => {
 			} );
 		} );
 
-		it( 'includes providers as first menu item', async () => {
+		it( 'uses the providers label for settings without a label', async () => {
 			vi.mocked( apiFetch ).mockResolvedValue( {} );
 
 			(
 				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
 			 ).wpGraphQLLogin = {
 				settings: {
-					wpgraphql_login_providers: {
-						label: 'Providers',
-					},
-					wpgraphql_login_test: {
-						label: 'Test',
-					},
+					wpgraphql_login_unlabeled: {},
 				},
 				providers: {},
 			};
@@ -104,46 +138,7 @@ describe( 'Menu Component', () => {
 			renderWithProviders( <Menu /> );
 
 			await waitFor( () => {
-				const providersItem = screen.getByText( 'Providers' );
-				expect( providersItem ).toBeInTheDocument();
-			} );
-		} );
-
-		it( 'handles empty settings object', async () => {
-			vi.mocked( apiFetch ).mockResolvedValue( {} );
-
-			(
-				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
-			 ).wpGraphQLLogin = {
-				settings: {},
-				providers: {},
-			};
-
-			renderWithProviders( <Menu /> );
-
-			await waitFor( () => {
-				expect( screen.getByText( 'Providers' ) ).toBeInTheDocument();
-			} );
-		} );
-
-		it( 'uses default label for providers when not defined', async () => {
-			vi.mocked( apiFetch ).mockResolvedValue( {} );
-
-			(
-				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
-			 ).wpGraphQLLogin = {
-				settings: {
-					wpgraphql_login_providers: {
-						label: 'Providers',
-					},
-				},
-				providers: {},
-			};
-
-			renderWithProviders( <Menu /> );
-
-			await waitFor( () => {
-				expect( screen.getByText( 'Providers' ) ).toBeInTheDocument();
+				expect( screen.getAllByText( 'Providers' ) ).toHaveLength( 2 );
 			} );
 		} );
 
@@ -161,13 +156,13 @@ describe( 'Menu Component', () => {
 				providers: {},
 			};
 
-			renderWithProviders( <Menu /> );
+			renderWithProviders( <MenuWithProbes /> );
 
-			await waitFor( () => {
-				expect(
-					screen.getByText( 'Access Control' )
-				).toBeInTheDocument();
-			} );
+			fireEvent.click( await screen.findByText( 'Access Control' ) );
+
+			expect( screen.getByTestId( 'current-screen' ) ).toHaveTextContent(
+				'access-control'
+			);
 		} );
 	} );
 
@@ -259,268 +254,12 @@ describe( 'Menu Component', () => {
 				);
 			} );
 		} );
-
-		it( 'dirty indicator shows for current screen when dirty', async () => {
-			vi.mocked( apiFetch ).mockResolvedValue( {
-				wpgraphql_login_settings: { test: 'value' },
-			} );
-
-			(
-				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
-			 ).wpGraphQLLogin = {
-				settings: {
-					wpgraphql_login_settings: {
-						label: 'Settings',
-					},
-				},
-				providers: {},
-			};
-
-			const { container } = renderWithProviders( <Menu /> );
-
-			await waitFor( () => {
-				expect( container ).toBeInTheDocument();
-			} );
-
-			const dirtyIndicators =
-				document.querySelectorAll( '.dirtyIndicator' );
-
-			expect( dirtyIndicators ).toBeDefined();
-		} );
-
-		it( 'menu items disabled when isSaving', async () => {
-			vi.mocked( apiFetch ).mockImplementation( ( { method } ) => {
-				if ( method === 'POST' ) {
-					return new Promise( ( resolve ) => {
-						setTimeout(
-							() =>
-								resolve( {
-									wpgraphql_login_settings: { test: 'value' },
-								} ),
-							100
-						);
-					} );
-				}
-				return Promise.resolve( {
-					wpgraphql_login_settings: { test: 'value' },
-				} );
-			} );
-
-			(
-				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
-			 ).wpGraphQLLogin = {
-				settings: {
-					wpgraphql_login_settings: {
-						label: 'Settings',
-					},
-				},
-				providers: {},
-			};
-
-			const { container } = renderWithProviders( <Menu /> );
-
-			await waitFor( () => {
-				expect( container ).toBeInTheDocument();
-			} );
-
-			const buttons = container.querySelectorAll( 'button' );
-			expect( buttons.length ).toBeGreaterThan( 0 );
-		} );
 	} );
 
-	describe( 'SaveChangesModal component', () => {
-		it( 'shows modal when clicking menu item while dirty', async () => {
+	describe( 'Unsaved changes', () => {
+		beforeEach( () => {
 			vi.mocked( apiFetch ).mockResolvedValue( {
 				wpgraphql_login_settings: { test: 'value' },
-				wpgraphql_login_test_screen: { test: 'value' },
-			} );
-
-			(
-				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
-			 ).wpGraphQLLogin = {
-				settings: {
-					wpgraphql_login_settings: {
-						label: 'Settings',
-					},
-					wpgraphql_login_test_screen: {
-						label: 'Test Screen',
-					},
-				},
-				providers: {},
-			};
-
-			const { container } = renderWithProviders( <Menu /> );
-
-			await waitFor( () => {
-				expect( container ).toBeInTheDocument();
-			} );
-
-			const testScreenButton = screen.getByText( 'Test Screen' );
-
-			fireEvent.click( testScreenButton );
-		} );
-
-		it( 'modal displays correct message', async () => {
-			vi.mocked( apiFetch ).mockResolvedValue( {
-				wpgraphql_login_settings: { test: 'value' },
-			} );
-
-			(
-				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
-			 ).wpGraphQLLogin = {
-				settings: {
-					wpgraphql_login_settings: {
-						label: 'Settings',
-					},
-				},
-				providers: {},
-			};
-
-			renderWithProviders( <Menu /> );
-
-			await waitFor( () => {
-				expect( screen.getByText( 'Docs' ) ).toBeInTheDocument();
-			} );
-		} );
-
-		it( 'Cancel closes modal without saving', async () => {
-			vi.mocked( apiFetch ).mockResolvedValue( {
-				wpgraphql_login_settings: { test: 'value' },
-			} );
-
-			(
-				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
-			 ).wpGraphQLLogin = {
-				settings: {
-					wpgraphql_login_settings: {
-						label: 'Settings',
-					},
-				},
-				providers: {},
-			};
-
-			renderWithProviders( <Menu /> );
-
-			await waitFor( () => {
-				expect( screen.getByText( 'Docs' ) ).toBeInTheDocument();
-			} );
-		} );
-
-		it( 'Save and continue saves and changes screen', async () => {
-			vi.mocked( apiFetch ).mockResolvedValue( {
-				wpgraphql_login_settings: { test: 'value' },
-				wpgraphql_login_test_screen: { test: 'value' },
-			} );
-
-			(
-				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
-			 ).wpGraphQLLogin = {
-				settings: {
-					wpgraphql_login_settings: {
-						label: 'Settings',
-					},
-					wpgraphql_login_test_screen: {
-						label: 'Test Screen',
-					},
-				},
-				providers: {},
-			};
-
-			renderWithProviders( <Menu /> );
-
-			await waitFor( () => {
-				expect( screen.getByText( 'Docs' ) ).toBeInTheDocument();
-			} );
-		} );
-
-		it( 'handles save failure in modal', async () => {
-			vi.mocked( apiFetch ).mockRejectedValue(
-				new Error( 'Save failed' )
-			);
-
-			(
-				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
-			 ).wpGraphQLLogin = {
-				settings: {
-					wpgraphql_login_settings: {
-						label: 'Settings',
-					},
-				},
-				providers: {},
-			};
-
-			renderWithProviders( <Menu /> );
-
-			await waitFor( () => {
-				expect( screen.getByText( 'Docs' ) ).toBeInTheDocument();
-			} );
-		} );
-
-		it( 'handles modal with no nextScreen', async () => {
-			vi.mocked( apiFetch ).mockResolvedValue( {
-				wpgraphql_login_settings: { test: 'value' },
-			} );
-
-			(
-				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
-			 ).wpGraphQLLogin = {
-				settings: {
-					wpgraphql_login_settings: {
-						label: 'Settings',
-					},
-				},
-				providers: {},
-			};
-
-			renderWithProviders( <Menu /> );
-
-			await waitFor( () => {
-				expect( screen.getByText( 'Docs' ) ).toBeInTheDocument();
-			} );
-		} );
-	} );
-
-	describe( 'Menu component with dirty state', () => {
-		it( 'clicking menu item changes screen when not dirty', async () => {
-			vi.mocked( apiFetch ).mockResolvedValue( {
-				wpgraphql_login_settings: { test: 'value' },
-				wpgraphql_login_test_screen: { test: 'value' },
-			} );
-
-			(
-				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
-			 ).wpGraphQLLogin = {
-				settings: {
-					wpgraphql_login_settings: {
-						label: 'Settings',
-					},
-					wpgraphql_login_test_screen: {
-						label: 'Test Screen',
-					},
-				},
-				providers: {},
-			};
-
-			const { container } = renderWithProviders( <Menu /> );
-
-			await waitFor( () => {
-				expect( screen.getByText( 'Docs' ) ).toBeInTheDocument();
-			} );
-
-			const buttons = container.querySelectorAll(
-				'.components-button.is-tertiary'
-			);
-			const testScreenButton = Array.from( buttons ).find( ( button ) =>
-				button.textContent?.includes( 'Test Screen' )
-			);
-
-			expect( testScreenButton ).toBeInTheDocument();
-		} );
-
-		it( 'screen navigation works correctly', async () => {
-			vi.mocked( apiFetch ).mockResolvedValue( {
-				wpgraphql_login_settings: { test: 'value' },
-				wpgraphql_login_access_control: { test: 'value' },
 			} );
 
 			(
@@ -536,122 +275,115 @@ describe( 'Menu Component', () => {
 				},
 				providers: {},
 			};
-
-			renderWithProviders( <Menu /> );
-
-			await waitFor( () => {
-				expect( screen.getByText( 'Docs' ) ).toBeInTheDocument();
-			} );
-		} );
-	} );
-
-	describe( 'Modal interactions', () => {
-		it( 'test modal save flow', async () => {
-			vi.mocked( apiFetch ).mockResolvedValue( {
-				wpgraphql_login_settings: { test: 'value' },
-				wpgraphql_login_test_screen: { test: 'value' },
-			} );
-
-			(
-				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
-			 ).wpGraphQLLogin = {
-				settings: {
-					wpgraphql_login_settings: {
-						label: 'Settings',
-					},
-					wpgraphql_login_test_screen: {
-						label: 'Test Screen',
-					},
-				},
-				providers: {},
-			};
-
-			renderWithProviders( <Menu /> );
-
-			await waitFor( () => {
-				expect( screen.getByText( 'Docs' ) ).toBeInTheDocument();
-			} );
 		} );
 
-		it( 'modal handleSaveAndContinue saves settings and changes screen', async () => {
-			// Setup: Make settings dirty so clicking menu item shows modal
-			vi.mocked( apiFetch )
-				.mockResolvedValueOnce( {
-					wpgraphql_login_settings: { test: 'value' },
-					wpgraphql_login_access_control: { control: 'value' },
-				} )
-				.mockResolvedValueOnce( {
-					wpgraphql_login_settings: { test: 'updated' },
-					wpgraphql_login_access_control: { control: 'value' },
-				} );
+		// Opens the Settings screen and edits it.
+		const renderDirtySettingsScreen = async () => {
+			renderWithProviders( <MenuWithProbes /> );
 
-			(
-				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
-			 ).wpGraphQLLogin = {
-				settings: {
-					wpgraphql_login_settings: {
-						label: 'Settings',
-						fields: { test: { label: 'Test', type: 'string' } },
-					},
-					wpgraphql_login_access_control: {
-						label: 'Access Control',
-					},
-				},
-				providers: {},
-			};
+			fireEvent.click( await screen.findByText( 'Settings' ) );
+			fireEvent.click( screen.getByText( 'make-dirty' ) );
+		};
 
-			renderWithProviders( <Menu /> );
+		it( 'navigates directly when there are no unsaved changes', async () => {
+			renderWithProviders( <MenuWithProbes /> );
 
-			await waitFor( () => {
-				expect( screen.getByText( 'Providers' ) ).toBeInTheDocument();
-			} );
+			fireEvent.click( await screen.findByText( 'Access Control' ) );
 
-			// Click on Access Control to navigate (when clean, should not show modal)
-			const accessControlButton = screen.getByText( 'Access Control' );
-			fireEvent.click( accessControlButton );
-
-			await waitFor( () => {
-				// Screen should change without modal when not dirty
-				expect( accessControlButton ).toBeInTheDocument();
-			} );
+			expect( screen.getByTestId( 'current-screen' ) ).toHaveTextContent(
+				'access-control'
+			);
+			expect(
+				screen.queryByText( /You have unsaved changes/ )
+			).not.toBeInTheDocument();
 		} );
 
-		it( 'modal handleCancel closes modal without navigation', async () => {
-			vi.mocked( apiFetch ).mockResolvedValue( {
-				wpgraphql_login_settings: { test: 'value' },
-				wpgraphql_login_other_screen: { other: 'value' },
-			} );
+		it( 'marks only the current screen as dirty', async () => {
+			await renderDirtySettingsScreen();
 
-			(
-				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
-			 ).wpGraphQLLogin = {
-				settings: {
-					wpgraphql_login_settings: {
-						label: 'Settings',
-					},
-					wpgraphql_login_other_screen: {
-						label: 'Other Screen',
-					},
-				},
-				providers: {},
-			};
+			const indicators = screen.getAllByLabelText( 'Unsaved changes' );
 
-			renderWithProviders( <Menu /> );
+			expect( indicators ).toHaveLength( 1 );
+			expect( indicators[ 0 ]?.closest( 'button' ) ).toHaveTextContent(
+				'Settings'
+			);
+		} );
+
+		it( 'asks before leaving a screen with unsaved changes', async () => {
+			await renderDirtySettingsScreen();
+
+			fireEvent.click( screen.getByText( 'Access Control' ) );
+
+			expect(
+				screen.getByText( /You have unsaved changes/ )
+			).toBeInTheDocument();
+			expect( screen.getByTestId( 'current-screen' ) ).toHaveTextContent(
+				'settings'
+			);
+		} );
+
+		it( 'Cancel closes the modal without saving or navigating', async () => {
+			await renderDirtySettingsScreen();
+
+			fireEvent.click( screen.getByText( 'Access Control' ) );
+			fireEvent.click( screen.getByText( 'Cancel' ) );
+
+			expect(
+				screen.queryByText( /You have unsaved changes/ )
+			).not.toBeInTheDocument();
+			expect( screen.getByTestId( 'current-screen' ) ).toHaveTextContent(
+				'settings'
+			);
+			expect( apiFetch ).not.toHaveBeenCalledWith(
+				expect.objectContaining( { method: 'POST' } )
+			);
+		} );
+
+		it( 'Save and continue saves the current screen, then navigates', async () => {
+			await renderDirtySettingsScreen();
+
+			fireEvent.click( screen.getByText( 'Access Control' ) );
+			fireEvent.click( screen.getByText( 'Save and continue' ) );
 
 			await waitFor( () => {
 				expect(
-					screen.getByText( 'Other Screen' )
-				).toBeInTheDocument();
+					screen.getByTestId( 'current-screen' )
+				).toHaveTextContent( 'access-control' );
 			} );
 
-			// Click on Other Screen - when not dirty, should navigate directly
-			const otherScreenButton = screen.getByText( 'Other Screen' );
-			fireEvent.click( otherScreenButton );
+			expect( apiFetch ).toHaveBeenCalledWith(
+				expect.objectContaining( {
+					method: 'POST',
+					data: {
+						slug: 'wpgraphql_login_settings',
+						values: { test: 'changed' },
+					},
+				} )
+			);
+			expect(
+				screen.queryByText( /You have unsaved changes/ )
+			).not.toBeInTheDocument();
+		} );
+
+		it( 'disables the menu items while saving', async () => {
+			await renderDirtySettingsScreen();
+
+			// The save never settles, so the menu stays in the saving state.
+			vi.mocked( apiFetch ).mockReturnValueOnce(
+				new Promise( () => {} )
+			);
+
+			fireEvent.click( screen.getByText( 'Access Control' ) );
+			fireEvent.click( screen.getByText( 'Save and continue' ) );
 
 			await waitFor( () => {
-				// Verify menu is still rendered
-				expect( screen.getByText( 'Providers' ) ).toBeInTheDocument();
+				expect(
+					screen.getByText( 'Access Control' ).closest( 'button' )
+				).toBeDisabled();
 			} );
+			expect(
+				screen.getByText( 'Settings' ).closest( 'button' )
+			).toBeDisabled();
 		} );
 	} );
 
@@ -682,23 +414,6 @@ describe( 'Menu Component', () => {
 
 				expect( buttons.length ).toBeGreaterThan( 0 );
 				expect( buttons[ 0 ]?.textContent ).toContain( 'Providers' );
-			} );
-		} );
-
-		it( 'providers has correct screen name', async () => {
-			vi.mocked( apiFetch ).mockResolvedValue( {} );
-
-			(
-				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
-			 ).wpGraphQLLogin = {
-				settings: {},
-				providers: {},
-			};
-
-			renderWithProviders( <Menu /> );
-
-			await waitFor( () => {
-				expect( screen.getByText( 'Providers' ) ).toBeInTheDocument();
 			} );
 		} );
 	} );

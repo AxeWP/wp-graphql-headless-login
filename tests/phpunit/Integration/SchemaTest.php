@@ -16,18 +16,14 @@ class SchemaTest extends TestCase {
 	/**
 	 * Test the schema can be generated and is valid.
 	 */
-	public function testSchema() {
-		try {
-			new \WPGraphQL\Request();
+	public function testSchema(): void {
+		new \WPGraphQL\Request();
 
-			$schema = \WPGraphQL::get_schema();
-			$this->clearSchema();
-			$schema->assertValid();
+		$schema = \WPGraphQL::get_schema();
+		$this->clearSchema();
 
-			$this->assertTrue( true );
-		} catch ( \GraphQL\Error\InvariantViolation ) {
-			$this->clearSchema();
-			$this->assertTrue( false );
-		}
+		// Throws an InvariantViolation describing the first problem found.
+		$schema->assertValid();
+		$this->addToAssertionCount( 1 );
 	}
 }

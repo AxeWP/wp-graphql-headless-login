@@ -249,20 +249,6 @@ describe( 'Screen Component', () => {
 				);
 			} ).toThrow();
 		} );
-
-		it( 'integrates with SettingsProvider', async () => {
-			await renderScreen();
-
-			expect( screen.getByRole( 'main' ) ).toBeInTheDocument();
-		} );
-
-		it( 'receives currentScreen from context', async () => {
-			await renderScreen();
-
-			// Screen should render without errors
-			const panel = screen.getByRole( 'main' );
-			expect( panel ).toBeInTheDocument();
-		} );
 	} );
 
 	describe( 'Edge cases', () => {

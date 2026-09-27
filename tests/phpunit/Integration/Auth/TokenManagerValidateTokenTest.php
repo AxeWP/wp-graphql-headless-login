@@ -224,7 +224,6 @@ class TokenManagerValidateTokenTest extends TestCase {
 		$result = TokenManager::validate_token( $this->mintToken( $payload ), true );
 
 		$this->assertNotWPError( $result );
-		$this->assertIsObject( $result );
 		$this->assertSame( $this->test_user, $result->data->user->id );
 	}
 }

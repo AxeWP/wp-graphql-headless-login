@@ -534,9 +534,12 @@ describe( 'SettingsScreen Component', () => {
 			} );
 			fireEvent.click( saveButton );
 
+			// Wait for the save to settle before checking what it did not do.
 			await waitFor( () => {
-				expect( mockDispatch.createNotice ).not.toHaveBeenCalled();
+				expect( mockDispatch.createErrorNotice ).toHaveBeenCalled();
 			} );
+
+			expect( mockDispatch.createNotice ).not.toHaveBeenCalled();
 		} );
 
 		it( 'prevents multiple save requests when isSaving', async () => {

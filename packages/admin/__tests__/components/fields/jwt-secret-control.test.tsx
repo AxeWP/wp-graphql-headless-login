@@ -3,15 +3,11 @@ import {
 	screen,
 	fireEvent,
 	waitFor,
-	renderHook,
 	act,
 } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { JwtSecretControl } from '@/admin/components/fields/jwt-secret-control';
-import {
-	SettingsProvider,
-	useSettings,
-} from '@/admin/contexts/settings-context';
+import { SettingsProvider } from '@/admin/contexts/settings-context';
 import {
 	setupWpGraphQLLoginMock,
 	resetWpGraphQLLoginMocks,
@@ -445,64 +441,6 @@ describe( 'JwtSecretControl Component', () => {
 			const button = screen.getByTestId( 'jwt-secret-button' );
 			expect( button ).toBeInTheDocument();
 			expect( button ).toHaveAttribute( 'data-disabled', 'false' );
-		} );
-	} );
-
-	describe( 'Integration with SettingsContext', () => {
-		it( 'has access to settings context methods', async () => {
-			(
-				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
-			 ).wpGraphQLLogin = {
-				...(
-					global as unknown as {
-						wpGraphQLLogin: WpGraphQLLoginGlobal;
-					}
-				 ).wpGraphQLLogin,
-				secret: {},
-			};
-
-			const { result } = renderHook( () => useSettings(), {
-				wrapper: ( { children } ) => (
-					<SettingsProvider>{ children }</SettingsProvider>
-				),
-			} );
-
-			await waitFor( () => {
-				expect( result.current ).toBeDefined();
-			} );
-
-			expect( result.current.updateSettings ).toBeDefined();
-			expect( result.current.saveSettings ).toBeDefined();
-			expect( result.current.isSaving ).toBeDefined();
-			expect( typeof result.current.updateSettings ).toBe( 'function' );
-			expect( typeof result.current.saveSettings ).toBe( 'function' );
-		} );
-
-		it( 'useDispatch is called for notices', async () => {
-			(
-				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
-			 ).wpGraphQLLogin = {
-				...(
-					global as unknown as {
-						wpGraphQLLogin: WpGraphQLLoginGlobal;
-					}
-				 ).wpGraphQLLogin,
-				secret: {},
-			};
-
-			const props: FieldSchema = {
-				label: 'Regenerate JWT Secret',
-				description: 'JWT Secret description',
-				type: 'string',
-				help: 'Help text',
-			};
-
-			await renderWithSettingsProvider(
-				<JwtSecretControl { ...props } />
-			);
-
-			expect( mockCreateNotice ).toBeDefined();
-			expect( mockCreateErrorNotice ).toBeDefined();
 		} );
 	} );
 

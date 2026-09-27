@@ -11,7 +11,6 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 		settings,
 		updateSettings,
 		saveSettings,
-		isComplete,
 		isSaving,
 		isDirty,
 		errorMessage,
@@ -51,9 +50,9 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 			return;
 		}
 
-		await saveSettings( settingKey );
+		const saved = await saveSettings( settingKey );
 
-		if ( isComplete && ! errorMessage ) {
+		if ( saved ) {
 			createNotice(
 				'success',
 				__( 'Settings saved', 'wp-graphql-headless-login' ),

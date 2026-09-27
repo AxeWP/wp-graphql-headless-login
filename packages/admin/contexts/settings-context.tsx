@@ -10,6 +10,28 @@ import { __ } from '@wordpress/i18n';
 
 const REST_ENDPOINT = 'wp-graphql-login/v1/settings';
 
+/**
+ * Gets the message from an apiFetch rejection.
+ *
+ * REST errors reject with the parsed response body (e.g. `{ code, message }`), not an `Error`.
+ *
+ * @param error    The rejection reason.
+ * @param fallback The message to use when the rejection has none.
+ */
+const getErrorMessage = ( error: unknown, fallback: string ): string => {
+	if (
+		error &&
+		typeof error === 'object' &&
+		'message' in error &&
+		typeof error.message === 'string' &&
+		error.message
+	) {
+		return error.message;
+	}
+
+	return fallback;
+};
+
 type AllowedStatuses = 'saving' | 'complete' | undefined;
 type SettingType = Record< string, Record< string, unknown > >;
 
@@ -91,16 +113,15 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 				setSettings( response ); // Initialize settings
 			} )
 			.catch( ( error: unknown ) => {
-				if ( error instanceof Error ) {
-					setErrorMessage( error.message );
-				} else {
-					setErrorMessage(
+				setErrorMessage(
+					getErrorMessage(
+						error,
 						__(
 							'Unable to fetch settings. An unknown error occurred',
 							'wp-graphql-headless-login'
 						)
-					);
-				}
+					)
+				);
 			} )
 			.finally( () => {
 				setStatus( 'complete' );
@@ -155,9 +176,15 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 
 			return true;
 		} catch ( error ) {
-			if ( error instanceof Error ) {
-				setErrorMessage( error.message );
-			}
+			setErrorMessage(
+				getErrorMessage(
+					error,
+					__(
+						'Unable to save settings. An unknown error occurred',
+						'wp-graphql-headless-login'
+					)
+				)
+			);
 
 			setStatus( 'complete' );
 			return false;
