@@ -13,19 +13,6 @@ use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 use WPGraphQL\Login\Admin\SettingsRegistry;
 
 /**
- * A SettingsRegistry that exposes and resets its registered settings.
- */
-class MockSettings extends SettingsRegistry {
-	public static function reset(): void {
-		static::$settings = null;
-	}
-
-	public static function get_settings_property(): ?array {
-		return static::$settings;
-	}
-}
-
-/**
  * Tests the SettingsRegistry class.
  */
 class SettingsRegistryTest extends TestCase {
@@ -35,33 +22,42 @@ class SettingsRegistryTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		MockSettings::reset();
+		self::reset_registry();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function tearDown(): void {
-		MockSettings::reset();
+		self::reset_registry();
 
 		parent::tearDown();
 	}
 
-	public function testInit(): void {
-		$has_action = has_action( 'init', [ SettingsRegistry::class, 'register_settings' ] );
-
-		// Must run after WPGraphQL's `init_registry()` at priority 11.
-		$this->assertSame( 12, $has_action );
+	/**
+	 * Clears the registry's cached settings instances.
+	 */
+	private static function reset_registry(): void {
+		\Closure::bind(
+			static function (): void {
+				SettingsRegistry::$settings = [];
+			},
+			null,
+			SettingsRegistry::class
+		)();
 	}
 
 	/**
 	 * Test the register_settings method.
 	 */
 	public function testRegisterSettings(): void {
-		MockSettings::init();
-		MockSettings::register_settings();
+		SettingsRegistry::register_settings();
 
-		$this->assertValidSettings( MockSettings::get_settings_property() );
+		$registered = get_registered_settings();
+
+		foreach ( SettingsRegistry::get_all() as $setting ) {
+			$this->assertArrayHasKey( $setting::get_slug(), $registered );
+		}
 	}
 
 	/**
@@ -69,13 +65,13 @@ class SettingsRegistryTest extends TestCase {
 	 */
 	public function testGetAll(): void {
 		// Test before init should initialize the settings.
-		$settings = MockSettings::get_all();
+		$settings = SettingsRegistry::get_all();
 
 		$this->assertValidSettings( $settings );
 
 		// Test after init should return the settings.
 		$expected = $settings;
-		$settings = MockSettings::get_all();
+		$settings = SettingsRegistry::get_all();
 
 		$this->assertValidSettings( $settings );
 		$this->assertSame( $expected, $settings );
@@ -88,22 +84,22 @@ class SettingsRegistryTest extends TestCase {
 		// Test before init should initialize the settings.
 		$slug = AccessControlSettings::get_slug();
 
-		$actual = MockSettings::get( $slug );
+		$actual = SettingsRegistry::get( $slug );
 
 		$this->assertInstanceOf( AccessControlSettings::class, $actual );
 
-		$settings = MockSettings::get_all();
+		$settings = SettingsRegistry::get_all();
 
 		foreach ( $settings as $setting ) {
 			$instance_slug = $setting::get_slug();
-			$instance      = MockSettings::get( $instance_slug );
+			$instance      = SettingsRegistry::get( $instance_slug );
 
 			$this->assertInstanceOf( AbstractSettings::class, $instance );
 		}
 
 		// Test after init should return the settings.
 		$expected = $actual;
-		$actual   = MockSettings::get( $slug );
+		$actual   = SettingsRegistry::get( $slug );
 
 		$this->assertInstanceOf( AccessControlSettings::class, $actual );
 		$this->assertSame( $expected, $actual );

@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "faac6189abcb26d9d9fe0abffa76ddcf",
+    "content-hash": "e48fbd66b963fdffa6cd74789deb6f4f",
     "packages": [
         {
             "name": "axepress/axewp-common",
-            "version": "v0.1.3",
+            "version": "v0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AxeWP/axewp-common.git",
-                "reference": "edf2cbb0fc0ee473b80e8adcbd8a95a7fede14ca"
+                "reference": "52b27a2dd6b15157e08657cd125b2a4c62647c1c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AxeWP/axewp-common/zipball/edf2cbb0fc0ee473b80e8adcbd8a95a7fede14ca",
-                "reference": "edf2cbb0fc0ee473b80e8adcbd8a95a7fede14ca",
+                "url": "https://api.github.com/repos/AxeWP/axewp-common/zipball/52b27a2dd6b15157e08657cd125b2a4c62647c1c",
+                "reference": "52b27a2dd6b15157e08657cd125b2a4c62647c1c",
                 "shasum": ""
             },
             "require": {
@@ -57,9 +57,9 @@
             "description": "Shared WordPress and WPGraphQL utilities for AxeWP plugins",
             "support": {
                 "issues": "https://github.com/AxeWP/axewp-common/issues",
-                "source": "https://github.com/AxeWP/axewp-common/tree/v0.1.3"
+                "source": "https://github.com/AxeWP/axewp-common/tree/v0.2.0"
             },
-            "time": "2026-09-27T16:31:52+00:00"
+            "time": "2026-09-27T21:34:25+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -3375,16 +3375,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "2.3.5",
+            "version": "2.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "148cefffaf0233e4c08cc13db8a195a56dd6dfe9"
+                "reference": "1427af4647235b4a73b13940b1f1258d3584f36e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/148cefffaf0233e4c08cc13db8a195a56dd6dfe9",
-                "reference": "148cefffaf0233e4c08cc13db8a195a56dd6dfe9",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/1427af4647235b4a73b13940b1f1258d3584f36e",
+                "reference": "1427af4647235b4a73b13940b1f1258d3584f36e",
                 "shasum": ""
             },
             "require": {
@@ -3416,9 +3416,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.3.5"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.3.6"
             },
-            "time": "2026-08-31T16:05:28+00:00"
+            "time": "2026-09-27T20:07:45+00:00"
         },
         {
             "name": "phpstan/phpstan",

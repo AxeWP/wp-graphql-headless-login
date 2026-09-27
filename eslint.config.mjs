@@ -79,8 +79,5 @@ export default [
 				vitest: 'readonly',
 			},
 		},
-		rules: {
-			'@typescript-eslint/no-explicit-any': 'off',
-		},
 	},
 ];

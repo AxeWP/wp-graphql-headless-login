@@ -10,14 +10,16 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Admin\Upgrade;
 
+use WPGraphQL\Login\Vendor\AxeWP\Common\Contracts\Interfaces\Registrable;
+
 /**
  * Class UpgradeRegistry
  */
-class UpgradeRegistry {
+class UpgradeRegistry implements Registrable {
 	/**
-	 * Registers the upgrade hooks.
+	 * {@inheritDoc}
 	 */
-	public static function init(): void {
+	public function register_hooks(): void {
 		// Register the upgrade process - in case the activation hook is missed.
 		add_action( 'admin_init', [ self::class, 'do_upgrades' ] );
 

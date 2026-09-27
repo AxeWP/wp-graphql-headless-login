@@ -22,7 +22,7 @@ As follows is a _brief_ overview of how the plugin works.
    - Fetch the Resource Owner's profile data from the provider.
    - (optional) Create a new WordPress user and/or link an existing WordPress user to the Provider's Resource Owner.
    - Generate and returns a JWT `authToken` and `refreshToken` for the user to use in future requests.
-4. Your frontend app should and and store the `authToken` and `refreshToken` in a secure location (like a [Web Worker](https://thenewstack.io/leveraging-web-workers-to-safely-store-access-tokens/) or secure cookie) for future requests.
+4. Your frontend app should store the `authToken` and `refreshToken` in a secure location (like a [Web Worker](https://thenewstack.io/leveraging-web-workers-to-safely-store-access-tokens/) or secure cookie) for future requests.
 
 - Authentication tokens should be passed in the Authorization Headers of future GraphQL requests.
 - Refresh tokens can be exchanged for a new auth token without requiring the user to reauthenticate.

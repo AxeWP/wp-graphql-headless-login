@@ -102,6 +102,7 @@ class ProviderSettings {
 						'description'       => __( 'The client options for the provider.', 'wp-graphql-headless-login' ),
 						'label'             => __( 'Client Options', 'wp-graphql-headless-login' ),
 						'type'              => 'object',
+						'default'           => [],
 						'properties'        => $provider::get_client_options_schema(),
 						'sanitize_callback' => static function ( $value ) use ( $provider ) {
 							$schema = $provider::get_client_options_schema();
@@ -124,6 +125,7 @@ class ProviderSettings {
 						'description'       => __( 'The login options for the provider.', 'wp-graphql-headless-login' ),
 						'label'             => __( 'Login Options', 'wp-graphql-headless-login' ),
 						'type'              => 'object',
+						'default'           => [],
 						'properties'        => $provider::get_login_options_schema(),
 						'sanitize_callback' => static function ( $value ) use ( $provider ) {
 							$schema = $provider::get_login_options_schema();
@@ -177,8 +179,7 @@ class ProviderSettings {
 				$defaults = [];
 
 				foreach ( $config[ self::$settings_prefix . $slug ] as $setting_key => $setting_args ) {
-					// A null default fails its own `object` schema, which makes WP's settings endpoint null out the entire option.
-					$defaults[ $setting_key ] = $setting_args['default'] ?? ( 'object' === ( $setting_args['type'] ?? '' ) ? [] : null );
+					$defaults[ $setting_key ] = $setting_args['default'] ?? null;
 
 					// Remove excluded keys from args.
 					$config[ self::$settings_prefix . $slug ][ $setting_key ] = array_diff_key( $setting_args, array_flip( $excluded_keys ) );

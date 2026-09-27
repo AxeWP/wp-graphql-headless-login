@@ -10,22 +10,38 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Admin;
 
+use WPGraphQL\Login\Vendor\AxeWP\Common\Contracts\Interfaces\Registrable;
+
 /**
  * Class SettingsRegistry
  */
-class SettingsRegistry {
+final class SettingsRegistry implements Registrable {
 	/**
 	 * The instantiated settings.
 	 *
-	 * @var ?array<string,\WPGraphQL\Login\Admin\Settings\AbstractSettings>
+	 * @var array<string,\WPGraphQL\Login\Admin\Settings\AbstractSettings>
 	 */
-	protected static ?array $settings;
+	private static array $settings = [];
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function register_hooks(): void {
+		/**
+		 * Register settings _after_ WPGraphQL initializes.
+		 *
+		 * Prevents conflict caused by
+		 *
+		 * @see https://github.com/wp-graphql/wp-graphql/pull/3878
+		 */
+		add_action( 'init', [ self::class, 'register_settings' ], 12 );
+	}
 
 	/**
 	 * Instantiates the settings classes for the registry.
 	 */
 	public static function init(): void {
-		if ( isset( self::$settings ) ) {
+		if ( ! empty( self::$settings ) ) {
 			return;
 		}
 
@@ -57,11 +73,8 @@ class SettingsRegistry {
 	 * @return array<string,\WPGraphQL\Login\Admin\Settings\AbstractSettings>
 	 */
 	public static function get_all(): array {
-		if ( ! isset( self::$settings ) ) {
-			self::init();
-		}
+		self::init();
 
-		/** @var array<string,\WPGraphQL\Login\Admin\Settings\AbstractSettings> */
 		return self::$settings;
 	}
 
@@ -71,9 +84,7 @@ class SettingsRegistry {
 	 * @param string $slug The setting slug.
 	 */
 	public static function get( string $slug ): ?\WPGraphQL\Login\Admin\Settings\AbstractSettings {
-		if ( ! isset( self::$settings ) ) {
-			self::init();
-		}
+		self::init();
 
 		return self::$settings[ $slug ] ?? null;
 	}

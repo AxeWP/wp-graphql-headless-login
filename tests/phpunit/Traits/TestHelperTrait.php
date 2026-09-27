@@ -8,9 +8,9 @@
 namespace Tests\WPGraphQL\Login\Traits;
 
 use ReflectionClass;
-use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 use WPGraphQL\Login\Auth\TokenManager;
+use WPGraphQL\Login\Utils\Utils;
 
 /**
  * Trait - TestHelperTrait
@@ -49,7 +49,7 @@ trait TestHelperTrait {
 	 * Resets the registered GraphQL types.
 	 */
 	public function reset_type_registry(): void {
-		$reflection = new ReflectionClass( 'WPGraphQL\Login\TypeRegistry' );
+		$reflection = new ReflectionClass( 'WPGraphQL\Login\GraphQL\TypeRegistry' );
 		$property   = $reflection->getProperty( 'registry' );
 		$property->setAccessible( true );
 		$property->setValue( null, [] );
@@ -81,7 +81,7 @@ trait TestHelperTrait {
 		wp_set_current_user( $user_id );
 
 		$site_secret = wp_generate_password( 64, false, false );
-		update_option( PluginSettings::get_slug() . 'jwt_secret_key', $site_secret );
+		Utils::update_plugin_setting( 'jwt_secret_key', $site_secret );
 		TokenManager::issue_new_user_secret( $user_id, false );
 		$this->reset_utils_properties();
 

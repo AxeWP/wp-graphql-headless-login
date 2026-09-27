@@ -12,13 +12,13 @@ namespace WPGraphQL\Login\Admin;
 
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 use WPGraphQL\Login\Admin\Settings\RestController;
-use WPGraphQL\Login\Admin\Upgrade\UpgradeRegistry;
 use WPGraphQL\Login\Auth\TokenManager;
+use WPGraphQL\Login\Vendor\AxeWP\Common\Contracts\Interfaces\Registrable;
 
 /**
  * Class - Settings
  */
-class Settings {
+final class Settings implements Registrable {
 	/**
 	 * The name of the plugin option group.
 	 *
@@ -48,37 +48,25 @@ class Settings {
 	private const SCRIPT_HANDLE = 'wp-graphql-headless-login/admin-editor';
 
 	/**
-	 * Registers the settings and their hooks.
+	 * {@inheritDoc}
 	 */
-	public static function init(): void {
-		/**
-		 * Register settings _after_ WPGraphQL initializes.
-		 *
-		 * Prevents conflict caused by
-		 *
-		 * @see https://github.com/wp-graphql/wp-graphql/pull/3878
-		 */
-		add_action( 'init', [ SettingsRegistry::class, 'register_settings' ], 12 );
-
-		add_action( 'rest_api_init', [ self::class, 'register_rest_routes' ] );
-		add_action( 'init', [ self::class, 'register_provider_settings' ] );
-		add_action( 'graphql_register_settings', [ self::class, 'register_settings_tab' ] );
-		add_action( 'admin_enqueue_scripts', [ self::class, 'register_admin_scripts' ] );
+	public function register_hooks(): void {
+		add_action( 'rest_api_init', [ $this, 'register_rest_routes' ] );
+		add_action( 'init', [ $this, 'register_provider_settings' ] );
+		add_action( 'graphql_register_settings', [ $this, 'register_settings_tab' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'register_admin_scripts' ] );
 
 		// The IDE loads its settings screen anywhere it's available - including the admin bar drawer.
-		add_action( 'wpgraphql_ide_enqueue_script', [ self::class, 'enqueue_settings_app' ] );
+		add_action( 'wpgraphql_ide_enqueue_script', [ $this, 'enqueue_settings_app' ] );
 
 		// After core's `option_update_filter()`, which adds registered settings back to the list.
-		add_filter( 'allowed_options', [ self::class, 'disallow_options_page_saves' ], 11 );
-
-		// Handle upgrades.
-		UpgradeRegistry::init();
+		add_filter( 'allowed_options', [ $this, 'disallow_options_page_saves' ], 11 );
 	}
 
 	/**
 	 * Registers the REST API routes for the settings.
 	 */
-	public static function register_rest_routes(): void {
+	public function register_rest_routes(): void {
 		$controller = new RestController();
 		$controller->register_routes();
 	}
@@ -86,7 +74,7 @@ class Settings {
 	/**
 	 * Register the settings to WordPress.
 	 */
-	public static function register_provider_settings(): void {
+	public function register_provider_settings(): void {
 		$settings = ProviderSettings::get_settings_args();
 		foreach ( $settings as $setting_name => $args ) {
 			register_setting(
@@ -100,7 +88,7 @@ class Settings {
 	/**
 	 * Register the Settings Tab to WPGraphQL.
 	 */
-	public static function register_settings_tab(): void {
+	public function register_settings_tab(): void {
 		register_graphql_settings_section(
 			self::$option_group,
 			[
@@ -133,7 +121,7 @@ class Settings {
 	 *
 	 * @return array<string,string[]>
 	 */
-	public static function disallow_options_page_saves( array $allowed_options ): array {
+	public function disallow_options_page_saves( array $allowed_options ): array {
 		unset( $allowed_options[ self::$option_group ] );
 
 		return $allowed_options;
@@ -144,12 +132,12 @@ class Settings {
 	 *
 	 * @param string $hook_suffix The current admin page.
 	 */
-	public static function register_admin_scripts( string $hook_suffix ): void {
+	public function register_admin_scripts( string $hook_suffix ): void {
 		if ( 'graphql_page_graphql-settings' !== $hook_suffix ) {
 			return;
 		}
 
-		self::enqueue_settings_app();
+		$this->enqueue_settings_app();
 	}
 
 	/**
@@ -158,7 +146,7 @@ class Settings {
 	 * The app itself only renders once its container is in the DOM, so this is safe
 	 * to enqueue on screens where the settings tab may never be opened.
 	 */
-	public static function enqueue_settings_app(): void {
+	public function enqueue_settings_app(): void {
 		// The IDE also loads for anonymous visitors on its public endpoint, and the
 		// localized config holds provider credentials. Mirror the REST permissions.
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -169,7 +157,7 @@ class Settings {
 			return;
 		}
 
-		self::register_asset_js( self::SCRIPT_HANDLE, 'admin' );
+		$this->register_asset_js( self::SCRIPT_HANDLE, 'admin' );
 		wp_script_add_data( self::SCRIPT_HANDLE, 'strategy', 'defer' );
 		wp_enqueue_script( self::SCRIPT_HANDLE );
 
@@ -189,7 +177,7 @@ class Settings {
 	 *
 	 * @throws \Exception If the asset file is not found.
 	 */
-	private static function register_asset_js( string $handle, string $asset_name ): void {
+	private function register_asset_js( string $handle, string $asset_name ): void {
 		$script_asset_path = WPGRAPHQL_LOGIN_PLUGIN_DIR . 'build/' . $asset_name . '.asset.php';
 		if ( ! file_exists( $script_asset_path ) ) {
 			throw new \Exception( esc_html__( 'The Headless Login for WPGraphQL admin assets are missing. Install the plugin from the release zip, or run `npm run build:prod` if you are working from source.', 'wp-graphql-headless-login' ) );
@@ -208,7 +196,7 @@ class Settings {
 		);
 		wp_set_script_translations( $handle, 'wp-graphql-headless-login' );
 
-		$config = self::get_settings_data();
+		$config = $this->get_settings_data();
 
 		wp_add_inline_script( $handle, 'const wpGraphQLLogin = ' . wp_json_encode( $config ), 'before' );
 	}
@@ -218,7 +206,7 @@ class Settings {
 	 *
 	 * @return array<string,mixed>
 	 */
-	private static function get_settings_data(): array {
+	private function get_settings_data(): array {
 		// Add meta about the secret without exposing it.
 		$secret = [
 			'hasKey'     => (bool) TokenManager::get_secret_key(),

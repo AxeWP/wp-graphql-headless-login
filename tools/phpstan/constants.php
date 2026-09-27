@@ -5,10 +5,6 @@
  * @package WPGraphQL/Login
  */
 
-define( 'WPGRAPHQL_LOGIN_PLUGIN_FILE', 'wp-graphql-headless-login.php' );
-define( 'WPGRAPHQL_LOGIN_VERSION', '0.4.4' );
-define( 'WPGRAPHQL_LOGIN_PLUGIN_DIR', '' );
-
 // WordPress Constants.
 define( 'AUTH_COOKIE', 'wordpress_' );
 define( 'SECURE_AUTH_COOKIE', 'wordpress_sec_' );

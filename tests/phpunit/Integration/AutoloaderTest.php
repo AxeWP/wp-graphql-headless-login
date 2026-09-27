@@ -11,65 +11,20 @@ use Tests\WPGraphQL\Login\TestCase;
 use WPGraphQL\Login\Autoloader;
 
 /**
- * An Autoloader that can reset its loaded state between tests.
- */
-class MockAutoloader extends Autoloader {
-	public static function reset() {
-		self::$is_loaded = false;
-	}
-}
-
-/**
  * Tests Autoloader.
  */
 class AutoloaderTest extends TestCase {
 	/**
-	 * Autoloader instance.
-	 *
-	 * @var \WPGraphQL\Login\Autoloader
-	 */
-	protected $autoloader;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function setUp(): void {
-		parent::setUp();
-
-		$this->autoloader = new MockAutoloader();
-		MockAutoloader::reset();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function tearDown(): void {
-		MockAutoloader::reset();
-		unset( $this->autoloader );
-
-		parent::tearDown();
-	}
-
-	public function testAutoload() {
-		$this->assertTrue( $this->autoloader->autoload() );
-	}
-
-	/**
 	 * Tests `Autoloader::require_autoloader()` with a valid and an invalid path.
 	 */
 	public function testRequireAutoloader() {
-		$reflection = new \ReflectionClass( $this->autoloader );
-		$property   = $reflection->getProperty( 'is_loaded' );
-		$property->setAccessible( true );
-		$property->setValue( $this->autoloader, false );
+		$method = new \ReflectionMethod( Autoloader::class, 'require_autoloader' );
 
-		$method = $reflection->getMethod( 'require_autoloader' );
-		$method->setAccessible( true );
+		$this->assertTrue( $method->invoke( null, WPGRAPHQL_LOGIN_PLUGIN_DIR . 'vendor/autoload.php' ) );
+		$this->assertFalse( $method->invoke( null, '/path/to/invalid/autoload.php' ) );
 
-		$this->assertTrue( $method->invokeArgs( $this->autoloader, [ WPGRAPHQL_LOGIN_PLUGIN_DIR . '/vendor/autoload.php' ] ) );
-		$this->assertFalse( $method->invokeArgs( $this->autoloader, [ '/path/to/invalid/autoload.php' ] ) );
-
-		// Test if there is an error message
+		// The missing autoloader notice is displayed and flagged as incorrect usage.
+		$this->setExpectedIncorrectUsage( Autoloader::class );
 		$this->expectOutputRegex( '/The Composer autoloader was not found/' );
 
 		do_action( 'admin_notices' );

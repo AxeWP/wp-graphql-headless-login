@@ -23,15 +23,17 @@ class SettingsTest extends TestCase {
 	 * Tests that options.php can't overwrite the plugin settings with the section's empty form.
 	 */
 	public function testOptionsPageCannotSaveSettings(): void {
-		// Core's `option_update_filter()` adds registered settings back at priority 10.
-		$this->assertGreaterThan( 10, has_filter( 'allowed_options', [ Settings::class, 'disallow_options_page_saves' ] ) );
+		global $new_allowed_options;
 
-		$allowed = Settings::disallow_options_page_saves(
-			[
-				'general'               => [ 'blogname' ],
-				Settings::$option_group => [ Settings::$option_group ],
-			]
-		);
+		// Core's `option_update_filter()` adds registered settings back at priority 10, but is only hooked in wp-admin.
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		add_filter( 'allowed_options', 'option_update_filter' );
+		$new_allowed_options = [ Settings::$option_group => [ Settings::$option_group ] ]; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
+		$allowed = apply_filters( 'allowed_options', [ 'general' => [ 'blogname' ] ] );
+
+		remove_filter( 'allowed_options', 'option_update_filter' );
+		$new_allowed_options = []; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
 		$this->assertSame( [ 'general' => [ 'blogname' ] ], $allowed );
 	}

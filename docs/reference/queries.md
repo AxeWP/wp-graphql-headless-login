@@ -62,9 +62,9 @@ query getUserWithAuthenticationData($id: ID!, $idType: UserNodeIdTypeEnum) {
 }
 ```
 
-If [WPGraphQL for WooCommerce](https://github.com/wp-graphql/wp-graphql-woocommerce) (v1.0.0+) is installed, the `auth` field is also available on the `Customer` Object type, so you can request auth tokens and customer data in one query.
+If [WPGraphQL for WooCommerce](https://github.com/wp-graphql/wp-graphql-woocommerce) is installed, the `auth` field is also available on the `Customer` Object type, so you can request auth tokens and customer data in one query.
 
-WooCommerce session tokens are separate from `auth`, and come from WPGraphQL for WooCommerce. Depending on its **Session Token Type** setting, query `Customer.sessionToken` / `User.wooSessionToken` (Legacy, the default) or `Customer.cartToken` / `User.cartToken` (Store API). See [Add Support for WPGraphQL for WooCommerce](/docs/recipes/server-side-auth-next-api-routes.md#8-optional-add-support-for-wpgraphql-for-woocommerce).
+See [Add Support for WPGraphQL for WooCommerce](/docs/recipes/server-side-auth-next-api-routes.md#8-optional-add-support-for-wpgraphql-for-woocommerce).
 
 ## Reference
 

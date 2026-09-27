@@ -24,7 +24,7 @@ export const Notices = () => {
 		<div className={ styles[ 'notices' ] }>
 			<SnackbarList
 				className="edit-site-notices"
-				notices={ notices as any }
+				notices={ notices }
 				onRemove={ removeNotice }
 			/>
 		</div>

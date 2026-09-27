@@ -19,27 +19,27 @@ use WPGraphQL\Login\Auth\ProviderRegistry;
 /**
  * Class - Utils
  */
-class Utils {
+final class Utils {
 	/**
 	 * The plugin settings.
 	 *
 	 * @var array<string,mixed>
 	 */
-	protected static array $settings = [];
+	private static array $settings = [];
 
 	/**
 	 * The providers config
 	 *
 	 * @var array<string,array<string,mixed>>
 	 */
-	protected static array $providers = [];
+	private static array $providers = [];
 
 	/**
 	 * The Access Control Settings
 	 *
 	 * @var ?array<string,mixed>
 	 */
-	protected static $access_control = [];
+	private static $access_control = [];
 
 	/**
 	 * Gets a single plugin setting.
@@ -230,7 +230,7 @@ class Utils {
 	 *
 	 * @return mixed
 	 */
-	protected static function get_setting_value( string $slug, string $option_name, $default_value = false ) {
+	private static function get_setting_value( string $slug, string $option_name, $default_value = false ) {
 		$instance = SettingsRegistry::get( $slug );
 
 		if ( ! $instance || ! self::is_field_dependency_met( $slug, $option_name ) ) {
@@ -248,7 +248,7 @@ class Utils {
 	 * @param string $slug The setting slug.
 	 * @param string $option_name The field key.
 	 */
-	protected static function is_field_dependency_met( string $slug, string $option_name ): bool {
+	private static function is_field_dependency_met( string $slug, string $option_name ): bool {
 		$instance = SettingsRegistry::get( $slug );
 
 		// Bail if invalid setting slug.

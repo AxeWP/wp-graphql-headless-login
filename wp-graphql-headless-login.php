@@ -33,12 +33,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Load the autoloader.
-require_once __DIR__ . '/src/Autoloader.php';
-if ( ! \WPGraphQL\Login\Autoloader::autoload() ) {
-	return;
-}
-
 /**
  * Define plugin constants.
  *
@@ -64,135 +58,22 @@ function constants(): void {
 	if ( ! defined( 'WPGRAPHQL_LOGIN_PLUGIN_FILE' ) ) {
 		define( 'WPGRAPHQL_LOGIN_PLUGIN_FILE', __FILE__ );
 	}
-
-	// Whether to autoload the files or not.
-	if ( ! defined( 'WPGRAPHQL_LOGIN_AUTOLOAD' ) ) {
-		define( 'WPGRAPHQL_LOGIN_AUTOLOAD', true );
-	}
-}
-
-/**
- * Checks if all the the required plugins are installed and activated.
- *
- * @since 0.0.1
- *
- * @return array<string,string>
- */
-function dependencies_not_ready(): array {
-	$wpgraphql_version = '2.14.1';
-
-	$deps = [];
-
-	if ( ! class_exists( 'WPGraphQL' ) || ( defined( 'WPGRAPHQL_VERSION' ) && version_compare( WPGRAPHQL_VERSION, $wpgraphql_version, '<' ) ) ) {
-		$deps['WPGraphQL'] = $wpgraphql_version;
-	}
-
-	return $deps;
-}
-
-/**
- * Checks if any known plugin conflicts are present.
- *
- * @since 0.0.4
- *
- * @return string[]
- */
-function plugin_conflicts(): array {
-	$conflicts = [];
-
-	if ( class_exists( 'WPGraphQL\JWT_Authentication\JWT_Authentication' ) && is_plugin_active( 'wp-graphql-jwt-authentication/wp-graphql-jwt-authentication.php' ) ) {
-		$conflicts[] = 'WPGraphQL JWT Authentication';
-	}
-
-	if ( class_exists( 'WP_GraphQL_CORS' ) && is_plugin_active( 'wp-graphql-cors/wp-graphql-cors.php' ) ) {
-		$conflicts[] = 'WPGraphQL CORS';
-	}
-
-	return $conflicts;
-}
-
-/**
- * Initializes plugin.
- *
- * @since 0.0.1
- */
-function init(): void {
-	// Get the dependencies that are not ready.
-	$not_ready = dependencies_not_ready();
-
-	// Get the conflicting plugins.
-	$conflicts = plugin_conflicts();
-
-	// Load our plugin and initialize.
-	if ( empty( $not_ready ) && empty( $conflicts ) && defined( 'WPGRAPHQL_LOGIN_PLUGIN_DIR' ) ) {
-		require_once WPGRAPHQL_LOGIN_PLUGIN_DIR . 'src/Main.php';
-		\WPGraphQL\Login\Main::instance();
-	}
-
-	// Output an error notice for the dependencies that are not ready.
-	foreach ( $not_ready as $dep => $version ) {
-		add_action(
-			'admin_notices',
-			static function () use ( $dep, $version ) {
-				?>
-				<div class="error notice">
-					<p>
-					<?php
-					printf(
-						/* translators: dependency not ready error message */
-						esc_html__( '%1$s (v%2$s) must be active for Headless Login for WPGraphqL to work.', 'wp-graphql-headless-login' ),
-						esc_attr( $dep ),
-						esc_attr( $version ),
-					);
-					?>
-					</p>
-				</div>
-					<?php
-			}
-		);
-	}
-
-	// Output an error notice for the conflicting plugins.
-	foreach ( $conflicts as $conflict ) {
-		add_action(
-			'admin_notices',
-			static function () use ( $conflict ) {
-				?>
-				<div class="error notice">
-					<p>
-					<?php
-					printf(
-						/* translators: dependency not ready error message */
-						esc_html__( '%1$s is not compatible with Headless Login for WPGraphQL. Please deactivate it.', 'wp-graphql-headless-login' ),
-						esc_attr( $conflict ),
-					);
-					?>
-					</p>
-				</div>
-					<?php
-			}
-		);
-	}
 }
 
 constants();
 
-// Initialize the plugin.
-add_action( 'graphql_init', 'WPGraphQL\Login\init' );
-
-// Run this function when the plugin is activated.
-if ( file_exists( __DIR__ . '/activation.php' ) ) {
-	require_once __DIR__ . '/activation.php';
-	register_activation_hook( __FILE__, 'WPGraphQL\Login\activation_callback' );
+// Load the autoloader.
+require_once __DIR__ . '/src/Autoloader.php';
+if ( ! \WPGraphQL\Login\Autoloader::autoload() ) {
+	return;
 }
 
-// Run this function when the plugin is deactivated.
-if ( file_exists( __DIR__ . '/deactivation.php' ) ) {
-	require_once __DIR__ . '/deactivation.php';
-	register_deactivation_hook( __FILE__, 'WPGraphQL\Login\deactivation_callback' );
-}
-
-// Some plugins may rely on authentication even before our plugin is initialized.
-if ( class_exists( 'WPGraphQL\Login\Auth\ServerAuthentication' ) ) {
-	\WPGraphQL\Login\Auth\ServerAuthentication::init();
+// Load the main plugin class.
+if ( class_exists( 'WPGraphQL\Login\Main' ) ) {
+	add_action(
+		'plugins_loaded',
+		static function () {
+			\WPGraphQL\Login\Main::get_instance();
+		}
+	);
 }

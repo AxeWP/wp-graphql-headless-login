@@ -1,33 +1,42 @@
 parameters:
-		level: 8
-		phpVersion:
-			min: 80200
-			max: 80500
-		treatPhpDocTypesAsCertain: false
-		inferPrivatePropertyTypeFromConstructor: true
-		checkExplicitMixedMissingReturn: true
-		checkFunctionNameCase: true
-		checkInternalClassCaseSensitivity: true
-		checkTooWideReturnTypesInProtectedAndPublicMethods: true
-		polluteScopeWithAlwaysIterableForeach: false
-		polluteScopeWithLoopInitialAssignments: false
-		reportAlwaysTrueInLastCondition: true
-		reportStaticMethodSignatures: true
-		reportWrongPhpDocTypeInVarTag: true
-		bootstrapFiles:
-			- tools/phpstan/constants.php
-		dynamicConstantNames:
-			- ADMIN_COOKIE_PATH
-			- COOKIEPATH
-			- SITECOOKIEPATH
-		paths:
-			- wp-graphql-headless-login.php
-			- access-functions.php
-			- activation.php
-			- deactivation.php
-			- src/
-		excludePaths:
-			analyse:
-				- vendor-prefixed/
-		scanFiles:
-			- vendor/axepress/wp-graphql-stubs/wp-graphql-stubs.php
+	# Rules
+	treatPhpDocTypesAsCertain: false
+	inferPrivatePropertyTypeFromConstructor: true
+	checkExplicitMixedMissingReturn: true
+	checkFunctionNameCase: true
+	checkInternalClassCaseSensitivity: true
+	checkTooWideReturnTypesInProtectedAndPublicMethods: true
+	polluteScopeWithAlwaysIterableForeach: false
+	polluteScopeWithLoopInitialAssignments: false
+	reportAlwaysTrueInLastCondition: true
+	reportStaticMethodSignatures: true
+	reportWrongPhpDocTypeInVarTag: true
+
+	# Configuration
+	level: 8
+	phpVersion:
+		min: 80200
+		max: 80500
+	bootstrapFiles:
+		- tools/phpstan/constants.php
+		- vendor-prefixed/autoload.php
+		- wp-graphql-headless-login.php
+	dynamicConstantNames:
+		- ADMIN_COOKIE_PATH
+		- COOKIEPATH
+		- SITECOOKIEPATH
+	paths:
+		- wp-graphql-headless-login.php
+		- access-functions.php
+		- activation.php
+		- deactivation.php
+		- src/
+	excludePaths:
+		analyse:
+			- tests/
+			- vendor/
+			- vendor-prefixed/
+		analyseAndScan:
+			- node_modules (?)
+	scanFiles:
+		- vendor/axepress/wp-graphql-stubs/wp-graphql-stubs.php
