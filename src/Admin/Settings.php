@@ -159,7 +159,7 @@ class Settings {
 	 * Registers a JS asset.
 	 *
 	 * @param non-empty-string $handle The asset handle.
-	 * @param string           $asset_name The asset name.
+	 * @param non-empty-string $asset_name The asset name.
 	 *
 	 * @throws \Exception If the asset file is not found.
 	 */
@@ -170,11 +170,12 @@ class Settings {
 		}
 
 		$script_asset = require_once $script_asset_path; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
-		$asset_src    = sprintf( '%s/build/%s.js', plugins_url( '', WPGRAPHQL_LOGIN_PLUGIN_FILE ), $asset_name );
+		/** @var non-empty-string $asset_url */
+		$asset_url = plugins_url( sprintf( 'build/%s.js', $asset_name ), WPGRAPHQL_LOGIN_PLUGIN_FILE );
 
 		wp_register_script(
 			$handle,
-			$asset_src,
+			$asset_url,
 			$script_asset['dependencies'],
 			$script_asset['version'],
 			true
