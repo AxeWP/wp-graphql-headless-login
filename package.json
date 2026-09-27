@@ -1,8 +1,7 @@
 {
 	"name": "wp-graphql-headless-login",
 	"engines": {
-		"node": ">=22.21.1",
-		"npm": ">=10.9.4"
+		"node": ">=24.15.0"
 	},
 	"files": [
 		"build",
