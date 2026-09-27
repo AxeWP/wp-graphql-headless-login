@@ -51,7 +51,13 @@ class Settings {
 	 * Registers the settings and their hooks.
 	 */
 	public static function init(): void {
-		// Initialize the settings registry **after** WPGraphQL loads it's settings.
+		/**
+		 * Register settings _after_ WPGraphQL initializes.
+		 *
+		 * Prevents conflict caused by
+		 *
+		 * @see https://github.com/wp-graphql/wp-graphql/pull/3878
+		 */
 		add_action( 'init', [ SettingsRegistry::class, 'register_settings' ], 12 );
 
 		add_action( 'rest_api_init', [ self::class, 'register_rest_routes' ] );
