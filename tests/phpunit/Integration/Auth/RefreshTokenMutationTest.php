@@ -45,63 +45,10 @@ class RefreshTokenMutationTest extends TestCase {
 	public $refresh_token;
 
 	/**
-	 * The `iss` values of the tokens minted during the test.
-	 */
-	private array $token_issuers = [];
-
-	/**
-	 * Returns the `iss` claim from the given token.
-	 */
-	private function getTokenIssuer( string $token ): ?string {
-		$parts = explode( '.', $token );
-
-		if ( 3 !== count( $parts ) ) {
-			return null;
-		}
-
-		$payload = json_decode( (string) base64_decode( strtr( $parts[1], '-_', '+/' ) ) );
-
-		return isset( $payload->iss ) && is_string( $payload->iss ) ? $payload->iss : null;
-	}
-
-	/**
-	 * Adds the test site URLs and minted token issuers to the allowed `iss` domains.
-	 */
-	public function filterAllowedIssDomains( array $allowed_domains ): array {
-		$home_url = (string) call_user_func( 'home_url' );
-
-		return array_values(
-			array_filter(
-				array_unique(
-					array_merge(
-						$allowed_domains,
-						[
-							$home_url,
-							$this->getBlogUrl(),
-							str_replace( 'http://', 'https://', $home_url ),
-							str_replace( 'https://', 'http://', $home_url ),
-							...$this->token_issuers,
-						]
-					)
-				)
-			)
-		);
-	}
-
-	/**
-	 * Wrapper for `get_bloginfo( 'url' )`.
-	 */
-	private function getBlogUrl(): string {
-		return (string) call_user_func( 'get_bloginfo', 'url' );
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public function setUp(): void {
 		parent::setUp();
-
-		add_filter( 'graphql_login_iss_allowed_domains', [ $this, 'filterAllowedIssDomains' ] );
 
 		$this->admin     = $this->factory()->user->create(
 			[
@@ -118,33 +65,18 @@ class RefreshTokenMutationTest extends TestCase {
 
 		$this->auth_token    = $tokens['auth_token'];
 		$this->refresh_token = $tokens['refresh_token'];
-		$this->token_issuers = array_values(
-			array_filter(
-				[
-					$this->getTokenIssuer( $this->auth_token ),
-					$this->getTokenIssuer( $this->refresh_token ),
-				]
-			)
-		);
-
-		unset( $_SERVER['HTTP_AUTHORIZATION'] );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function tearDown(): void {
-		unset( $_SERVER['HTTP_AUTHORIZATION'] );
-		call_user_func( 'remove_filter', 'graphql_login_iss_allowed_domains', [ $this, 'filterAllowedIssDomains' ] );
 		$this->reset_utils_properties();
 		$this->clearSchema();
 
 		parent::tearDown();
 	}
 
-	/**
-	 * The `refreshToken` mutation.
-	 */
 	public function query(): string {
 		return '
 			mutation RefreshToken( $refreshToken: String! ) {
@@ -186,7 +118,7 @@ class RefreshTokenMutationTest extends TestCase {
 		// Spoof token with bad user ID.
 
 		$refresh_token_args = [
-			'iss'  => $this->getBlogUrl(),
+			'iss'  => get_bloginfo( 'url' ),
 			'iat'  => time(),
 			'nbf'  => time(),
 			'exp'  => time() + ( DAY_IN_SECONDS * 365 ),
@@ -270,9 +202,6 @@ class RefreshTokenMutationTest extends TestCase {
 		$this->assertEquals( 'User secret not found in the token.', $actual['extensions']['debug'][0]['message'] );
 	}
 
-	/**
-	 * Tests the mutation when the user secret has been revoked.
-	 */
 	public function testWithSecretRevoked(): void {
 		$query = $this->query();
 
@@ -332,9 +261,6 @@ class RefreshTokenMutationTest extends TestCase {
 		$this->assertEquals( 'User secret does not match.', $actual['extensions']['debug'][0]['message'] );
 	}
 
-	/**
-	 * Tests the mutation with a valid refresh token.
-	 */
 	public function testWithValidRefreshToken(): void {
 		$query = $this->query();
 

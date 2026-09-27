@@ -30,6 +30,4 @@ parameters:
 			analyse:
 				- vendor-prefixed/
 		scanFiles:
-			- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
 			- vendor/axepress/wp-graphql-stubs/wp-graphql-stubs.php
-			- tools/phpstan/woographql-stubs.php

@@ -22,7 +22,6 @@ vi.mock( '@/admin/components/provider-config/ClientPanel', () => ( {
 } ) );
 
 vi.mock( '@wordpress/components', () => ( {
-	...vi.importActual( '@wordpress/components' ),
 	Flex: ( { children }: { children: React.ReactNode } ) => (
 		<div data-testid="flex">{ children }</div>
 	),

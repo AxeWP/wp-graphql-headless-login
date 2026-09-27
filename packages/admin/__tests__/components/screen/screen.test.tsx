@@ -26,7 +26,7 @@ vi.mock( '@wordpress/api-fetch' );
 
 // Partial mock: `@wordpress/components` imports many i18n functions at import time, so pass through everything except what the tests control.
 vi.mock( '@wordpress/i18n', async ( importOriginal ) => ( {
-	...( await importOriginal< typeof import('@wordpress/i18n') >() ),
+	...( await importOriginal< typeof import( '@wordpress/i18n' ) >() ),
 	__: ( text: string ) => text,
 	sprintf: ( text: string, ...args: string[] ) => {
 		let result = text;
@@ -251,7 +251,9 @@ describe( 'Screen Component', () => {
 		} );
 
 		it( 'integrates with SettingsProvider', async () => {
-			await expect( renderScreen() ).resolves.not.toThrow();
+			await renderScreen();
+
+			expect( screen.getByRole( 'main' ) ).toBeInTheDocument();
 		} );
 
 		it( 'receives currentScreen from context', async () => {

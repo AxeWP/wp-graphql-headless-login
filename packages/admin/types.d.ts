@@ -3,12 +3,7 @@
 import type { createHooks } from '@wordpress/hooks';
 
 export type AllowedConditionalLogicOperators =
-	| '=='
-	| '!='
-	| '>'
-	| '<'
-	| '>='
-	| '<=';
+	'==' | '!=' | '>' | '<' | '>=' | '<=';
 
 export type FieldSchema = {
 	description: string;
@@ -54,8 +49,7 @@ export type ProviderSettingType = {
 };
 
 export type ClientOptionsType =
-	| OAuth2ClientOptionsType
-	| SiteTokenClientOptionsType;
+	OAuth2ClientOptionsType | SiteTokenClientOptionsType;
 
 export type OAuth2ClientOptionsType = Record<
 	string,

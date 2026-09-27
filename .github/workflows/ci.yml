@@ -55,6 +55,8 @@ jobs:
               - '**.*js'
               - '**.ts'
               - '**.ts*'
+              - '**.scss'
+              - '**.css'
               - 'package*.json'
             php:
               - '**.php'
@@ -125,6 +127,19 @@ jobs:
       prettier: true
       stylelint: true
       tsc: true
+    secrets: inherit
+
+  build:
+    name: Build
+    needs: detect
+    if: needs.detect.outputs.js == 'true'
+    uses: AxeWP/plugin-infra/.github/workflows/reusable-build.yml@c1201b2a13344c68c0b0c651a8dfc6b6265f22b7 # v0.1.0
+    permissions:
+      contents: read
+    with:
+      php-version: ${{ needs.detect.outputs.php-version }}
+      artifact-name: wp-graphql-headless-login
+      artifact-path: wp-graphql-headless-login.zip
     secrets: inherit
 
   jest:

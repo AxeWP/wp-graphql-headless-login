@@ -18,7 +18,7 @@ vi.mock( '@wordpress/api-fetch' );
 
 // Partial mock: `@wordpress/components` imports many i18n functions at import time, so pass through everything except what the tests control.
 vi.mock( '@wordpress/i18n', async ( importOriginal ) => ( {
-	...( await importOriginal< typeof import('@wordpress/i18n') >() ),
+	...( await importOriginal< typeof import( '@wordpress/i18n' ) >() ),
 	__: ( text: string ) => text,
 } ) );
 
@@ -510,8 +510,8 @@ describe( 'Menu Component', () => {
 			const buttons = container.querySelectorAll(
 				'.components-button.is-tertiary'
 			);
-			const testScreenButton = Array.from( buttons ).find(
-				( button ) => button.textContent?.includes( 'Test Screen' )
+			const testScreenButton = Array.from( buttons ).find( ( button ) =>
+				button.textContent?.includes( 'Test Screen' )
 			);
 
 			expect( testScreenButton ).toBeInTheDocument();

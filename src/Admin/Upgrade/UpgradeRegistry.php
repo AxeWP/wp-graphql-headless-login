@@ -15,7 +15,7 @@ namespace WPGraphQL\Login\Admin\Upgrade;
  */
 class UpgradeRegistry {
 	/**
-	 * {@inheritDoc}
+	 * Registers the upgrade hooks.
 	 */
 	public static function init(): void {
 		// Register the upgrade process - in case the activation hook is missed.

@@ -44,20 +44,6 @@ class LogoutMutationTest extends TestCase {
 	public $refresh_token;
 
 	/**
-	 * Returns the `name` of each of the given fields.
-	 */
-	private function getFieldNames( array $fields ): array {
-		return call_user_func( 'wp_list_pluck', $fields, 'name' );
-	}
-
-	/**
-	 * Wrapper for `is_user_logged_in()`.
-	 */
-	private function isUserLoggedIn(): bool {
-		return (bool) call_user_func( 'is_user_logged_in' );
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public function setUp(): void {
@@ -81,6 +67,7 @@ class LogoutMutationTest extends TestCase {
 	 * {@inheritDoc}
 	 */
 	public function tearDown(): void {
+		unset( $_SERVER['HTTP_ORIGIN'] );
 		$this->reset_utils_properties();
 
 		delete_option( AccessControlSettings::get_slug() );
@@ -91,9 +78,6 @@ class LogoutMutationTest extends TestCase {
 		parent::tearDown();
 	}
 
-	/**
-	 * The `logout` mutation.
-	 */
 	public function query(): string {
 		return '
 			mutation Logout {
@@ -122,7 +106,7 @@ class LogoutMutationTest extends TestCase {
 		$actual = $this->graphql( compact( 'query' ) );
 
 		$this->assertArrayNotHasKey( 'errors', $actual );
-		$this->assertNotContains( 'logout', $this->getFieldNames( $actual['data']['__type']['fields'] ), 'Logout mutation should not be exposed.' );
+		$this->assertNotContains( 'logout', wp_list_pluck( $actual['data']['__type']['fields'], 'name' ), 'Logout mutation should not be exposed.' );
 
 		// Test with mutation enabled.
 		update_option( CookieSettings::get_slug(), [ 'hasLogoutMutation' => true ] );
@@ -132,7 +116,7 @@ class LogoutMutationTest extends TestCase {
 		$actual = $this->graphql( compact( 'query' ) );
 
 		$this->assertArrayNotHasKey( 'errors', $actual );
-		$this->assertNotContains( 'logout', $this->getFieldNames( $actual['data']['__type']['fields'] ), 'Logout mutation should not be exposed.' );
+		$this->assertNotContains( 'logout', wp_list_pluck( $actual['data']['__type']['fields'], 'name' ), 'Logout mutation should not be exposed.' );
 
 		// Test with mutation and dependency enabled.
 		update_option(
@@ -148,7 +132,7 @@ class LogoutMutationTest extends TestCase {
 		$actual = $this->graphql( compact( 'query' ) );
 
 		$this->assertArrayNotHasKey( 'errors', $actual );
-		$this->assertNotContains( 'logout', $this->getFieldNames( $actual['data']['__type']['fields'] ), 'Logout mutation should not be exposed.' );
+		$this->assertNotContains( 'logout', wp_list_pluck( $actual['data']['__type']['fields'], 'name' ), 'Logout mutation should not be exposed.' );
 
 		// Test with ALL dependencies enabled.
 		update_option( AccessControlSettings::get_slug(), [ 'shouldBlockUnauthorizedDomains' => true ] );
@@ -158,12 +142,9 @@ class LogoutMutationTest extends TestCase {
 		$actual = $this->graphql( compact( 'query' ) );
 
 		$this->assertArrayNotHasKey( 'errors', $actual );
-		$this->assertContains( 'logout', $this->getFieldNames( $actual['data']['__type']['fields'] ), 'Logout mutation should be exposed.' );
+		$this->assertContains( 'logout', wp_list_pluck( $actual['data']['__type']['fields'], 'name' ), 'Logout mutation should be exposed.' );
 	}
 
-	/**
-	 * Tests the mutation when `hasLogoutMutation` is disabled.
-	 */
 	public function testWithMutationDisabled(): void {
 		$query = $this->query();
 
@@ -174,9 +155,6 @@ class LogoutMutationTest extends TestCase {
 		$this->assertStringStartsWith( 'Cannot query field "logout" on type "RootMutation".', $actual['errors'][0]['message'] );
 	}
 
-	/**
-	 * Tests the mutation when `hasLogoutMutation` is enabled.
-	 */
 	public function testWithMutationEnabled(): void {
 		update_option(
 			CookieSettings::get_slug(),
@@ -202,6 +180,6 @@ class LogoutMutationTest extends TestCase {
 
 		$this->assertArrayNotHasKey( 'errors', $actual );
 		$this->assertTrue( $actual['data']['logout']['success'], 'The success field should be true if the user is logged out.' );
-		$this->assertFalse( $this->isUserLoggedIn(), 'The user should be logged out.' );
+		$this->assertFalse( is_user_logged_in(), 'The user should be logged out.' );
 	}
 }

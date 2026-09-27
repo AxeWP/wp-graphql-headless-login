@@ -70,9 +70,6 @@ class RevokeUserSecretMutationTest extends TestCase {
 		parent::tearDown();
 	}
 
-	/**
-	 * The `revokeUserSecret` mutation.
-	 */
 	public function query(): string {
 		return '
 			mutation RevokeUserSecret( $userId: ID! ) {
@@ -84,9 +81,6 @@ class RevokeUserSecretMutationTest extends TestCase {
 		';
 	}
 
-	/**
-	 * Tests the mutation without the required permissions.
-	 */
 	public function testWithBadPermissions(): void {
 		$query = $this->query();
 
@@ -100,9 +94,6 @@ class RevokeUserSecretMutationTest extends TestCase {
 		$this->assertEquals( 'You are not allowed to revoke the user secret.', $actual['errors'][0]['message'] );
 	}
 
-	/**
-	 * Tests the mutation with an invalid user ID.
-	 */
 	public function testWithBadId(): void {
 		$query = $this->query();
 
@@ -119,9 +110,6 @@ class RevokeUserSecretMutationTest extends TestCase {
 		$this->assertEquals( 'You are not allowed to revoke the user secret.', $actual['errors'][0]['message'] );
 	}
 
-	/**
-	 * Tests the mutation with a valid request.
-	 */
 	public function testMutation(): void {
 		$query = $this->query();
 
