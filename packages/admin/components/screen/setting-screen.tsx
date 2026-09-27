@@ -111,7 +111,7 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 									'wp-graphql-headless-login'
 								),
 								blockerLabel
-						  )
+							)
 						: sprintf(
 								// translators: %1$s: Label of the setting that unlocks this screen. %2$s: Label of the screen it lives on.
 								__(
@@ -120,7 +120,7 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 								),
 								blockerLabel,
 								blockerSetting.label
-						  ) }
+							) }
 				</Notice>
 			</PanelBody>
 		);

@@ -57,7 +57,7 @@ apply_filters( 'graphql_login_registered_object_classes', $classes );
 
 #### Parameters
 
-- **`$classes`** _(array)_ : The list of PHP classes that are registered as GraphQL Types. These classes must extend the `WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\GraphQLType` interface.
+- **`$classes`** _(array)_ : The list of PHP classes that are registered as GraphQL Types. These classes must implement the `WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Interfaces\GraphQLType` interface.
 
 ## Authentication
 

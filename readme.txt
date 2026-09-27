@@ -4,7 +4,9 @@ Tags: GraphQL, Headless, React SSO, Social Login, OAuth2, SAML, Authentication, 
 Requires at least: 6.9
 Tested up to: 7.0.2
 Requires PHP: 8.2
+<!-- x-release-please-start-version -->
 Stable tag: 0.4.4
+<!-- x-release-please-end -->
 Maintained at: https://github.com/AxeWP/wp-graphql-headless-login
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html

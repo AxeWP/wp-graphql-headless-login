@@ -43,7 +43,7 @@ https://github.com/AxeWP/wp-graphql-headless-login/blob/develop/docs/CONTRIBUTIN
 
 ## Checklist
 
-- [ ] I have read the [Contribution Guidelines](../docs/CONTRIBUTING.md).
+- [ ] I have read the [Contribution Guidelines](https://github.com/AxeWP/wp-graphql-headless-login/blob/develop/docs/CONTRIBUTING.md).
 - [ ] My PR title is descriptive and follows the [conventional commit message format](https://www.conventionalcommits.org/en/v1.0.0/).
 - [ ] My code passes all lints (PHPCS, PHPStan, etc.), tests, and CI checks.
 - [ ] My code has full test coverage.

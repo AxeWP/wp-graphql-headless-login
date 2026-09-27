@@ -43,14 +43,14 @@ In general, we recommend you **adhere to the GitHub issue templates** included i
 
 4. **Commit and push your changes**: Once you're satisfied with your changes, commit them to your forked repository and push them to your branch.
 
-5. **Create a pull request**: Submit a `Pull Request` to the `main` branch of this repository. Select your branch and provide a detailed description of your changes.
+5. **Create a pull request**: Submit a `Pull Request` to the `develop` branch of this repository. Select your branch and provide a detailed description of your changes.
 
    Pull Request titles should be concise and descriptive. They must follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format. E.g., `feat: Add new feature`.
 
 ### Review Process
 
 1. Your pull request will be reviewed by a maintainer. We'll review all PRs, and make suggestions or changes as needed.
-2. Once approved, your PR will be **squash-merged** into the `main` branch.
+2. Once approved, your PR will be **squash-merged** into the `develop` branch.
 
 ### Contributing Documentation
 

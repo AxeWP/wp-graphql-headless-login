@@ -4,8 +4,18 @@
 		".": {
 			"release-type": "php",
 			"changelog-path": "CHANGELOG.md",
-			"include-v-in-tag": true,
-			"bump-minor-pre-major": true
+			"include-v-in-tag": false,
+			"bump-minor-pre-major": true,
+			"extra-files": [
+				{
+					"type": "generic",
+					"path": "wp-graphql-headless-login.php"
+				},
+				{
+					"type": "generic",
+					"path": "readme.txt"
+				}
+			]
 		}
 	}
 }

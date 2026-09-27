@@ -9,7 +9,7 @@ A WordPress plugin that provides headless login and authentication for <a href="
 
 ---
 
-![Packagist License](https://img.shields.io/packagist/l/axepress/wp-graphql-headless-login?color=green) ![Packagist Version](https://img.shields.io/packagist/v/axepress/wp-graphql-headless-login?label=stable) ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/AxeWP/wp-graphql-headless-login/0.4.4) ![GitHub forks](https://img.shields.io/github/forks/AxeWP/wp-graphql-headless-login?style=social) ![GitHub Repo stars](https://img.shields.io/github/stars/AxeWP/wp-graphql-headless-login?style=social)<br />
+![Packagist License](https://img.shields.io/packagist/l/axepress/wp-graphql-headless-login?color=green) ![Packagist Version](https://img.shields.io/packagist/v/axepress/wp-graphql-headless-login?label=stable) ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/AxeWP/wp-graphql-headless-login/latest) ![GitHub forks](https://img.shields.io/github/forks/AxeWP/wp-graphql-headless-login?style=social) ![GitHub Repo stars](https://img.shields.io/github/stars/AxeWP/wp-graphql-headless-login?style=social)<br />
 ![CI](https://img.shields.io/github/actions/workflow/status/axewp/wp-graphql-headless-login/ci.yml?branch=develop&label=CI)
 [![Coverage Status](https://codecov.io/gh/AxeWP/wp-graphql-headless-login/branch/develop/graph/badge.svg)](https://codecov.io/gh/AxeWP/wp-graphql-headless-login)
 
@@ -55,7 +55,7 @@ Until we hit v1.0, we're using a _modified_ version of [SemVer](https://semver.o
 
 ## Development and Support
 
-Development of Headless Login for WPGraphQL is provided by [AxePress Development](https://axepress.dev). Community contributions are _welcome_ and **encouraged**. For more information on contributing, please see [CONTRIBUTING.md](./CONTRIBUTING.md).
+Development of Headless Login for WPGraphQL is provided by [AxePress Development](https://axepress.dev). Community contributions are _welcome_ and **encouraged**. For more information on contributing, please see [CONTRIBUTING.md](./docs/CONTRIBUTING.md).
 
 Basic support is provided for free, both in [this repo](https://github.com/AxeWP/wp-graphql-headless-login/issues) and in [WPGraphQL's official Discord](https://discord.gg/55h7WmYZff).
 

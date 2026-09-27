@@ -12,9 +12,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request_target' && github.head_ref || github.sha }}
   cancel-in-progress: true
 
-permissions:
-  pull-requests: write
-  statuses: write
+permissions: {}
 
 jobs:
   run:
@@ -23,9 +21,10 @@ jobs:
     runs-on: ubuntu-slim
     permissions:
       pull-requests: read
+      statuses: write
     steps:
       - name: Validate pull request title
-        uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50
+        uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

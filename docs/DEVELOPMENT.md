@@ -114,11 +114,11 @@ You can use Docker and the `wp-env` tool to set up a local development environme
 
 ### Workflow
 
-This repository uses `main` as its default branch. Always create a new branch from `main` when working on a feature or bug fix.
+This repository uses `develop` as its default branch. Always create a new branch from `develop` when working on a feature or bug fix.
 
 Branches should be prefixed with the type of change (e.g. `feat`, `chore`, `tests`, `fix`, etc.) followed by a short description of the change. For example, a branch for a new feature called "Add new feature" could be named `feat/add-new-feature`.
 
-Pull requests are **squash-merged** into `main`. Use a [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) title (for example, `feat: add settings page`) so the squash commit on `main` can drive automated releases.
+Pull requests are **squash-merged** into `develop`. Use a [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) title (for example, `feat: add settings page`) so the squash commit on `develop` can drive automated releases.
 
 ### Code Quality / Code Standards
 
@@ -151,7 +151,7 @@ npm run format
 
 #### TypeScript
 
-The admin app is type-checked with TypeScript 6's native `tsc` (config: [`tsconfig.json`](../tsconfig.json), extending `@axepress/plugin-infra/tsconfig`).
+The admin app is type-checked with `tsc` (config: [`tsconfig.json`](../tsconfig.json), extending `@axepress/plugin-infra/tsconfig`).
 
 ```bash
 npm run lint:js:types
@@ -209,7 +209,7 @@ npm run lint:schema
 
 ### GitHub Workflows
 
-GitHub workflows run the lints and tests on pull requests and on `main` and `main`. The entrypoint is [`.github/workflows/ci.yml`](../.github/workflows/ci.yml), which delegates to the reusable workflows in [AxeWP/plugin-infra](https://github.com/AxeWP/plugin-infra/tree/main/.github/workflows).
+GitHub workflows run the lints and tests on pull requests and on `develop` and `main`. The entrypoint is [`.github/workflows/ci.yml`](../.github/workflows/ci.yml), which delegates to the reusable workflows in [AxeWP/plugin-infra](https://github.com/AxeWP/plugin-infra/tree/main/.github/workflows).
 
 ## Releasing
 
