@@ -2,9 +2,8 @@
 	"$schema": "https://schemas.wp.org/trunk/wp-env.json",
 	"core": null,
 	"plugins": [
-		"https://downloads.wordpress.org/plugin/wp-graphql.zip",
+		"https://downloads.wordpress.org/plugin/wp-graphql.2.14.1.zip",
 		"https://downloads.wordpress.org/plugin/wpgraphql-ide.zip",
-		"wp-graphql/wp-graphql-woocommerce",
 		"."
 	],
 	"mappings": {

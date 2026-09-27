@@ -103,7 +103,7 @@
 		"format": "vendor/bin/phpcbf",
 		"phpstan": "vendor/bin/phpstan analyze --ansi --memory-limit=1G",
 		"strauss-install": [
-			"test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.26.3/strauss.phar"
+			"test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.30.0/strauss.phar"
 		],
 		"prefix-namespaces": [
 			"@strauss-install",
