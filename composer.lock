@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "axepress/axewp-common",
-            "version": "v0.1.2",
+            "version": "v0.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AxeWP/axewp-common.git",
-                "reference": "135886fe8a6c217df9054f64eb0cd5723e1c8bde"
+                "reference": "edf2cbb0fc0ee473b80e8adcbd8a95a7fede14ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AxeWP/axewp-common/zipball/135886fe8a6c217df9054f64eb0cd5723e1c8bde",
-                "reference": "135886fe8a6c217df9054f64eb0cd5723e1c8bde",
+                "url": "https://api.github.com/repos/AxeWP/axewp-common/zipball/edf2cbb0fc0ee473b80e8adcbd8a95a7fede14ca",
+                "reference": "edf2cbb0fc0ee473b80e8adcbd8a95a7fede14ca",
                 "shasum": ""
             },
             "require": {
@@ -57,9 +57,9 @@
             "description": "Shared WordPress and WPGraphQL utilities for AxeWP plugins",
             "support": {
                 "issues": "https://github.com/AxeWP/axewp-common/issues",
-                "source": "https://github.com/AxeWP/axewp-common/tree/v0.1.2"
+                "source": "https://github.com/AxeWP/axewp-common/tree/v0.1.3"
             },
-            "time": "2026-09-27T09:21:34+00:00"
+            "time": "2026-09-27T16:31:52+00:00"
         },
         {
             "name": "firebase/php-jwt",
