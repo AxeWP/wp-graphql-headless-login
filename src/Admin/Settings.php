@@ -101,9 +101,12 @@ class Settings {
 
 		// Maybe load react-jsx-runtime polyfill.
 		if ( ! wp_script_is( 'react-jsx-runtime', 'registered' ) ) {
+			/** @var non-empty-string $script_url */
+			$script_url = plugins_url( 'build/react-jsx-runtime.js', WPGRAPHQL_LOGIN_PLUGIN_FILE );
+
 			wp_register_script(
 				'react-jsx-runtime',
-				plugins_url( 'build/react-jsx-runtime.js', WPGRAPHQL_LOGIN_PLUGIN_FILE ),
+				$script_url,
 				[],
 				(string) filemtime( WPGRAPHQL_LOGIN_PLUGIN_DIR . 'build/react-jsx-runtime.js' ),
 				true
@@ -122,8 +125,8 @@ class Settings {
 	/**
 	 * Registers a JS asset.
 	 *
-	 * @param string $handle The asset handle.
-	 * @param string $asset_name The asset name.
+	 * @param non-empty-string $handle The asset handle.
+	 * @param non-empty-string $asset_name The asset name.
 	 *
 	 * @throws \Exception If the asset file is not found.
 	 */
@@ -136,9 +139,12 @@ class Settings {
 		$script_asset = require_once $script_asset_path; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
 		$js           = 'build/' . $asset_name . '.js';
 
+		/** @var non-empty-string $script_url */
+		$asset_url = plugins_url( $js, WPGRAPHQL_LOGIN_PLUGIN_FILE );
+
 		wp_register_script(
 			$handle,
-			plugins_url( $js, WPGRAPHQL_LOGIN_PLUGIN_FILE ),
+			$asset_url,
 			$script_asset['dependencies'],
 			$script_asset['version'],
 			true
