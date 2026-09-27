@@ -4,8 +4,6 @@
 	"plugins": [
 		"https://downloads.wordpress.org/plugin/wp-graphql.2.14.1.zip",
 		"https://downloads.wordpress.org/plugin/wpgraphql-ide.zip",
-		"https://downloads.wordpress.org/plugin/woocommerce.zip",
-		"wp-graphql/wp-graphql-woocommerce",
 		"."
 	],
 	"mappings": {

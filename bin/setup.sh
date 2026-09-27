@@ -16,10 +16,8 @@ setup_plugins() {
 		wp plugin install woocommerce --allow-root
 	fi
 
-	cd ../wp-graphql-woocommerce || exit 1
-	if [ ! -d "vendor" ]; then
-		echo "Installing WPGraphQL WooCommerce dependencies..."
-		composer install --no-interaction --no-dev --optimize-autoloader
+	if ! $( wp plugin is-installed wp-graphql-woocommerce --allow-root ); then
+		wp plugin install https://github.com/wp-graphql/wp-graphql-woocommerce/releases/latest/wp-graphql-woocommerce.zip --allow-root
 	fi
 
 	cd "$BASEDIR" || exit 1
