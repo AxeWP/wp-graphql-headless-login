@@ -7,12 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 
 - chore: Update NPM and Composer deps.
-- ci: Test compatibility with WordPress 6.9.1, WPGraphQL 2.7.1, PHP 8.4.
+- ci: Test compatibility with WordPress 6.9.1, WPGraphQL 2.23.1, PHP 8.4.
 - ci: Cleanup Workflows.
 - dev: Refactor repository structure and scaffold.
 - dev: Improve typescript code quality and edge cases.
 - tests: Implement vitest and backfill tests.
 - fix: Ensure constants are available for plugin Activation/Deactivation hooks.
+- fix: Delay settings registration to prevent WPGraphQL 2.15+ from stripping out `default` values.
 
 ## [0.4.4] - 2025-09-19
 
