@@ -84,21 +84,16 @@ class RefreshUserSecret extends MutationType {
 
 			$user = ! empty( $user_id ) ? get_user_by( 'id', $user_id ) : false;
 
-			if ( empty( $user_id ) || empty( $user ) || ! TokenManager::current_user_can( $user_id, false ) ) {
+			if ( empty( $user_id ) || empty( $user ) ) {
 				throw new UserError( esc_html__( 'You are not allowed to refresh the user secret.', 'wp-graphql-headless-login' ) );
 			}
 
 			$revoked_secret = TokenManager::get_user_secret( $user_id, true );
 			$is_refreshed   = TokenManager::refresh_user_secret( $user_id, false );
 
+			// The user doesn't have permission to refresh the secret.
 			if ( is_wp_error( $is_refreshed ) ) {
-				graphql_debug( $is_refreshed->get_error_message() );
-				return [ 'success' => false ];
-			}
-
-			if ( ! $is_refreshed ) {
-				graphql_debug( __( 'User secret could not be refreshed.', 'wp-graphql-headless-login' ) );
-				return [ 'success' => false ];
+				throw new UserError( esc_html__( 'You are not allowed to refresh the user secret.', 'wp-graphql-headless-login' ) );
 			}
 
 			// Generate new tokens.

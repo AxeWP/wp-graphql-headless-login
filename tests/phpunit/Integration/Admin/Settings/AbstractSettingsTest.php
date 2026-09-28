@@ -88,6 +88,10 @@ class AbstractSettingsTest extends TestCase {
 			[ 'additionalAuthorizedDomains' => [ 'https://example.com' ] ],
 			get_option( AccessControlSettings::get_slug() )
 		);
+
+		update_option( AccessControlSettings::get_slug(), [ 'additionalAuthorizedDomains' => 42 ] );
+
+		$this->assertSame( [ 'additionalAuthorizedDomains' => [] ], get_option( AccessControlSettings::get_slug() ) );
 	}
 
 	/**
@@ -151,5 +155,11 @@ class AbstractSettingsTest extends TestCase {
 		$this->assertSame( 'invalid_setting_key', $actual->get_error_code() );
 
 		$this->assertTrue( $settings->prepare_value( 'hasLogoutMutation', 'true' ) );
+
+		// Values are validated before they're sanitized.
+		$actual = SettingsRegistry::get( AccessControlSettings::get_slug() )->prepare_value( 'additionalAuthorizedDomains', [ '*' ] );
+
+		$this->assertWPError( $actual );
+		$this->assertSame( 'rest_invalid_authorized_domain', $actual->get_error_code() );
 	}
 }

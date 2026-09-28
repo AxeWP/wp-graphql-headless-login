@@ -130,9 +130,7 @@ class SiteTokenTest extends TestCase {
 
 		$this->assertArrayHasKey( 'errors', $actual );
 
-		// Compat for WPGraphQL v1.x.
-		$debug_message = $actual['errors'][0]['extensions']['debugMessage'] ?? $actual['errors'][0]['debugMessage'];
-		$this->assertEquals( 'Provider siteToken is not enabled.', $debug_message );
+		$this->assertSame( 'Provider siteToken is not enabled.', $actual['errors'][0]['message'] );
 	}
 
 	/**
@@ -180,6 +178,13 @@ class SiteTokenTest extends TestCase {
 
 		// Test with bad identity.
 		$variables['input']['identity'] = 'bad_user';
+
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertEquals( 'The user could not be logged in.', $actual['errors'][0]['message'] );
+
+		// Test with an empty identity, which shouldn't match users without one.
+		$variables['input']['identity'] = '';
 
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 		$this->assertArrayHasKey( 'errors', $actual );
@@ -277,8 +282,7 @@ class SiteTokenTest extends TestCase {
 		$blocked = $this->graphql( compact( 'query', 'variables' ) );
 
 		$this->assertArrayHasKey( 'errors', $blocked );
-		$debug_message = $blocked['errors'][0]['extensions']['debugMessage'] ?? $blocked['errors'][0]['debugMessage'] ?? '';
-		$this->assertSame( 'Provider siteToken is not enabled.', $debug_message );
+		$this->assertSame( 'Provider siteToken is not enabled.', $blocked['errors'][0]['message'] );
 
 		update_option(
 			AccessControlSettings::get_slug(),

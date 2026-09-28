@@ -132,6 +132,29 @@ class ServerAuthenticationTest extends TestCase {
 	}
 
 	/**
+	 * Tests that determining the current user while validating the token doesn't recurse.
+	 */
+	public function test_nested_current_user_lookup_does_not_recurse(): void {
+		$tokens = $this->generate_user_tokens( $this->user_id );
+
+		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $tokens['auth_token'];
+
+		$nested_user_id = null;
+		add_filter(
+			'graphql_login_auth_header',
+			static function ( string $header ) use ( &$nested_user_id ): string {
+				// E.g. a capability check while filtering the header.
+				$nested_user_id = apply_filters( 'determine_current_user', false );
+
+				return $header;
+			}
+		);
+
+		$this->assertSame( $this->user_id, $this->determine_current_user_id() );
+		$this->assertFalse( $nested_user_id, 'The nested lookup should skip token authentication.' );
+	}
+
+	/**
 	 * Simulates another authentication method (e.g. an auth cookie) determining the current user before ours runs.
 	 */
 	private function authenticate_admin_by_other_method(): void {

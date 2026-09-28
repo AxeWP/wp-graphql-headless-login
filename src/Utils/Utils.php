@@ -273,10 +273,6 @@ final class Utils {
 		// The rule slug is in the format of `field` or `slug.field`. If there is only one part, the slug is the same as the current one.
 		$slug_parts = explode( '.', $rule['slug'] );
 
-		if ( empty( $slug_parts ) ) {
-			return false;
-		}
-
 		$dep_slug        = count( $slug_parts ) > 1 ? $slug_parts[0] : $slug;
 		$dep_option_name = count( $slug_parts ) > 1 ? $slug_parts[1] : $rule['slug'];
 

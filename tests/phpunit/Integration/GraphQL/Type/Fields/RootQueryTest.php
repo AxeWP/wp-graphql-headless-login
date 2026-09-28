@@ -10,6 +10,7 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login\Tests\Integration\GraphQL\Type\Fields;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Facebook;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\OAuth2Config;
 use WPGraphQL\Login\GraphQL\Model\Client as ClientModel;
 use WPGraphQL\Login\GraphQL\Type\Fields\RootQuery;
@@ -26,6 +27,7 @@ use WPGraphQL\Type\WPEnumType;
 #[CoversClass( ClientOptions::class )]
 #[CoversClass( LoginOptions::class )]
 #[CoversClass( OAuth2Config::class )]
+#[CoversClass( Facebook::class )]
 class RootQueryTest extends TestCase {
 	/**
 	 * The provider config settings.
@@ -101,6 +103,7 @@ class RootQueryTest extends TestCase {
 						... on FacebookClientOptions {
 							clientId
 							clientSecret
+							graphApiVersion
 							redirectUri
 						}
 					}
@@ -174,6 +177,7 @@ class RootQueryTest extends TestCase {
 						... on FacebookClientOptions {
 							clientId
 							clientSecret
+							graphApiVersion
 							redirectUri
 						}
 					}
@@ -206,6 +210,7 @@ class RootQueryTest extends TestCase {
 							[
 								$this->expectedField( 'clientId', $this->client_config['clientOptions']['clientId'] ),
 								$this->expectedField( 'clientSecret', $this->client_config['clientOptions']['clientSecret'] ),
+								$this->expectedField( 'graphApiVersion', $this->client_config['clientOptions']['graphAPIVersion'] ),
 								$this->expectedField( 'redirectUri', $this->client_config['clientOptions']['redirectUri'] ),
 							]
 						),
@@ -240,6 +245,7 @@ class RootQueryTest extends TestCase {
 						... on FacebookClientOptions {
 							clientId
 							clientSecret
+							graphApiVersion
 							redirectUri
 						}
 					}
@@ -304,6 +310,7 @@ class RootQueryTest extends TestCase {
 						... on FacebookClientOptions {
 							clientId
 							clientSecret
+							graphApiVersion
 							redirectUri
 						}
 					}
@@ -339,6 +346,7 @@ class RootQueryTest extends TestCase {
 							[
 								$this->expectedField( 'clientId', $this->client_config['clientOptions']['clientId'] ),
 								$this->expectedField( 'clientSecret', $this->client_config['clientOptions']['clientSecret'] ),
+								$this->expectedField( 'graphApiVersion', $this->client_config['clientOptions']['graphAPIVersion'] ),
 								$this->expectedField( 'redirectUri', $this->client_config['clientOptions']['redirectUri'] ),
 							]
 						),

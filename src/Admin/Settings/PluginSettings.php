@@ -10,6 +10,8 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Admin\Settings;
 
+use WPGraphQL\Login\Auth\TokenManager;
+
 /**
  * Class PluginSettings
  */
@@ -82,6 +84,22 @@ class PluginSettings extends AbstractSettings {
 				'type'              => 'string',
 				'controlType'       => 'jwtSecret',
 				'sanitize_callback' => 'sanitize_text_field',
+				'validate_callback' => static function ( $value ) {
+					// An empty value regenerates the secret, and a masked value is ignored.
+					if ( ! is_string( $value ) || '' === $value || preg_match( '/^\*+$/', $value ) || strlen( $value ) >= TokenManager::MIN_SECRET_KEY_LENGTH ) {
+						return true;
+					}
+
+					return new \WP_Error(
+						'rest_invalid_jwt_secret_key',
+						sprintf(
+							// translators: %d is the minimum length of the secret key.
+							__( 'The JWT secret key must be at least %d characters long.', 'wp-graphql-headless-login' ),
+							TokenManager::MIN_SECRET_KEY_LENGTH
+						),
+						[ 'status' => 400 ]
+					);
+				},
 			],
 		];
 	}

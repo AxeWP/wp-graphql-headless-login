@@ -14,7 +14,6 @@ use GraphQL\Error\UserError;
 use WPGraphQL\Login\Auth\Client;
 use WPGraphQL\Login\Auth\ProviderConfig\Password;
 use WPGraphQL\Utils\Utils;
-use WP_Error;
 
 /**
  * Class - Auth
@@ -28,10 +27,27 @@ class Auth {
 	 * @throws \GraphQL\Error\UserError If the client is invalid.
 	 */
 	public static function get_client( string $provider ): Client {
+		// Disabled providers aren't in the registry.
+		if ( ! array_key_exists( $provider, ProviderRegistry::get_instance()->get_providers() ) ) {
+			throw new UserError(
+				sprintf(
+					// translators: %s is the provider slug.
+					esc_html__( 'Provider %s is not enabled.', 'wp-graphql-headless-login' ),
+					esc_html( $provider )
+				)
+			);
+		}
+
 		$client = new Client( $provider );
 
-		// Ensure the client is valid before returning.
-		self::validate_client( $client );
+		/**
+		 * Fires when validating the client instance.
+		 *
+		 * Throw a \GraphQL\Error\UserError to reject the client.
+		 *
+		 * @param \WPGraphQL\Login\Auth\Client $client The client instance.
+		 */
+		do_action( 'graphql_login_validate_client', $client );
 
 		return $client;
 	}
@@ -183,27 +199,5 @@ class Auth {
 			'success' => (bool) $linked_user,
 			'user'    => false === $linked_user ? null : $linked_user,
 		];
-	}
-
-	/**
-	 * Validates the client instance.
-	 *
-	 * @param mixed $client The client instance.
-	 *
-	 * @throws \GraphQL\Error\UserError If the client is invalid.
-	 */
-	private static function validate_client( $client ): void {
-		if ( $client instanceof WP_Error ) {
-			throw new UserError( esc_html( $client->get_error_message() ) );
-		}
-
-		if ( ! $client instanceof Client ) {
-			throw new UserError( esc_html__( 'Invalid Authentication client.', 'wp-graphql-headless-login' ) );
-		}
-
-		/**
-		 * Fires when validating the client instance.
-		 */
-		do_action( 'graphql_login_validate_client', $client );
 	}
 }

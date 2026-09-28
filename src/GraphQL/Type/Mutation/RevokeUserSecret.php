@@ -72,7 +72,7 @@ class RevokeUserSecret extends MutationType {
 
 			$user = ! empty( $user_id ) ? get_user_by( 'id', $user_id ) : false;
 
-			if ( empty( $user_id ) || empty( $user ) || ! TokenManager::current_user_can( $user_id, false ) ) {
+			if ( empty( $user_id ) || empty( $user ) ) {
 				throw new UserError( esc_html__( 'You are not allowed to revoke the user secret.', 'wp-graphql-headless-login' ) );
 			}
 
@@ -80,9 +80,9 @@ class RevokeUserSecret extends MutationType {
 			$revoked_secret = TokenManager::get_user_secret( $user_id, true );
 			$is_revoked     = TokenManager::revoke_user_secret( $user_id, false );
 
+			// The user doesn't have permission to revoke the secret.
 			if ( is_wp_error( $is_revoked ) ) {
-				graphql_debug( $is_revoked->get_error_message() );
-				return [ 'success' => false ];
+				throw new UserError( esc_html__( 'You are not allowed to revoke the user secret.', 'wp-graphql-headless-login' ) );
 			}
 
 			return [

@@ -10,6 +10,8 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login\Tests\Integration\Admin;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use ReflectionClass;
 use ReflectionMethod;
 use WPGraphQL\Admin\Settings\SettingsRegistry as WPGraphQLSettingsRegistry;
@@ -64,6 +66,30 @@ class SettingsTest extends TestCase {
 
 		$this->assertCount( 1, $inline_scripts );
 		$this->assertStringStartsWith( 'const wpGraphQLLogin = ', reset( $inline_scripts ) );
+	}
+
+	/**
+	 * Tests that the settings app is told when the secret is defined with a constant.
+	 */
+	#[RunInSeparateProcess]
+	#[PreserveGlobalState( false )]
+	public function test_settings_app_reports_secret_constant(): void {
+		define( 'WPGRAPHQL_LOGIN_JWT_SECRET_KEY', str_repeat( 'constant-secret-', 4 ) );
+
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'administrator' ] ) );
+		set_current_screen( 'graphql_page_graphql-settings' );
+		do_action( 'admin_enqueue_scripts', 'graphql_page_graphql-settings' );
+
+		$inline_scripts = array_filter( (array) wp_scripts()->get_data( 'wp-graphql-headless-login/admin-editor', 'before' ) );
+		$config         = json_decode( substr( (string) reset( $inline_scripts ), strlen( 'const wpGraphQLLogin = ' ) ), true );
+
+		$this->assertSame(
+			[
+				'hasKey'     => true,
+				'isConstant' => true,
+			],
+			$config['secret']
+		);
 	}
 
 	/**

@@ -121,6 +121,20 @@ class RefreshTokenTest extends TestCase {
 	}
 
 	/**
+	 * Tests that an empty refresh token is rejected.
+	 */
+	public function test_refresh_token_fails_with_empty_token(): void {
+		$query     = $this->query();
+		$variables = [
+			'refreshToken' => '',
+		];
+
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assert_refresh_token_failed( $actual, 'The provided refresh token is invalid.' );
+	}
+
+	/**
 	 * Tests that a malformed refresh token is rejected.
 	 */
 	public function test_refresh_token_fails_with_malformed_token(): void {

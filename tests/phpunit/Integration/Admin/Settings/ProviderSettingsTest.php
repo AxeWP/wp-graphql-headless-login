@@ -140,6 +140,51 @@ class ProviderSettingsTest extends TestCase {
 	}
 
 	/**
+	 * Tests that saved provider settings are sanitized, dropping any options the provider doesn't support.
+	 */
+	public function test_provider_settings_are_sanitized_on_save(): void {
+		update_option(
+			ProviderSettings::$settings_prefix . 'instagram',
+			[
+				'name'          => '<b>Instagram</b>',
+				'order'         => '3',
+				'isEnabled'     => '1',
+				'notASetting'   => 'value',
+				'clientOptions' => [
+					'clientId'    => 'mock_client_id',
+					'notAnOption' => 'value',
+				],
+				'loginOptions'  => [
+					'useAuthenticationCookie' => 1,
+					'createUserIfNoneExists'  => true,
+					// Instagram doesn't return an email address to link existing users with.
+					'linkExistingUsers'       => true,
+				],
+			]
+		);
+
+		$this->assertSame(
+			[
+				'name'          => 'Instagram',
+				'order'         => 3,
+				'isEnabled'     => true,
+				'clientOptions' => [
+					'clientId' => 'mock_client_id',
+				],
+				'loginOptions'  => [
+					'useAuthenticationCookie' => true,
+					'createUserIfNoneExists'  => true,
+				],
+			],
+			get_option( ProviderSettings::$settings_prefix . 'instagram' )
+		);
+
+		update_option( ProviderSettings::$settings_prefix . 'instagram', 'not-an-array' );
+
+		$this->assertSame( [], get_option( ProviderSettings::$settings_prefix . 'instagram' ) );
+	}
+
+	/**
 	 * Tests that the options are validated against each provider's schema.
 	 *
 	 * @param string              $slug     The provider slug.

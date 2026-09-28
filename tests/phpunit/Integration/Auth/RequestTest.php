@@ -606,6 +606,11 @@ class RequestTest extends TestCase {
 
 		$this->assertSame( 'https://example2.com', $actual['Access-Control-Allow-Origin'] );
 
+		// An opaque upstream origin isn't treated as an allowed host.
+		$actual = Request::response_headers_to_send( [ 'Access-Control-Allow-Origin' => 'null' ] );
+
+		$this->assertSame( 'https://example2.com', $actual['Access-Control-Allow-Origin'] );
+
 		// Unauthorized origins fall back to the site URL.
 		$_SERVER['HTTP_ORIGIN'] = 'https://unauthorized.example.com';
 
@@ -625,6 +630,23 @@ class RequestTest extends TestCase {
 		$this->assertArrayHasKey( 'X-WPGraphQL-Login-Token', Request::response_headers_to_send( [] ) );
 
 		add_filter( 'graphql_debug_enabled', '__return_false', 100 );
+
+		$actual = Request::response_headers_to_send( [] );
+
+		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Token', $actual );
+		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Refresh-Token', $actual );
+	}
+
+	/**
+	 * Tests that no tokens are sent in the response headers if the new refresh token is invalid.
+	 */
+	public function test_response_headers_to_send_omits_tokens_when_refresh_token_is_invalid(): void {
+		$tokens = $this->generate_user_tokens( $this->factory()->user->create() );
+
+		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $tokens['auth_token'];
+
+		// E.g. a misconfigured filter that issues already-expired refresh tokens.
+		add_filter( 'graphql_login_refresh_token_expiration_timestamp', static fn (): int => time() - HOUR_IN_SECONDS );
 
 		$actual = Request::response_headers_to_send( [] );
 

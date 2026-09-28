@@ -201,4 +201,86 @@ class AuthenticationDataTest extends TestCase {
 			]
 		);
 	}
+
+	/**
+	 * Tests that the authentication fields are only added to the User model.
+	 */
+	public function test_other_models_are_not_extended(): void {
+		$fields = [ 'title' => static fn (): string => 'Hello World' ];
+
+		// The model name, data, visibility, owner, and current user.
+		$actual = apply_filters( 'graphql_model_prepare_fields', $fields, 'PostObject', get_post( $this->factory()->post->create() ), 'public', null, 0 );
+
+		$this->assertSame( $fields, $actual );
+	}
+
+	/**
+	 * Tests that the `auth` field resolves on other user types, whose source isn't the User model (e.g. WPGraphQL for WooCommerce's `Customer`).
+	 */
+	public function test_auth_field_is_added_to_filtered_user_types(): void {
+		add_filter(
+			'graphql_login_user_types',
+			static fn ( array $types ): array => array_merge( $types, [ 'FooCustomer' ] )
+		);
+		add_action(
+			'graphql_register_types',
+			static function (): void {
+				register_graphql_object_type(
+					'FooCustomer',
+					[
+						'description' => 'A stand-in for a user type with its own model.',
+						'fields'      => [
+							'databaseId' => [
+								'type'    => 'Int',
+								'resolve' => static fn ( \WP_User $source ): int => $source->ID,
+							],
+						],
+					]
+				);
+				register_graphql_field(
+					'RootQuery',
+					'fooCustomer',
+					[
+						'type'    => 'FooCustomer',
+						'resolve' => static fn (): \WP_User => wp_get_current_user(),
+					]
+				);
+			}
+		);
+		$this->clearSchema();
+
+		wp_set_current_user( $this->test_user );
+
+		$query = '
+			query {
+				fooCustomer {
+					databaseId
+					auth {
+						linkedIdentities {
+							id
+							provider
+						}
+					}
+				}
+			}
+		';
+
+		$actual = $this->graphql( compact( 'query' ) );
+
+		$this->assertArrayNotHasKey( 'errors', $actual );
+		$this->assertSame( $this->test_user, $actual['data']['fooCustomer']['databaseId'] );
+		$this->assertEqualSets(
+			[
+				[
+					'id'       => '1234567890',
+					'provider' => 'FACEBOOK',
+				],
+				[
+					'id'       => '1234567890',
+					'provider' => 'GOOGLE',
+				],
+			],
+			$actual['data']['fooCustomer']['auth']['linkedIdentities']
+		);
+	}
 }

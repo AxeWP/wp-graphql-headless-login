@@ -210,7 +210,10 @@ final class Settings implements Registrable {
 		// Add meta about the secret without exposing it.
 		$secret = [
 			'hasKey'     => (bool) TokenManager::get_secret_key(),
-			'isConstant' => defined( 'WPGRAPHQL_LOGIN_JWT_SECRET_KEY' ) && ! empty( WPGRAPHQL_LOGIN_JWT_SECRET_KEY ),
+			// @todo GRAPHQL_LOGIN_JWT_SECRET_KEY is deprecated.
+			'isConstant' => ( defined( 'WPGRAPHQL_LOGIN_JWT_SECRET_KEY' ) && ! empty( WPGRAPHQL_LOGIN_JWT_SECRET_KEY ) )
+			// @todo GRAPHQL_LOGIN_JWT_SECRET_KEY is deprecated.
+			|| ( defined( 'GRAPHQL_LOGIN_JWT_SECRET_KEY' ) && ! empty( GRAPHQL_LOGIN_JWT_SECRET_KEY ) ),
 		];
 
 		$setting_instances = SettingsRegistry::get_all();

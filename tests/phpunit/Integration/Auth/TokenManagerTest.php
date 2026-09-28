@@ -10,6 +10,8 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login\Tests\Integration\Auth;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Auth\TokenManager;
 use WPGraphQL\Login\Auth\User;
@@ -244,6 +246,14 @@ class TokenManagerTest extends TestCase {
 		$_SERVER['HTTP_AUTHORIZATION'] = 'Basic ' . $token;
 		$this->assertNull( TokenManager::validate_token() );
 
+		// A bearer scheme without a token.
+		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer';
+		$this->assertNull( TokenManager::validate_token() );
+
+		// The scheme is case-insensitive.
+		$_SERVER['HTTP_AUTHORIZATION'] = 'bearer ' . $token;
+		$this->assertSame( $this->test_user, TokenManager::validate_token()->data->user->id );
+
 		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $token;
 		$this->assertSame( $this->test_user, TokenManager::validate_token()->data->user->id );
 
@@ -284,8 +294,76 @@ class TokenManagerTest extends TestCase {
 		$this->reset_utils_properties();
 		$this->assertSame( $secret, TokenManager::get_secret_key(), 'The generated secret should be stored.' );
 
-		add_filter( 'graphql_login_jwt_secret_key', static fn (): string => 'filtered-secret' );
-		$this->assertSame( 'filtered-secret', TokenManager::get_secret_key() );
+		$filtered_secret = str_repeat( 'filtered-secret-', 4 );
+		add_filter( 'graphql_login_jwt_secret_key', static fn (): string => $filtered_secret );
+		$this->assertSame( $filtered_secret, TokenManager::get_secret_key() );
+	}
+
+	/**
+	 * Tests that a secret key too short to sign tokens with is treated as missing, instead of causing a fatal error.
+	 */
+	public function test_short_secret_key_is_rejected(): void {
+		wp_set_current_user( $this->test_user );
+		$token = $this->mint_token( $this->build_payload() );
+
+		add_filter( 'graphql_login_jwt_secret_key', static fn (): string => 'too-short' );
+
+		$this->assertSame( '', TokenManager::get_secret_key() );
+		$this->assertNull( TokenManager::get_auth_token( wp_get_current_user() ) );
+
+		$actual = TokenManager::validate_token( $token );
+
+		$this->assertWPError( $actual );
+		$this->assertSame( 'invalid-secret-key', $actual->get_error_code() );
+	}
+
+	/**
+	 * Tests that each token is timed from when it's issued, using the current validity.
+	 */
+	public function test_tokens_are_timed_when_issued(): void {
+		wp_set_current_user( $this->test_user );
+		$user = wp_get_current_user();
+
+		$token = TokenManager::validate_token( TokenManager::get_auth_token( $user ) );
+		$this->assertSame( 300, $token->exp - $token->iat );
+
+		add_filter( 'graphql_login_token_validity', static fn (): int => 60 );
+		add_filter( 'graphql_login_refresh_token_validity', static fn (): int => DAY_IN_SECONDS );
+
+		$token = TokenManager::validate_token( TokenManager::get_auth_token( $user ) );
+		$this->assertSame( 60, $token->exp - $token->iat );
+		$this->assertEqualsWithDelta( time(), $token->iat, 5 );
+
+		$refresh_token = TokenManager::validate_token( TokenManager::get_refresh_token( $user ), true );
+		$this->assertSame( DAY_IN_SECONDS, $refresh_token->exp - $refresh_token->iat );
+	}
+
+	/**
+	 * Tests that the secret key defined with the documented constant is used to sign tokens.
+	 */
+	#[RunInSeparateProcess]
+	#[PreserveGlobalState( false )]
+	public function test_get_secret_key_uses_constant(): void {
+		$secret = str_repeat( 'constant-secret-', 4 );
+		define( 'WPGRAPHQL_LOGIN_JWT_SECRET_KEY', $secret );
+
+		$this->assertSame( $secret, TokenManager::get_secret_key() );
+
+		// Tokens signed with the stored secret are rejected.
+		$this->assertWPError( TokenManager::validate_token( $this->mint_token( $this->build_payload(), (string) graphql_login_get_setting( 'jwt_secret_key' ) ) ) );
+		$this->assertSame( $this->test_user, TokenManager::validate_token( $this->mint_token( $this->build_payload(), $secret ) )->data->user->id );
+	}
+
+	/**
+	 * Tests that the legacy constant is still supported.
+	 */
+	#[RunInSeparateProcess]
+	#[PreserveGlobalState( false )]
+	public function test_get_secret_key_supports_legacy_constant(): void {
+		$secret = str_repeat( 'legacy-secret-', 5 );
+		define( 'GRAPHQL_LOGIN_JWT_SECRET_KEY', $secret );
+		$this->setExpectedDeprecated( 'GRAPHQL_LOGIN_JWT_SECRET_KEY' );
+		$this->assertSame( $secret, TokenManager::get_secret_key() );
 	}
 
 	/**

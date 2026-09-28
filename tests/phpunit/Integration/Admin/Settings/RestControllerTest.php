@@ -365,6 +365,30 @@ class RestControllerTest extends TestCase {
 	}
 
 	/**
+	 * Tests that the JWT secret can't be set to a key too short to sign tokens with.
+	 */
+	public function test_update_item_rejects_short_secret_key(): void {
+		wp_set_current_user( $this->admin_id );
+
+		$request = new WP_REST_Request( 'POST', $this->endpoint );
+		$request->set_param( 'slug', PluginSettings::get_slug() );
+		$request->set_param( 'values', [ 'jwt_secret_key' => 'too-short' ] );
+
+		$response = $this->server->dispatch( $request );
+
+		$this->assertSame( 400, $response->get_status() );
+		$this->assertSame( 'rest_invalid_param', $response->get_data()['code'] );
+
+		// An empty value regenerates the secret.
+		$request->set_param( 'values', [ 'jwt_secret_key' => '' ] );
+
+		$this->assertSame( 200, $this->server->dispatch( $request )->get_status() );
+
+		$this->reset_utils_properties();
+		$this->assertSame( 64, strlen( TokenManager::get_secret_key() ) );
+	}
+
+	/**
 	 * Tests that update_item() sanitizes the Access Control settings.
 	 */
 	public function test_update_item_sanitizes_access_control_settings(): void {

@@ -17,6 +17,7 @@ use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\OAuth2Config;
 use WPGraphQL\Login\Auth\User;
 use WPGraphQL\Login\GraphQL\Type\Mutation\LinkUserIdentity;
 use WPGraphQL\Login\GraphQL\Type\Mutation\Login;
+use WPGraphQL\Login\Tests\Fixtures\FooGenericProvider;
 use WPGraphQL\Login\Tests\Fixtures\FooGenericProviderConfig;
 
 /**
@@ -134,6 +135,37 @@ class GenericTest extends OAuth2ConfigTestCase {
 		$this->assertSame( $this->test_user, $login['events']['set_auth_cookie'][0][3] );
 		$this->assertCount( 1, $login['events']['set_logged_in_cookie'] );
 		$this->assertSame( $this->test_user, $login['events']['set_logged_in_cookie'][0][3] );
+	}
+
+	/**
+	 * Tests that the client passed to the login hooks exposes the provider details and the configured OAuth2 provider.
+	 */
+	public function test_login_hooks_receive_client_with_provider_details(): void {
+		User::link_user_identity( $this->test_user, 'oauth2-generic', self::IDENTITY_ID );
+
+		$client = null;
+		add_action(
+			'graphql_login_after_successful_login',
+			static function ( array $payload, $user_data, Client $login_client ) use ( &$client ): void {
+				$client = $login_client;
+			},
+			10,
+			3
+		);
+
+		$this->assert_logged_in( $this->login(), [ 'databaseId' => $this->test_user ] );
+
+		$this->assertInstanceOf( Client::class, $client );
+		$this->assertSame( 'oauth2-generic', $client->get_provider_slug() );
+		$this->assertSame( 'OAuth2 (Generic)', $client->get_provider_name() );
+		$this->assertSame( 'oauth2', $client->get_provider_type() );
+
+		$config = $client->get_provider_configurator();
+
+		$this->assertInstanceOf( FooGenericProviderConfig::class, $config );
+		// The provider is configured from the client options.
+		$this->assertInstanceOf( FooGenericProvider::class, $config->get_provider() );
+		$this->assertStringStartsWith( 'http://example.com/authorize', $config->get_provider()->getBaseAuthorizationUrl() );
 	}
 
 	/**

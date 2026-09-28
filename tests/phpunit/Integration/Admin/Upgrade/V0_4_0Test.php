@@ -62,4 +62,27 @@ class V0_4_0Test extends TestCase {
 		$this->assertFalse( get_option( 'wp_graphql_login_settings_jwt_secret_key' ) );
 		$this->assertArrayNotHasKey( 'hasAccessControlAllowCredentials', get_option( AccessControlSettings::get_slug(), [] ) );
 	}
+
+	/**
+	 * Tests that the upgrade leaves the current settings untouched when there are no legacy settings to migrate.
+	 */
+	public function test_upgrade_without_legacy_settings_changes_nothing(): void {
+		update_option( AbstractUpgrade::VERSION_OPTION_KEY, '0.3.0' );
+		update_option( CookieSettings::get_slug(), [ 'hasLogoutMutation' => true ] );
+
+		// No access control settings at all.
+		$this->assertTrue( ( new V0_4_0() )->run() );
+
+		$this->assertFalse( get_option( PluginSettings::get_slug(), false ) );
+		$this->assertSame( [ 'hasLogoutMutation' => true ], get_option( CookieSettings::get_slug() ) );
+
+		// Access control settings without the legacy key.
+		update_option( AbstractUpgrade::VERSION_OPTION_KEY, '0.3.0' );
+		update_option( AccessControlSettings::get_slug(), [ 'shouldBlockUnauthorizedDomains' => true ] );
+
+		$this->assertTrue( ( new V0_4_0() )->run() );
+
+		$this->assertSame( [ 'shouldBlockUnauthorizedDomains' => true ], get_option( AccessControlSettings::get_slug() ) );
+		$this->assertSame( [ 'hasLogoutMutation' => true ], get_option( CookieSettings::get_slug() ) );
+	}
 }

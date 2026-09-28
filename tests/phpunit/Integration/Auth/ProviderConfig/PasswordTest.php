@@ -371,6 +371,19 @@ class PasswordTest extends TestCase {
 	}
 
 	/**
+	 * Tests that only an authenticated user (or an authentication error) is returned from the provider's user data.
+	 */
+	public function test_get_user_from_data(): void {
+		$config = new Password();
+		$user   = get_user_by( 'id', $this->test_user );
+		$error  = new \WP_Error( 'incorrect_password', 'Incorrect password.' );
+
+		$this->assertSame( $user, $config->get_user_from_data( $user ) );
+		$this->assertSame( $error, $config->get_user_from_data( $error ) );
+		$this->assertFalse( $config->get_user_from_data( [ 'user_login' => 'test_user' ] ) );
+	}
+
+	/**
 	 * Configures the provider, access control, and cookie settings for authenticating follow-up requests.
 	 *
 	 * @param bool $use_authentication_cookie Whether logging in should set the authentication cookie.

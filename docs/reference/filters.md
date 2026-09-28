@@ -129,7 +129,7 @@ apply_filters( 'graphql_login_payload', $payload, $user, $user_data, $client );
 
 ### `graphql_login_jwt_secret_key`
 
-Filter the secret key used to sign the JWT auth and refresh tokens.
+Define the secret key used to sign the JWT token. Only used if the `WPGRAPHQL_LOGIN_JWT_SECRET_KEY` is not defined.
 
 ```php
 apply_filters( 'graphql_login_jwt_secret_key', $secret );

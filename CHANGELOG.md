@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - `LoginPayload.wooSessionToken` (deprecated since v0.1.4) ➡️ `LoginPayload.sessionToken`.
   - If WPGraphQL for WooCommerce's **Session Token Type** setting is set to _Store API_, use the `cartToken` fields instead.
 - **Custom GraphQL types**: The bundled `WPGraphQL\Login\Vendor\AxeWP\GraphQL` library has been replaced by `WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL`. Classes added with the `graphql_login_registered_{type}_classes` filters must now implement `WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Interfaces\GraphQLType`, where `register()` is an instance method instead of a static one.
+- **JWT secret key length**: The JWT secret key must now be at least 32 characters long. Shorter keys are treated as missing: tokens won't be issued, and existing tokens will fail validation with an `invalid-secret-key` error. If your key is too short, replace it with a longer one before updating. Existing tokens will be invalidated.
 
 ### What's changed
 
@@ -29,6 +30,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - tests: Implement vitest and backfill tests.
 - fix: Ensure constants are available for plugin Activation/Deactivation hooks.
 - fix: Delay settings registration to prevent WPGraphQL 2.15+ from stripping out `default` values.
+- fix: Deprecate `GRAPHQL_LOGIN_JWT_SECRET_KEY` constant in favor of `WPGRAPHQL_LOGIN_JWT_SECRET_KEY` .
+- fix: Return a `Provider {slug} is not enabled.` error instead of an internal server error when logging in with a disabled provider.
+- fix: Time each token from when it's issued, instead of the first token issued in the PHP process.
+- fix: Accept the `Authorization` header's `Bearer` scheme case-insensitively (e.g. `bearer <token>`).
+- fix: Sanitize provider settings when they're saved, dropping unsupported options.
+- fix: Allow the Instagram provider to create new users.
 
 ## [0.4.4] - 2025-09-19
 

@@ -10,10 +10,13 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login\Tests\Integration\Utils;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use ReflectionClass;
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 use WPGraphQL\Login\Admin\Settings\CookieSettings;
 use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
+use WPGraphQL\Login\Admin\SettingsRegistry;
+use WPGraphQL\Login\Tests\Fixtures\FooConditionalCookieSettings;
 use WPGraphQL\Login\Tests\TestCase;
 use WPGraphQL\Login\Utils\Utils;
 
@@ -117,6 +120,46 @@ class UtilsTest extends TestCase {
 		);
 
 		$this->assertSame( '.filtered.com', Utils::get_cookie_setting( 'cookieDomain' ) );
+	}
+
+	/**
+	 * Tests each conditional logic operator, and that a dependency on an unknown settings group is never met.
+	 */
+	public function test_conditional_logic_operators(): void {
+		$registry = new ReflectionClass( SettingsRegistry::class );
+		$original = $registry->getStaticPropertyValue( 'settings' );
+
+		$registry->setStaticPropertyValue(
+			'settings',
+			array_merge( SettingsRegistry::get_all(), [ CookieSettings::get_slug() => new FooConditionalCookieSettings() ] )
+		);
+
+		$fields = [ 'whenEqual', 'whenNotEqual', 'whenGreater', 'whenLess', 'whenGreaterOrEqual', 'whenLessOrEqual', 'whenUnknownOp', 'whenMissingGroup' ];
+
+		// Store every dependent field as enabled, bypassing the sanitization registered for the real config.
+		remove_all_filters( 'sanitize_option_' . CookieSettings::get_slug() );
+		update_option( CookieSettings::get_slug(), array_fill_keys( $fields, true ) );
+
+		try {
+			// `level` uses its default of 5.
+			$actual = array_combine( $fields, array_map( [ Utils::class, 'get_cookie_setting' ], $fields ) );
+
+			$this->assertSame(
+				[
+					'whenEqual'          => true,
+					'whenNotEqual'       => false,
+					'whenGreater'        => true,
+					'whenLess'           => true,
+					'whenGreaterOrEqual' => false,
+					'whenLessOrEqual'    => false,
+					'whenUnknownOp'      => false,
+					'whenMissingGroup'   => false,
+				],
+				$actual
+			);
+		} finally {
+			$registry->setStaticPropertyValue( 'settings', $original );
+		}
 	}
 
 	/**
