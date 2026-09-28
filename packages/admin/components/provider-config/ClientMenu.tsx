@@ -1,11 +1,7 @@
-/* eslint-disable @wordpress/no-unsafe-wp-apis */
-import {
-	__experimentalNavigation as Navigation,
-	__experimentalNavigationItem as NavigationItem,
-	__experimentalNavigationMenu as NavigationMenu,
-} from '@wordpress/components';
+import { Button, Flex, FlexItem } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useEntityProp } from '@wordpress/core-data';
+
 import { useClientContext } from '@/admin/contexts/provider-config-context';
 
 import styles from './styles.module.scss';
@@ -25,36 +21,46 @@ export function StatusBadge( { provider }: { provider: string } ) {
 				className={ isEnabled ? styles?.[ 'enabled' ] : undefined }
 				aria-label={ title }
 				title={ title }
-			></span>
+			/>
 		</div>
 	);
 }
 
 export function ClientMenu() {
 	const providers = Object.keys( wpGraphQLLogin?.settings?.providers || {} );
+
 	const { activeClient, setActiveClient } = useClientContext();
 
 	return (
-		<Navigation activeItem={ activeClient }>
-			<NavigationMenu
-				title={ __( 'Providers', 'wp-graphql-headless-login' ) }
-			>
-				{ providers.length > 0 &&
-					providers.map( ( provider ) => (
-						<NavigationItem
-							className={ styles?.[ 'menuItem' ] ?? '' }
-							key={ provider }
-							item={ provider }
-							title={
-								wpGraphQLLogin?.settings?.providers?.[
-									provider
-								]?.[ 'name' ]?.default as string
-							}
-							icon={ <StatusBadge provider={ provider } /> }
-							onClick={ () => setActiveClient( provider ) }
-						/>
-					) ) }
-			</NavigationMenu>
-		</Navigation>
+		<Flex direction="column" gap={ 1 }>
+			<FlexItem>
+				<strong>
+					{ __( 'Providers', 'wp-graphql-headless-login' ) }
+				</strong>
+			</FlexItem>
+
+			{ providers.map( ( provider ) => (
+				<FlexItem key={ provider }>
+					<Button
+						className={ styles?.[ 'menuItem' ] ?? '' }
+						variant={
+							activeClient === provider ? 'secondary' : 'tertiary'
+						}
+						onClick={ () => setActiveClient( provider ) }
+						aria-current={
+							activeClient === provider ? 'page' : undefined
+						}
+					>
+						<StatusBadge provider={ provider } />
+
+						{
+							wpGraphQLLogin?.settings?.providers?.[ provider ]?.[
+								'name'
+							]?.default as string
+						}
+					</Button>
+				</FlexItem>
+			) ) }
+		</Flex>
 	);
 }

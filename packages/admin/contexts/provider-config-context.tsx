@@ -123,7 +123,7 @@ export const ProviderConfigProvider = ( { children }: PropsWithChildren ) => {
 		) {
 			setClientConfig( {
 				...clientDefaults,
-				slug: activeClient,
+				slug: activeClient.replace( PROVIDER_PREFIX, '' ),
 			} );
 		}
 	}, [ clientConfig, setClientConfig, activeClient ] );
