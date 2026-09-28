@@ -104,6 +104,23 @@ class RefreshTokenTest extends TestCase {
 	}
 
 	/**
+	 * Tests that a refresh token for a user that no longer exists is rejected, since their secret is deleted with them.
+	 */
+	public function test_refresh_token_fails_for_deleted_user(): void {
+		require_once ABSPATH . 'wp-admin/includes/user.php';
+		wp_delete_user( $this->test_user );
+
+		$query     = $this->query();
+		$variables = [
+			'refreshToken' => $this->refresh_token,
+		];
+
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assert_refresh_token_failed( $actual, 'User secret does not match.' );
+	}
+
+	/**
 	 * Tests that a malformed refresh token is rejected.
 	 */
 	public function test_refresh_token_fails_with_malformed_token(): void {

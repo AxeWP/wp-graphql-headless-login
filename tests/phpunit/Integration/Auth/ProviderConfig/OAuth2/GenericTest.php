@@ -135,4 +135,65 @@ class GenericTest extends OAuth2ConfigTestCase {
 		$this->assertCount( 1, $login['events']['set_logged_in_cookie'] );
 		$this->assertSame( $this->test_user, $login['events']['set_logged_in_cookie'][0][3] );
 	}
+
+	/**
+	 * Tests that a new user gets a unique username when the provider's is already taken.
+	 */
+	public function test_login_with_create_user_increments_taken_username(): void {
+		$this->set_provider_settings( [ 'createUserIfNoneExists' => true ] );
+
+		$this->factory()->user->create( [ 'user_login' => 'mock_username' ] );
+		$this->factory()->user->create( [ 'user_login' => 'mock_username2' ] );
+
+		$actual = $this->login();
+
+		$this->assert_logged_in( $actual, [ 'username' => 'mock_username3' ] );
+	}
+
+	/**
+	 * Tests that no user is matched without the provider's identity.
+	 */
+	public function test_get_user_from_data_requires_identity(): void {
+		User::link_user_identity( $this->test_user, 'oauth2-generic', self::IDENTITY_ID );
+
+		$config = new FooGenericProviderConfig();
+
+		$this->assertFalse( $config->get_user_from_data( [ 'user_email' => 'mock_email@email.com' ] ) );
+		$this->assertSame( $this->test_user, $config->get_user_from_data( [ 'subject_identity' => self::IDENTITY_ID ] )->ID );
+	}
+
+	/**
+	 * Tests that a `state` added to the client options is used in the authorization URL.
+	 */
+	public function test_authorization_url_uses_state_from_client_options(): void {
+		add_filter(
+			'graphql_login_client_options',
+			static fn ( array $options ): array => array_merge( $options, [ 'state' => 'my_state' ] )
+		);
+
+		$authorization_url = ( new Generic() )->get_authorization_url();
+
+		parse_str( (string) wp_parse_url( $authorization_url, PHP_URL_QUERY ), $query_args );
+
+		$this->assertStringStartsWith( 'http://example.com/authorize', $authorization_url );
+		$this->assertSame( 'my_state', $query_args['state'] );
+		$this->assertSame( 'mock_redirect_uri', $query_args['redirect_uri'] );
+	}
+
+	/**
+	 * Tests that the provider class must be an OAuth2 provider.
+	 */
+	public function test_provider_class_must_extend_abstract_provider(): void {
+		$this->expectException( \InvalidArgumentException::class );
+		$this->expectExceptionMessage( 'The provider class must extend AbstractProvider. stdClass does not' );
+
+		new class() extends Generic {
+			/**
+			 * Builds the config with a provider class that isn't an OAuth2 provider.
+			 */
+			public function __construct() {
+				OAuth2Config::__construct( \stdClass::class );
+			}
+		};
+	}
 }

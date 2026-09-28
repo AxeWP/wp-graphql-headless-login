@@ -10,6 +10,7 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login\Tests\Integration\Admin\Settings;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use WPGraphQL\Login\Admin\Settings;
 use WPGraphQL\Login\Admin\Settings\AbstractSettings;
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 use WPGraphQL\Login\Admin\Settings\CookieSettings;
@@ -25,6 +26,7 @@ use WP_REST_Server;
  * Tests the Admin\Settings\RestController class.
  */
 #[CoversClass( RestController::class )]
+#[CoversClass( Settings::class )]
 #[CoversClass( AbstractSettings::class )]
 #[CoversClass( AccessControlSettings::class )]
 #[CoversClass( CookieSettings::class )]
@@ -393,25 +395,20 @@ class RestControllerTest extends TestCase {
 		$this->assertFalse( $actual['shouldBlockUnauthorizedDomains'], 'shouldBlockUnauthorizedDomains should be (bool) false.' );
 		$this->assertEquals( [ '*', 'X-Wrapped-In-HTML' ], $actual['customHeaders'], 'customHeaders should be sanitized.' );
 
-		// Test additionalAuthorizedDomains as wildcard string.
-		$values['additionalAuthorizedDomains'] = '*';
+		// Test additionalAuthorizedDomains with a wildcard, which isn't supported.
+		foreach ( [ '*', [ 'https://example.com', ' * ' ] ] as $wildcard ) {
+			$values['additionalAuthorizedDomains'] = $wildcard;
 
-		$request = new WP_REST_Request( 'POST', $this->endpoint );
-		$request->set_param( 'slug', AccessControlSettings::get_slug() );
-		$request->set_param( 'values', $values );
+			$request = new WP_REST_Request( 'POST', $this->endpoint );
+			$request->set_param( 'slug', AccessControlSettings::get_slug() );
+			$request->set_param( 'values', $values );
 
-		$response = $this->server->dispatch( $request );
+			$response = $this->server->dispatch( $request );
 
-		$this->assertEquals( 200, $response->get_status() );
-
-		$data = $response->get_data();
-
-		$this->assertIsArray( $data );
-		$this->assertArrayHasKey( AccessControlSettings::get_slug(), $data );
-
-		$actual = $data[ AccessControlSettings::get_slug() ];
-
-		$this->assertEquals( [ '*' ], $actual['additionalAuthorizedDomains'], 'additionalAuthorizedDomains should be an array with a single wildcard.' );
+			$this->assertEquals( 400, $response->get_status() );
+			$this->assertSame( 'rest_invalid_param', $response->get_data()['code'] );
+			$this->assertSame( [], get_option( AccessControlSettings::get_slug() )['additionalAuthorizedDomains'] ?? [], 'The wildcard should not be saved.' );
+		}
 
 		// Test sanitization of additionalAuthorizedDomains as string.
 		$values['additionalAuthorizedDomains'] = 'https://example.com, badurl, https://example.org';

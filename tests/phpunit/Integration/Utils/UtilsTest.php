@@ -11,6 +11,7 @@ namespace WPGraphQL\Login\Tests\Integration\Utils;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
+use WPGraphQL\Login\Admin\Settings\CookieSettings;
 use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 use WPGraphQL\Login\Tests\TestCase;
@@ -69,6 +70,53 @@ class UtilsTest extends TestCase {
 		$actual = Utils::get_setting( 'delete_data_on_deactivate' );
 
 		$this->assertEquals( $expected, $actual, 'DB value should be true' );
+
+		// Test an unknown setting.
+		$this->assertFalse( Utils::update_plugin_setting( 'not_a_setting', true ) );
+		$this->assertArrayNotHasKey( 'not_a_setting', get_option( PluginSettings::get_slug() ) );
+	}
+
+	/**
+	 * Tests that get_cookie_setting() only returns the stored values once the settings they depend on are enabled.
+	 */
+	public function test_get_cookie_setting_respects_conditional_logic(): void {
+		update_option(
+			CookieSettings::get_slug(),
+			[
+				'hasAccessControlAllowCredentials' => true,
+				'hasLogoutMutation'                => true,
+				'cookieDomain'                     => '.example.com',
+			]
+		);
+
+		// `hasAccessControlAllowCredentials` requires `shouldBlockUnauthorizedDomains`, which the other settings require in turn.
+		update_option( AccessControlSettings::get_slug(), [ 'shouldBlockUnauthorizedDomains' => false ] );
+
+		$this->assertFalse( Utils::get_cookie_setting( 'hasAccessControlAllowCredentials' ) );
+		$this->assertFalse( Utils::get_cookie_setting( 'hasLogoutMutation' ) );
+		$this->assertSame( 'default', Utils::get_cookie_setting( 'cookieDomain', 'default' ) );
+
+		update_option( AccessControlSettings::get_slug(), [ 'shouldBlockUnauthorizedDomains' => true ] );
+
+		$this->assertTrue( Utils::get_cookie_setting( 'hasAccessControlAllowCredentials' ) );
+		$this->assertTrue( Utils::get_cookie_setting( 'hasLogoutMutation' ) );
+		$this->assertSame( '.example.com', Utils::get_cookie_setting( 'cookieDomain', 'default' ) );
+
+		// Unset values use the default.
+		$this->assertSame( 'default', Utils::get_cookie_setting( 'sameSiteOption', 'default' ) );
+
+		// Unknown settings use the default.
+		$this->assertSame( 'default', Utils::get_cookie_setting( 'notASetting', 'default' ) );
+
+		// The value can be filtered.
+		add_filter(
+			'graphql_login_cookie_setting',
+			static fn ( $value, string $option_name ) => 'cookieDomain' === $option_name ? '.filtered.com' : $value,
+			10,
+			2
+		);
+
+		$this->assertSame( '.filtered.com', Utils::get_cookie_setting( 'cookieDomain' ) );
 	}
 
 	/**

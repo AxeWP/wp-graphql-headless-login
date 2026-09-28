@@ -107,6 +107,11 @@ abstract class AbstractSettings {
 			'label'             => $this->get_title(),
 			'show_in_rest'      => false,
 			'sanitize_callback' => static function ( $values ) use ( $config ) {
+				// Settings are stored as an object, so discard anything else.
+				if ( ! is_array( $values ) ) {
+					return [];
+				}
+
 				$sanitized_values = [];
 
 				foreach ( $values as $key => $value ) {

@@ -92,4 +92,36 @@ class TypeRegistryTest extends TestCase {
 		$schema->assertValid();
 		$this->addToAssertionCount( 1 );
 	}
+
+	/**
+	 * Tests that classes which aren't GraphQL types are rejected.
+	 */
+	public function test_init_rejects_classes_that_are_not_graphql_types(): void {
+		$this->reset_type_registry();
+
+		add_filter(
+			'graphql_login_registered_object_classes',
+			static fn ( array $classes ): array => array_merge( $classes, [ \stdClass::class ] )
+		);
+
+		$this->expectException( \Throwable::class );
+		$this->expectExceptionMessage( 'To be registered to the WPGraphQL schema, stdClass needs to implement' );
+
+		TypeRegistry::init();
+	}
+
+	/**
+	 * Tests that no types are registered when they're all filtered out.
+	 */
+	public function test_init_registers_nothing_when_all_types_are_filtered_out(): void {
+		$this->reset_type_registry();
+
+		foreach ( [ 'enum', 'input', 'interface', 'object', 'connection', 'mutation', 'field' ] as $kind ) {
+			add_filter( 'graphql_login_registered_' . $kind . '_classes', '__return_empty_array' );
+		}
+
+		TypeRegistry::init();
+
+		$this->assertSame( [], TypeRegistry::$registry );
+	}
 }

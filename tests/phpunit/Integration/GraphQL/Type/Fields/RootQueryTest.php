@@ -10,8 +10,11 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login\Tests\Integration\GraphQL\Type\Fields;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\OAuth2Config;
 use WPGraphQL\Login\GraphQL\Model\Client as ClientModel;
 use WPGraphQL\Login\GraphQL\Type\Fields\RootQuery;
+use WPGraphQL\Login\GraphQL\Type\WPInterface\ClientOptions;
+use WPGraphQL\Login\GraphQL\Type\WPInterface\LoginOptions;
 use WPGraphQL\Login\Tests\TestCase;
 use WPGraphQL\Type\WPEnumType;
 
@@ -20,6 +23,9 @@ use WPGraphQL\Type\WPEnumType;
  */
 #[CoversClass( RootQuery::class )]
 #[CoversClass( ClientModel::class )]
+#[CoversClass( ClientOptions::class )]
+#[CoversClass( LoginOptions::class )]
+#[CoversClass( OAuth2Config::class )]
 class RootQueryTest extends TestCase {
 	/**
 	 * The provider config settings.

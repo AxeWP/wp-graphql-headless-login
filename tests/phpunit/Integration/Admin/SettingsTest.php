@@ -35,6 +35,15 @@ class SettingsTest extends TestCase {
 		do_action( 'graphql_init_settings', $registry );
 
 		$this->assertArrayHasKey( Settings::$option_group, $registry->get_settings_sections() );
+
+		// The section renders the mount point for the settings app.
+		$fields = array_column( $registry->get_settings_fields()[ Settings::$option_group ] ?? [], null, 'name' );
+
+		$this->assertArrayHasKey( 'app', $fields );
+
+		ob_start();
+		$fields['app']['callback']( [] );
+		$this->assertSame( '<div id="wp-graphql-headless-login-settings"></div>', ob_get_clean() );
 	}
 
 	/**
@@ -47,6 +56,34 @@ class SettingsTest extends TestCase {
 		do_action( 'admin_enqueue_scripts', 'graphql_page_graphql-settings' );
 
 		$this->assertTrue( wp_script_is( 'wp-graphql-headless-login/admin-editor', 'enqueued' ) );
+
+		// The IDE enqueues the app too, but the config should only be added once.
+		do_action( 'wpgraphql_ide_enqueue_script' );
+
+		$inline_scripts = array_filter( (array) wp_scripts()->get_data( 'wp-graphql-headless-login/admin-editor', 'before' ) );
+
+		$this->assertCount( 1, $inline_scripts );
+		$this->assertStringStartsWith( 'const wpGraphQLLogin = ', reset( $inline_scripts ) );
+	}
+
+	/**
+	 * Tests that the settings app, which holds the provider credentials, isn't enqueued on other screens or for users who can't manage options.
+	 */
+	public function test_settings_app_is_not_enqueued_for_other_screens_or_users(): void {
+		wp_dequeue_script( 'wp-graphql-headless-login/admin-editor' );
+
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'administrator' ] ) );
+		set_current_screen( 'dashboard' );
+		do_action( 'admin_enqueue_scripts', 'index.php' );
+
+		$this->assertFalse( wp_script_is( 'wp-graphql-headless-login/admin-editor', 'enqueued' ) );
+
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'editor' ] ) );
+		set_current_screen( 'graphql_page_graphql-settings' );
+		do_action( 'admin_enqueue_scripts', 'graphql_page_graphql-settings' );
+		do_action( 'wpgraphql_ide_enqueue_script' );
+
+		$this->assertFalse( wp_script_is( 'wp-graphql-headless-login/admin-editor', 'enqueued' ) );
 	}
 
 	/**

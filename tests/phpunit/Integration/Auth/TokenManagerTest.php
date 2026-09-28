@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests TokenManager::validate_token().
+ * Tests the TokenManager class.
  *
  * @package WPGraphQL\Login\Tests\Integration\Auth
  */
@@ -10,15 +10,17 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login\Tests\Integration\Auth;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Auth\TokenManager;
 use WPGraphQL\Login\Auth\User;
 use WPGraphQL\Login\Tests\TestCase;
 use WPGraphQL\Login\Vendor\Firebase\JWT\JWT;
 
 /**
- * Tests validating auth and refresh tokens with TokenManager::validate_token().
+ * Tests issuing and validating auth and refresh tokens, and managing the secrets used to sign them.
  */
 #[CoversClass( TokenManager::class )]
+#[CoversClass( User::class )]
 class TokenManagerTest extends TestCase {
 	/**
 	 * The test user ID.
@@ -46,6 +48,7 @@ class TokenManagerTest extends TestCase {
 	 */
 	protected function tearDown(): void {
 		User::set_is_secret_revoked( $this->test_user, false );
+		unset( $_SERVER['HTTP_AUTHORIZATION'], $_SERVER['REDIRECT_HTTP_AUTHORIZATION'], $_SERVER['HTTP_REFRESH_AUTHORIZATION'] );
 		wp_set_current_user( 0 );
 		$this->reset_utils_properties();
 
@@ -226,6 +229,177 @@ class TokenManagerTest extends TestCase {
 
 		$this->assertNotWPError( $result );
 		$this->assertSame( $this->test_user, $result->data->user->id );
+	}
+
+	/**
+	 * Tests that the auth token is read from the Authorization header when none is provided.
+	 */
+	public function test_validates_token_from_authorization_header(): void {
+		$token = $this->mint_token( $this->build_payload() );
+
+		// No header.
+		$this->assertNull( TokenManager::validate_token() );
+
+		// Not a bearer token.
+		$_SERVER['HTTP_AUTHORIZATION'] = 'Basic ' . $token;
+		$this->assertNull( TokenManager::validate_token() );
+
+		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $token;
+		$this->assertSame( $this->test_user, TokenManager::validate_token()->data->user->id );
+
+		// Some servers only pass the redirected header.
+		unset( $_SERVER['HTTP_AUTHORIZATION'] );
+		$_SERVER['REDIRECT_HTTP_AUTHORIZATION'] = 'Bearer ' . $token;
+		$this->assertSame( $this->test_user, TokenManager::validate_token()->data->user->id );
+
+		// The header can be filtered.
+		add_filter( 'graphql_login_auth_header', '__return_empty_string' );
+		$this->assertNull( TokenManager::validate_token() );
+	}
+
+	/**
+	 * Tests that the refresh token header is read from the request, and can be filtered.
+	 */
+	public function test_get_refresh_header(): void {
+		$this->assertSame( '', TokenManager::get_refresh_header() );
+
+		$_SERVER['HTTP_REFRESH_AUTHORIZATION'] = 'my-refresh-token';
+		$this->assertSame( 'my-refresh-token', TokenManager::get_refresh_header() );
+
+		add_filter( 'graphql_login_refresh_header', static fn (): string => 'filtered-refresh-token' );
+		$this->assertSame( 'filtered-refresh-token', TokenManager::get_refresh_header() );
+	}
+
+	/**
+	 * Tests that a site secret is generated and stored if none exists, and that it can be filtered.
+	 */
+	public function test_get_secret_key_generates_missing_secret(): void {
+		update_option( PluginSettings::get_slug(), [] );
+		$this->reset_utils_properties();
+
+		$secret = TokenManager::get_secret_key();
+
+		$this->assertSame( 64, strlen( $secret ) );
+
+		$this->reset_utils_properties();
+		$this->assertSame( $secret, TokenManager::get_secret_key(), 'The generated secret should be stored.' );
+
+		add_filter( 'graphql_login_jwt_secret_key', static fn (): string => 'filtered-secret' );
+		$this->assertSame( 'filtered-secret', TokenManager::get_secret_key() );
+	}
+
+	/**
+	 * Tests that tokens and secrets are only issued to the current user when enforced.
+	 */
+	public function test_tokens_are_only_issued_to_the_current_user(): void {
+		$user = get_user_by( 'id', $this->test_user );
+
+		wp_set_current_user( $this->factory()->user->create( [ 'role' => 'administrator' ] ) );
+
+		$this->assertNull( TokenManager::get_auth_token( $user ) );
+		$this->assertNull( TokenManager::get_refresh_token( $user ) );
+		$this->assertNull( TokenManager::get_user_secret( $this->test_user ) );
+
+		$actual = TokenManager::issue_new_user_secret( $this->test_user );
+		$this->assertWPError( $actual );
+		$this->assertSame( 'graphql-headless-login-no-permissions', $actual->get_error_code() );
+
+		// The current user can get their own tokens.
+		wp_set_current_user( $this->test_user );
+
+		$this->assertSame( $this->test_user, TokenManager::validate_token( TokenManager::get_auth_token( $user ) )->data->user->id );
+		$this->assertSame( $this->test_user, TokenManager::validate_token( TokenManager::get_refresh_token( $user ), true )->data->user->id );
+	}
+
+	/**
+	 * Tests that a user secret is issued if the user doesn't have one, and that no refresh token is issued if the secret is unavailable.
+	 */
+	public function test_user_secret_is_issued_when_missing(): void {
+		wp_set_current_user( $this->test_user );
+		delete_user_meta( $this->test_user, 'graphql_login_secret' );
+
+		$secret = TokenManager::get_user_secret( $this->test_user );
+
+		$this->assertNotEmpty( $secret );
+		$this->assertSame( $secret, User::get_secret( $this->test_user ) );
+
+		add_filter( 'graphql_login_user_secret', static fn () => new \WP_Error( 'no-secret', 'No secret.' ) );
+
+		$this->assertNull( TokenManager::get_user_secret( $this->test_user ) );
+		$this->assertNull( TokenManager::get_refresh_token( get_user_by( 'id', $this->test_user ) ) );
+	}
+
+	/**
+	 * Tests that users can revoke their own secret, and users with the auth capability can revoke others' when not enforcing the current user.
+	 */
+	public function test_revoke_user_secret(): void {
+		$subscriber = $this->factory()->user->create( [ 'role' => 'subscriber' ] );
+		$admin      = $this->factory()->user->create( [ 'role' => 'administrator' ] );
+
+		// Other users can't revoke the secret.
+		wp_set_current_user( $subscriber );
+
+		$actual = TokenManager::revoke_user_secret( $this->test_user, false );
+		$this->assertWPError( $actual );
+		$this->assertSame( 'graphql-headless-login-cannot-revoke-secret', $actual->get_error_code() );
+
+		wp_set_current_user( $admin );
+
+		$actual = TokenManager::revoke_user_secret( $this->test_user );
+		$this->assertWPError( $actual );
+		$this->assertFalse( TokenManager::is_user_secret_revoked( $this->test_user ) );
+
+		// Unless they have the auth capability, and the current user isn't enforced.
+		$this->assertTrue( TokenManager::revoke_user_secret( $this->test_user, false ) );
+		$this->assertTrue( TokenManager::is_user_secret_revoked( $this->test_user ) );
+		$this->assertNull( User::get_secret( $this->test_user ) );
+
+		// Users can revoke their own secret.
+		User::set_is_secret_revoked( $this->test_user, false );
+		wp_set_current_user( $this->test_user );
+
+		$this->assertTrue( TokenManager::revoke_user_secret( $this->test_user ) );
+		$this->assertTrue( TokenManager::is_user_secret_revoked( $this->test_user ) );
+	}
+
+	/**
+	 * Tests that refreshing a user secret replaces it and restores a revoked one.
+	 */
+	public function test_refresh_user_secret(): void {
+		$old_secret = User::get_secret( $this->test_user );
+		User::set_is_secret_revoked( $this->test_user, true );
+
+		// Other users can't refresh the secret.
+		wp_set_current_user( $this->factory()->user->create( [ 'role' => 'subscriber' ] ) );
+
+		$actual = TokenManager::refresh_user_secret( $this->test_user );
+		$this->assertWPError( $actual );
+		$this->assertSame( 'graphql-headless-login-cannot-refresh-secret', $actual->get_error_code() );
+		$this->assertTrue( TokenManager::is_user_secret_revoked( $this->test_user ) );
+
+		wp_set_current_user( $this->test_user );
+
+		$this->assertTrue( TokenManager::refresh_user_secret( $this->test_user ) );
+		$this->assertFalse( TokenManager::is_user_secret_revoked( $this->test_user ) );
+
+		$new_secret = User::get_secret( $this->test_user );
+		$this->assertNotEmpty( $new_secret );
+		$this->assertNotSame( $old_secret, $new_secret );
+	}
+
+	/**
+	 * Tests that the capability needed to manage other users' secrets can be filtered.
+	 */
+	public function test_auth_capability_can_be_filtered(): void {
+		wp_set_current_user( $this->factory()->user->create( [ 'role' => 'editor' ] ) );
+
+		$this->assertFalse( TokenManager::current_user_can( $this->test_user, false ) );
+
+		add_filter( 'graphql_login_edit_jwt_capability', static fn (): string => 'edit_others_posts' );
+
+		$this->assertTrue( TokenManager::current_user_can( $this->test_user, false ) );
+		$this->assertFalse( TokenManager::current_user_can( $this->test_user ), 'The current user should still be enforced.' );
+		$this->assertTrue( TokenManager::current_user_can( $this->test_user, false, false ), 'Nothing should be enforced.' );
 	}
 
 	/**

@@ -335,6 +335,42 @@ class PasswordTest extends TestCase {
 	}
 
 	/**
+	 * Tests that logging in requires a username and password.
+	 */
+	public function test_login_requires_credentials(): void {
+		$query = '
+			mutation Login( $input: LoginInput! ) {
+				login( input: $input ) {
+					authToken
+				}
+			}
+		';
+
+		// Test without credentials.
+		$variables = [
+			'input' => [
+				'provider' => 'PASSWORD',
+			],
+		];
+
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertSame( 'The PASSWORD provider requires the use of the `credentials` input arg.', $actual['errors'][0]['message'] );
+
+		// Test with empty credentials.
+		$variables['input']['credentials'] = [
+			'username' => 'test_user',
+			'password' => ' ',
+		];
+
+		$actual = $this->graphql( compact( 'query', 'variables' ) );
+
+		$this->assertArrayHasKey( 'errors', $actual );
+		$this->assertSame( 'Missing username or password.', $actual['errors'][0]['message'] );
+	}
+
+	/**
 	 * Configures the provider, access control, and cookie settings for authenticating follow-up requests.
 	 *
 	 * @param bool $use_authentication_cookie Whether logging in should set the authentication cookie.

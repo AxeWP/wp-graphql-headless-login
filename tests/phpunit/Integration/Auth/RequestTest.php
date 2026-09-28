@@ -66,6 +66,7 @@ class RequestTest extends TestCase {
 		delete_option( AccessControlSettings::get_slug() );
 		delete_option( CookieSettings::get_slug() );
 		unset( $_SERVER['HTTP_AUTHORIZATION'], $_SERVER['HTTP_ORIGIN'], $_SERVER['HTTP_REFERER'] );
+		$GLOBALS['wp_rest_server'] = null; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$this->reset_utils_properties();
 
 		parent::tearDown();
@@ -573,6 +574,107 @@ class RequestTest extends TestCase {
 
 		$this->assertArrayHasKey( 'Access-Control-Allow-Origin', $actual );
 		$this->assertStringContainsString( 'https://example2.com', $actual['Access-Control-Allow-Origin'] );
+	}
+
+	/**
+	 * Tests that an origin allowed by an upstream `Access-Control-Allow-Origin` header is kept.
+	 */
+	public function test_response_headers_to_send_allows_upstream_origin(): void {
+		update_option(
+			AccessControlSettings::get_slug(),
+			array_merge(
+				$this->default_options['accessControl'],
+				[
+					'shouldBlockUnauthorizedDomains' => true,
+					'additionalAuthorizedDomains'    => [ 'https://example2.com' ],
+				]
+			)
+		);
+		$this->reset_utils_properties();
+
+		$headers = [ 'Access-Control-Allow-Origin' => 'https://frontend.example.com' ];
+
+		$_SERVER['HTTP_ORIGIN'] = 'https://frontend.example.com';
+
+		$actual = Request::response_headers_to_send( $headers );
+
+		$this->assertSame( 'https://frontend.example.com', $actual['Access-Control-Allow-Origin'] );
+
+		$_SERVER['HTTP_ORIGIN'] = 'https://example2.com';
+
+		$actual = Request::response_headers_to_send( $headers );
+
+		$this->assertSame( 'https://example2.com', $actual['Access-Control-Allow-Origin'] );
+
+		// Unauthorized origins fall back to the site URL.
+		$_SERVER['HTTP_ORIGIN'] = 'https://unauthorized.example.com';
+
+		$actual = Request::response_headers_to_send( $headers );
+
+		$this->assertSame( site_url(), $actual['Access-Control-Allow-Origin'] );
+	}
+
+	/**
+	 * Tests that refreshed tokens are only sent in the response headers over SSL or when debugging.
+	 */
+	public function test_response_headers_to_send_omits_tokens_without_ssl_or_debugging(): void {
+		$tokens = $this->generate_user_tokens( $this->factory()->user->create() );
+
+		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $tokens['auth_token'];
+
+		$this->assertArrayHasKey( 'X-WPGraphQL-Login-Token', Request::response_headers_to_send( [] ) );
+
+		add_filter( 'graphql_debug_enabled', '__return_false', 100 );
+
+		$actual = Request::response_headers_to_send( [] );
+
+		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Token', $actual );
+		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Refresh-Token', $actual );
+	}
+
+	/**
+	 * Tests that REST responses get the CORS and refreshed token headers, but only when served over SSL or debugging.
+	 */
+	public function test_rest_responses_get_login_headers(): void {
+		global $wp_rest_server;
+
+		$wp_rest_server = new \WP_REST_Server();
+		do_action( 'rest_api_init' );
+
+		$user_id = $this->factory()->user->create( [ 'role' => 'administrator' ] );
+		$tokens  = $this->generate_user_tokens( $user_id );
+
+		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $tokens['auth_token'];
+
+		// Debugging is enabled in the tests.
+		$headers = $wp_rest_server->dispatch( new \WP_REST_Request( 'GET', '/wp/v2/types/post' ) )->get_headers();
+
+		$this->assertStringContainsString( 'X-WPGraphQL-Login-Token', $headers['Access-Control-Allow-Headers'] ?? '' );
+		$this->assertSame( $user_id, TokenManager::validate_token( $headers['X-WPGraphQL-Login-Token'] ?? '' )->data->user->id );
+		$this->assertSame( $user_id, TokenManager::validate_token( $headers['X-WPGraphQL-Login-Refresh-Token'] ?? '', true )->data->user->id );
+
+		// Errors are passed through.
+		$response = $wp_rest_server->dispatch( new \WP_REST_Request( 'GET', '/wp/v2/types/not-a-type' ) );
+
+		$this->assertSame( 404, $response->get_status() );
+		$this->assertArrayNotHasKey( 'Access-Control-Allow-Headers', $response->get_headers() );
+
+		// Tokens aren't refreshed for deleted users.
+		require_once ABSPATH . 'wp-admin/includes/user.php';
+		wp_delete_user( $user_id );
+
+		$headers = $wp_rest_server->dispatch( new \WP_REST_Request( 'GET', '/wp/v2/types/post' ) )->get_headers();
+
+		$this->assertArrayHasKey( 'Access-Control-Allow-Headers', $headers );
+		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Token', $headers );
+
+		// Without SSL or debugging, the headers aren't added.
+		add_filter( 'graphql_debug_enabled', '__return_false', 100 );
+
+		$headers = $wp_rest_server->dispatch( new \WP_REST_Request( 'GET', '/wp/v2/types/post' ) )->get_headers();
+
+		$this->assertArrayNotHasKey( 'Access-Control-Allow-Headers', $headers );
+		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Token', $headers );
 	}
 
 	/**

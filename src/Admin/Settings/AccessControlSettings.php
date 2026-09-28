@@ -77,7 +77,7 @@ class AccessControlSettings extends AbstractSettings {
 				'label'             => __( 'Additional authorized domains', 'wp-graphql-headless-login' ),
 				'type'              => 'array',
 				'default'           => [],
-				'help'              => __( 'Domains added here will also be included in the `Access-Control-Allow-Origin` header. Make sure to include the protocol (http:// or https://).', 'wp-graphql-headless-login' ),
+				'help'              => __( 'Domains added here will also be included in the `Access-Control-Allow-Origin` header. Make sure to include the protocol (http:// or https://). Wildcards (`*`) are not supported.', 'wp-graphql-headless-login' ),
 				'isAdvanced'        => true,
 				'order'             => 4,
 				'required'          => false,
@@ -86,16 +86,32 @@ class AccessControlSettings extends AbstractSettings {
 						$value = explode( ',', $value );
 					}
 
-					return is_array( $value ) ? array_map(
-						static function ( $domain ) {
-							if ( '*' === $domain ) {
-								return $domain;
-							}
+					if ( ! is_array( $value ) ) {
+						return [];
+					}
 
-							return esc_url_raw( $domain );
-						},
+					// Wildcards aren't supported, since they can't be matched against the request origin.
+					$domains = array_map(
+						static fn ( $domain ) => '*' === trim( (string) $domain ) ? '' : esc_url_raw( (string) $domain ),
 						$value
-					) : [];
+					);
+
+					return array_values( array_filter( $domains ) );
+				},
+				'validate_callback' => static function ( $value ) {
+					$domains = is_string( $value ) ? explode( ',', $value ) : (array) $value;
+
+					foreach ( $domains as $domain ) {
+						if ( '*' === trim( (string) $domain ) ) {
+							return new \WP_Error(
+								'rest_invalid_authorized_domain',
+								__( 'The `*` wildcard is not supported. To allow requests from any domain, disable "Block unauthorized domains" instead.', 'wp-graphql-headless-login' ),
+								[ 'status' => 400 ]
+							);
+						}
+					}
+
+					return true;
 				},
 			],
 			// Custom Headers.
