@@ -2,23 +2,28 @@
 /**
  * Tests the Autoloader.
  *
- * @package Tests\WPGraphQL\Login\Integration
+ * @package WPGraphQL\Login\Tests\Integration
  */
 
-namespace Tests\WPGraphQL\Login\Integration;
+declare( strict_types = 1 );
 
-use Tests\WPGraphQL\Login\TestCase;
+namespace WPGraphQL\Login\Tests\Integration;
+
+use PHPUnit\Framework\Attributes\CoversClass;
+use ReflectionMethod;
 use WPGraphQL\Login\Autoloader;
+use WPGraphQL\Login\Tests\TestCase;
 
 /**
- * Tests Autoloader.
+ * Tests the Autoloader class.
  */
+#[CoversClass( Autoloader::class )]
 class AutoloaderTest extends TestCase {
 	/**
-	 * Tests `Autoloader::require_autoloader()` with a valid and an invalid path.
+	 * Tests that require_autoloader() loads a readable file, and flags a missing one with an admin notice.
 	 */
-	public function testRequireAutoloader() {
-		$method = new \ReflectionMethod( Autoloader::class, 'require_autoloader' );
+	public function test_require_autoloader_loads_file_or_shows_missing_notice(): void {
+		$method = new ReflectionMethod( Autoloader::class, 'require_autoloader' );
 
 		$this->assertTrue( $method->invoke( null, WPGRAPHQL_LOGIN_PLUGIN_DIR . 'vendor/autoload.php' ) );
 		$this->assertFalse( $method->invoke( null, '/path/to/invalid/autoload.php' ) );

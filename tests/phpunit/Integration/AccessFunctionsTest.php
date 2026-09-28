@@ -2,49 +2,44 @@
 /**
  * Tests the plugin access functions.
  *
- * @package Tests\WPGraphQL\Login\Integration
+ * @package WPGraphQL\Login\Tests\Integration
  */
 
-namespace Tests\WPGraphQL\Login\Integration;
+declare( strict_types = 1 );
 
-use Tests\WPGraphQL\Login\TestCase;
+namespace WPGraphQL\Login\Tests\Integration;
+
+use PHPUnit\Framework\Attributes\CoversFunction;
 use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
+use WPGraphQL\Login\Tests\TestCase;
 
 /**
  * Tests the plugin access functions.
  */
+#[CoversFunction( 'graphql_login_get_setting' )]
+#[CoversFunction( 'graphql_login_get_provider_settings' )]
 class AccessFunctionsTest extends TestCase {
 	/**
-	 * {@inheritDoc}
+	 * Tests that graphql_login_get_setting() returns the stored plugin setting.
 	 */
-	public function setUp(): void {
-		if ( ! isset( $GLOBALS['wp_filter'] ) ) {
-			$GLOBALS['wp_filter'] = [];
-		}
-
-		parent::setUp();
-	}
-
-	/**
-	 * Tests graphql_login_get_setting()
-	 */
-	public function testGetSetting(): void {
+	public function test_graphql_login_get_setting_returns_stored_value(): void {
 		$expected = true;
 
 		update_option( PluginSettings::get_slug(), [ 'delete_data_on_deactivate' => $expected ] );
 
+		// Reset the memoized settings.
+		$this->reset_utils_properties();
+
 		$actual = graphql_login_get_setting( 'delete_data_on_deactivate' );
 
 		$this->assertEquals( $expected, $actual );
-
-		delete_option( PluginSettings::get_slug() );
 	}
 
 	/**
-	 * Tests graphql_login_get_provider_settings()
+	 * Tests that graphql_login_get_provider_settings() returns the stored provider settings.
 	 */
-	public function testGetProviderSettings(): void {
+	public function test_graphql_login_get_provider_settings_returns_stored_settings(): void {
 		$expected = [
 			'name'      => 'Facebook',
 			'isEnabled' => false,
@@ -52,13 +47,11 @@ class AccessFunctionsTest extends TestCase {
 
 		update_option( ProviderSettings::$settings_prefix . 'facebook', $expected );
 
-		// reset Utils::providers
+		// Reset the memoized provider settings.
 		$this->reset_utils_properties();
 
 		$actual = graphql_login_get_provider_settings( 'facebook' );
 
 		$this->assertEquals( $expected, $actual );
-
-		delete_option( ProviderSettings::$settings_prefix . 'facebook' );
 	}
 }

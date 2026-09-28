@@ -2,67 +2,55 @@
 /**
  * Tests the CoreSchemaFilters class.
  *
- * @package Tests\WPGraphQL\Login\Integration\GraphQL
+ * @package WPGraphQL\Login\Tests\Integration\GraphQL
  */
 
-namespace Tests\WPGraphQL\Login\Integration\GraphQL;
+declare( strict_types = 1 );
 
-use Tests\WPGraphQL\Login\TestCase;
+namespace WPGraphQL\Login\Tests\Integration\GraphQL;
+
+use GraphQL\Error\UserError;
+use PHPUnit\Framework\Attributes\CoversClass;
 use WPGraphQL\Login\Auth\TokenManager;
 use WPGraphQL\Login\Auth\User;
 use WPGraphQL\Login\GraphQL\CoreSchemaFilters;
+use WPGraphQL\Login\Tests\TestCase;
 
 /**
  * Tests CoreSchemaFilters.
  */
+#[CoversClass( CoreSchemaFilters::class )]
 class CoreSchemaFiltersTest extends TestCase {
 	/**
-	 * The administrator user ID.
-	 *
-	 * @var int
-	 */
-	public $admin;
-
-	/**
 	 * The CoreSchemaFilters instance.
-	 *
-	 * @var \WPGraphQL\Login\GraphQL\CoreSchemaFilters
 	 */
-	public $filters;
+	private CoreSchemaFilters $filters;
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setUp(): void {
+	protected function setUp(): void {
 		parent::setUp();
-
-		$this->admin = $this->factory()->user->create(
-			[
-				'role' => 'administrator',
-			]
-		);
 
 		$this->filters = new CoreSchemaFilters();
 	}
 
 	/**
-	 * Tests check_if_secret_is_revoked() when the secret is revoked.
+	 * Tests that a token is not returned for a user whose secret is revoked.
 	 */
-	public function testCheckIfSecretIsRevokedWhenRevoked(): void {
+	public function test_check_if_secret_is_revoked_throws_when_secret_is_revoked(): void {
 		$user_id = $this->factory()->user->create();
-
-		$expected = 'test_token';
 
 		User::set_is_secret_revoked( $user_id, true );
 
-		$this->expectException( \GraphQL\Error\UserError::class );
-		$this->filters->check_if_secret_is_revoked( $expected, $user_id );
+		$this->expectException( UserError::class );
+		$this->filters->check_if_secret_is_revoked( 'test_token', $user_id );
 	}
 
 	/**
-	 * Tests check_if_secret_is_revoked()
+	 * Tests that the token is returned unchanged for a user whose secret is not revoked.
 	 */
-	public function testCheckIfSecretIsRevoked(): void {
+	public function test_check_if_secret_is_revoked_returns_token_when_secret_is_active(): void {
 		$user_id = $this->factory()->user->create();
 
 		$expected = 'test_token';

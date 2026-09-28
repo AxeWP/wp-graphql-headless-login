@@ -2,33 +2,33 @@
 /**
  * Tests the authentication cookies issued by AuthCookie.
  *
- * @package Tests\WPGraphQL\Login\Integration\Auth
+ * @package WPGraphQL\Login\Tests\Integration\Auth
  */
 
 declare( strict_types = 1 );
 
-namespace Tests\WPGraphQL\Login\Integration\Auth;
+namespace WPGraphQL\Login\Tests\Integration\Auth;
 
-use Tests\WPGraphQL\Login\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use WPGraphQL\Login\Auth\AuthCookie;
+use WPGraphQL\Login\Tests\TestCase;
 
 /**
  * Tests `AuthCookie::set_auth_cookie()`.
  *
- * The `SameSite` and `Domain` cookie attributes are covered by PasswordLoginTest.
+ * The `SameSite` and `Domain` cookie attributes are covered by `ProviderConfig\PasswordTest::test_login_with_authentication_cookie()`.
  */
+#[CoversClass( AuthCookie::class )]
 class AuthCookieTest extends TestCase {
 	/**
 	 * The test user ID.
-	 *
-	 * @var int
 	 */
-	private $user_id;
+	private int $user_id;
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setUp(): void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->user_id = $this->factory()->user->create( [ 'role' => 'administrator' ] );

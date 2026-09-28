@@ -2,26 +2,30 @@
 /**
  * Tests the Main class.
  *
- * @package Tests\WPGraphQL\Login\Integration
+ * @package WPGraphQL\Login\Tests\Integration
  */
 
-namespace Tests\WPGraphQL\Login\Integration;
+declare( strict_types = 1 );
 
-use Tests\WPGraphQL\Login\TestCase;
+namespace WPGraphQL\Login\Tests\Integration;
+
+use PHPUnit\Framework\Attributes\CoversClass;
 use WPGraphQL\Login\Main;
+use WPGraphQL\Login\Tests\TestCase;
 
 /**
- * Tests Main.
+ * Tests the Main class.
  */
+#[CoversClass( Main::class )]
 class MainTest extends TestCase {
 	/**
-	 * Tests get_instance() passes the plugin instance to the `graphql_login_init` action.
+	 * Tests that get_instance() passes the plugin instance to the `graphql_login_init` action.
 	 */
-	public function testGetInstanceFiresInitAction() {
+	public function test_get_instance_fires_init_action(): void {
 		$received = null;
 		add_action(
 			'graphql_login_init',
-			static function ( $instance ) use ( &$received ) {
+			static function ( Main $instance ) use ( &$received ): void {
 				$received = $instance;
 			}
 		);

@@ -2,23 +2,27 @@
 /**
  * Tests the WooCommerce extension.
  *
- * @package Tests\WPGraphQL\Login\Integration\Extensions
+ * @package WPGraphQL\Login\Tests\Integration\Extensions
  */
 
-namespace Tests\WPGraphQL\Login\Integration\Extensions;
+declare( strict_types = 1 );
 
-use Tests\WPGraphQL\Login\TestCase;
+namespace WPGraphQL\Login\Tests\Integration\Extensions;
+
+use PHPUnit\Framework\Attributes\CoversClass;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 use WPGraphQL\Login\Extensions\WooCommerce;
+use WPGraphQL\Login\Tests\TestCase;
 
 /**
  * Tests the WPGraphQL for WooCommerce integration.
  */
+#[CoversClass( WooCommerce::class )]
 class WooCommerceTest extends TestCase {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function tearDown(): void {
+	protected function tearDown(): void {
 		delete_option( ProviderSettings::$settings_prefix . 'password' );
 		$this->reset_utils_properties();
 		$this->clearSchema();
@@ -26,14 +30,17 @@ class WooCommerceTest extends TestCase {
 		parent::tearDown();
 	}
 
-	public function testAddCustomerToUserTypes(): void {
+	/**
+	 * Tests that `Customer` is appended to the GraphQL user types that get the `auth` field.
+	 */
+	public function test_add_customer_to_user_types_appends_customer(): void {
 		$this->assertSame( [ 'User', 'Customer' ], WooCommerce::add_customer_to_user_types( [ 'User' ] ) );
 	}
 
 	/**
 	 * Tests that the `Customer` returned by the `login` mutation has the Headless Login `auth` field.
 	 */
-	public function testLoginPayloadCustomerAuth(): void {
+	public function test_login_payload_customer_has_auth_field(): void {
 		if ( ! defined( 'WPGRAPHQL_WOOCOMMERCE_VERSION' ) || version_compare( WPGRAPHQL_WOOCOMMERCE_VERSION, '1.0.0', '<' ) ) {
 			$this->markTestSkipped( 'Requires WPGraphQL for WooCommerce v1.0.0+ to be active.' );
 		}

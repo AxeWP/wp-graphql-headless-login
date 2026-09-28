@@ -2,39 +2,37 @@
 /**
  * Tests authenticating the current WordPress user from the Authorization header.
  *
- * @package Tests\WPGraphQL\Login\Integration\Auth
+ * @package WPGraphQL\Login\Tests\Integration\Auth
  */
 
-namespace Tests\WPGraphQL\Login\Integration\Auth;
+declare( strict_types = 1 );
+
+namespace WPGraphQL\Login\Tests\Integration\Auth;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use Tests\WPGraphQL\Login\TestCase;
 use WPGraphQL\Login\Auth\ServerAuthentication;
+use WPGraphQL\Login\Tests\TestCase;
 use WPGraphQL\Login\Utils\Utils;
 
 /**
- * Tests ServerAuthentication.
+ * Tests authenticating the current user from the auth token in the `Authorization` header.
  */
 #[CoversClass( ServerAuthentication::class )]
 class ServerAuthenticationTest extends TestCase {
 	/**
 	 * The ID of the user the tokens are issued for.
-	 *
-	 * @var int
 	 */
-	public $user_id;
+	private int $user_id;
 
 	/**
 	 * The ID of a user authenticated by another method earlier in the `determine_current_user` chain.
-	 *
-	 * @var int
 	 */
-	public $admin;
+	private int $admin;
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setUp(): void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->user_id = $this->factory()->user->create();
@@ -48,7 +46,7 @@ class ServerAuthenticationTest extends TestCase {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function tearDown(): void {
+	protected function tearDown(): void {
 		unset( $_SERVER['HTTP_AUTHORIZATION'] );
 		$this->reset_utils_properties();
 		wp_set_current_user( 0 );
@@ -56,7 +54,10 @@ class ServerAuthenticationTest extends TestCase {
 		parent::tearDown();
 	}
 
-	public function testValidAuthTokenAuthenticatesCurrentUser(): void {
+	/**
+	 * Tests that a valid auth token authenticates its user.
+	 */
+	public function test_valid_auth_token_authenticates_current_user(): void {
 		$tokens = $this->generate_user_tokens( $this->user_id );
 
 		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $tokens['auth_token'];
@@ -64,7 +65,10 @@ class ServerAuthenticationTest extends TestCase {
 		$this->assertSame( $this->user_id, $this->determine_current_user_id() );
 	}
 
-	public function testValidAuthTokenTakesPrecedenceOverPreviouslyDeterminedUser(): void {
+	/**
+	 * Tests that a valid auth token overrides a user determined by another authentication method.
+	 */
+	public function test_valid_auth_token_takes_precedence_over_previously_determined_user(): void {
 		$tokens = $this->generate_user_tokens( $this->user_id );
 
 		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $tokens['auth_token'];
@@ -74,7 +78,10 @@ class ServerAuthenticationTest extends TestCase {
 		$this->assertSame( $this->user_id, $this->determine_current_user_id() );
 	}
 
-	public function testWithoutAuthHeaderUserIsUnchanged(): void {
+	/**
+	 * Tests that without an `Authorization` header the current user is left unchanged.
+	 */
+	public function test_without_auth_header_user_is_unchanged(): void {
 		$this->assertSame( 0, $this->determine_current_user_id() );
 
 		$this->authenticate_admin_by_other_method();
@@ -82,7 +89,10 @@ class ServerAuthenticationTest extends TestCase {
 		$this->assertSame( $this->admin, $this->determine_current_user_id() );
 	}
 
-	public function testMalformedTokenDoesNotAuthenticate(): void {
+	/**
+	 * Tests that a malformed token neither authenticates nor overrides the previously determined user.
+	 */
+	public function test_malformed_token_does_not_authenticate(): void {
 		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer not-a-valid-jwt';
 
 		$this->assertSame( 0, $this->determine_current_user_id() );
@@ -92,7 +102,10 @@ class ServerAuthenticationTest extends TestCase {
 		$this->assertSame( $this->admin, $this->determine_current_user_id() );
 	}
 
-	public function testRefreshTokenCannotBeUsedToAuthenticate(): void {
+	/**
+	 * Tests that a refresh token neither authenticates nor overrides the previously determined user.
+	 */
+	public function test_refresh_token_cannot_be_used_to_authenticate(): void {
 		$tokens = $this->generate_user_tokens( $this->user_id );
 
 		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $tokens['refresh_token'];
@@ -104,7 +117,10 @@ class ServerAuthenticationTest extends TestCase {
 		$this->assertSame( $this->admin, $this->determine_current_user_id() );
 	}
 
-	public function testTokenSignedWithPreviousSiteSecretDoesNotAuthenticate(): void {
+	/**
+	 * Tests that rotating the site secret invalidates previously issued auth tokens.
+	 */
+	public function test_token_signed_with_previous_site_secret_does_not_authenticate(): void {
 		$tokens = $this->generate_user_tokens( $this->user_id );
 
 		// Rotate the site secret, invalidating all previously-issued tokens.

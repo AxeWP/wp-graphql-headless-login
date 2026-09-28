@@ -2,12 +2,12 @@
 /**
  * Holds the cookies recorded by the `WPGraphQL\Login\Auth\setcookie()` fixture.
  *
- * @package Tests\WPGraphQL\Login\Fixtures
+ * @package WPGraphQL\Login\Tests\Fixtures
  */
 
 declare( strict_types = 1 );
 
-namespace Tests\WPGraphQL\Login\Fixtures;
+namespace WPGraphQL\Login\Tests\Fixtures;
 
 /**
  * Class - CookieJar

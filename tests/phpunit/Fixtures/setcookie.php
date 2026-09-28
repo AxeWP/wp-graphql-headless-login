@@ -6,14 +6,14 @@
  * so PHP resolves this function before the global one. Cookies can't be sent from the CLI,
  * so the tests assert on the recorded ones instead.
  *
- * @package Tests\WPGraphQL\Login\Fixtures
+ * @package WPGraphQL\Login\Tests\Fixtures
  */
 
 declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Auth;
 
-use Tests\WPGraphQL\Login\Fixtures\CookieJar;
+use WPGraphQL\Login\Tests\Fixtures\CookieJar;
 
 /**
  * Records the cookie in the CookieJar.

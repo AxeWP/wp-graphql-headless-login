@@ -2,34 +2,39 @@
 /**
  * Tests the Auth\Request class.
  *
- * @package Tests\WPGraphQL\Login\Integration\Auth
+ * @package WPGraphQL\Login\Tests\Integration\Auth
  */
 
-namespace Tests\WPGraphQL\Login\Integration\Auth;
+declare( strict_types = 1 );
 
+namespace WPGraphQL\Login\Tests\Integration\Auth;
+
+use Closure;
+use GraphQL\Error\UserError;
 use PHPUnit\Framework\Attributes\CoversClass;
-use Tests\WPGraphQL\Login\TestCase;
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 use WPGraphQL\Login\Admin\Settings\CookieSettings;
 use WPGraphQL\Login\Auth\Request;
 use WPGraphQL\Login\Auth\TokenManager;
+use WPGraphQL\Login\Tests\TestCase;
+use WPGraphQL\Utils\DebugLog;
 
 /**
- * Test Auth\Request class
+ * Tests authenticating the request token and origin, and the response headers.
  */
 #[CoversClass( Request::class )]
 class RequestTest extends TestCase {
 	/**
-	 * The home URL to force via the `pre_option_home` filter.
+	 * The `pre_option_home` filter forcing the home URL, if any.
 	 */
-	private ?string $forced_home_url = null;
+	private ?Closure $home_url_filter = null;
 
 	/**
 	 * The plugin settings each test starts from.
 	 *
-	 * @var array<string,mixed>
+	 * @var array<string,array<string,mixed>>
 	 */
-	public $default_options = [
+	private array $default_options = [
 		'accessControl' => [
 			'shouldBlockUnauthorizedDomains' => false,
 			'hasSiteAddressInOrigin'         => false,
@@ -41,42 +46,23 @@ class RequestTest extends TestCase {
 	];
 
 	/**
-	 * Filters `pre_option_home` to return the forced home URL.
-	 */
-	public function filterHomeOption( $pre_option ) {
-		return $this->forced_home_url ?? $pre_option;
-	}
-
-	/**
-	 * Forces the home URL for the remainder of the test.
-	 */
-	private function forceHomeUrl( string $home_url ): void {
-		$this->forced_home_url = $home_url;
-		add_filter( 'pre_option_home', [ $this, 'filterHomeOption' ] );
-	}
-
-	private function clearForcedHomeUrl(): void {
-		$this->forced_home_url = null;
-		remove_filter( 'pre_option_home', [ $this, 'filterHomeOption' ] );
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
-	public function setUp(): void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		update_option( AccessControlSettings::get_slug(), $this->default_options['accessControl'] );
 		update_option( CookieSettings::get_slug(), $this->default_options['cookies'] );
 
 		$this->reset_utils_properties();
+		$this->clearSchema();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function tearDown(): void {
-		$this->clearForcedHomeUrl();
+	protected function tearDown(): void {
+		$this->clear_forced_home_url();
 		delete_option( AccessControlSettings::get_slug() );
 		delete_option( CookieSettings::get_slug() );
 		unset( $_SERVER['HTTP_AUTHORIZATION'], $_SERVER['HTTP_ORIGIN'], $_SERVER['HTTP_REFERER'] );
@@ -85,8 +71,11 @@ class RequestTest extends TestCase {
 		parent::tearDown();
 	}
 
-	public function testAuthenticateTokenOnRequest(): void {
-		$debug_log = new \WPGraphQL\Utils\DebugLog();
+	/**
+	 * Tests that an invalid auth token is logged to the debug log.
+	 */
+	public function test_authenticate_token_on_request(): void {
+		$debug_log = new DebugLog();
 
 		Request::authenticate_token_on_request();
 
@@ -106,12 +95,12 @@ class RequestTest extends TestCase {
 
 		$expected = 'invalid-secret-key | Wrong number of segments';
 		$this->assertEquals( $expected, $actual[0]['message'], 'Debug log should contain expected message' );
-
-		// cleanup
-		unset( $_SERVER['HTTP_AUTHORIZATION'] );
 	}
 
-	public function testAuthenticateOriginOnRequestWithUnauthorizedDomain() {
+	/**
+	 * Tests that a missing origin is only rejected when `shouldBlockUnauthorizedDomains` is enabled.
+	 */
+	public function test_authenticate_origin_on_request_with_unauthorized_domain(): void {
 		// Test with no origin set doesnt throw an error.
 		Request::authenticate_origin_on_request();
 
@@ -121,31 +110,25 @@ class RequestTest extends TestCase {
 		Request::authenticate_origin_on_request();
 
 		// Test with shouldBlockUnauthorizedDomains set to true.
-
 		update_option( AccessControlSettings::get_slug(), array_merge( $this->default_options['accessControl'], [ 'shouldBlockUnauthorizedDomains' => true ] ) );
 		$this->reset_utils_properties();
 
-		// If the origin is the same as the host this should be fine.
-		$_SERVER['HTTP_ORIGIN'] = 'http://' . $_SERVER['HTTP_HOST'];
+		// If the origin is the WordPress address this should be fine.
+		$_SERVER['HTTP_ORIGIN'] = site_url();
 
 		Request::authenticate_origin_on_request();
 
 		// If the origin isn't set, this should throw an error.
+		unset( $_SERVER['HTTP_ORIGIN'], $_SERVER['HTTP_REFERER'] );
 
-		unset( $_SERVER['HTTP_ORIGIN'] );
-		unset( $_SERVER['HTTP_REFERER'] );
-
-		$this->expectException( \GraphQL\Error\UserError::class );
-		$this->expectExceptionMessage( 'Unauthorized request origin.' );
-
-		Request::authenticate_origin_on_request();
+		$this->assert_origin_is_unauthorized();
 	}
 
 	/**
 	 * Tests origin authentication when `hasSiteAddressInOrigin` is toggled.
 	 */
-	public function testAuthenticateOriginOnRequestWithSiteAddress() {
-		$this->forceHomeUrl( 'https://example.com' );
+	public function test_authenticate_origin_on_request_with_site_address(): void {
+		$this->force_home_url( 'https://example.com' );
 		update_option(
 			AccessControlSettings::get_slug(),
 			array_merge(
@@ -189,20 +172,13 @@ class RequestTest extends TestCase {
 		);
 		$this->reset_utils_properties();
 
-		$this->expectException( \GraphQL\Error\UserError::class );
-		$this->expectExceptionMessage( 'Unauthorized request origin.' );
-
-		Request::authenticate_origin_on_request();
-
-		// cleanup
-		unset( $_SERVER['HTTP_ORIGIN'] );
-		$this->clearForcedHomeUrl();
+		$this->assert_origin_is_unauthorized();
 	}
 
 	/**
 	 * Tests origin authentication against `additionalAuthorizedDomains`.
 	 */
-	public function testAuthenticateOriginOnRequestWithAdditionalDomains() {
+	public function test_authenticate_origin_on_request_with_additional_domains(): void {
 		update_option(
 			AccessControlSettings::get_slug(),
 			array_merge(
@@ -230,10 +206,7 @@ class RequestTest extends TestCase {
 		// Test with a subdomain will fail.
 		$_SERVER['HTTP_ORIGIN'] = 'https://subdomain.example.com';
 
-		$this->expectException( \GraphQL\Error\UserError::class );
-		$this->expectExceptionMessage( 'Unauthorized request origin.' );
-
-		Request::authenticate_origin_on_request();
+		$this->assert_origin_is_unauthorized();
 
 		// This will fail with additionalAuthorizedDomains set to false.
 		update_option(
@@ -248,20 +221,15 @@ class RequestTest extends TestCase {
 		);
 		$this->reset_utils_properties();
 
-		$this->expectException( \GraphQL\Error\UserError::class );
-		$this->expectExceptionMessage( 'Unauthorized request origin.' );
-
 		$_SERVER['HTTP_ORIGIN'] = 'http://example.com';
 
-		Request::authenticate_origin_on_request();
-
-		unset( $_SERVER['HTTP_ORIGIN'] );
+		$this->assert_origin_is_unauthorized();
 	}
 
 	/**
-	 * Test authenticate_origin_on_request with different ports.
+	 * Tests that an origin port must match the authorized domain's port.
 	 */
-	public function testAuthenticateOriginOnRequestWithDifferentPorts(): void {
+	public function test_authenticate_origin_on_request_with_different_ports(): void {
 		// Test with different ports on the same domain.
 		update_option(
 			AccessControlSettings::get_slug(),
@@ -284,19 +252,13 @@ class RequestTest extends TestCase {
 		// Test it fails when not matching ports.
 		$_SERVER['HTTP_ORIGIN'] = 'http://example.com:8080';
 
-		$this->expectException( \GraphQL\Error\UserError::class );
-		$this->expectExceptionMessage( 'Unauthorized request origin.' );
-
-		Request::authenticate_origin_on_request();
-
-		// Cleanup.
-		unset( $_SERVER['HTTP_ORIGIN'] );
+		$this->assert_origin_is_unauthorized();
 	}
 
 	/**
-	 * Test authenticate_origin_on_request with different subdomains.
+	 * Tests that an origin subdomain must match the authorized domain's subdomain.
 	 */
-	public function testAuthenticateOriginOnRequestWithDifferentSubdomains(): void {
+	public function test_authenticate_origin_on_request_with_different_subdomains(): void {
 		// Test with different subdomains.
 		update_option(
 			AccessControlSettings::get_slug(),
@@ -319,16 +281,13 @@ class RequestTest extends TestCase {
 		// Test it fails when not matching.
 		$_SERVER['HTTP_ORIGIN'] = 'http://sub2.example.com';
 
-		$this->expectException( \GraphQL\Error\UserError::class );
-		$this->expectExceptionMessage( 'Unauthorized request origin.' );
-
-		Request::authenticate_origin_on_request();
-
-		// Cleanup.
-		unset( $_SERVER['HTTP_ORIGIN'] );
+		$this->assert_origin_is_unauthorized();
 	}
 
-	public function testResponseHeadersToSend(): void {
+	/**
+	 * Tests the CORS and token response headers for the access control, cookie, and Site Token settings.
+	 */
+	public function test_response_headers_to_send(): void {
 		$default_client_config = [
 			'name'          => 'Site Token',
 			'slug'          => 'siteToken',
@@ -357,7 +316,7 @@ class RequestTest extends TestCase {
 			),
 			'Access-Control-Expose-Headers' => 'X-Custom-Header',
 			'Access-Control-Max-Age'        => 600,
-			// cache the result of preflight requests (600 is the upper limit for Chromium).
+			// Cache the result of preflight requests (600 is the upper limit for Chromium).
 			'Content-Type'                  => 'application/json ; charset=' . get_option( 'blog_charset' ),
 			'X-Robots-Tag'                  => 'noindex',
 			'X-Content-Type-Options'        => 'nosniff',
@@ -438,9 +397,9 @@ class RequestTest extends TestCase {
 
 		$actual = Request::response_headers_to_send( $default_headers );
 
-		// Check Access-Control-Allow-Origin.
+		// Check Access-Control-Allow-Origin falls back to the WordPress address.
 		$this->assertArrayHasKey( 'Access-Control-Allow-Origin', $actual );
-		$this->assertStringContainsString( '', $actual['Access-Control-Allow-Origin'] );
+		$this->assertSame( site_url(), $actual['Access-Control-Allow-Origin'] );
 
 		// Check Access-Control-Allow-Credentials.
 		$this->assertArrayHasKey( 'Access-Control-Allow-Credentials', $actual );
@@ -481,7 +440,7 @@ class RequestTest extends TestCase {
 		$this->assertStringContainsString( 'X-Custom-Header', $actual['Vary'] );
 		$this->assertStringNotContainsString( 'Origin', $actual['Vary'] );
 
-		// Test with authenticated user and shouldBlockUnauthorizedDomains
+		// Test with authenticated user and shouldBlockUnauthorizedDomains.
 		$user_id = $this->factory()->user->create(
 			[
 				'role' => 'administrator',
@@ -525,9 +484,9 @@ class RequestTest extends TestCase {
 	}
 
 	/**
-	 * Tests the `Access-Control-Allow-Origin` header.
+	 * Tests the `Access-Control-Allow-Origin` header when unauthorized domains are blocked.
 	 */
-	public function testGetAcaoHeader(): void {
+	public function test_response_headers_to_send_sets_acao_header(): void {
 		$default_headers = [
 			'Access-Control-Allow-Origin'   => '*',
 			'Access-Control-Allow-Headers'  => implode(
@@ -540,7 +499,7 @@ class RequestTest extends TestCase {
 			),
 			'Access-Control-Expose-Headers' => 'X-Custom-Header',
 			'Access-Control-Max-Age'        => 600,
-			// cache the result of preflight requests (600 is the upper limit for Chromium).
+			// Cache the result of preflight requests (600 is the upper limit for Chromium).
 			'Content-Type'                  => 'application/json ; charset=' . get_option( 'blog_charset' ),
 			'X-Robots-Tag'                  => 'noindex',
 			'X-Content-Type-Options'        => 'nosniff',
@@ -574,7 +533,7 @@ class RequestTest extends TestCase {
 		$this->assertStringContainsString( site_url(), $actual['Access-Control-Allow-Origin'] );
 
 		// Test with hasSiteAddressInOrigin set to true.
-		$this->forceHomeUrl( 'https://example.com' );
+		$this->force_home_url( 'https://example.com' );
 		update_option(
 			AccessControlSettings::get_slug(),
 			array_merge(
@@ -592,7 +551,7 @@ class RequestTest extends TestCase {
 		$this->assertArrayHasKey( 'Access-Control-Allow-Origin', $actual );
 		$this->assertStringContainsString( home_url(), $actual['Access-Control-Allow-Origin'] );
 
-		// Test with additionalAuthorizedDomains
+		// Test with additionalAuthorizedDomains.
 		update_option(
 			AccessControlSettings::get_slug(),
 			array_merge(
@@ -614,5 +573,230 @@ class RequestTest extends TestCase {
 
 		$this->assertArrayHasKey( 'Access-Control-Allow-Origin', $actual );
 		$this->assertStringContainsString( 'https://example2.com', $actual['Access-Control-Allow-Origin'] );
+	}
+
+	/**
+	 * Tests that an invalid auth token gets a 403 with a debug message, while still resolving public data.
+	 */
+	public function test_query_with_invalid_auth_token_returns_public_data_and_debug_message(): void {
+		$this->factory()->user->create(
+			[
+				'role'       => 'administrator',
+				'user_login' => 'testuser',
+				'user_pass'  => 'testpass',
+			]
+		);
+
+		$this->factory()->post->create(
+			[
+				'post_title'   => 'Test Post',
+				'post_type'    => 'post',
+				'post_status'  => 'publish',
+				'post_content' => 'Post Content',
+			]
+		);
+
+		$query = '
+			query {
+				posts {
+					edges {
+						node {
+							id
+							title
+							link
+							date
+						}
+					}
+				}
+				viewer {
+					databaseId
+					username
+					auth {
+						authToken
+						authTokenExpiration
+						refreshToken
+						refreshTokenExpiration
+						isUserSecretRevoked
+						userSecret
+					}
+				}
+			}
+		';
+
+		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer invalid-auth-token';
+
+		$response = $this->graphql( [ 'query' => $query ] );
+		$headers  = apply_filters( 'graphql_response_headers_to_send', [] );
+
+		$this->assertSame( 403, apply_filters( 'graphql_response_status_code', 200 ) );
+		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Token', $headers );
+		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Refresh-Token', $headers );
+		$this->assertSame( [ 'invalid-secret-key | Wrong number of segments' ], $this->get_debug_messages( $response ) );
+		$this->assertArrayHasKey( 'data', $response );
+		$this->assertNull( $response['data']['viewer'] );
+		$this->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['id'] );
+		$this->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['title'] );
+		$this->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['link'] );
+		$this->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['date'] );
+	}
+
+	/**
+	 * Tests that a request without an auth token resolves public data without token headers.
+	 */
+	public function test_query_without_auth_token_returns_public_data_without_token_headers(): void {
+		$this->factory()->post->create(
+			[
+				'post_title'   => 'Test Post',
+				'post_type'    => 'post',
+				'post_status'  => 'publish',
+				'post_content' => 'Post Content',
+			]
+		);
+
+		$query = '
+			query {
+				posts {
+					edges {
+						node {
+							id
+							title
+							link
+							date
+						}
+					}
+				}
+			}
+		';
+
+		$response = $this->graphql( [ 'query' => $query ] );
+		$headers  = apply_filters( 'graphql_response_headers_to_send', [] );
+
+		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Token', $headers );
+		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Refresh-Token', $headers );
+		$this->assertArrayNotHasKey( 'errors', $response );
+		$this->assertSame( [], $this->get_debug_messages( $response ) );
+		$this->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['id'] );
+		$this->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['title'] );
+		$this->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['link'] );
+		$this->assertNotEmpty( $response['data']['posts']['edges'][0]['node']['date'] );
+	}
+
+	/**
+	 * Tests that a token-authenticated request is only allowed from an authorized origin, which gets refreshed tokens.
+	 */
+	public function test_query_with_authorized_origin_refreshes_tokens(): void {
+		$user_id = $this->factory()->user->create(
+			[
+				'role'       => 'administrator',
+				'user_login' => 'testuser',
+				'user_pass'  => 'testpass',
+			]
+		);
+
+		update_option(
+			AccessControlSettings::get_slug(),
+			[
+				'shouldBlockUnauthorizedDomains' => true,
+				'hasSiteAddressInOrigin'         => true,
+				'additionalAuthorizedDomains'    => [ 'https://example.com' ],
+				'customHeaders'                  => [ 'X-Custom-Header' ],
+			]
+		);
+		$this->reset_utils_properties();
+
+		$tokens = $this->generate_user_tokens( $user_id );
+
+		// Authenticate from the auth token alone.
+		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $tokens['auth_token'];
+		$GLOBALS['current_user']       = null; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Forces WordPress to re-determine the current user.
+
+		$query = '
+			query {
+				viewer {
+					databaseId
+					username
+					auth {
+						authToken
+						authTokenExpiration
+						refreshToken
+						refreshTokenExpiration
+						isUserSecretRevoked
+						userSecret
+					}
+				}
+			}
+		';
+
+		try {
+			$this->graphql( [ 'query' => $query ] );
+			$this->fail( 'Expected an unauthorized origin error.' );
+		} catch ( UserError $error ) {
+			$this->assertSame( 'Unauthorized request origin.', $error->getMessage() );
+		}
+
+		$headers = apply_filters( 'graphql_response_headers_to_send', [] );
+
+		$this->assertSame( 403, apply_filters( 'graphql_response_status_code', 200 ) );
+		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Token', $headers );
+		$this->assertArrayNotHasKey( 'X-WPGraphQL-Login-Refresh-Token', $headers );
+
+		$this->reset_utils_properties();
+		$_SERVER['HTTP_ORIGIN'] = 'https://example.com';
+
+		$response = $this->graphql( [ 'query' => $query ] );
+		$headers  = apply_filters( 'graphql_response_headers_to_send', [] );
+
+		$this->assertNotEmpty( $headers['X-WPGraphQL-Login-Token'] ?? null );
+		$this->assertNotEmpty( $headers['X-WPGraphQL-Login-Refresh-Token'] ?? null );
+
+		$this->assertArrayNotHasKey( 'errors', $response );
+		$this->assertSame( [], $this->get_debug_messages( $response ) );
+		$this->assertSame( $user_id, $response['data']['viewer']['databaseId'] );
+		$this->assertSame( 'testuser', $response['data']['viewer']['username'] );
+		$this->assertNotEmpty( $response['data']['viewer']['auth']['authToken'] );
+		$this->assertNotEmpty( $response['data']['viewer']['auth']['authTokenExpiration'] );
+		$this->assertNotEmpty( $response['data']['viewer']['auth']['refreshToken'] );
+		$this->assertNotEmpty( $response['data']['viewer']['auth']['refreshTokenExpiration'] );
+		$this->assertFalse( $response['data']['viewer']['auth']['isUserSecretRevoked'] );
+		$this->assertNotEmpty( $response['data']['viewer']['auth']['userSecret'] );
+	}
+
+	/**
+	 * Asserts that the current request origin is rejected as unauthorized.
+	 */
+	private function assert_origin_is_unauthorized(): void {
+		try {
+			Request::authenticate_origin_on_request();
+		} catch ( UserError $error ) {
+			$this->assertSame( 'Unauthorized request origin.', $error->getMessage() );
+
+			return;
+		}
+
+		$this->fail( 'Expected an unauthorized request origin error.' );
+	}
+
+	/**
+	 * Forces the home URL for the remainder of the test.
+	 *
+	 * @param string $home_url The home URL to return from `pre_option_home`.
+	 */
+	private function force_home_url( string $home_url ): void {
+		$this->clear_forced_home_url();
+
+		$this->home_url_filter = static fn (): string => $home_url;
+		add_filter( 'pre_option_home', $this->home_url_filter );
+	}
+
+	/**
+	 * Removes the forced home URL, if any.
+	 */
+	private function clear_forced_home_url(): void {
+		if ( null === $this->home_url_filter ) {
+			return;
+		}
+
+		remove_filter( 'pre_option_home', $this->home_url_filter );
+		$this->home_url_filter = null;
 	}
 }
