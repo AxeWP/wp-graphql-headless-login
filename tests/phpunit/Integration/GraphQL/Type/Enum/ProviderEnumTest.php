@@ -2,41 +2,37 @@
 /**
  * Tests the ProviderEnum type.
  *
- * @package Tests\WPGraphQL\Login\Integration
+ * @package WPGraphQL\Login\Tests\Integration\GraphQL\Type\Enum
  */
 
-namespace Tests\WPGraphQL\Login\Integration;
+declare( strict_types = 1 );
 
-use Tests\WPGraphQL\Login\TestCase;
+namespace WPGraphQL\Login\Tests\Integration\GraphQL\Type\Enum;
+
+use PHPUnit\Framework\Attributes\CoversClass;
+use WPGraphQL\Login\GraphQL\Type\Enum\ProviderEnum;
+use WPGraphQL\Login\Tests\TestCase;
 
 /**
  * Tests ProviderEnum class
  */
+#[CoversClass( ProviderEnum::class )]
 class ProviderEnumTest extends TestCase {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setUp(): void {
-		parent::setUp();
-	}
+	protected function tearDown(): void {
+		$this->reset_provider_registry();
+		$this->clearSchema();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function tearDown(): void {
 		parent::tearDown();
 	}
 
 	/**
-	 * Tests ProviderEnum is set to none by default.
+	 * Tests that the enum only has a NONE value when no providers are registered.
 	 */
-	public function testNoProviderEnum(): void {
-		add_filter(
-			'graphql_login_registered_provider_configs',
-			static function () {
-				return [];
-			}
-		);
+	public function test_enum_falls_back_to_none_when_no_providers_are_registered(): void {
+		add_filter( 'graphql_login_registered_provider_configs', '__return_empty_array' );
 		$this->reset_provider_registry();
 		$this->clearSchema();
 

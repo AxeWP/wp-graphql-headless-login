@@ -2,51 +2,33 @@
 /**
  * Tests the logout mutation.
  *
- * @package Tests\WPGraphQL\Login\Integration\Auth
+ * @package WPGraphQL\Login\Tests\Integration\GraphQL\Type\Mutation
  */
 
-namespace Tests\WPGraphQL\Login\Integration\Auth;
+declare( strict_types = 1 );
 
-use Tests\WPGraphQL\Login\TestCase;
+namespace WPGraphQL\Login\Tests\Integration\GraphQL\Type\Mutation;
+
+use PHPUnit\Framework\Attributes\CoversClass;
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 use WPGraphQL\Login\Admin\Settings\CookieSettings;
+use WPGraphQL\Login\GraphQL\Type\Mutation\Logout;
+use WPGraphQL\Login\Tests\TestCase;
 
 /**
  * Tests the logout mutation.
  */
-class LogoutMutationTest extends TestCase {
+#[CoversClass( Logout::class )]
+class LogoutTest extends TestCase {
 	/**
 	 * The administrator user ID.
-	 *
-	 * @var int
 	 */
-	public $admin;
-
-	/**
-	 * The test user ID.
-	 *
-	 * @var int
-	 */
-	public $test_user;
-
-	/**
-	 * The auth token for the test user.
-	 *
-	 * @var string
-	 */
-	public $auth_token;
-
-	/**
-	 * The refresh token for the test user.
-	 *
-	 * @var string
-	 */
-	public $refresh_token;
+	private int $admin;
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setUp(): void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->admin = $this->factory()->user->create(
@@ -66,7 +48,7 @@ class LogoutMutationTest extends TestCase {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function tearDown(): void {
+	protected function tearDown(): void {
 		unset( $_SERVER['HTTP_ORIGIN'] );
 		$this->reset_utils_properties();
 
@@ -78,7 +60,10 @@ class LogoutMutationTest extends TestCase {
 		parent::tearDown();
 	}
 
-	public function query(): string {
+	/**
+	 * Returns the logout mutation.
+	 */
+	private function query(): string {
 		return '
 			mutation Logout {
 				logout( input: {} ){
@@ -89,9 +74,9 @@ class LogoutMutationTest extends TestCase {
 	}
 
 	/**
-	 * Tests that the mutation is only registered when it is enabled.
+	 * Tests that the mutation is only registered when it and all its dependencies are enabled.
 	 */
-	public function testSchema(): void {
+	public function test_logout_mutation_is_only_registered_when_all_dependencies_are_enabled(): void {
 		// Test with mutation disabled.
 		$query = '
 			query {
@@ -145,17 +130,22 @@ class LogoutMutationTest extends TestCase {
 		$this->assertContains( 'logout', wp_list_pluck( $actual['data']['__type']['fields'], 'name' ), 'Logout mutation should be exposed.' );
 	}
 
-	public function testWithMutationDisabled(): void {
+	/**
+	 * Tests that the mutation cannot be queried when it is disabled.
+	 */
+	public function test_logout_mutation_cannot_be_queried_when_disabled(): void {
 		$query = $this->query();
 
-		// Test with mutation disabled.
 		$actual = $this->graphql( compact( 'query' ) );
 
 		$this->assertArrayHasKey( 'errors', $actual );
 		$this->assertStringStartsWith( 'Cannot query field "logout" on type "RootMutation".', $actual['errors'][0]['message'] );
 	}
 
-	public function testWithMutationEnabled(): void {
+	/**
+	 * Tests that the mutation logs out the current user, and returns null when no user is logged in.
+	 */
+	public function test_logout_mutation_logs_out_the_current_user(): void {
 		update_option(
 			CookieSettings::get_slug(),
 			[
@@ -173,7 +163,7 @@ class LogoutMutationTest extends TestCase {
 
 		$this->assertNull( $actual['data']['logout']['success'], 'The success field should be null if the user is not logged in.' );
 
-		// Test as admin user
+		// Test as admin user.
 		wp_set_current_user( $this->admin );
 
 		$actual = $this->graphql( compact( 'query' ) );

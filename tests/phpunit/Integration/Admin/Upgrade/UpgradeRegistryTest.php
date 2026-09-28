@@ -2,17 +2,18 @@
 /**
  * Tests the upgrade routines.
  *
- * @package Tests\WPGraphQL\Login\Integration\Upgrade
+ * @package WPGraphQL\Login\Tests\Integration\Admin\Upgrade
  */
 
-namespace Tests\WPGraphQL\Login\Integration\Upgrade;
+declare( strict_types = 1 );
 
-use Tests\WPGraphQL\Login\TestCase;
-use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
-use WPGraphQL\Login\Admin\Settings\CookieSettings;
-use WPGraphQL\Login\Admin\Settings\PluginSettings;
+namespace WPGraphQL\Login\Tests\Integration\Admin\Upgrade;
+
+use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use WPGraphQL\Login\Admin\Upgrade\AbstractUpgrade;
 use WPGraphQL\Login\Admin\Upgrade\UpgradeRegistry;
+use WPGraphQL\Login\Tests\TestCase;
 
 /**
  * An upgrade that succeeds.
@@ -26,7 +27,7 @@ class MockUpgrade extends AbstractUpgrade {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function upgrade(): void {
+	protected function upgrade(): void {
 		update_option( 'WP_GRAPHQL_LOGIN_MOCK_UPGRADE', true );
 	}
 }
@@ -45,15 +46,15 @@ class MockFailedUpgrade extends AbstractUpgrade {
 	 *
 	 * @throws \Exception Always.
 	 */
-	public function upgrade(): void {
-		throw new \Exception( 'Upgrade failed.' );
+	protected function upgrade(): void {
+		throw new Exception( 'Upgrade failed.' );
 	}
 }
 
 /**
  * An upgrade older than the stored version, so it is skipped.
  */
-class MockedSkippedUpgrade extends AbstractUpgrade {
+class MockSkippedUpgrade extends AbstractUpgrade {
 	/**
 	 * The version this upgrade applies to.
 	 */
@@ -62,7 +63,7 @@ class MockedSkippedUpgrade extends AbstractUpgrade {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function upgrade(): void {
+	protected function upgrade(): void {
 		update_option( 'WP_GRAPHQL_LOGIN_MOCK_SKIPPED_UPGRADE', true );
 	}
 }
@@ -74,10 +75,10 @@ class MockUpgradeRegistry extends UpgradeRegistry {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_upgrade_classes(): array {
+	protected static function get_upgrade_classes(): array {
 		return [
 			MockUpgrade::class,
-			MockedSkippedUpgrade::class,
+			MockSkippedUpgrade::class,
 		];
 	}
 }
@@ -89,9 +90,9 @@ class MockFailedUpgradeRegistry extends UpgradeRegistry {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_upgrade_classes(): array {
+	protected static function get_upgrade_classes(): array {
 		return [
-			MockedSkippedUpgrade::class, // This upgrade should be skipped.
+			MockSkippedUpgrade::class, // This upgrade should be skipped.
 			MockFailedUpgrade::class, // This upgrade should fail.
 			MockUpgrade::class, // This upgrade should not run.
 		];
@@ -101,7 +102,9 @@ class MockFailedUpgradeRegistry extends UpgradeRegistry {
 /**
  * Tests the UpgradeRegistry and AbstractUpgrade lifecycle.
  */
-class UpgradeTest extends TestCase {
+#[CoversClass( UpgradeRegistry::class )]
+#[CoversClass( AbstractUpgrade::class )]
+class UpgradeRegistryTest extends TestCase {
 	/**
 	 * {@inheritDoc}
 	 */
@@ -112,18 +115,9 @@ class UpgradeTest extends TestCase {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Tests that run() applies the upgrade and stores its version, but only once.
 	 */
-	protected function tearDown(): void {
-		$this->cleanup_upgrade_state();
-
-		parent::tearDown();
-	}
-
-	/**
-	 * Test that the upgrade process runs successfully.
-	 */
-	public function testUpgradeSuccess(): void {
+	public function test_run_applies_upgrade_and_updates_version(): void {
 		// Test with no version set.
 		$upgrade = new MockUpgrade();
 		$success = $upgrade->run();
@@ -155,9 +149,9 @@ class UpgradeTest extends TestCase {
 	}
 
 	/**
-	 * Test that the upgrade process fails.
+	 * Tests that a failed upgrade stores an error that is shown as an admin notice until an upgrade succeeds.
 	 */
-	public function testUpgradeFailure(): void {
+	public function test_run_failure_shows_error_notice_until_next_success(): void {
 		update_option( AbstractUpgrade::VERSION_OPTION_KEY, '0.0.1' );
 
 		$expected = [
@@ -176,8 +170,7 @@ class UpgradeTest extends TestCase {
 		$this->assertEquals( $expected, $actual );
 
 		// Test that the error message is output on the admin_notices hook.
-		$this->expectOutputRegex( '/Upgrade failed./' );
-		UpgradeRegistry::failed_upgrade_notice();
+		$this->assertStringContainsString( 'Upgrade failed.', $this->get_failed_upgrade_notice() );
 
 		// Test that the error message is cleared.
 		$upgrade = new MockUpgrade();
@@ -190,20 +183,16 @@ class UpgradeTest extends TestCase {
 		$this->assertFalse( $actual );
 
 		// Failed upgrade notice should not be displayed.
-		$this->expectOutputString( '' );
-		UpgradeRegistry::failed_upgrade_notice();
-
-		// Cleanup.
-		delete_transient( AbstractUpgrade::ERROR_TRANSIENT_KEY );
+		$this->assertSame( '', $this->get_failed_upgrade_notice() );
 	}
 
 	/**
-	 * Test that the upgrade process skips upgrades that are not needed.
+	 * Tests that run() skips upgrades that aren't newer than the stored version.
 	 */
-	public function testUpgradeSkipped(): void {
+	public function test_run_skips_upgrade_older_than_stored_version(): void {
 		update_option( AbstractUpgrade::VERSION_OPTION_KEY, '0.0.2' );
 
-		$upgrade = new MockedSkippedUpgrade();
+		$upgrade = new MockSkippedUpgrade();
 		$success = $upgrade->run();
 
 		$this->assertTrue( $success );
@@ -211,10 +200,10 @@ class UpgradeTest extends TestCase {
 	}
 
 	/**
-	 * Test that the upgrade process runs all upgrades.
+	 * Tests that do_upgrades() runs the pending upgrades and stores the plugin version.
 	 */
-	public function testDoUpgrades(): void {
-		// If the version is not set, no upgrades should run.
+	public function test_do_upgrades_runs_pending_upgrades(): void {
+		// With no version set, the newer upgrade runs first and the older one is then skipped.
 		MockUpgradeRegistry::do_upgrades();
 
 		$this->assertTrue( get_option( 'WP_GRAPHQL_LOGIN_MOCK_UPGRADE' ) );
@@ -233,48 +222,33 @@ class UpgradeTest extends TestCase {
 	}
 
 	/**
-	 * Tests the v0.4.0 upgrade process.
+	 * Tests that do_upgrades() halts at a failed upgrade without running later upgrades or bumping the version.
 	 */
-	public function testV0_4_0Upgrade(): void {
-		global $wpdb;
+	public function test_do_upgrades_halts_on_failed_upgrade(): void {
+		update_option( AbstractUpgrade::VERSION_OPTION_KEY, '0.0.1' );
 
-		// Set the old settings.
-		update_option( 'wp_graphql_login_settings_show_advanced_settings', true );
-		update_option( 'wp_graphql_login_settings_delete_data_on_deactivate', true );
-		update_option( 'wp_graphql_login_settings_jwt_secret_key', 'secret' );
+		MockFailedUpgradeRegistry::do_upgrades();
 
-		$wpdb->insert(
-			$wpdb->options,
+		$this->assertFalse( get_option( 'WP_GRAPHQL_LOGIN_MOCK_SKIPPED_UPGRADE' ), 'Upgrades older than the stored version should be skipped.' );
+		$this->assertFalse( get_option( 'WP_GRAPHQL_LOGIN_MOCK_UPGRADE' ), 'Upgrades after the failed one should not run.' );
+		$this->assertSame( '0.0.1', get_option( AbstractUpgrade::VERSION_OPTION_KEY ), 'The version should not be updated if an upgrade fails.' );
+		$this->assertSame(
 			[
-				'option_name'  => 'wpgraphql_login_access_control',
-				'option_value' => serialize( [ 'hasAccessControlAllowCredentials' => true ] ),
-			]
-		);
-
-		// Set the version to < 0.4.0.
-		update_option( AbstractUpgrade::VERSION_OPTION_KEY, '0.3.0' );
-
-		$upgrade = new \WPGraphQL\Login\Admin\Upgrade\V0_4_0();
-		$upgrade->run();
-
-		// Check the new settings.
-		$this->assertEquals(
-			[
-				'show_advanced_settings'    => true,
-				'delete_data_on_deactivate' => true,
-				'jwt_secret_key'            => 'secret',
+				'version' => '99.99.99',
+				'message' => 'Upgrade failed.',
 			],
-			get_option( PluginSettings::get_slug() )
+			get_transient( AbstractUpgrade::ERROR_TRANSIENT_KEY )
 		);
-		$this->assertTrue(
-			get_option( CookieSettings::get_slug() )['hasAccessControlAllowCredentials']
-		);
+	}
 
-		// Check the old settings.
-		$this->assertFalse( get_option( 'wp_graphql_login_settings_show_advanced_settings' ) );
-		$this->assertFalse( get_option( 'wp_graphql_login_settings_delete_data_on_deactivate' ) );
-		$this->assertFalse( get_option( 'wp_graphql_login_settings_jwt_secret_key' ) );
-		$this->assertArrayNotHasKey( 'hasAccessControlAllowCredentials', get_option( AccessControlSettings::get_slug(), [] ) );
+	/**
+	 * Returns the output of the failed upgrade admin notice.
+	 */
+	private function get_failed_upgrade_notice(): string {
+		ob_start();
+		UpgradeRegistry::failed_upgrade_notice();
+
+		return (string) ob_get_clean();
 	}
 
 	/**

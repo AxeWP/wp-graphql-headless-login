@@ -2,37 +2,40 @@
 /**
  * Tests the user authentication data query.
  *
- * @package Tests\WPGraphQL\Login\Integration\Queries
+ * @package WPGraphQL\Login\Tests\Integration\GraphQL\Type\WPObject
  */
 
-namespace Tests\WPGraphQL\Login\Integration\Queries;
+declare( strict_types = 1 );
 
-use Tests\WPGraphQL\Login\TestCase;
+namespace WPGraphQL\Login\Tests\Integration\GraphQL\Type\WPObject;
+
+use PHPUnit\Framework\Attributes\CoversClass;
 use WPGraphQL\Login\Auth\User;
+use WPGraphQL\Login\GraphQL\Model\User as UserModel;
+use WPGraphQL\Login\GraphQL\Type\WPObject\AuthenticationData;
+use WPGraphQL\Login\Tests\TestCase;
 use WPGraphQL\Type\WPEnumType;
 
 /**
  * Tests the user authentication data query.
  */
-class UserAuthenticationQueryTest extends TestCase {
+#[CoversClass( AuthenticationData::class )]
+#[CoversClass( UserModel::class )]
+class AuthenticationDataTest extends TestCase {
 	/**
 	 * The administrator user ID.
-	 *
-	 * @var int
 	 */
-	public $admin;
+	private int $admin;
 
 	/**
 	 * The test user ID.
-	 *
-	 * @var int
 	 */
-	public $test_user;
+	private int $test_user;
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setUp(): void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->set_client_config(
@@ -66,7 +69,7 @@ class UserAuthenticationQueryTest extends TestCase {
 			]
 		);
 
-		// Add mock linked identities
+		// Add mock linked identities.
 		User::link_user_identity( $this->test_user, 'facebook', '1234567890' );
 		User::link_user_identity( $this->test_user, 'google', '1234567890' );
 	}
@@ -74,7 +77,7 @@ class UserAuthenticationQueryTest extends TestCase {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function tearDown(): void {
+	protected function tearDown(): void {
 		$this->clear_client_config( 'facebook' );
 		$this->clear_client_config( 'google' );
 		$this->clearSchema();
@@ -83,9 +86,9 @@ class UserAuthenticationQueryTest extends TestCase {
 	}
 
 	/**
-	 * Test the `user.auth` query.
+	 * Tests that `User.auth` exposes linked identities to admins, but only exposes tokens and secrets to the user.
 	 */
-	public function testUserAuthQuery(): void {
+	public function test_user_auth_only_exposes_tokens_to_the_user(): void {
 		$query = '
 			query UserAuth( $id: ID! ) {
 				user( id: $id, idType: DATABASE_ID ) {
@@ -110,7 +113,7 @@ class UserAuthenticationQueryTest extends TestCase {
 			'id' => $this->test_user,
 		];
 
-		// Test as admin
+		// Test as admin.
 		wp_set_current_user( $this->admin );
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
@@ -154,7 +157,7 @@ class UserAuthenticationQueryTest extends TestCase {
 			]
 		);
 
-		// Test as actual user
+		// Test as actual user.
 		wp_set_current_user( $this->test_user );
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 

@@ -2,27 +2,57 @@
 /**
  * Tests the plugin settings.
  *
- * @package Tests\WPGraphQL\Login\Integration\Settings
+ * @package WPGraphQL\Login\Tests\Integration\Admin
  */
 
-namespace Tests\WPGraphQL\Login\Integration\Settings;
+declare( strict_types = 1 );
 
+namespace WPGraphQL\Login\Tests\Integration\Admin;
+
+use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClass;
-use Tests\WPGraphQL\Login\TestCase;
+use ReflectionMethod;
+use WPGraphQL\Admin\Settings\SettingsRegistry as WPGraphQLSettingsRegistry;
 use WPGraphQL\Login\Admin\Settings;
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 use WPGraphQL\Login\Auth\ProviderRegistry;
+use WPGraphQL\Login\Tests\TestCase;
 
 /**
- * Test Settings\Settings class
+ * Tests the Admin\Settings class.
  */
+#[CoversClass( Settings::class )]
 class SettingsTest extends TestCase {
+	/**
+	 * Tests that the settings section is registered to the WPGraphQL settings registry.
+	 */
+	public function test_settings_section_is_registered_with_wpgraphql(): void {
+		do_action( 'graphql_register_settings' );
+
+		$registry = new WPGraphQLSettingsRegistry();
+		do_action( 'graphql_init_settings', $registry );
+
+		$this->assertArrayHasKey( Settings::$option_group, $registry->get_settings_sections() );
+	}
+
+	/**
+	 * Tests that the settings app is enqueued on the WPGraphQL settings screen.
+	 */
+	public function test_settings_app_is_enqueued_on_settings_page(): void {
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'administrator' ] ) );
+		set_current_screen( 'graphql_page_graphql-settings' );
+
+		do_action( 'admin_enqueue_scripts', 'graphql_page_graphql-settings' );
+
+		$this->assertTrue( wp_script_is( 'wp-graphql-headless-login/admin-editor', 'enqueued' ) );
+	}
+
 	/**
 	 * Tests that options.php can't overwrite the plugin settings with the section's empty form.
 	 */
-	public function testOptionsPageCannotSaveSettings(): void {
+	public function test_options_page_cannot_save_settings(): void {
 		global $new_allowed_options;
 
 		// Core's `option_update_filter()` adds registered settings back at priority 10, but is only hooked in wp-admin.
@@ -39,14 +69,12 @@ class SettingsTest extends TestCase {
 	}
 
 	/**
-	 * Tests that the Settings tab is registered.
+	 * Tests that the data passed to the settings app includes the secret meta, a valid nonce, and every settings group.
 	 */
-	public function testGetSettingsData(): void {
-		$instance   = new Settings();
-		$reflection = new ReflectionClass( $instance );
-		$method     = $reflection->getMethod( 'get_settings_data' );
+	public function test_get_settings_data_includes_secret_nonce_and_settings(): void {
+		$method = new ReflectionMethod( Settings::class, 'get_settings_data' );
 
-		$actual = $method->invoke( $instance );
+		$actual = $method->invoke( new Settings() );
 
 		$this->assertNotEmpty( $actual );
 
@@ -91,11 +119,8 @@ class SettingsTest extends TestCase {
 			'Provider settings should have the same keys as the registered providers.'
 		);
 
-		// Ensure the keys are in ProviderSettings::get_config().
-		$reflection        = new ReflectionClass( ProviderSettings::class );
-		$provider_settings = $reflection->getProperty( 'config' );
-		// Reset the config to force a reload.
-		$provider_settings->setValue( null, [] );
+		// Ensure the keys are in a freshly-loaded ProviderSettings::get_config().
+		( new ReflectionClass( ProviderSettings::class ) )->setStaticPropertyValue( 'config', [] );
 
 		$provider_settings = ProviderSettings::get_config();
 

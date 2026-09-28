@@ -2,43 +2,48 @@
 /**
  * Tests the login client queries.
  *
- * @package Tests\WPGraphQL\Login\Integration\Queries
+ * @package WPGraphQL\Login\Tests\Integration\GraphQL\Type\Fields
  */
 
-namespace Tests\WPGraphQL\Login\Integration\Queries;
+declare( strict_types = 1 );
 
-use Tests\WPGraphQL\Login\TestCase;
+namespace WPGraphQL\Login\Tests\Integration\GraphQL\Type\Fields;
+
+use PHPUnit\Framework\Attributes\CoversClass;
+use WPGraphQL\Login\GraphQL\Model\Client as ClientModel;
+use WPGraphQL\Login\GraphQL\Type\Fields\RootQuery;
+use WPGraphQL\Login\Tests\TestCase;
 use WPGraphQL\Type\WPEnumType;
 
 /**
  * Tests querying for login clients
  */
-class LoginClientQueriesTest extends TestCase {
+#[CoversClass( RootQuery::class )]
+#[CoversClass( ClientModel::class )]
+class RootQueryTest extends TestCase {
 	/**
 	 * The provider config settings.
 	 *
 	 * @var array<string,mixed>
 	 */
-	public array $client_config = [];
+	private array $client_config = [];
 
 	/**
 	 * The administrator user ID.
-	 *
-	 * @var int
 	 */
-	public $admin;
+	private int $admin;
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setUp(): void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->reset_utils_properties();
 		$this->clear_client_config( 'facebook' );
 		$this->clearSchema();
 
-		// Set the provider settings
+		// Set the provider settings.
 		$this->client_config = [
 			'name'          => 'Facebook',
 			'slug'          => 'facebook',
@@ -66,7 +71,7 @@ class LoginClientQueriesTest extends TestCase {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function tearDown(): void {
+	protected function tearDown(): void {
 		$this->clear_client_config( 'facebook' );
 		$this->clearSchema();
 
@@ -74,9 +79,9 @@ class LoginClientQueriesTest extends TestCase {
 	}
 
 	/**
-	 * Test the `loginClients` query.
+	 * Tests that `loginClients` is null without providers, and only exposes public client data to guests.
 	 */
-	public function testClientsQuery(): void {
+	public function test_login_clients_returns_public_client_data_to_guests(): void {
 		$query = '
 			query LoginClientQuery {
 				loginClients {
@@ -104,7 +109,7 @@ class LoginClientQueriesTest extends TestCase {
 			}
 		';
 
-		// Test with no providers
+		// Test with no providers.
 		$this->reset_utils_properties();
 		$this->clear_client_config( 'facebook' );
 
@@ -113,7 +118,7 @@ class LoginClientQueriesTest extends TestCase {
 		$this->assertArrayNotHasKey( 'errors', $actual );
 		$this->assertNull( $actual['data']['loginClients'] );
 
-		// Test with providers
+		// Test with providers.
 		$this->set_client_config( 'facebook', $this->client_config );
 
 		$actual = $this->graphql( compact( 'query' ) );
@@ -131,7 +136,7 @@ class LoginClientQueriesTest extends TestCase {
 						$this->expectedField( 'name', $this->client_config['name'] ),
 						$this->expectedField( 'order', $this->client_config['order'] ),
 						$this->expectedField( 'provider', WPEnumType::get_safe_name( $this->client_config['slug'] ) ),
-						// These should be null because the user isnt Authenticated
+						// These should be null because the user isn't authenticated.
 						$this->expectedField( 'clientOptions', self::IS_NULL ),
 						$this->expectedField( 'loginOptions', self::IS_NULL ),
 					]
@@ -139,8 +144,8 @@ class LoginClientQueriesTest extends TestCase {
 			]
 		);
 		$this->assertStringStartsWith( 'https://www.facebook.com/v16.0/dialog/oauth', $actual['data']['loginClients'][0]['authorizationUrl'] );
-		// Check the authorization url has the correct query params
-		$auth_url = parse_url( $actual['data']['loginClients'][0]['authorizationUrl'] );
+		// Check the authorization url has the correct query params.
+		$auth_url = wp_parse_url( $actual['data']['loginClients'][0]['authorizationUrl'] );
 		parse_str( $auth_url['query'], $query_params );
 		$this->assertEquals( $this->client_config['clientOptions']['clientId'], $query_params['client_id'] );
 		$this->assertEquals(
@@ -152,7 +157,10 @@ class LoginClientQueriesTest extends TestCase {
 		$this->assertArrayHasKey( 'response_type', $query_params );
 	}
 
-	public function testClientsQueryWithAuthenticatedUser(): void {
+	/**
+	 * Tests that `loginClients` exposes the client and login options to admins.
+	 */
+	public function test_login_clients_returns_client_and_login_options_to_admins(): void {
 		$query = '
 			query LoginClientQuery {
 				loginClients {
@@ -209,7 +217,10 @@ class LoginClientQueriesTest extends TestCase {
 		);
 	}
 
-	public function testClientQuery(): void {
+	/**
+	 * Tests that `loginClient` errors for a disabled provider, and only exposes public client data to guests.
+	 */
+	public function test_login_client_returns_public_client_data_to_guests(): void {
 		$query = '
 			query LoginClientQuery( $provider: LoginProviderEnum! ) {
 				loginClient( provider: $provider ) {
@@ -241,7 +252,7 @@ class LoginClientQueriesTest extends TestCase {
 			'provider' => 'FACEBOOK',
 		];
 
-		// Test with no providers
+		// Test with no providers.
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
 
 		$this->assertArrayHasKey( 'errors', $actual );
@@ -250,7 +261,7 @@ class LoginClientQueriesTest extends TestCase {
 		$debug_message = $actual['errors'][0]['extensions']['debugMessage'] ?? $actual['errors'][0]['debugMessage'];
 		$this->assertEquals( 'Provider facebook is not enabled.', $debug_message );
 
-		// Test with providers
+		// Test with providers.
 		$this->set_client_config( 'facebook', $this->client_config );
 
 		$actual = $this->graphql( compact( 'query', 'variables' ) );
@@ -267,7 +278,7 @@ class LoginClientQueriesTest extends TestCase {
 						$this->expectedField( 'name', $this->client_config['name'] ),
 						$this->expectedField( 'order', $this->client_config['order'] ),
 						$this->expectedField( 'provider', WPEnumType::get_safe_name( $this->client_config['slug'] ) ),
-						// These should be null because the user isnt Authenticated
+						// These should be null because the user isn't authenticated.
 						$this->expectedField( 'clientOptions', self::IS_NULL ),
 						$this->expectedField( 'loginOptions', self::IS_NULL ),
 					]
@@ -276,7 +287,10 @@ class LoginClientQueriesTest extends TestCase {
 		);
 	}
 
-	public function testClientQueryWithAuthenticatedUser(): void {
+	/**
+	 * Tests that `loginClient` exposes the client and login options to admins.
+	 */
+	public function test_login_client_returns_client_and_login_options_to_admins(): void {
 		$query = '
 			query LoginClientQuery( $provider: LoginProviderEnum! ) {
 				loginClient( provider: $provider ) {

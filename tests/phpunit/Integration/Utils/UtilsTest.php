@@ -2,44 +2,39 @@
 /**
  * Tests the Utils class.
  *
- * @package Tests\WPGraphQL\Login\Integration
+ * @package WPGraphQL\Login\Tests\Integration\Utils
  */
 
-namespace Tests\WPGraphQL\Login\Integration;
+declare( strict_types = 1 );
+
+namespace WPGraphQL\Login\Tests\Integration\Utils;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use Tests\WPGraphQL\Login\TestCase;
 use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
+use WPGraphQL\Login\Tests\TestCase;
 use WPGraphQL\Login\Utils\Utils;
 
 /**
- * Tests Utils class
+ * Tests the Utils\Utils class.
  */
 #[CoversClass( Utils::class )]
 class UtilsTest extends TestCase {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setUp(): void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->reset_utils_properties();
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Tests that get_setting() returns the default, stored, and filtered plugin setting values.
 	 */
-	public function tearDown(): void {
-		parent::tearDown();
-	}
-
-	/**
-	 * Tests Utils::get_setting()
-	 */
-	public function testGetSetting(): void {
-		// Test default value (false)
+	public function test_get_setting_returns_default_stored_and_filtered_values(): void {
+		// Test the default value.
 		$actual = Utils::get_setting( 'delete_data_on_deactivate' );
 
 		$this->assertFalse( $actual, 'Default value should be false' );
@@ -60,17 +55,12 @@ class UtilsTest extends TestCase {
 		$actual = Utils::get_setting( 'delete_data_on_deactivate' );
 
 		$this->assertFalse( $actual, 'Filter value should be false' );
-
-		remove_filter( 'graphql_login_setting', [ $this, 'setting_filter_callback' ], 10 );
-
-		// cleanup db
-		delete_option( PluginSettings::get_slug() );
 	}
 
 	/**
-	 * Tests Utils::update_plugin_setting()
+	 * Tests that update_plugin_setting() stores the plugin setting.
 	 */
-	public function testUpdatePluginSetting(): void {
+	public function test_update_plugin_setting_stores_value(): void {
 		// Test db value.
 		$expected = true;
 		Utils::update_plugin_setting( 'delete_data_on_deactivate', $expected );
@@ -79,18 +69,15 @@ class UtilsTest extends TestCase {
 		$actual = Utils::get_setting( 'delete_data_on_deactivate' );
 
 		$this->assertEquals( $expected, $actual, 'DB value should be true' );
-
-		// cleanup db
-		delete_option( PluginSettings::get_slug() );
 	}
 
 	/**
-	 * Tests Utils::get_access_control_setting()
+	 * Tests that get_access_control_setting() returns the default, stored, and filtered access control setting values.
 	 */
-	public function testGetAccessControlSetting(): void {
+	public function test_get_access_control_setting_returns_default_stored_and_filtered_values(): void {
 		$expected = [];
 
-		// Test default value (false)
+		// Test the default value.
 		$actual = Utils::get_access_control_setting( 'hasSiteAddressInOrigin' );
 
 		$this->assertFalse( $actual, 'Default value should be false' );
@@ -111,18 +98,13 @@ class UtilsTest extends TestCase {
 		$actual = Utils::get_access_control_setting( 'hasSiteAddressInOrigin' );
 
 		$this->assertFalse( $actual, 'Filter value should be false' );
-
-		remove_filter( 'graphql_login_access_control_settings', [ $this, 'access_control_settings_filter_callback' ], 10 );
-
-		// cleanup db
-		delete_option( AccessControlSettings::get_slug() );
 	}
 
 	/**
-	 * Tests Utils::get_provider_settings()
+	 * Tests that get_provider_settings() returns the default, stored, and filtered provider settings.
 	 */
-	public function testGetProviderSettings(): void {
-		// Test default value ([])
+	public function test_get_provider_settings_returns_default_stored_and_filtered_values(): void {
+		// Test the default value.
 		$actual = Utils::get_provider_settings( 'facebook' );
 
 		$this->assertEmpty( $actual, 'Default value should be an empty array' );
@@ -137,7 +119,7 @@ class UtilsTest extends TestCase {
 
 		$actual = Utils::get_provider_settings( 'facebook' );
 
-		$this->assertEquals( $expected, $actual, 'DB value should be true' );
+		$this->assertEquals( $expected, $actual, 'DB value should be returned' );
 
 		// Test filter.
 		add_filter( 'graphql_login_provider_settings', [ $this, 'provider_settings_filter_callback' ], 10, 2 );
@@ -146,21 +128,16 @@ class UtilsTest extends TestCase {
 		$actual = Utils::get_provider_settings( 'facebook' );
 
 		$this->assertTrue( $actual['isEnabled'], 'Filter value should be true' );
-
-		remove_filter( 'graphql_login_provider_settings', [ $this, 'provider_settings_filter_callback' ], 10 );
-
-		// cleanup db
-		delete_option( ProviderSettings::$settings_prefix . 'facebook' );
 	}
 
 	/**
-	 * Tests Utils::get_provider_settings()
+	 * Tests that get_all_provider_settings() returns the default, stored, and filtered settings for every provider.
 	 */
-	public function testGetAllProviderSettings() {
-		// Test default value ([])
+	public function test_get_all_provider_settings_returns_default_stored_and_filtered_values(): void {
+		// Test the default value.
 		$actual = Utils::get_all_provider_settings();
 
-		$this->assertArrayHasKey( 'facebook', $actual, 'Default value have the keys for all providers' );
+		$this->assertArrayHasKey( 'facebook', $actual, 'Default value should have the keys for all providers' );
 
 		// Test db value.
 		$expected = [
@@ -189,58 +166,57 @@ class UtilsTest extends TestCase {
 
 		$actual = Utils::get_all_provider_settings();
 
-		$this->assertTrue( $actual['facebook']['isEnabled'], 'Filter value should be false' );
-
-		remove_filter( 'graphql_login_provider_settings', [ $this, 'provider_settings_filter_callback' ], 10 );
-
-		// cleanup db
-		delete_option( ProviderSettings::$settings_prefix . 'facebook' );
-		delete_option( ProviderSettings::$settings_prefix . 'google' );
+		$this->assertTrue( $actual['facebook']['isEnabled'], 'Filter value should be true' );
 	}
 
 	/**
-	 * Tests Utils::is_current_user()
+	 * Tests that is_current_user() only matches the logged-in user.
 	 */
-	public function testIsCurrentUser(): void {
+	public function test_is_current_user_matches_only_logged_in_user(): void {
 		$user = $this->factory()->user->create_and_get();
 
-		// Test logged out
+		// Test logged out.
 		$actual = Utils::is_current_user( $user->ID );
 
 		$this->assertFalse( $actual, 'Should be false when logged out' );
 
-		// Test logged out with user Object
+		// Test logged out with a user object.
 		$actual = Utils::is_current_user( $user );
 
 		$this->assertFalse( $actual, 'Should be false when logged out' );
 
-		// Test logged in
+		// Test logged in.
 		wp_set_current_user( $user->ID );
 
-		// With bad user id
+		// With a bad user ID.
 		$actual = Utils::is_current_user( 999252 );
 
 		$this->assertFalse( $actual, 'Should be false when logged in with bad user id' );
 
-		// With different user
+		// With a different user.
 		$test_user = $this->factory()->user->create_and_get();
 
 		$actual = Utils::is_current_user( $test_user->ID );
 
 		$this->assertFalse( $actual, 'Should be false when logged in with different user id' );
 
-		// With same user
+		// With the same user.
 		$actual = Utils::is_current_user( $user->ID );
 
 		$this->assertTrue( $actual, 'Should be true when logged in' );
 
-		// With no user
+		// With no user.
 		$actual = Utils::is_current_user( 0 );
 		$this->assertFalse( $actual, 'Should be false when logged in with no user' );
 	}
 
 	/**
 	 * Callback for the `graphql_login_setting` filter.
+	 *
+	 * @param mixed  $value   The setting value.
+	 * @param string $setting The setting name.
+	 *
+	 * @return mixed
 	 */
 	public function setting_filter_callback( $value, string $setting ) {
 		if ( 'delete_data_on_deactivate' === $setting ) {
@@ -251,8 +227,13 @@ class UtilsTest extends TestCase {
 
 	/**
 	 * Callback for the `graphql_login_provider_settings` filter.
+	 *
+	 * @param array<string,mixed> $settings The provider settings.
+	 * @param string              $slug     The provider slug.
+	 *
+	 * @return array<string,mixed>
 	 */
-	public function provider_settings_filter_callback( array $settings, string $slug ) {
+	public function provider_settings_filter_callback( array $settings, string $slug ): array {
 		if ( 'facebook' === $slug ) {
 			$settings['isEnabled'] = true;
 		}
@@ -261,8 +242,12 @@ class UtilsTest extends TestCase {
 
 	/**
 	 * Callback for the `graphql_login_access_control_settings` filter.
+	 *
+	 * @param array<string,mixed> $settings The access control settings.
+	 *
+	 * @return array<string,mixed>
 	 */
-	public function access_control_settings_filter_callback( array $settings ) {
+	public function access_control_settings_filter_callback( array $settings ): array {
 		$settings['hasSiteAddressInOrigin'] = false;
 
 		return $settings;
