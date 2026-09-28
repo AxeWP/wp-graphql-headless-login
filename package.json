@@ -13,7 +13,7 @@
 		"access-functions.php",
 		"activation.php",
 		"deactivation.php",
-		"LICENSE",
+		"LICENSE.md",
 		"README.md",
 		"readme.txt",
 		"wp-graphql-headless-login.php"

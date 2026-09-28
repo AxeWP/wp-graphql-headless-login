@@ -15,7 +15,7 @@ namespace WPGraphQL\Login;
  *
  * @internal
  */
-class Autoloader {
+final class Autoloader {
 	/**
 	 * Attempts to autoload the Composer dependencies.
 	 */
@@ -30,7 +30,7 @@ class Autoloader {
 			return false;
 		}
 
-		return self::require_autoloader( WPGRAPHQL_LOGIN_PLUGIN_DIR . '/vendor/autoload.php' );
+		return self::require_autoloader( WPGRAPHQL_LOGIN_PLUGIN_DIR . 'vendor/autoload.php' );
 	}
 
 	/**
@@ -59,9 +59,9 @@ class Autoloader {
 		return $loaded[ $autoloader_file ];
 	}
 
-		/**
-		 * Displays a notice if the autoloader is missing.
-		 */
+	/**
+	 * Displays a notice if the autoloader is missing.
+	 */
 	private static function missing_autoloader_notice(): void {
 		$hooks = [
 			'admin_notices',

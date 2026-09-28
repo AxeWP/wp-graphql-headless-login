@@ -2,7 +2,7 @@
 /**
  * This file contains access functions for various class methods.
  *
- * @package WPGraphQL/Login
+ * @package WPGraphQL\Login
  * @since 0.0.1
  */
 

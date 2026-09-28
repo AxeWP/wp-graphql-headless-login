@@ -74,7 +74,7 @@ class UpgradeRegistry implements Registrable {
 				<?php
 				printf(
 					// translators: %1$s is the version the plugin was trying to upgrade to, %2$s is the version the plugin halted at, %3$s is the error message.
-					esc_html__( 'An error occured while upgrading to version %1$s. Te upgrade process has been halted at version %2$s. Error message: %3$s', 'wp-graphql-headless-login' ),
+					esc_html__( 'An error occurred while upgrading to version %1$s. The upgrade process has been halted at version %2$s. Error message: %3$s', 'wp-graphql-headless-login' ),
 					esc_html( WPGRAPHQL_LOGIN_VERSION ),
 					esc_html( $error['version'] ),
 					esc_html( $error['message'] )

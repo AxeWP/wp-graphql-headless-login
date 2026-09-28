@@ -16,6 +16,7 @@
 	failOnNotice="true"
 	failOnDeprecation="true"
 	failOnPhpunitDeprecation="false"
+	requireCoverageMetadata="true"
 >
 	<testsuites>
 		<testsuite name="integration">

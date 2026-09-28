@@ -2,7 +2,7 @@
 /**
  * Utility functions.
  *
- * @package WPGraphQL/Login/Utils
+ * @package WPGraphQL\Login\Utils
  */
 
 declare( strict_types = 1 );
@@ -37,7 +37,7 @@ final class Utils {
 	/**
 	 * The Access Control Settings
 	 *
-	 * @var ?array<string,mixed>
+	 * @var array<string,mixed>
 	 */
 	private static $access_control = [];
 

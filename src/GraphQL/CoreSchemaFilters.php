@@ -2,7 +2,7 @@
 /**
  * Adds filters that modify core schema.
  *
- * @package WPGraphQL\Login
+ * @package WPGraphQL\Login\GraphQL
  */
 
 declare( strict_types = 1 );

@@ -1,3 +1,5 @@
+# https://phpstan.org/config-reference
+
 parameters:
 	# Rules
 	treatPhpDocTypesAsCertain: false

@@ -30,6 +30,6 @@
 /CHANGELOG.md linguist-documentation export-ignore
 
 # Keep license and readme files.
-/LICENSE linguist-documentation
+/LICENSE.md linguist-documentation
 /README.md linguist-documentation
 /readme.txt linguist-documentation

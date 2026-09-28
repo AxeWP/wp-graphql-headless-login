@@ -2,7 +2,7 @@
 /**
  * Adds filters that modify WooGraphQL schema.
  *
- * @package WPGraphQL\Login
+ * @package WPGraphQL\Login\Extensions
  */
 
 declare( strict_types = 1 );

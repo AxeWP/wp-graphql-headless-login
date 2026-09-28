@@ -2,7 +2,7 @@
 /**
  * Registers the Logout mutation.
  *
- * @package WPGraphQL\Logout\Mutation
+ * @package WPGraphQL\Login\GraphQL\Type\Mutation
  * @since 0.4.0
  */
 

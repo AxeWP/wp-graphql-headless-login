@@ -2,7 +2,7 @@
 /**
  * Bootstrap the PHPUnit tests.
  *
- * @package Tests\WPGraphQL\Login
+ * @package WPGraphQL\Login\Tests
  *
  * phpcs:disable WordPressVIPMinimum.Files.IncludingFile.UsingVariable
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals

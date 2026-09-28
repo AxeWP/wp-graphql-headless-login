@@ -18,6 +18,8 @@ coverage:
         informational: true
 
 ignore:
+  - 'tests/**'
+  - '**/__tests__/**'
   - '**/*.test.ts'
   - '**/*.test.tsx'
   - '**/*.spec.ts'

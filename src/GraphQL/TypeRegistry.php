@@ -2,7 +2,7 @@
 /**
  * Registers Plugin types to the GraphQL schema.
  *
- * @package WPGraphQL\Login
+ * @package WPGraphQL\Login\GraphQL
  */
 
 declare( strict_types = 1 );

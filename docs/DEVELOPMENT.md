@@ -16,7 +16,7 @@ This document covers local setup, code standards, testing, and releasing for `ax
 | ------------------ | ---------------------------------------------------------------------------------------------------------- |
 | `src/`             | The plugin PHP source, autoloaded under the `WPGraphQL\Login\` PSR-4 namespace.                            |
 | `packages/admin/`  | The React admin settings app (TypeScript), bundled with `wp-scripts`/webpack.                              |
-| `tests/phpunit/`   | PHPUnit integration tests, autoloaded under the `Tests\WPGraphQL\Login\` namespace.                        |
+| `tests/phpunit/`   | PHPUnit integration tests, autoloaded under the `WPGraphQL\Login\Tests\` namespace.                        |
 | `tools/phpstan/`   | PHPStan bootstrap constants and stubs for symbols that live outside the plugin.                            |
 | `vendor-prefixed/` | Composer dependencies prefixed with [Strauss](https://github.com/BrianHenryIE/strauss) to avoid conflicts. |
 | `docs/`            | Project documentation.                                                                                     |

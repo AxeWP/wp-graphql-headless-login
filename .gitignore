@@ -23,9 +23,6 @@ Thumbs.db
 *.tsbuildinfo
 wp-graphql-headless-login.zip
 
-# Strauss
-bin/strauss.phar
-
 # AI files
 .claude/
 AGENTS.md
