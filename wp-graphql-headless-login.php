@@ -70,10 +70,5 @@ if ( ! \WPGraphQL\Login\Autoloader::autoload() ) {
 
 // Load the main plugin class.
 if ( class_exists( 'WPGraphQL\Login\Main' ) ) {
-	add_action(
-		'plugins_loaded',
-		static function () {
-			\WPGraphQL\Login\Main::get_instance();
-		}
-	);
+	\WPGraphQL\Login\Main::get_instance();
 }

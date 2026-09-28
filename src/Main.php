@@ -42,11 +42,6 @@ final class Main {
 	 * Called when the singleton instance is created.
 	 */
 	protected function __construct() {
-		// Only load plugin if all dependencies are met.
-		if ( ! Dependencies::check() ) {
-			return;
-		}
-
 		$this->setup();
 	}
 
@@ -76,7 +71,7 @@ final class Main {
 		Config::set_hook_prefix( 'graphql_login' );
 
 		// Setup plugin.
-		$this->load();
+		add_action( 'plugins_loaded', [ $this, 'load' ] );
 
 		// Register activation and deactivation hooks.
 		register_activation_hook( WPGRAPHQL_LOGIN_PLUGIN_FILE, [ $this, 'on_activation' ] );
@@ -86,7 +81,12 @@ final class Main {
 	/**
 	 * Load the plugin classes.
 	 */
-	private function load(): void {
+	public function load(): void {
+		// Only load plugin classes if all dependencies are met.
+		if ( ! Dependencies::check() ) {
+			return;
+		}
+
 		// Loop through all the classes, instantiate them, and register any hooks.
 		foreach ( self::REGISTRABLE_CLASSES as $class_name ) {
 			$instance = new $class_name();
