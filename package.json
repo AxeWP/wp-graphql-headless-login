@@ -38,10 +38,10 @@
 		"lint:schema": "graphql-schema-linter --rules arguments-have-descriptions,defined-types-are-used,deprecations-have-a-reason,descriptions-are-capitalized,enum-values-all-caps,enum-values-have-descriptions,fields-have-descriptions,input-object-values-have-descriptions,relay-connection-arguments-spec,types-have-descriptions,types-are-capitalized tests/_output/schema.graphql",
 		"plugin-zip": "wp-scripts plugin-zip",
 		"start:js": "wp-scripts start --config ./webpack.config.js",
-		"test:js": "vitest run",
-		"test:js:coverage": "vitest run --coverage",
-		"test:js:watch": "vitest watch",
-		"test:js:ui": "vitest --ui",
+		"test:js": "wp-scripts test-unit-js",
+		"test:js:coverage": "wp-scripts test-unit-js --coverage",
+		"test:js:watch": "wp-scripts test-unit-js --watch",
+		"test:js:ui": "wp-scripts test-unit-js --watch --ui",
 		"test:php": "npm run wp-env:test -- run cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ vendor/bin/phpunit -c phpunit.xml.dist",
 		"wp-env": "wp-env",
 		"wp-env:cli": "wp-env run cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/",
@@ -63,7 +63,7 @@
 		"react-dom": "^18.3.1"
 	},
 	"devDependencies": {
-		"@axepress/plugin-infra": "^0.2.1",
+		"@axepress/plugin-infra": "^0.3.0",
 		"@graphql-inspector/cli": "^7.0.0",
 		"@svgr/webpack": "^8.1.0",
 		"@testing-library/jest-dom": "^7.0.1",
@@ -71,11 +71,11 @@
 		"@testing-library/user-event": "^14.6.7",
 		"@types/react": "^18.3.31",
 		"@types/react-dom": "^18.3.7",
-		"@vitest/coverage-v8": "^4.1.11",
+		"@vitest/coverage-v8": "^5.0.2",
 		"@wordpress/env": "^11.16.0",
 		"@wordpress/eslint-plugin": "^27.0.0",
 		"@wordpress/prettier-config": "^4.56.0",
-		"@wordpress/scripts": "^35.0.0",
+		"@wordpress/scripts": "^36.0.0",
 		"@wordpress/stylelint-config": "^26.0.0",
 		"cross-env": "^10.1.0",
 		"eslint-plugin-jest": "^29.16.6",
@@ -89,7 +89,7 @@
 		"typescript": "^6.0.3",
 		"url-loader": "^4.1.1",
 		"vite-tsconfig-paths": "^6.1.1",
-		"vitest": "^4.1.11",
+		"vitest": "^5.0.2",
 		"webpack-remove-empty-scripts": "^1.1.1"
 	},
 	"overrides": {
@@ -103,9 +103,9 @@
 	},
 	"allowScripts": {
 		"esbuild@0.27.2": true,
-		"unrs-resolver@1.12.2": true,
 		"fs-ext-extra-prebuilt@2.2.7": true,
 		"lefthook@2.1.14": true,
+		"unrs-resolver@1.12.2": true,
 		"@parcel/watcher": false,
 		"core-js": false,
 		"core-js-pure": false

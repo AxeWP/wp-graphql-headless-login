@@ -24,20 +24,6 @@ export default [
 			],
 			// @todo disable upstream.
 			'@wordpress/dependency-group': 'off',
-			// This project bundles its own Vitest tooling.
-			'import/no-extraneous-dependencies': [
-				'error',
-				{
-					devDependencies: [
-						'**/*.@(spec|test).@(j|t)s?(x)',
-						'**/@(webpack|babel|vite|vitest).config.@(j|t)s',
-						'**/vitest.setup.@(j|t)s',
-						'**/scripts/**',
-						'**/tests/**',
-						'**/__tests__/**',
-					],
-				},
-			],
 		},
 	},
 

@@ -2,7 +2,7 @@
  * @type {import('lint-staged').Configuration}
  */
 export default {
-	'**/*.{js,jsx,ts,tsx}': [ 'npm run lint:js:fix' ],
+	'**/*.{*js,jsx,ts,tsx}': [ 'npm run lint:js:fix' ],
 	'**/*.{css,scss}': [ 'npm run lint:css:fix' ],
 	/**
 	 * Two separate hazards here, both load-bearing:
