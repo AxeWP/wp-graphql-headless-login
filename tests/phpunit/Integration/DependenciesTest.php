@@ -26,9 +26,11 @@ class DependenciesTest extends TestCase {
 
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-		// Stand in for the conflicting plugin's main class.
+		// Stand in for the conflicting plugin's main class. PHP < 8.3 can't alias internal classes like stdClass.
 		if ( ! class_exists( 'WP_GraphQL_CORS' ) ) {
-			class_alias( \stdClass::class, 'WP_GraphQL_CORS' );
+			$stub = new class() {
+			};
+			class_alias( $stub::class, 'WP_GraphQL_CORS' );
 		}
 	}
 
