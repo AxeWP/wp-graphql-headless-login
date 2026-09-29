@@ -9,12 +9,12 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Utils;
 
-use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
-use WPGraphQL\Login\Admin\Settings\CookieSettings;
-use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
-use WPGraphQL\Login\Admin\SettingsRegistry;
 use WPGraphQL\Login\Auth\ProviderRegistry;
+use WPGraphQL\Login\Settings\AccessControlSettings;
+use WPGraphQL\Login\Settings\CookieSettings;
+use WPGraphQL\Login\Settings\PluginSettings;
+use WPGraphQL\Login\Settings\SettingsRegistry;
 
 /**
  * Class - Utils

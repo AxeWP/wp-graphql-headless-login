@@ -15,18 +15,18 @@ use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use ReflectionClass;
 use ReflectionMethod;
 use WPGraphQL\Admin\Settings\SettingsRegistry as WPGraphQLSettingsRegistry;
-use WPGraphQL\Login\Admin\Settings;
-use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
-use WPGraphQL\Login\Admin\Settings\PluginSettings;
+use WPGraphQL\Login\Admin\Admin;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 use WPGraphQL\Login\Auth\ProviderRegistry;
+use WPGraphQL\Login\Settings\AccessControlSettings;
+use WPGraphQL\Login\Settings\PluginSettings;
 use WPGraphQL\Login\Tests\TestCase;
 
 /**
- * Tests the Admin\Settings class.
+ * Tests the Admin\Admin class.
  */
-#[CoversClass( Settings::class )]
-class SettingsTest extends TestCase {
+#[CoversClass( Admin::class )]
+class AdminTest extends TestCase {
 	/**
 	 * Tests that the settings section is registered to the WPGraphQL settings registry.
 	 */
@@ -36,10 +36,10 @@ class SettingsTest extends TestCase {
 		$registry = new WPGraphQLSettingsRegistry();
 		do_action( 'graphql_init_settings', $registry );
 
-		$this->assertArrayHasKey( Settings::$option_group, $registry->get_settings_sections() );
+		$this->assertArrayHasKey( Admin::$option_group, $registry->get_settings_sections() );
 
 		// The section renders the mount point for the settings app.
-		$fields = array_column( $registry->get_settings_fields()[ Settings::$option_group ] ?? [], null, 'name' );
+		$fields = array_column( $registry->get_settings_fields()[ Admin::$option_group ] ?? [], null, 'name' );
 
 		$this->assertArrayHasKey( 'app', $fields );
 
@@ -121,7 +121,7 @@ class SettingsTest extends TestCase {
 		// Core's `option_update_filter()` adds registered settings back at priority 10, but is only hooked in wp-admin.
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		add_filter( 'allowed_options', 'option_update_filter' );
-		$new_allowed_options = [ Settings::$option_group => [ Settings::$option_group ] ]; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$new_allowed_options = [ Admin::$option_group => [ Admin::$option_group ] ]; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
 		$allowed = apply_filters( 'allowed_options', [ 'general' => [ 'blogname' ] ] );
 
@@ -135,9 +135,9 @@ class SettingsTest extends TestCase {
 	 * Tests that the data passed to the settings app includes the secret meta, a valid nonce, and every settings group.
 	 */
 	public function test_get_settings_data_includes_secret_nonce_and_settings(): void {
-		$method = new ReflectionMethod( Settings::class, 'get_settings_data' );
+		$method = new ReflectionMethod( Admin::class, 'get_settings_data' );
 
-		$actual = $method->invoke( new Settings() );
+		$actual = $method->invoke( new Admin() );
 
 		$this->assertNotEmpty( $actual );
 

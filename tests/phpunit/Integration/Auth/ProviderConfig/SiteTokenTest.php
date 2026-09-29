@@ -10,7 +10,6 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login\Tests\Integration\Auth\ProviderConfig;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 use WPGraphQL\Login\Auth\Auth;
 use WPGraphQL\Login\Auth\Client;
@@ -18,6 +17,7 @@ use WPGraphQL\Login\Auth\ProviderConfig\SiteToken;
 use WPGraphQL\Login\Auth\User;
 use WPGraphQL\Login\GraphQL\Type\Mutation\LinkUserIdentity;
 use WPGraphQL\Login\GraphQL\Type\Mutation\Login;
+use WPGraphQL\Login\Settings\AccessControlSettings;
 use WPGraphQL\Login\Tests\TestCase;
 
 /**

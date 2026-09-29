@@ -11,11 +11,11 @@ namespace WPGraphQL\Login\Tests\Integration\Utils;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClass;
-use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
-use WPGraphQL\Login\Admin\Settings\CookieSettings;
-use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
-use WPGraphQL\Login\Admin\SettingsRegistry;
+use WPGraphQL\Login\Settings\AccessControlSettings;
+use WPGraphQL\Login\Settings\CookieSettings;
+use WPGraphQL\Login\Settings\PluginSettings;
+use WPGraphQL\Login\Settings\SettingsRegistry;
 use WPGraphQL\Login\Tests\Fixtures\FooConditionalCookieSettings;
 use WPGraphQL\Login\Tests\TestCase;
 use WPGraphQL\Login\Utils\Utils;

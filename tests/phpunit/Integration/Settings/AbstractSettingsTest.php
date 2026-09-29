@@ -2,19 +2,19 @@
 /**
  * Tests the plugin settings groups.
  *
- * @package WPGraphQL\Login\Tests\Integration\Admin\Settings
+ * @package WPGraphQL\Login\Tests\Integration\Settings
  */
 
 declare( strict_types = 1 );
 
-namespace WPGraphQL\Login\Tests\Integration\Admin\Settings;
+namespace WPGraphQL\Login\Tests\Integration\Settings;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use WPGraphQL\Login\Admin\Settings\AbstractSettings;
-use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
-use WPGraphQL\Login\Admin\Settings\CookieSettings;
-use WPGraphQL\Login\Admin\Settings\PluginSettings;
-use WPGraphQL\Login\Admin\SettingsRegistry;
+use WPGraphQL\Login\Settings\AbstractSettings;
+use WPGraphQL\Login\Settings\AccessControlSettings;
+use WPGraphQL\Login\Settings\CookieSettings;
+use WPGraphQL\Login\Settings\PluginSettings;
+use WPGraphQL\Login\Settings\SettingsRegistry;
 use WPGraphQL\Login\Tests\TestCase;
 
 /**

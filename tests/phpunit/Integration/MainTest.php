@@ -11,12 +11,12 @@ namespace WPGraphQL\Login\Tests\Integration;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversFunction;
-use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
-use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 use WPGraphQL\Login\Admin\Upgrade\AbstractUpgrade;
 use WPGraphQL\Login\Admin\Upgrade\UpgradeRegistry;
 use WPGraphQL\Login\Main;
+use WPGraphQL\Login\Settings\AccessControlSettings;
+use WPGraphQL\Login\Settings\PluginSettings;
 use WPGraphQL\Login\Tests\TestCase;
 use WPGraphQL\Login\Utils\Utils;
 

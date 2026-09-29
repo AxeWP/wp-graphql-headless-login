@@ -2,13 +2,13 @@
 /**
  * Registers the Cookie Settings
  *
- * @package WPGraphQL\Login\Admin\Settings
+ * @package WPGraphQL\Login\Settings
  * @since 0.4.0
  */
 
 declare( strict_types = 1 );
 
-namespace WPGraphQL\Login\Admin\Settings;
+namespace WPGraphQL\Login\Settings;
 
 /**
  * Class CookieSettings

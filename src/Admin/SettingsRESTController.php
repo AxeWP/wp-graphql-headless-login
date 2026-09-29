@@ -2,20 +2,20 @@
 /**
  * The Rest Controller for the plugin settings
  *
- * @package WPGraphQL\Login\Admin\Settings
+ * @package WPGraphQL\Login\Admin
  * @since 0.4.0
  */
 
 declare( strict_types = 1 );
 
-namespace WPGraphQL\Login\Admin\Settings;
+namespace WPGraphQL\Login\Admin;
 
-use WPGraphQL\Login\Admin\SettingsRegistry;
+use WPGraphQL\Login\Settings\SettingsRegistry;
 
 /**
- * Class RestController
+ * Class SettingsRESTController
  */
-class RestController extends \WP_REST_Controller {
+class SettingsRESTController extends \WP_REST_Controller {
 	/**
 	 * The namespace for the settings.
 	 */
@@ -104,7 +104,7 @@ class RestController extends \WP_REST_Controller {
 
 		$values = $this->sanitize_update_values( $values );
 
-		/** @var \WPGraphQL\Login\Admin\Settings\AbstractSettings $setting */
+		/** @var \WPGraphQL\Login\Settings\AbstractSettings $setting */
 		$setting = SettingsRegistry::get( $slug );
 
 		$setting->update_values( $values );
@@ -134,7 +134,7 @@ class RestController extends \WP_REST_Controller {
 				'sanitize_callback' => static function ( $param, $request ) {
 					$slug = $request->get_param( 'slug' );
 
-					/** @var \WPGraphQL\Login\Admin\Settings\AbstractSettings $setting */
+					/** @var \WPGraphQL\Login\Settings\AbstractSettings $setting */
 					$setting = SettingsRegistry::get( $slug );
 
 					// Sanitize from the setting schema.

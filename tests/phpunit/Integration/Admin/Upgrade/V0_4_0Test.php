@@ -10,11 +10,11 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login\Tests\Integration\Admin\Upgrade;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
-use WPGraphQL\Login\Admin\Settings\CookieSettings;
-use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Upgrade\AbstractUpgrade;
 use WPGraphQL\Login\Admin\Upgrade\V0_4_0;
+use WPGraphQL\Login\Settings\AccessControlSettings;
+use WPGraphQL\Login\Settings\CookieSettings;
+use WPGraphQL\Login\Settings\PluginSettings;
 use WPGraphQL\Login\Tests\TestCase;
 
 /**

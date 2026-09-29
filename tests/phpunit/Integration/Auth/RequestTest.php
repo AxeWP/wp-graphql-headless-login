@@ -12,10 +12,10 @@ namespace WPGraphQL\Login\Tests\Integration\Auth;
 use Closure;
 use GraphQL\Error\UserError;
 use PHPUnit\Framework\Attributes\CoversClass;
-use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
-use WPGraphQL\Login\Admin\Settings\CookieSettings;
 use WPGraphQL\Login\Auth\Request;
 use WPGraphQL\Login\Auth\TokenManager;
+use WPGraphQL\Login\Settings\AccessControlSettings;
+use WPGraphQL\Login\Settings\CookieSettings;
 use WPGraphQL\Login\Tests\TestCase;
 use WPGraphQL\Utils\DebugLog;
 

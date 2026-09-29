@@ -4,13 +4,13 @@
  *
  * This will register the settings on the backend and the data to populate the screen.
  *
- * @package WPGraphQL\Login\Admin\Settings
+ * @package WPGraphQL\Login\Settings
  * @since 0.4.0
  */
 
 declare( strict_types = 1 );
 
-namespace WPGraphQL\Login\Admin\Settings;
+namespace WPGraphQL\Login\Settings;
 
 /**
  * Class - AbstractSettings

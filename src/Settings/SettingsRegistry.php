@@ -8,7 +8,7 @@
 
 declare( strict_types = 1 );
 
-namespace WPGraphQL\Login\Admin;
+namespace WPGraphQL\Login\Settings;
 
 use WPGraphQL\Login\Vendor\AxeWP\Common\Contracts\Interfaces\Registrable;
 
@@ -19,7 +19,7 @@ final class SettingsRegistry implements Registrable {
 	/**
 	 * The instantiated settings.
 	 *
-	 * @var array<string,\WPGraphQL\Login\Admin\Settings\AbstractSettings>
+	 * @var array<string,\WPGraphQL\Login\Settings\AbstractSettings>
 	 */
 	private static array $settings = [];
 
@@ -46,9 +46,9 @@ final class SettingsRegistry implements Registrable {
 		}
 
 		$classes_to_register = [
-			Settings\AccessControlSettings::class,
-			Settings\CookieSettings::class,
-			Settings\PluginSettings::class,
+			AccessControlSettings::class,
+			CookieSettings::class,
+			PluginSettings::class,
 		];
 
 		foreach ( $classes_to_register as $class ) {
@@ -70,7 +70,7 @@ final class SettingsRegistry implements Registrable {
 	/**
 	 * Get all the registered settings instances.
 	 *
-	 * @return array<string,\WPGraphQL\Login\Admin\Settings\AbstractSettings>
+	 * @return array<string,\WPGraphQL\Login\Settings\AbstractSettings>
 	 */
 	public static function get_all(): array {
 		self::init();
@@ -83,7 +83,7 @@ final class SettingsRegistry implements Registrable {
 	 *
 	 * @param string $slug The setting slug.
 	 */
-	public static function get( string $slug ): ?\WPGraphQL\Login\Admin\Settings\AbstractSettings {
+	public static function get( string $slug ): ?\WPGraphQL\Login\Settings\AbstractSettings {
 		self::init();
 
 		return self::$settings[ $slug ] ?? null;

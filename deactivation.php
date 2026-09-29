@@ -11,9 +11,9 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login;
 
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
-use WPGraphQL\Login\Admin\SettingsRegistry;
 use WPGraphQL\Login\Admin\Upgrade\AbstractUpgrade;
 use WPGraphQL\Login\Auth\ProviderRegistry;
+use WPGraphQL\Login\Settings\SettingsRegistry;
 
 /**
  * Runs when WPGraphQL is de-activated.

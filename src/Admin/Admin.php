@@ -11,14 +11,14 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login\Admin;
 
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
-use WPGraphQL\Login\Admin\Settings\RestController;
 use WPGraphQL\Login\Auth\TokenManager;
+use WPGraphQL\Login\Settings\SettingsRegistry;
 use WPGraphQL\Login\Vendor\AxeWP\Common\Contracts\Interfaces\Registrable;
 
 /**
- * Class - Settings
+ * Class - Admin
  */
-final class Settings implements Registrable {
+final class Admin implements Registrable {
 	/**
 	 * The name of the plugin option group.
 	 *
@@ -67,7 +67,7 @@ final class Settings implements Registrable {
 	 * Registers the REST API routes for the settings.
 	 */
 	public function register_rest_routes(): void {
-		$controller = new RestController();
+		$controller = new SettingsRESTController();
 		$controller->register_routes();
 	}
 

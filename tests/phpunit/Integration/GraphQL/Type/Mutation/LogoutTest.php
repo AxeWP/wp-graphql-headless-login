@@ -10,9 +10,9 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login\Tests\Integration\GraphQL\Type\Mutation;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
-use WPGraphQL\Login\Admin\Settings\CookieSettings;
 use WPGraphQL\Login\GraphQL\Type\Mutation\Logout;
+use WPGraphQL\Login\Settings\AccessControlSettings;
+use WPGraphQL\Login\Settings\CookieSettings;
 use WPGraphQL\Login\Tests\TestCase;
 
 /**

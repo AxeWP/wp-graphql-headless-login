@@ -10,8 +10,8 @@ declare( strict_types = 1 );
 namespace WPGraphQL\Login\Tests\Integration;
 
 use PHPUnit\Framework\Attributes\CoversFunction;
-use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
+use WPGraphQL\Login\Settings\PluginSettings;
 use WPGraphQL\Login\Tests\TestCase;
 
 /**

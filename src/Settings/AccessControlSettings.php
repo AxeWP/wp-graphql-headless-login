@@ -2,13 +2,13 @@
 /**
  * Registers the Access Control Settings
  *
- * @package WPGraphQL\Login\Admin\Settings
+ * @package WPGraphQL\Login\Settings
  * @since 0.0.6
  */
 
 declare( strict_types = 1 );
 
-namespace WPGraphQL\Login\Admin\Settings;
+namespace WPGraphQL\Login\Settings;
 
 /**
  * Class AccessControlSettings

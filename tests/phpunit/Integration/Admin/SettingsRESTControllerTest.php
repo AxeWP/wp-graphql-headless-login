@@ -2,37 +2,37 @@
 /**
  * Tests the settings REST controller.
  *
- * @package WPGraphQL\Login\Tests\Integration\Admin\Settings
+ * @package WPGraphQL\Login\Tests\Integration\Admin
  */
 
 declare( strict_types = 1 );
 
-namespace WPGraphQL\Login\Tests\Integration\Admin\Settings;
+namespace WPGraphQL\Login\Tests\Integration\Admin;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use WPGraphQL\Login\Admin\Settings;
-use WPGraphQL\Login\Admin\Settings\AbstractSettings;
-use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
-use WPGraphQL\Login\Admin\Settings\CookieSettings;
-use WPGraphQL\Login\Admin\Settings\PluginSettings;
+use WPGraphQL\Login\Admin\Admin;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
-use WPGraphQL\Login\Admin\Settings\RestController;
+use WPGraphQL\Login\Admin\SettingsRESTController;
 use WPGraphQL\Login\Auth\TokenManager;
+use WPGraphQL\Login\Settings\AbstractSettings;
+use WPGraphQL\Login\Settings\AccessControlSettings;
+use WPGraphQL\Login\Settings\CookieSettings;
+use WPGraphQL\Login\Settings\PluginSettings;
 use WPGraphQL\Login\Tests\TestCase;
 use WP_REST_Request;
 use WP_REST_Server;
 
 /**
- * Tests the Admin\Settings\RestController class.
+ * Tests the Admin\SettingsRESTController class.
  */
-#[CoversClass( RestController::class )]
-#[CoversClass( Settings::class )]
+#[CoversClass( SettingsRESTController::class )]
+#[CoversClass( Admin::class )]
 #[CoversClass( AbstractSettings::class )]
 #[CoversClass( AccessControlSettings::class )]
 #[CoversClass( CookieSettings::class )]
 #[CoversClass( PluginSettings::class )]
 #[CoversClass( ProviderSettings::class )]
-class RestControllerTest extends TestCase {
+class SettingsRESTControllerTest extends TestCase {
 	/**
 	 * The Admin ID.
 	 */

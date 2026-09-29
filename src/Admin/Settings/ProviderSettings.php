@@ -17,7 +17,7 @@ use WPGraphQL\Login\Auth\ProviderRegistry;
 /**
  * Class ProviderSettings
  *
- * @phpstan-import-type Setting from \WPGraphQL\Login\Admin\Settings\AbstractSettings
+ * @phpstan-import-type Setting from \WPGraphQL\Login\Settings\AbstractSettings
  */
 class ProviderSettings {
 	/**

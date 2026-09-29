@@ -9,7 +9,7 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Tests\Fixtures;
 
-use WPGraphQL\Login\Admin\Settings\CookieSettings;
+use WPGraphQL\Login\Settings\CookieSettings;
 
 /**
  * Replaces the cookie settings config with fields that depend on the `level` field.

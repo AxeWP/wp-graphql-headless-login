@@ -32,8 +32,8 @@ final class Main {
 		GraphQL\Model\User::class,
 		Extensions\WooCommerce::class,
 		Auth\ServerAuthentication::class,
-		Admin\SettingsRegistry::class,
-		Admin\Settings::class,
+		Settings\SettingsRegistry::class,
+		Admin\Admin::class,
 		Admin\Upgrade\UpgradeRegistry::class,
 		Admin\UserProfile::class,
 	];

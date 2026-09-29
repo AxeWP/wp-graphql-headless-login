@@ -12,7 +12,7 @@ namespace WPGraphQL\Login\Tests\Integration\Admin\Settings;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
-use WPGraphQL\Login\Admin\Settings;
+use WPGraphQL\Login\Admin\Admin;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Facebook;
 use WPGraphQL\Login\Auth\ProviderConfig\OAuth2\Generic;
@@ -34,7 +34,7 @@ use WP_REST_Server;
  * Tests that the provider settings are registered to the WP REST settings endpoint, which the settings app uses to save them.
  */
 #[CoversClass( ProviderSettings::class )]
-#[CoversClass( Settings::class )]
+#[CoversClass( Admin::class )]
 #[CoversClass( ProviderConfig::class )]
 #[CoversClass( OAuth2Config::class )]
 #[CoversClass( Facebook::class )]
@@ -62,7 +62,7 @@ class ProviderSettingsTest extends TestCase {
 		$reflection->setStaticPropertyValue( 'config', [] );
 		$reflection->setStaticPropertyValue( 'args', [] );
 
-		( new Settings() )->register_provider_settings();
+		( new Admin() )->register_provider_settings();
 
 		global $wp_rest_server;
 

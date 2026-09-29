@@ -7,17 +7,17 @@
 
 declare( strict_types = 1 );
 
-namespace WPGraphQL\Login\Tests\Integration\Admin;
+namespace WPGraphQL\Login\Tests\Integration\Settings;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClass;
-use WPGraphQL\Login\Admin\Settings\AbstractSettings;
-use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
-use WPGraphQL\Login\Admin\SettingsRegistry;
+use WPGraphQL\Login\Settings\AbstractSettings;
+use WPGraphQL\Login\Settings\AccessControlSettings;
+use WPGraphQL\Login\Settings\SettingsRegistry;
 use WPGraphQL\Login\Tests\TestCase;
 
 /**
- * Tests the Admin\SettingsRegistry class.
+ * Tests the Settings\SettingsRegistry class.
  */
 #[CoversClass( SettingsRegistry::class )]
 class SettingsRegistryTest extends TestCase {
