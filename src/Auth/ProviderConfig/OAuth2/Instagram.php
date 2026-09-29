@@ -99,8 +99,8 @@ class Instagram extends OAuth2Config {
 	 * {@inheritDoc}
 	 */
 	protected static function login_options_schema(): array {
-		// Instagram doesnt give us enough information to link an existing user.
-		return [];
+		// Instagram doesn't return an email address to link an existing user with, but new users can be created.
+		return array_intersect_key( parent::login_options_schema(), [ 'createUserIfNoneExists' => true ] );
 	}
 
 	/**

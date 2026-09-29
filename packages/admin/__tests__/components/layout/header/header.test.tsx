@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Header } from '@/admin/components/layout/header';
 import { SettingsProvider } from '@/admin/contexts/settings-context';
@@ -32,16 +32,23 @@ vi.mock( '@wordpress/i18n', () => ( {
 	__: ( text: string ) => text,
 } ) );
 
-function renderWithProviders( ui: React.ReactElement ) {
+vi.mock( '@wordpress/api-fetch', () => ( {
+	default: vi.fn().mockResolvedValue( {} ),
+} ) );
+
+async function renderWithProviders( ui: React.ReactElement ) {
 	const wrapper = ( { children }: { children: React.ReactNode } ) => (
 		<SettingsProvider>
 			<ScreenProvider>{ children }</ScreenProvider>
 		</SettingsProvider>
 	);
 
-	return {
-		...render( ui, { wrapper } ),
-	};
+	const result = render( ui, { wrapper } );
+
+	// Flush the SettingsProvider settings fetch so its state updates land inside act().
+	await act( async () => {} );
+
+	return result;
 }
 
 describe( 'Header Component', () => {
@@ -56,8 +63,8 @@ describe( 'Header Component', () => {
 	} );
 
 	describe( 'Component structure', () => {
-		it( 'renders header element', () => {
-			const { container } = renderWithProviders( <Header /> );
+		it( 'renders header element', async () => {
+			const { container } = await renderWithProviders( <Header /> );
 
 			const header = container.querySelector( 'header' );
 			expect( header ).toBeInTheDocument();
@@ -65,29 +72,29 @@ describe( 'Header Component', () => {
 	} );
 
 	describe( 'Child components', () => {
-		it( 'renders Logo component', () => {
-			renderWithProviders( <Header /> );
+		it( 'renders Logo component', async () => {
+			await renderWithProviders( <Header /> );
 
 			const logo = screen.getByTestId( 'logo' );
 			expect( logo ).toBeInTheDocument();
 		} );
 
-		it( 'renders Logo with correct size', () => {
-			renderWithProviders( <Header /> );
+		it( 'renders Logo with correct size', async () => {
+			await renderWithProviders( <Header /> );
 
 			const logo = screen.getByTestId( 'logo' );
 			expect( logo ).toHaveAttribute( 'data-size', '90' );
 		} );
 
-		it( 'renders Menu component', () => {
-			renderWithProviders( <Header /> );
+		it( 'renders Menu component', async () => {
+			await renderWithProviders( <Header /> );
 
 			const menu = screen.getByTestId( 'menu' );
 			expect( menu ).toBeInTheDocument();
 		} );
 
-		it( 'renders AdvancedSettingsToggle component', () => {
-			renderWithProviders( <Header /> );
+		it( 'renders AdvancedSettingsToggle component', async () => {
+			await renderWithProviders( <Header /> );
 
 			const toggle = screen.getByTestId( 'advanced-settings-toggle' );
 			expect( toggle ).toBeInTheDocument();
@@ -95,8 +102,8 @@ describe( 'Header Component', () => {
 	} );
 
 	describe( 'Layout structure', () => {
-		it( 'renders title in menu section', () => {
-			renderWithProviders( <Header /> );
+		it( 'renders title in menu section', async () => {
+			await renderWithProviders( <Header /> );
 
 			const title = screen.getByText( 'Headless Login Settings' );
 			expect( title ).toBeInTheDocument();

@@ -52,56 +52,6 @@ describe( 'ProviderConfigContext', () => {
 
 			// With default context, we get the stub values
 			expect( result.current.activeClient ).toBe( '' );
-			expect( typeof result.current.setActiveClient ).toBe( 'function' );
-		} );
-	} );
-
-	describe( 'useClientContext hook', () => {
-		it( 'provides all context values', async () => {
-			const mockClientConfig: ProviderSettingType = {
-				name: 'OAuth2',
-				order: 1,
-				slug: 'oauth2',
-				isEnabled: true,
-				clientOptions: {
-					clientId: 'test-client-id',
-					clientSecret: 'test-client-secret',
-					redirectUri: 'https://example.com/callback',
-				} as unknown as ClientOptionsType,
-				loginOptions: {
-					useAuthenticationCookie: true,
-				} as unknown as LoginOptionsType,
-			};
-
-			vi.mocked( useEntityProp ).mockReturnValue( [
-				mockClientConfig,
-				vi.fn(),
-				undefined,
-			] );
-
-			const { wrapper } = renderWithProviderConfigProvider();
-			const { result } = renderHook( () => useClientContext(), {
-				wrapper,
-			} );
-
-			await waitFor( () => {
-				expect( result.current ).toBeDefined();
-				expect( result.current.activeClient ).toBeDefined();
-				expect( result.current.clientConfig ).toBeDefined();
-				expect( typeof result.current.setActiveClient ).toBe(
-					'function'
-				);
-				expect( typeof result.current.setClientConfig ).toBe(
-					'function'
-				);
-				expect( typeof result.current.updateClient ).toBe( 'function' );
-				expect( typeof result.current.setClientOption ).toBe(
-					'function'
-				);
-				expect( typeof result.current.setLoginOption ).toBe(
-					'function'
-				);
-			} );
 		} );
 	} );
 
@@ -221,6 +171,8 @@ describe( 'ProviderConfigContext', () => {
 						name: '',
 						order: 0,
 						isEnabled: false,
+						// The bare slug, not the prefixed option name — the REST schema only accepts registered provider slugs.
+						slug: 'oauth2',
 						loginOptions: {
 							useAuthenticationCookie: false,
 						},

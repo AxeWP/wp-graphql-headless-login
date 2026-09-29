@@ -196,10 +196,11 @@ describe( 'Error Boundary', () => {
 
 		const lastCall =
 			consoleErrorSpy.mock.calls[ consoleErrorSpy.mock.calls.length - 1 ];
-		if ( lastCall ) {
-			expect( lastCall[ 1 ] ).toBeInstanceOf( Error );
-			expect( lastCall[ 1 ].message ).toBe( 'Console test error' );
+		if ( ! lastCall ) {
+			throw new Error( 'console.error was not called' );
 		}
+		expect( lastCall[ 1 ] ).toBeInstanceOf( Error );
+		expect( lastCall[ 1 ].message ).toBe( 'Console test error' );
 
 		consoleErrorSpy.mockRestore();
 	} );

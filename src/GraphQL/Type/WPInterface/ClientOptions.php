@@ -1,0 +1,51 @@
+<?php
+/**
+ * The ClientOptions GraphQL Object.
+ *
+ * @package WPGraphQL\Login\GraphQL\Type\WPInterface
+ */
+
+declare( strict_types = 1 );
+
+namespace WPGraphQL\Login\GraphQL\Type\WPInterface;
+
+use WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig;
+use WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Abstracts\InterfaceType;
+use WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Traits\TypeResolverTrait;
+
+/**
+ * Class - ClientOptions
+ */
+class ClientOptions extends InterfaceType {
+	use TypeResolverTrait;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected static function type_name(): string {
+		return 'LoginClientOptions';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected static function get_description(): string {
+		return __( 'The Client Options for the Headless Login provider.', 'wp-graphql-headless-login' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function get_fields(): array {
+		return ProviderConfig::default_client_options_fields();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param array<string,mixed> $value The value.
+	 */
+	protected static function get_resolved_type_name( $value ): ?string {
+		return graphql_format_type_name( ucfirst( $value['__typename'] ) . 'ClientOptions' );
+	}
+}

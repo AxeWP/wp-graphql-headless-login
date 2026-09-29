@@ -117,8 +117,8 @@ class Facebook extends OAuth2Config {
 	 * {@inheritDoc}
 	 */
 	public function get_user_data( array $owner_details ): array {
-		$email    = $owner_details['email'];
-		$username = $owner_details['username'] ?? strstr( $email, '@', true );
+		$email    = $owner_details['email'] ?? null;
+		$username = $owner_details['username'] ?? strstr( (string) $email, '@', true );
 
 		$first_name = $owner_details['first_name'] ?? null;
 		$last_name  = $owner_details['last_name'] ?? null;

@@ -1,14 +1,12 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/wp-env.json",
 	"core": null,
+	"testsEnvironment": false,
 	"plugins": [
 		"https://downloads.wordpress.org/plugin/wp-graphql.zip",
 		"https://downloads.wordpress.org/plugin/wpgraphql-ide.zip",
 		"."
 	],
-	"mappings": {
-		"/wp-content/mu-plugins": "./tests/_data/mu-plugins"
-	},
 	"env": {
 		"development": {
 			"config": {
@@ -17,15 +15,6 @@
 				"GRAPHQL_DEBUG": true,
 				"WP_DEBUG": true,
 				"WP_DEBUG_LOG": "/var/www/html/wp-content/plugins/wp-graphql-headless-login/tests/_output/debug.log"
-			}
-		},
-		"tests": {
-			"config": {
-				"WP_DEBUG": true,
-				"FS_METHOD": "direct"
-			},
-			"mappings": {
-				"/wp-content/plugins/wp-graphql-headless-login": "."
 			}
 		}
 	},

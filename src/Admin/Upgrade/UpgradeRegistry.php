@@ -10,7 +10,7 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Admin\Upgrade;
 
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\Registrable;
+use WPGraphQL\Login\Vendor\AxeWP\Common\Contracts\Interfaces\Registrable;
 
 /**
  * Class UpgradeRegistry
@@ -19,7 +19,7 @@ class UpgradeRegistry implements Registrable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function init(): void {
+	public function register_hooks(): void {
 		// Register the upgrade process - in case the activation hook is missed.
 		add_action( 'admin_init', [ self::class, 'do_upgrades' ] );
 
@@ -74,7 +74,7 @@ class UpgradeRegistry implements Registrable {
 				<?php
 				printf(
 					// translators: %1$s is the version the plugin was trying to upgrade to, %2$s is the version the plugin halted at, %3$s is the error message.
-					esc_html__( 'An error occured while upgrading to version %1$s. Te upgrade process has been halted at version %2$s. Error message: %3$s', 'wp-graphql-headless-login' ),
+					esc_html__( 'An error occurred while upgrading to version %1$s. The upgrade process has been halted at version %2$s. Error message: %3$s', 'wp-graphql-headless-login' ),
 					esc_html( WPGRAPHQL_LOGIN_VERSION ),
 					esc_html( $error['version'] ),
 					esc_html( $error['message'] )

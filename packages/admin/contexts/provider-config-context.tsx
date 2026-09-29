@@ -123,7 +123,8 @@ export const ProviderConfigProvider = ( { children }: PropsWithChildren ) => {
 		) {
 			setClientConfig( {
 				...clientDefaults,
-				slug: activeClient,
+				// The stored slug is the bare provider slug, not the option name.
+				slug: activeClient.replace( PROVIDER_PREFIX, '' ),
 			} );
 		}
 	}, [ clientConfig, setClientConfig, activeClient ] );

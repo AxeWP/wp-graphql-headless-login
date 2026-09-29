@@ -10,6 +10,28 @@ import { __ } from '@wordpress/i18n';
 
 const REST_ENDPOINT = 'wp-graphql-login/v1/settings';
 
+/**
+ * Gets the message from an apiFetch rejection.
+ *
+ * REST errors reject with the parsed response body (e.g. `{ code, message }`), not an `Error`.
+ *
+ * @param error    The rejection reason.
+ * @param fallback The message to use when the rejection has none.
+ */
+const getErrorMessage = ( error: unknown, fallback: string ): string => {
+	if (
+		error &&
+		typeof error === 'object' &&
+		'message' in error &&
+		typeof error.message === 'string' &&
+		error.message
+	) {
+		return error.message;
+	}
+
+	return fallback;
+};
+
 type AllowedStatuses = 'saving' | 'complete' | undefined;
 type SettingType = Record< string, Record< string, unknown > >;
 
@@ -22,7 +44,10 @@ const SettingsContext = createContext< {
 		slug: keyof SettingType;
 		values: Record< string, unknown >;
 	} ) => void;
-	saveSettings: ( slug: keyof SettingType ) => Promise< boolean >;
+	saveSettings: (
+		slug: keyof SettingType,
+		valuesOverride?: Record< string, unknown >
+	) => Promise< boolean >;
 	isConditionMet: ( {
 		settingKey,
 		field,
@@ -30,6 +55,13 @@ const SettingsContext = createContext< {
 		settingKey: string;
 		field: string;
 	} ) => boolean;
+	getUnmetCondition: ( {
+		settingKey,
+		field,
+	}: {
+		settingKey: string;
+		field: string;
+	} ) => { settingKey: string; field: string } | undefined;
 	isComplete: boolean;
 	isDirty: boolean;
 	isSaving: boolean;
@@ -37,6 +69,7 @@ const SettingsContext = createContext< {
 	showAdvancedSettings: boolean;
 } >( {
 	isConditionMet: () => true,
+	getUnmetCondition: () => undefined,
 	settings: undefined,
 	updateSettings: () => {},
 	saveSettings: async () => false,
@@ -80,16 +113,15 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 				setSettings( response ); // Initialize settings
 			} )
 			.catch( ( error: unknown ) => {
-				if ( error instanceof Error ) {
-					setErrorMessage( error.message );
-				} else {
-					setErrorMessage(
+				setErrorMessage(
+					getErrorMessage(
+						error,
 						__(
 							'Unable to fetch settings. An unknown error occurred',
 							'wp-graphql-headless-login'
 						)
-					);
-				}
+					)
+				);
 			} )
 			.finally( () => {
 				setStatus( 'complete' );
@@ -124,7 +156,8 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 	 * Save the settings to the REST API
 	 */
 	const saveSettings = async (
-		slug: keyof SettingType
+		slug: keyof SettingType,
+		valuesOverride?: Record< string, unknown >
 	): Promise< boolean > => {
 		setStatus( 'saving' );
 		try {
@@ -133,7 +166,7 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 				method: 'POST',
 				data: {
 					slug,
-					values: settings?.[ slug ],
+					values: valuesOverride ?? settings?.[ slug ],
 				},
 			} );
 			setServerSettings( response );
@@ -143,13 +176,111 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 
 			return true;
 		} catch ( error ) {
-			if ( error instanceof Error ) {
-				setErrorMessage( error.message );
-			}
+			setErrorMessage(
+				getErrorMessage(
+					error,
+					__(
+						'Unable to save settings. An unknown error occurred',
+						'wp-graphql-headless-login'
+					)
+				)
+			);
 
 			setStatus( 'complete' );
 			return false;
 		}
+	};
+
+	/**
+	 * Finds the field blocking a setting from being displayed, if there is one.
+	 *
+	 * When a rule's target is itself blocked, the root cause is returned so
+	 * callers can point the user at the setting they actually need to change.
+	 */
+	const getUnmetCondition = ( {
+		settingKey,
+		field,
+	}: {
+		settingKey: string;
+		field: string;
+	} ): { settingKey: string; field: string } | undefined => {
+		// Get the logic rule.
+		const conditionalLogic =
+			wpGraphQLLogin?.settings?.[ settingKey ]?.fields?.[ field ]
+				?.conditionalLogic;
+
+		if ( ! conditionalLogic ) {
+			return undefined;
+		}
+
+		const conditionalLogicArray = Array.isArray( conditionalLogic )
+			? conditionalLogic
+			: [ conditionalLogic ];
+
+		// Check if the condition is met by comparing the current field value to the rule.
+		for ( const rule of conditionalLogicArray ) {
+			const { slug, operator, value } = rule;
+
+			// Parse the slug to get the setting and field. If there is no dot, the field is on the current setting.
+			const [ targetSetting, targetField ] = slug.includes( '.' )
+				? slug.split( '.' )
+				: [ settingKey, slug ];
+
+			if ( ! targetSetting || ! targetField ) {
+				return { settingKey, field };
+			}
+
+			const target = { settingKey: targetSetting, field: targetField };
+
+			// If the field schema has a condition, we need to check if the condition is met.
+			const unmetParent = wpGraphQLLogin?.settings?.[ targetSetting ]
+				?.fields?.[ targetField ]?.conditionalLogic
+				? getUnmetCondition( target )
+				: undefined;
+
+			if ( unmetParent ) {
+				return unmetParent;
+			}
+
+			const fieldValue = settings?.[ targetSetting as string ]?.[
+				targetField
+			] as string | undefined;
+
+			if ( ! fieldValue ) {
+				return target;
+			}
+
+			let isMet: boolean;
+
+			switch ( operator ) {
+				case '==':
+					isMet = fieldValue === value;
+					break;
+				case '!=':
+					isMet = fieldValue !== value;
+					break;
+				case '>':
+					isMet = fieldValue > value;
+					break;
+				case '<':
+					isMet = fieldValue < value;
+					break;
+				case '>=':
+					isMet = fieldValue >= value;
+					break;
+				case '<=':
+					isMet = fieldValue <= value;
+					break;
+				default:
+					isMet = true;
+			}
+
+			if ( ! isMet ) {
+				return target;
+			}
+		}
+
+		return undefined;
 	};
 
 	/**
@@ -161,79 +292,14 @@ export const SettingsProvider = ( { children }: PropsWithChildren ) => {
 	}: {
 		settingKey: string;
 		field: string;
-	} ) => {
-		// Get the logic rule.
-		const conditionalLogic =
-			wpGraphQLLogin?.settings?.[ settingKey ]?.fields?.[ field ]
-				?.conditionalLogic;
-
-		if ( ! conditionalLogic ) {
-			return true;
-		}
-
-		const conditionalLogicArray = Array.isArray( conditionalLogic )
-			? conditionalLogic
-			: [ conditionalLogic ];
-
-		// Check if the condition is met by comparing the current field value to the rule.
-		return conditionalLogicArray.every( ( rule ) => {
-			const { slug, operator, value } = rule;
-
-			// Parse the slug to get the setting and field. If there is no dot, the field is on the current setting.
-			const [ targetSetting, targetField ] = slug.includes( '.' )
-				? slug.split( '.' )
-				: [ settingKey, slug ];
-
-			if ( ! targetSetting || ! targetField ) {
-				return false;
-			}
-
-			const fieldValue = settings?.[ targetSetting as string ]?.[
-				targetField
-			] as string | undefined;
-
-			if ( ! fieldValue ) {
-				return false;
-			}
-
-			// If the field schema has a condition, we need to check if the condition is met.
-			const isParentConditionMet = wpGraphQLLogin?.settings?.[
-				targetSetting
-			]?.fields?.[ targetField ]?.conditionalLogic
-				? isConditionMet( {
-						settingKey: targetSetting,
-						field: targetField,
-				  } )
-				: true;
-
-			if ( ! isParentConditionMet ) {
-				return false;
-			}
-
-			switch ( operator ) {
-				case '==':
-					return fieldValue === value;
-				case '!=':
-					return fieldValue !== value;
-				case '>':
-					return fieldValue > value;
-				case '<':
-					return fieldValue < value;
-				case '>=':
-					return fieldValue >= value;
-				case '<=':
-					return fieldValue <= value;
-				default:
-					return true;
-			}
-		} );
-	};
+	} ) => ! getUnmetCondition( { settingKey, field } );
 
 	return (
 		<SettingsContext.Provider
 			value={ {
 				settings,
 				isConditionMet,
+				getUnmetCondition,
 				updateSettings,
 				saveSettings,
 				isComplete,

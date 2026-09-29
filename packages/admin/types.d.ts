@@ -1,14 +1,9 @@
 /// <reference types="react" />
 
-import { _Hooks } from '@wordpress/hooks/build-types/createHooks';
+import type { createHooks } from '@wordpress/hooks';
 
 export type AllowedConditionalLogicOperators =
-	| '=='
-	| '!='
-	| '>'
-	| '<'
-	| '>='
-	| '<=';
+	'==' | '!=' | '>' | '<' | '>=' | '<=';
 
 export type FieldSchema = {
 	description: string;
@@ -54,8 +49,7 @@ export type ProviderSettingType = {
 };
 
 export type ClientOptionsType =
-	| OAuth2ClientOptionsType
-	| SiteTokenClientOptionsType;
+	OAuth2ClientOptionsType | SiteTokenClientOptionsType;
 
 export type OAuth2ClientOptionsType = Record<
 	string,
@@ -92,7 +86,7 @@ export type OAuth2LoginOptionsType = {
 };
 
 export type WpGraphQLLogin = {
-	hooks: _Hooks;
+	hooks: ReturnType< typeof createHooks >;
 	settings: SettingSchema & {
 		providers: Record<
 			string,

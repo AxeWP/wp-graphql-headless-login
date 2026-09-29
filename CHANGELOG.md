@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+> [!WARNING]
+> This release contains breaking changes. Please review them before updating.
+
+### Breaking changes
+
+- **New minimum requirements**: PHP 8.2+, WordPress 6.9+, and WPGraphQL 2.14.1+ (previously PHP 7.4, WordPress 6.2, and WPGraphQL 1.14.0).
+- **Install from the release zip only**: The `wp-graphql-headless-login.zip` attached to each [GitHub release](https://github.com/AxeWP/wp-graphql-headless-login/releases) is now the only supported way to install the plugin. Installs from Composer/Packagist or a source checkout don't include the built admin assets.
+- **WPGraphQL for WooCommerce**: The plugin no longer registers its own WooCommerce session token fields, and the integration now requires WPGraphQL for WooCommerce v1.0.0+. `Customer.auth` and `LoginPayload.customer` keep working. Update your queries to use the fields that WPGraphQL for WooCommerce provides:
+  - `AuthenticationData.wooSessionToken` (e.g. `viewer { auth { wooSessionToken } }`) ➡️ `User.wooSessionToken` or `Customer.sessionToken`.
+  - `LoginPayload.wooSessionToken` (deprecated since v0.1.4) ➡️ `LoginPayload.sessionToken`.
+  - If WPGraphQL for WooCommerce's **Session Token Type** setting is set to _Store API_, use the `cartToken` fields instead.
+- **Custom GraphQL types**: The bundled `WPGraphQL\Login\Vendor\AxeWP\GraphQL` library has been replaced by `WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL`. Classes added with the `graphql_login_registered_{type}_classes` filters must now implement `WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Interfaces\GraphQLType`, where `register()` is an instance method instead of a static one.
+- **JWT secret key length**: The JWT secret key must now be at least 32 characters long. Shorter keys are treated as missing: tokens won't be issued, and existing tokens will fail validation with an `invalid-secret-key` error. If your key is too short, replace it with a longer one before updating. Existing tokens will be invalidated.
+
+### What's changed
+
 - chore: Update NPM and Composer deps.
 - ci: Test compatibility with WordPress 6.9.1, WPGraphQL 2.23.1, PHP 8.4.
 - ci: Cleanup Workflows.
@@ -14,6 +30,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - tests: Implement vitest and backfill tests.
 - fix: Ensure constants are available for plugin Activation/Deactivation hooks.
 - fix: Delay settings registration to prevent WPGraphQL 2.15+ from stripping out `default` values.
+- fix: Deprecate `GRAPHQL_LOGIN_JWT_SECRET_KEY` constant in favor of `WPGRAPHQL_LOGIN_JWT_SECRET_KEY` .
+- fix: Return a `Provider {slug} is not enabled.` error instead of an internal server error when logging in with a disabled provider.
+- fix: Time each token from when it's issued, instead of the first token issued in the PHP process.
+- fix: Accept the `Authorization` header's `Bearer` scheme case-insensitively (e.g. `bearer <token>`).
+- fix: Sanitize provider settings when they're saved, dropping unsupported options.
+- fix: Allow the Instagram provider to create new users.
 
 ## [0.4.4] - 2025-09-19
 

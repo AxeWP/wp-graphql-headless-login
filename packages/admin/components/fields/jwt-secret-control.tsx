@@ -8,8 +8,7 @@ import { useSettings } from '@/admin/contexts/settings-context';
 import type { FieldSchema } from '@/admin/types';
 
 export function JwtSecretControl( { label, help }: FieldSchema ) {
-	const { updateSettings, saveSettings, errorMessage, isSaving } =
-		useSettings();
+	const { saveSettings, errorMessage, isSaving } = useSettings();
 
 	const { createNotice, createErrorNotice } = useDispatch( noticesStore );
 	const instanceId = useInstanceId( JwtSecretControl );
@@ -34,14 +33,9 @@ export function JwtSecretControl( { label, help }: FieldSchema ) {
 	}, [ isSaving, errorMessage, createErrorNotice ] );
 
 	const regenerateJwtSecret = async () => {
-		await updateSettings( {
-			slug: 'wpgraphql_login_settings',
-			values: {
-				jwt_secret_key: '',
-			},
+		const success = await saveSettings( 'wpgraphql_login_settings', {
+			jwt_secret_key: '',
 		} );
-
-		const success = await saveSettings( 'wpgraphql_login_settings' );
 
 		if ( success ) {
 			createNotice(

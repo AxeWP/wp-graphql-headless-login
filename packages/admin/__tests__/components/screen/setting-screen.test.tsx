@@ -52,6 +52,9 @@ describe( 'SettingsScreen Component', () => {
 	beforeEach( () => {
 		setupWpGraphQLLoginMock();
 		vi.clearAllMocks();
+		// `clearAllMocks` leaves unconsumed `*Once` queues behind, which would
+		// otherwise shadow the next test's response.
+		vi.mocked( apiFetch ).mockReset().mockResolvedValue( {} );
 	} );
 
 	afterEach( () => {
@@ -70,6 +73,7 @@ describe( 'SettingsScreen Component', () => {
 					};
 					existing_settings?: {
 						fields?: Record< string, unknown >;
+						label?: string;
 					};
 				};
 				providers?: Record< string, unknown >;
@@ -530,9 +534,12 @@ describe( 'SettingsScreen Component', () => {
 			} );
 			fireEvent.click( saveButton );
 
+			// Wait for the save to settle before checking what it did not do.
 			await waitFor( () => {
-				expect( mockDispatch.createNotice ).not.toHaveBeenCalled();
+				expect( mockDispatch.createErrorNotice ).toHaveBeenCalled();
 			} );
+
+			expect( mockDispatch.createNotice ).not.toHaveBeenCalled();
 		} );
 
 		it( 'prevents multiple save requests when isSaving', async () => {
@@ -634,6 +641,54 @@ describe( 'SettingsScreen Component', () => {
 					screen.getByTestId( 'fields-component' );
 				expect( fieldsComponent ).toBeInTheDocument();
 			} );
+		} );
+
+		it( 'explains what unlocks the screen when every field is hidden', async () => {
+			const wpGraphQLLogin = getWpGlobal().wpGraphQLLogin;
+			if ( wpGraphQLLogin?.settings ) {
+				wpGraphQLLogin.settings.existing_settings = {
+					label: 'Other Screen',
+					fields: {
+						gate: { label: 'The Gate', type: 'boolean' },
+					},
+				};
+				wpGraphQLLogin.settings.test_settings = {
+					fields: {
+						field1: {
+							label: 'Field 1',
+							type: 'string',
+							conditionalLogic: {
+								slug: 'existing_settings.gate',
+								operator: '==',
+								value: true,
+							},
+						},
+					},
+				};
+			}
+
+			vi.mocked( apiFetch ).mockResolvedValue( {
+				existing_settings: { gate: false },
+				test_settings: { field1: 'value1' },
+			} );
+
+			render(
+				<SettingsProvider>
+					<SettingsScreen settingKey="test_settings" />
+				</SettingsProvider>
+			);
+
+			await waitFor( () => {
+				expect(
+					screen.getAllByText(
+						/“The Gate” is enabled under Other Screen/
+					).length
+				).toBeGreaterThan( 0 );
+			} );
+
+			expect(
+				screen.queryByTestId( 'fields-component' )
+			).not.toBeInTheDocument();
 		} );
 	} );
 } );

@@ -2,7 +2,7 @@
 /**
  * Deactivation Hook
  *
- * @package WPGraphql\Login
+ * @package WPGraphQL\Login
  * @since 0.0.1
  */
 
@@ -10,8 +10,10 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login;
 
-use WPGraphQL\Login\Admin\SettingsRegistry;
+use WPGraphQL\Login\Admin\Settings\ProviderSettings;
 use WPGraphQL\Login\Admin\Upgrade\AbstractUpgrade;
+use WPGraphQL\Login\Auth\ProviderRegistry;
+use WPGraphQL\Login\Settings\SettingsRegistry;
 
 /**
  * Runs when WPGraphQL is de-activated.
@@ -47,11 +49,12 @@ function delete_data(): void {
 	$options = array_merge(
 		[ AbstractUpgrade::VERSION_OPTION_KEY ],
 		array_keys( SettingsRegistry::get_all() ),
+		// The provider client configurations.
+		array_map(
+			static fn ( string $slug ): string => ProviderSettings::$settings_prefix . $slug,
+			array_keys( ProviderRegistry::get_instance()->get_registered_providers() )
+		),
 	);
-
-	if ( empty( $options ) ) {
-		return;
-	}
 
 	foreach ( $options as $option ) {
 		delete_option( $option );

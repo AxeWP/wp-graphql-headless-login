@@ -1,6 +1,0 @@
-#!/bin/sh
-
-set -e
-
-# Lint Staged
-npx --no-install lint-staged

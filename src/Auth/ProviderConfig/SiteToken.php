@@ -96,7 +96,7 @@ class SiteToken extends ProviderConfig {
 			);
 		}
 
-		if ( ! isset( $this->options['clientOptions']['secretKey'] ) || $secret !== $this->options['clientOptions']['secretKey'] ) {
+		if ( ! isset( $this->options['clientOptions']['secretKey'] ) || ! hash_equals( (string) $this->options['clientOptions']['secretKey'], $secret ) ) {
 			return new \WP_Error(
 				'graphql-headless-login-invalid-header-token',
 				__( 'Invalid site token.', 'wp-graphql-headless-login' )

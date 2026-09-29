@@ -1,6 +1,6 @@
 # Supporting Custom Providers with the `ProviderConfig` PHP Class.
 
-Headless Login for WPGraphQL allows you to add support for other authentication provides by extending the  [`WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig` PHP class](../../src/Auth/ProviderConfig/ProviderConfig.php). This class will handle the authentication flow for your provider, as well as its settings and GraphQL fields.
+Headless Login for WPGraphQL allows you to add support for other authentication provides by extending the [`WPGraphQL\Login\Auth\ProviderConfig\ProviderConfig` PHP class](../../src/Auth/ProviderConfig/ProviderConfig.php). This class will handle the authentication flow for your provider, as well as its settings and GraphQL fields.
 
 The `ProviderConfig` class also has a child class called `OAuth2Config` that you can extend to handle OAuth2 providers. This class is built to work seamlessly with League's [OAuth2 Client](https://oauth2-client.thephpleague.com/) library, however you can extend it to work with any OAuth2 library, or use the parent `ProviderConfig` class to handle your own custom authentication flow, such as [SAML](https://en.wikipedia.org/wiki/Security_Assertion_Markup_Language), [keycloak](https://www.keycloak.org/), or practically anything else.
 
@@ -147,4 +147,5 @@ add_filter(
     return $provider_configs;
 } );
 ```
+
 _For more flexibility and customization when adding custom providers, see the [ProviderConfig](../../src/Auth/ProviderConfig/ProviderConfig.php) and [OAuth2Config](../../src/Auth/ProviderConfig/OAuth2/OAuth2Config.php) classes._

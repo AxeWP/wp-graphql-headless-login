@@ -17,7 +17,7 @@ use WPGraphQL\Login\Auth\ProviderRegistry;
 /**
  * Class ProviderSettings
  *
- * @phpstan-import-type Setting from \WPGraphQL\Login\Admin\Settings\AbstractSettings
+ * @phpstan-import-type Setting from \WPGraphQL\Login\Settings\AbstractSettings
  */
 class ProviderSettings {
 	/**
@@ -102,6 +102,7 @@ class ProviderSettings {
 						'description'       => __( 'The client options for the provider.', 'wp-graphql-headless-login' ),
 						'label'             => __( 'Client Options', 'wp-graphql-headless-login' ),
 						'type'              => 'object',
+						'default'           => [],
 						'properties'        => $provider::get_client_options_schema(),
 						'sanitize_callback' => static function ( $value ) use ( $provider ) {
 							$schema = $provider::get_client_options_schema();
@@ -124,6 +125,7 @@ class ProviderSettings {
 						'description'       => __( 'The login options for the provider.', 'wp-graphql-headless-login' ),
 						'label'             => __( 'Login Options', 'wp-graphql-headless-login' ),
 						'type'              => 'object',
+						'default'           => [],
 						'properties'        => $provider::get_login_options_schema(),
 						'sanitize_callback' => static function ( $value ) use ( $provider ) {
 							$schema = $provider::get_login_options_schema();
@@ -183,12 +185,15 @@ class ProviderSettings {
 					$config[ self::$settings_prefix . $slug ][ $setting_key ] = array_diff_key( $setting_args, array_flip( $excluded_keys ) );
 				}
 
+				$fields = $config[ self::$settings_prefix . $slug ];
+
 				$args[ self::$settings_prefix . $slug ] = [
-					'single'          => false,
-					'type'            => 'object',
-					'default'         => $defaults,
-					'show_in_graphql' => false,
-					'show_in_rest'    => [
+					'single'            => false,
+					'type'              => 'object',
+					'default'           => $defaults,
+					'sanitize_callback' => static fn ( $value ): array => self::sanitize_provider_settings( $value, $fields ),
+					'show_in_graphql'   => false,
+					'show_in_rest'      => [
 						'schema' => [
 							'title'      => $provider::get_name(),
 							'type'       => 'object',
@@ -202,5 +207,33 @@ class ProviderSettings {
 		}
 
 		return self::$args;
+	}
+
+	/**
+	 * Sanitizes the provider settings before they're saved, dropping any keys that aren't in the config.
+	 *
+	 * @param mixed                             $value  The provider settings.
+	 * @param array<string,array<string,mixed>> $fields The provider settings config.
+	 *
+	 * @return array<string,mixed>
+	 */
+	private static function sanitize_provider_settings( $value, array $fields ): array {
+		if ( ! is_array( $value ) ) {
+			return [];
+		}
+
+		$sanitized_values = [];
+
+		foreach ( $value as $key => $field_value ) {
+			if ( ! isset( $fields[ $key ] ) ) {
+				continue;
+			}
+
+			$sanitize_callback = $fields[ $key ]['sanitize_callback'] ?? null;
+
+			$sanitized_values[ $key ] = is_callable( $sanitize_callback ) ? $sanitize_callback( $field_value ) : $field_value;
+		}
+
+		return $sanitized_values;
 	}
 }
