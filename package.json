@@ -61,7 +61,7 @@
 		"@babel/cli": "^7.29.7",
 		"@babel/core": "^7.29.7",
 		"@svgr/webpack": "^8.1.0",
-		"@testing-library/jest-dom": "^6.10.0",
+		"@testing-library/jest-dom": "^7.0.1",
 		"@testing-library/react": "^16.3.3",
 		"@testing-library/user-event": "^14.6.7",
 		"@types/react": "^18.3.31",
