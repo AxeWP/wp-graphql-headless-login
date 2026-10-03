@@ -90,7 +90,7 @@
 		"codeception/module-rest": "^2.0",
 		"lucatume/wp-browser": "^3.7",
 		"mockery/mockery": "^1.5",
-		"php-stubs/woocommerce-stubs": "^10.0",
+		"php-stubs/woocommerce-stubs": "^11.1",
 		"phpstan/extension-installer": "^1.1",
 		"phpstan/phpstan-deprecation-rules": "^2.0",
 		"phpstan/phpstan": "^2.0",
