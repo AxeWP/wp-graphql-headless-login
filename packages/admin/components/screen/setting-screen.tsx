@@ -2,7 +2,7 @@ import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { __, sprintf } from '@wordpress/i18n';
 import { useEffect } from 'react';
-import { Button, PanelBody, Spinner } from '@wordpress/components';
+import { Button, Notice, PanelBody, Spinner } from '@wordpress/components';
 import { Fields } from '@/admin/components/fields';
 import { useSettings } from '@/admin/contexts/settings-context';
 
@@ -11,11 +11,11 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 		settings,
 		updateSettings,
 		saveSettings,
-		isComplete,
 		isSaving,
 		isDirty,
 		errorMessage,
 		isConditionMet,
+		getUnmetCondition,
 	} = useSettings();
 
 	const { createNotice, createErrorNotice } = useDispatch( noticesStore );
@@ -50,9 +50,9 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 			return;
 		}
 
-		await saveSettings( settingKey );
+		const saved = await saveSettings( settingKey );
 
-		if ( isComplete && ! errorMessage ) {
+		if ( saved ) {
 			createNotice(
 				'success',
 				__( 'Settings saved', 'wp-graphql-headless-login' ),
@@ -80,6 +80,49 @@ export const SettingsScreen = ( { settingKey }: { settingKey: string } ) => {
 
 	if ( ! settings || ! optionsSchema ) {
 		return null;
+	}
+
+	// When conditional logic hides every field, tell the user what unlocks them.
+	const shownFields = Object.keys( optionsSchema ).filter(
+		( field ) => ! optionsSchema[ field ]?.hidden
+	);
+	const blocker =
+		shownFields.length > 0 && ! shownFields.some( validateConditionalLogic )
+			? getUnmetCondition( { settingKey, field: shownFields[ 0 ]! } )
+			: undefined;
+	if ( blocker ) {
+		const blockerSetting = wpGraphQLLogin?.settings?.[ blocker.settingKey ];
+		const blockerLabel = blockerSetting?.fields?.[ blocker.field ]?.label;
+
+		if ( ! blockerLabel ) {
+			return null;
+		}
+
+		return (
+			<PanelBody>
+				<Notice status="info" isDismissible={ false }>
+					{ blocker.settingKey === settingKey ||
+					! blockerSetting?.label
+						? sprintf(
+								// translators: %s: Label of the setting that unlocks this screen.
+								__(
+									'Nothing to configure yet — these settings unlock once “%s” is enabled.',
+									'wp-graphql-headless-login'
+								),
+								blockerLabel
+							)
+						: sprintf(
+								// translators: %1$s: Label of the setting that unlocks this screen. %2$s: Label of the screen it lives on.
+								__(
+									'Nothing to configure yet — these settings unlock once “%1$s” is enabled under %2$s.',
+									'wp-graphql-headless-login'
+								),
+								blockerLabel,
+								blockerSetting.label
+							) }
+				</Notice>
+			</PanelBody>
+		);
 	}
 
 	return (

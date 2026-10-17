@@ -10,7 +10,7 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Auth\ProviderConfig\OAuth2;
 
-use WPGraphQL\Login\Type\Enum\GoogleProviderPromptTypeEnum;
+use WPGraphQL\Login\GraphQL\Type\Enum\GoogleProviderPromptTypeEnum;
 use WPGraphQL\Login\Vendor\League\OAuth2\Client\Provider\Google as GoogleProvider;
 
 /**

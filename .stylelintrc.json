@@ -1,17 +1,8 @@
 {
 	"extends": "@wordpress/stylelint-config/scss",
 	"rules": {
-		"at-rule-empty-line-before": null,
-		"at-rule-no-unknown": null,
-		"comment-empty-line-before": null,
-		"declaration-block-no-duplicate-properties": null,
-		"declaration-property-unit-allowed-list": null,
-		"font-weight-notation": null,
-		"no-descending-specificity": null,
-		"no-duplicate-selectors": null,
 		"rule-empty-line-before": null,
 		"selector-class-pattern": null,
-		"value-keyword-case": null,
 		"selector-pseudo-class-no-unknown": [
 			true,
 			{

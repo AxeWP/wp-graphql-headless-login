@@ -21,32 +21,27 @@ use WP_User;
  */
 class TokenManager {
 	/**
-	 * The token issued time.
-	 *
-	 * @var int
+	 * The minimum length of the secret key, required to sign tokens with HS256.
 	 */
-	private static int $issued_at;
-
-	/**
-	 * The token expiration time.
-	 *
-	 * @var int
-	 */
-	private static int $expiration;
+	public const MIN_SECRET_KEY_LENGTH = 32;
 
 	/**
 	 * This returns the secret key, using the defined constant if defined, and passing it through a filter to allow for the config to be able to be set via another method other than a defined constant, such as an admin UI that allows the key to be updated/changed/revoked at any time without touching server files.
 	 */
 	public static function get_secret_key(): string {
 		// Use the defined secret key, if it exists.
-		$secret = defined( 'GRAPHQL_LOGIN_JWT_SECRET_KEY' ) && ! empty( GRAPHQL_LOGIN_JWT_SECRET_KEY ) ? GRAPHQL_LOGIN_JWT_SECRET_KEY : '';
+		$secret = self::get_constant_secret_key();
 
-		/**
-		 * Filter the secret key used to sign the JWT token.
-		 *
-		 * @param string $secret The secret key.
-		 */
-		$secret = apply_filters( 'graphql_login_jwt_secret_key', $secret );
+		if ( empty( $secret ) ) {
+			/**
+			 * Define the secret key used to sign the JWT token.
+			 *
+			 * Only used if the WPGRAPHQL_LOGIN_JWT_SECRET_KEY is not defined.
+			 *
+			 * @param string $secret The secret key. Defaults to empty.
+			 */
+			$secret = apply_filters( 'graphql_login_jwt_secret_key', '' );
+		}
 
 		// Attempt to get the secret from the settings.
 		if ( empty( $secret ) ) {
@@ -59,7 +54,48 @@ class TokenManager {
 			}
 		}
 
+		// Tokens can't be signed with a short key, so treat it as missing.
+		if ( strlen( $secret ) < self::MIN_SECRET_KEY_LENGTH ) {
+			graphql_debug(
+				sprintf(
+					// translators: %d is the minimum length of the secret key.
+					__( 'The JWT secret key must be at least %d characters long.', 'wp-graphql-headless-login' ),
+					self::MIN_SECRET_KEY_LENGTH
+				)
+			);
+
+			return '';
+		}
+
 		return $secret;
+	}
+
+	/**
+	 * Gets the secret key defined with a constant, if any.
+	 *
+	 * `WPGRAPHQL_LOGIN_JWT_SECRET_KEY` is the documented constant. `GRAPHQL_LOGIN_JWT_SECRET_KEY` is still supported for backwards compatibility.
+	 *
+	 * @todo remove when GRAPHQL_LOGIN_JWT_SECRET_KEY is no longer supported.
+	 */
+	private static function get_constant_secret_key(): string {
+		$key = '';
+		// GRAPHQL_LOGIN_JWT_SECRET_KEY is deprecated.
+		if ( defined( 'GRAPHQL_LOGIN_JWT_SECRET_KEY' ) && ! empty( GRAPHQL_LOGIN_JWT_SECRET_KEY ) ) {
+			_deprecated_argument(
+				'GRAPHQL_LOGIN_JWT_SECRET_KEY',
+				'@todo',
+				'Use WPGRAPHQL_LOGIN_JWT_SECRET_KEY instead.'
+			);
+
+			$key = GRAPHQL_LOGIN_JWT_SECRET_KEY;
+		}
+
+		// Prioritize the real key.
+		if ( defined( 'WPGRAPHQL_LOGIN_JWT_SECRET_KEY' ) && ! empty( WPGRAPHQL_LOGIN_JWT_SECRET_KEY ) ) {
+			return WPGRAPHQL_LOGIN_JWT_SECRET_KEY;
+		}
+
+		return $key;
 	}
 
 	/**
@@ -132,7 +168,7 @@ class TokenManager {
 		 */
 		$token['exp'] = apply_filters(
 			'graphql_login_refresh_token_expiration_timestamp',
-			self::get_issued_at() + $validity
+			( $token['iat'] ?? time() ) + $validity
 		);
 		// Add the user secret to the token.
 		$token['data']['user']['user_secret'] = $secret;
@@ -206,19 +242,19 @@ class TokenManager {
 	 * @param int  $user_id The user ID.
 	 * @param bool $enforce_current_user Whether to enforce the user secret. Default true.
 	 *
-	 * @return bool|\WP_Error
+	 * @return true|\WP_Error
 	 */
 	public static function refresh_user_secret( int $user_id, bool $enforce_current_user = true ) {
-		// Return an error if the user cannot revoke the secret.
+		// Return an error if the user cannot refresh the secret.
 		if ( ! self::current_user_can( $user_id, $enforce_current_user ) ) {
 			self::set_status( 401 );
 			return new WP_Error( 'graphql-headless-login-cannot-refresh-secret', __( 'The Secret cannot be refreshed for this user.', 'wp-graphql-headless-login' ) );
 		}
 
-		// Issue a new secret, essentially 'unrevoking' it.
-		$secret = self::issue_new_user_secret( $user_id, $enforce_current_user );
+		// Issue a new secret, essentially 'unrevoking' it. The permissions were already checked.
+		self::issue_new_user_secret( $user_id, false );
 
-		return ! empty( $secret );
+		return true;
 	}
 
 	/**
@@ -268,13 +304,24 @@ class TokenManager {
 			return new WP_Error( 'graphql-headless-login-no-permissions', __( 'Users can only request tokens for themselves.', 'wp-graphql-headless-login' ) );
 		}
 
+		// Each token is timed from when it's issued.
+		$issued_at = time();
+
 		/**
 		 * Determines the "not before" value for the user's token.
 		 *
 		 * @param int      $issued The timestamp of the authentication, used in the token.
 		 * @param \WP_User $user   The authenticated user.
 		 */
-		$nbf = apply_filters( 'graphql_login_token_not_before_timestamp', self::get_issued_at(), $user );
+		$nbf = apply_filters( 'graphql_login_token_not_before_timestamp', $issued_at, $user );
+
+		/**
+		 * Filter the expiration time for the token.
+		 * Defaults to 300 seconds
+		 *
+		 * @param int $validity The expiration time for the token.
+		 */
+		$validity = apply_filters( 'graphql_login_token_validity', 300 );
 
 		/**
 		 * Determines the expiration time for the user's token.
@@ -282,11 +329,11 @@ class TokenManager {
 		 * @param int      $issued The timestamp of the expiration, used in the token.
 		 * @param \WP_User $user   The authenticated user.
 		 */
-		$expiration = apply_filters( 'graphql_login_token_expiration_timestamp', self::get_expiration(), $user );
+		$expiration = apply_filters( 'graphql_login_token_expiration_timestamp', $issued_at + $validity, $user );
 
 		$token = [
 			'iss'  => home_url(),
-			'iat'  => self::get_issued_at(),
+			'iat'  => $issued_at,
 			'nbf'  => $nbf,
 			'exp'  => $expiration,
 			'data' => [
@@ -312,8 +359,15 @@ class TokenManager {
 	 * @param int                 $user_id The user ID.
 	 */
 	protected static function sign_token( array $token, int $user_id ): ?string {
+		$secret_key = self::get_secret_key();
+
+		// Bail if there's no usable secret key.
+		if ( '' === $secret_key ) {
+			return null;
+		}
+
 		JWT::$leeway  = 60;
-		$signed_token = JWT::encode( $token, self::get_secret_key(), 'HS256' );
+		$signed_token = JWT::encode( $token, $secret_key, 'HS256' );
 
 		/**
 		 * Filter the token before returning it, allowing for individual systems to override what's returned.
@@ -342,36 +396,6 @@ class TokenManager {
 	}
 
 	/**
-	 * Gets the time the token was issued.
-	 */
-	protected static function get_issued_at(): int {
-		if ( ! isset( self::$issued_at ) ) {
-			self::$issued_at = time();
-		}
-
-		return self::$issued_at;
-	}
-
-	/**
-	 * Gets the time the token will expire.
-	 */
-	protected static function get_expiration(): int {
-		if ( ! isset( self::$expiration ) ) {
-			/**
-			 * Filter the expiration time for the token.
-			 * Defaults to 300 seconds
-			 *
-			 * @param int $validity The expiration time for the token.
-			 */
-			$validity = apply_filters( 'graphql_login_token_validity', 300 );
-
-			self::$expiration = self::get_issued_at() + $validity;
-		}
-
-		return self::$expiration;
-	}
-
-	/**
 	 * Checks whether the user secret has been revoked.
 	 *
 	 * @param int $user_id The user ID.
@@ -396,7 +420,7 @@ class TokenManager {
 			return new WP_Error( 'graphql-headless-login-no-permissions', __( 'Users can only issue new secrets for themselves.', 'wp-graphql-headless-login' ) );
 		}
 
-		$secret = uniqid( 'graphql_login_secret_', true );
+		$secret = wp_generate_password( 64, false, false );
 
 		// Update the user meta.
 		User::set_secret( $user_id, $secret );
@@ -423,24 +447,22 @@ class TokenManager {
 				return null;
 			}
 
-			// Grab the token from the header, verifying the format.
-			$header_token = sscanf( $auth_header, 'Bearer %s' );
-			// Bail if no token set in header.
-			if ( empty( $header_token ) ) {
+			// Bail if the header doesn't hold a bearer token. The auth scheme is case-insensitive.
+			if ( ! preg_match( '/^Bearer\s+(\S+)$/i', $auth_header, $matches ) ) {
 				return null;
 			}
 
-			list( $token ) = $header_token;
+			$token = $matches[1];
 		}
 
 		/**
-		 * If there's no secret key, throw an error as there needs to be a secret key for Auth to work properly
+		 * If there's no usable secret key, throw an error as there needs to be a secret key for Auth to work properly
 		 */
 		$secret_key = self::get_secret_key();
 
 		if ( empty( $secret_key ) ) {
 			self::set_status( 403 );
-			return new WP_Error( 'invalid-secret-key', __( 'The JWT secret key is not set.', 'wp-graphql-headless-login' ) );
+			return new WP_Error( 'invalid-secret-key', __( 'The JWT secret key is not set, or is too short.', 'wp-graphql-headless-login' ) );
 		}
 
 		// Decode the token.
@@ -494,7 +516,7 @@ class TokenManager {
 				return new WP_Error( 'invalid-jwt', __( 'User secret is revoked.', 'wp-graphql-headless-login' ) );
 			}
 			// the secret in the token doesnt match the user secret.
-			if ( User::get_secret( $token->data->user->id ) !== $token->data->user->user_secret ) {
+			if ( ! hash_equals( (string) User::get_secret( $token->data->user->id ), (string) $token->data->user->user_secret ) ) {
 				self::set_status( 401 );
 				return new WP_Error( 'invalid-jwt', __( 'User secret does not match.', 'wp-graphql-headless-login' ) );
 			}

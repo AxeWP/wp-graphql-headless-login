@@ -2,44 +2,44 @@
 /**
  * Utility functions.
  *
- * @package WPGraphQL/Login/Utils
+ * @package WPGraphQL\Login\Utils
  */
 
 declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Utils;
 
-use WPGraphQL\Login\Admin\Settings\AccessControlSettings;
-use WPGraphQL\Login\Admin\Settings\CookieSettings;
-use WPGraphQL\Login\Admin\Settings\PluginSettings;
 use WPGraphQL\Login\Admin\Settings\ProviderSettings;
-use WPGraphQL\Login\Admin\SettingsRegistry;
 use WPGraphQL\Login\Auth\ProviderRegistry;
+use WPGraphQL\Login\Settings\AccessControlSettings;
+use WPGraphQL\Login\Settings\CookieSettings;
+use WPGraphQL\Login\Settings\PluginSettings;
+use WPGraphQL\Login\Settings\SettingsRegistry;
 
 /**
  * Class - Utils
  */
-class Utils {
+final class Utils {
 	/**
 	 * The plugin settings.
 	 *
 	 * @var array<string,mixed>
 	 */
-	protected static array $settings = [];
+	private static array $settings = [];
 
 	/**
 	 * The providers config
 	 *
 	 * @var array<string,array<string,mixed>>
 	 */
-	protected static array $providers = [];
+	private static array $providers = [];
 
 	/**
 	 * The Access Control Settings
 	 *
-	 * @var ?array<string,mixed>
+	 * @var array<string,mixed>
 	 */
-	protected static $access_control = [];
+	private static $access_control = [];
 
 	/**
 	 * Gets a single plugin setting.
@@ -230,7 +230,7 @@ class Utils {
 	 *
 	 * @return mixed
 	 */
-	protected static function get_setting_value( string $slug, string $option_name, $default_value = false ) {
+	private static function get_setting_value( string $slug, string $option_name, $default_value = false ) {
 		$instance = SettingsRegistry::get( $slug );
 
 		if ( ! $instance || ! self::is_field_dependency_met( $slug, $option_name ) ) {
@@ -248,7 +248,7 @@ class Utils {
 	 * @param string $slug The setting slug.
 	 * @param string $option_name The field key.
 	 */
-	protected static function is_field_dependency_met( string $slug, string $option_name ): bool {
+	private static function is_field_dependency_met( string $slug, string $option_name ): bool {
 		$instance = SettingsRegistry::get( $slug );
 
 		// Bail if invalid setting slug.
@@ -272,10 +272,6 @@ class Utils {
 
 		// The rule slug is in the format of `field` or `slug.field`. If there is only one part, the slug is the same as the current one.
 		$slug_parts = explode( '.', $rule['slug'] );
-
-		if ( empty( $slug_parts ) ) {
-			return false;
-		}
 
 		$dep_slug        = count( $slug_parts ) > 1 ? $slug_parts[0] : $slug;
 		$dep_option_name = count( $slug_parts ) > 1 ? $slug_parts[1] : $rule['slug'];

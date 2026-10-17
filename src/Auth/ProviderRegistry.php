@@ -89,14 +89,14 @@ class ProviderRegistry {
 			// Store the instantiated provider config.
 			$class                                 = new $class();
 			$this->providers[ $class->get_slug() ] = $class;
-
-			/**
-			 * Filters the provider instances.
-			 *
-			 * @param array $providers The instantiated provider config instances.
-			 */
-			$this->providers = apply_filters( 'graphql_login_provider_config_instances', $this->providers );
 		}
+
+		/**
+		 * Filters the provider instances.
+		 *
+		 * @param array $providers The instantiated provider config instances.
+		 */
+		$this->providers = apply_filters( 'graphql_login_provider_config_instances', $this->providers );
 	}
 
 	/**

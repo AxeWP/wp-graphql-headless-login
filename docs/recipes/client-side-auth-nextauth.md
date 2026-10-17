@@ -7,16 +7,16 @@ While the example below uses [NextAuth.js](https://next-auth.js.org/), the same 
 ## Table of Contents
 
 - [Recipe: Client-side Authentication flow with NextAuth.js](#recipe-client-side-authentication-flow-with-nextauthjs)
-	- [Table of Contents](#table-of-contents)
-	- [🐲 Warning: Dragons Ahead](#-warning-dragons-ahead)
-	- [1. Configure the Password and SiteToken providers](#1-configure-the-password-and-sitetoken-providers)
-	- [2. Create the \[...nextauth\].js API Route](#2-create-the-nextauthjs-api-route)
-	- [3. Configure the NextAuth provider(s) and the `signIn` callback.](#3-configure-the-nextauth-providers-and-the-signin-callback)
-	- [4. Configure the `jwt` callback.](#4-configure-the-jwt-callback)
-	- [5. Configure the `session` callback](#5-configure-the-session-callback)
-	- [6. Use the `authToken` in your GraphQL requests.](#6-use-the-authtoken-in-your-graphql-requests)
-	- [7. Using the session data in your frontend components.](#7-using-the-session-data-in-your-frontend-components)
-	- [8. (Optional) Configure NextAuth to support password authentication.](#8-optional-configure-nextauth-to-support-password-authentication)
+  - [Table of Contents](#table-of-contents)
+  - [🐲 Warning: Dragons Ahead](#-warning-dragons-ahead)
+  - [1. Configure the Password and SiteToken providers](#1-configure-the-password-and-sitetoken-providers)
+  - [2. Create the \[...nextauth\].js API Route](#2-create-the-nextauthjs-api-route)
+  - [3. Configure the NextAuth provider(s) and the `signIn` callback.](#3-configure-the-nextauth-providers-and-the-signin-callback)
+  - [4. Configure the `jwt` callback.](#4-configure-the-jwt-callback)
+  - [5. Configure the `session` callback](#5-configure-the-session-callback)
+  - [6. Use the `authToken` in your GraphQL requests.](#6-use-the-authtoken-in-your-graphql-requests)
+  - [7. Using the session data in your frontend components.](#7-using-the-session-data-in-your-frontend-components)
+  - [8. (Optional) Configure NextAuth to support password authentication.](#8-optional-configure-nextauth-to-support-password-authentication)
 
 ## 🐲 Warning: Dragons Ahead
 
@@ -41,7 +41,6 @@ For more information on configuring the providers, see the [Settings Guide](../r
 In your headless app, you will need to create the [the `[...nextauth].js` API route](https://next-auth.js.org/getting-started/example#add-api-route) used by NextAuth to configure the providers and callbacks used by the authentication flow.
 
 We scaffold this file now, and fill in the logic in the next step.
-
 
 ```jsx
 // pages/api/auth/[...nextauth].js
@@ -73,11 +72,11 @@ Providers are configured by adding them to the `providers` array in the `[...nex
 ```jsx
 // pages/api/auth/[...nextauth].js
 const providers = [
-// Add any other providers here. E.g.:
-	GoogleProvider( {
-		clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-		clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-	} ),
+  // Add any other providers here. E.g.:
+  GoogleProvider( {
+    clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  } ),
 ];
 ```
 
@@ -87,30 +86,30 @@ While this is all that is required to support the provider on the client side, w
 // pages/api/auth/[...nextauth].js
 
 const callbacks = {
-	/**
-	 * The signIn callback is called when a user signs in.
-	 * We use it to match the user with a user on WordPress, and get the user and auth data we'll use to manage the session.
-	 */
-	signIn: async ( user, account, profile ) => {
-		try {
-			// This example is using the email, but you should use the value that corresponds to what you configured in Step 1.
-			const { email } = profile;
+  /**
+   * The signIn callback is called when a user signs in.
+   * We use it to match the user with a user on WordPress, and get the user and auth data we'll use to manage the session.
+   */
+  signIn: async ( user, account, profile ) => {
+    try {
+      // This example is using the email, but you should use the value that corresponds to what you configured in Step 1.
+      const { email } = profile;
 
-			const data = await loginWithSiteIdentity( email ); // We'll define this later.
+      const data = await loginWithSiteIdentity( email ); // We'll define this later.
 
-			// If we get user data back from then endpoint, we'll add them to NextAuth's user object.
-			if ( data ) {
-				user.authToken = data.authToken;
-				user.refreshToken = data.refreshToken;
-				user.userData = data.user; 
-			} else {
-				return false;
-			}
-		} catch ( e ) {
-			console.error( e ); // Do something with the error.
-			return false;
-		}
-	},
+      // If we get user data back from then endpoint, we'll add them to NextAuth's user object.
+      if ( data ) {
+        user.authToken = data.authToken;
+        user.refreshToken = data.refreshToken;
+        user.userData = data.user;
+      } else {
+        return false;
+      }
+    } catch ( e ) {
+      console.error( e ); // Do something with the error.
+      return false;
+    }
+  },
 };
 ```
 
@@ -119,7 +118,7 @@ Now we need to define the `loginWithSiteIdentity` function that we use in the `s
 ```jsx
 // pages/api/auth/[...nextauth].js
 
-const LOGIN = /* GraphQL */`
+const LOGIN = /* GraphQL */ `
   mutation Login($input: LoginInput!) {
     login(input: $input) {
       authToken
@@ -132,34 +131,30 @@ const LOGIN = /* GraphQL */`
 `;
 
 const loginWithSiteIdentity = async ( identity ) => {
-	const variables = {
-		input: {
-			provider: LoginProviderEnum.SiteToken, // 'SITETOKEN',
-			identity,
-		},
-	};
+  const variables = {
+    input: {
+      provider: LoginProviderEnum.SiteToken, // 'SITETOKEN',
+      identity,
+    },
+  };
 
-	// We need to pass the Site Token header and secret we defined in the Headless Login settings.
-	const headers = {
-		[ process.env.SITE_TOKEN_HEADER ]: process.env.SITE_TOKEN_SECRET
-	};
+  // We need to pass the Site Token header and secret we defined in the Headless Login settings.
+  const headers = {
+    [ process.env.SITE_TOKEN_HEADER ]: process.env.SITE_TOKEN_SECRET,
+  };
 
-	// replace fetchAPI with whatever you're using to connect to WPGraphQL.
-	const res = await fetchAPI(
-		LOGIN,
-		{ variables },
-		headers
-	);
+  // replace fetchAPI with whatever you're using to connect to WPGraphQL.
+  const res = await fetchAPI( LOGIN, { variables }, headers );
 
-	if ( res?.errors ) {
-		throw new Error( res.errors[ 0 ].message );
-	}
+  if ( res?.errors ) {
+    throw new Error( res.errors[ 0 ].message );
+  }
 
-	return res?.data?.login;
-}
+  return res?.data?.login;
+};
 ```
 
-As you can see from the above, all that is required to authenticate the user with WordPress is to pass the `Site Token` header and secret, along with the user `identity` we want to match. 
+As you can see from the above, all that is required to authenticate the user with WordPress is to pass the `Site Token` header and secret, along with the user `identity` we want to match.
 
 [Despite the risks](#🐲-warning-dragons-ahead), we're trusting NextAuth with the responsibility of authenticating the user, since `signIn` is only called after the user has successfully authenticated with a client we configured.
 
@@ -219,31 +214,32 @@ Now we need to define the `refreshAuthToken` function that we use in the `jwt` c
 ```js
 // pages/api/auth/[...nextauth].js
 
-const refreshAuthToken = async( refreshToken ) => {
-	const query = /* GraphQL */`
-	mutation RefreshAuthToken($input: RefreshAuthTokenInput!) {
-		refreshToken(input: $input) {
-			authToken
-		}
-	}
-	`;
+const refreshAuthToken = async ( refreshToken ) => {
+  const query = /* GraphQL */ `
+    mutation RefreshAuthToken($input: RefreshAuthTokenInput!) {
+      refreshToken(input: $input) {
+        authToken
+      }
+    }
+  `;
 
-	const variables = {
-		input: {
-			refreshToken,
-		},
-	};
+  const variables = {
+    input: {
+      refreshToken,
+    },
+  };
 
-	// replace fetchAPI with whatever you're using to connect to WPGraphQL.
-	const res = await fetchAPI( query, { variables } );
+  // replace fetchAPI with whatever you're using to connect to WPGraphQL.
+  const res = await fetchAPI( query, { variables } );
 
-	if ( res?.errors ) {
-		throw new Error( res.errors[ 0 ].message );
-	}
+  if ( res?.errors ) {
+    throw new Error( res.errors[ 0 ].message );
+  }
 
-	return res?.data?.refreshToken;
-}
+  return res?.data?.refreshToken;
+};
 ```
+
 ## 5. Configure the `session` callback
 
 Now we need to configure the `session` callback to actually use our tokens to manage the local session.
@@ -252,33 +248,32 @@ Now we need to configure the `session` callback to actually use our tokens to ma
 // pages/api/auth/[...nextauth].js
 
 const callbacks = {
-	signIn: async ( user, account, profile ) => {
-		// From step 3.
-	},
-	jwt: async ( {token, user} ) => {
-		// From step 4.
-	},
-	/**
-	 * The session callback is called when a user signs in, or when a session is retrieved from the database.
-	 * We use it to set the session token and refresh token from WordPress.
-	 */
-	session: async ( {session, token} ) => {
+  signIn: async ( user, account, profile ) => {
+    // From step 3.
+  },
+  jwt: async ( { token, user } ) => {
+    // From step 4.
+  },
+  /**
+   * The session callback is called when a user signs in, or when a session is retrieved from the database.
+   * We use it to set the session token and refresh token from WordPress.
+   */
+  session: async ( { session, token } ) => {
+    // If we have an auth token, that means the user is logged in.
+    if ( token?.authToken ) {
+      session.isLoggedIn = true;
+      session.userData = token.userData;
+      session.authToken = token.authToken;
+      // We don't store the refresh token, since we don't need it in our frontend.
+    } else {
+      // This means the user is not logged in.
+      session.isLoggedIn = false;
+      delete session.authToken;
+      // We don't delete stale userData, to help the user log back in.
+    }
 
-		// If we have an auth token, that means the user is logged in.
-		if ( token?.authToken ) {
-			session.isLoggedIn = true;
-			session.userData = token.userData;
-			session.authToken = token.authToken;
-			// We don't store the refresh token, since we don't need it in our frontend.
-		} else {
-			// This means the user is not logged in.
-			session.isLoggedIn = false;
-			delete session.authToken;
-			// We don't delete stale userData, to help the user log back in.
-		}
-
-		return session;
-	},
+    return session;
+  },
 };
 ```
 
@@ -295,42 +290,46 @@ For example: here's the `fetchAPI` function we've been using until now.
 ```jsx
 import { getSession } from 'next-auth/client';
 
-export default async function fetchAPI( query, { variables } = {}, headers = {} ) {
-	try {
-		// We get the session from NextAuth.
-		const session = await getSession();
+export default async function fetchAPI(
+  query,
+  { variables } = {},
+  headers = {}
+) {
+  try {
+    // We get the session from NextAuth.
+    const session = await getSession();
 
-		// If the user has an authToken, we add it to the headers.
-		if ( session?.authToken ) {
-			headers.Authorization = `Bearer ${ session.authToken }`;
-		}
+    // If the user has an authToken, we add it to the headers.
+    if ( session?.authToken ) {
+      headers.Authorization = `Bearer ${ session.authToken }`;
+    }
 
-		const res = await fetch( process.env.WPGRAPHQL_URL, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Origin: process.env.NEXT_PUBLIC_SITE_URL, // Required because we are restricting domains in WPGraphQL.
-				...headers,
-			},
-			body: JSON.stringify( {
-				query,
-				variables,
-			} ),
-		} );
+    const res = await fetch( process.env.WPGRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Origin: process.env.NEXT_PUBLIC_SITE_URL, // Required because we are restricting domains in WPGraphQL.
+        ...headers,
+      },
+      body: JSON.stringify( {
+        query,
+        variables,
+      } ),
+    } );
 
-		const json = await res.json();
+    const json = await res.json();
 
-		if ( json.errors ) {
-			console.error( json.errors );
-			throw new Error( 'Failed to fetch API' );
-		}
+    if ( json.errors ) {
+      console.error( json.errors );
+      throw new Error( 'Failed to fetch API' );
+    }
 
-		return json.data;
-	} catch ( e ) {
-		return {
-			errors: [ e ],
-		}
-	}
+    return json.data;
+  } catch ( e ) {
+    return {
+      errors: [ e ],
+    };
+  }
 }
 ```
 
@@ -362,7 +361,6 @@ const MyComponent = () => {
 }
 ```
 
-
 ## 8. (Optional) Configure NextAuth to support password authentication.
 
 We can also use NextAuth to support password authentication with our WordPress site.
@@ -373,29 +371,32 @@ To support password authentication, we need to configure the the NextAuth [Crede
 // pages/api/auth/[...nextauth].js
 
 const providers = [
-	// ... other providers
-	CredentialsProvider( {
-		name: 'Password',
-		// Defines the fields that will be presented to the user.
-		credentials: {
-			username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
-			password: { label: 'Password', type: 'password' },
-		},
-		/**
-		 * The authorize callback is called when a user signs in with the credentials provider.
-		 * We use it to authenticate the user with WordPress.
-		 */
-		async authorize( credentials ) {
-			const user = await loginWithPassword( credentials.username, credentials.password ); // We'll define this later.
+  // ... other providers
+  CredentialsProvider( {
+    name: 'Password',
+    // Defines the fields that will be presented to the user.
+    credentials: {
+      username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
+      password: { label: 'Password', type: 'password' },
+    },
+    /**
+     * The authorize callback is called when a user signs in with the credentials provider.
+     * We use it to authenticate the user with WordPress.
+     */
+    async authorize( credentials ) {
+      const user = await loginWithPassword(
+        credentials.username,
+        credentials.password
+      ); // We'll define this later.
 
-			if ( user ) {
-				return user;
-			}
+      if ( user ) {
+        return user;
+      }
 
-			// If the user is not found, return null.
-			return null;
-		}
-	} ),
+      // If the user is not found, return null.
+      return null;
+    },
+  } ),
 ];
 ```
 
@@ -407,28 +408,28 @@ This is where we use the `login` mutation from Headless Login for WPGraphQL to g
 // pages/api/auth/[...nextauth].js
 
 const loginWithPassword = async ( username, password ) => {
-	const variables = {
-		input: {
-			provider: LoginProviderEnum.Password, // 'PASSWORD',
-			credentials: {
-				username,
-				password,
-			},
-		},
-	};
+  const variables = {
+    input: {
+      provider: LoginProviderEnum.Password, // 'PASSWORD',
+      credentials: {
+        username,
+        password,
+      },
+    },
+  };
 
-	// replace fetchAPI with whatever you're using to connect to WPGraphQL.
-	const res = await fetchAPI(
-		LOGIN, // This is the same login mutation we used in Step 3.
-		{ variables }
-	);
+  // replace fetchAPI with whatever you're using to connect to WPGraphQL.
+  const res = await fetchAPI(
+    LOGIN, // This is the same login mutation we used in Step 3.
+    { variables }
+  );
 
-	if ( res?.errors ) {
-		throw new Error( res.errors[ 0 ].message );
-	}
+  if ( res?.errors ) {
+    throw new Error( res.errors[ 0 ].message );
+  }
 
-	return res?.data?.login;
-}
+  return res?.data?.login;
+};
 ```
 
 We're _almost_ done. All that's left is to make sure that our `signIn` callback from before doesn't try to authenticate the user with the `login` mutation again. We'll do that by wrapping it in a conditional that checks what NextAuth provider was used to sign in.
@@ -437,20 +438,20 @@ We're _almost_ done. All that's left is to make sure that our `signIn` callback 
 // pages/api/auth/[...nextauth].js
 
 const callbacks = {
-	signIn: async ( user, account, profile ) => {
-		// We only want to authenticate the user with WordPress if they used a client-side provider. The 'credentials' provider is already directly authenticating.
-		if ( account.provider !== 'credentials' ) {
-			// Rest of the callback from step 3.
-		}
+  signIn: async ( user, account, profile ) => {
+    // We only want to authenticate the user with WordPress if they used a client-side provider. The 'credentials' provider is already directly authenticating.
+    if ( account.provider !== 'credentials' ) {
+      // Rest of the callback from step 3.
+    }
 
-		return true;
-	},
-	jwt: async ( {token, user} ) => {
-		// From above.
-	},
-	session: async ( {session, token} ) => {
-		// From above.
-	},
+    return true;
+  },
+  jwt: async ( { token, user } ) => {
+    // From above.
+  },
+  session: async ( { session, token } ) => {
+    // From above.
+  },
 };
 ```
 

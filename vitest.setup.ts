@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
 import { afterEach, vi } from 'vitest';
 import { setupWpGraphQLLoginMock } from './packages/admin/__tests__/mocks/wordpress-global.mock';

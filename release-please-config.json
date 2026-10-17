@@ -1,0 +1,21 @@
+{
+	"$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+	"packages": {
+		".": {
+			"release-type": "php",
+			"changelog-path": "CHANGELOG.md",
+			"include-v-in-tag": false,
+			"bump-minor-pre-major": true,
+			"extra-files": [
+				{
+					"type": "generic",
+					"path": "wp-graphql-headless-login.php"
+				},
+				{
+					"type": "generic",
+					"path": "readme.txt"
+				}
+			]
+		}
+	}
+}

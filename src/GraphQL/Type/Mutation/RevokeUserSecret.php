@@ -1,0 +1,94 @@
+<?php
+/**
+ * Registers the RevokeUserSecret mutation
+ *
+ * @package WPGraphQL\Login\GraphQL\Type\Mutation
+ * @since 0.0.1
+ */
+
+declare( strict_types = 1 );
+
+namespace WPGraphQL\Login\GraphQL\Type\Mutation;
+
+use GraphQL\Error\UserError;
+use GraphQL\Type\Definition\ResolveInfo;
+use WPGraphQL\AppContext;
+use WPGraphQL\Login\Auth\TokenManager;
+use WPGraphQL\Login\Vendor\AxeWP\Common\GraphQL\Abstracts\MutationType;
+use WPGraphQL\Utils\Utils as GraphQL_Utils;
+
+/**
+ * Class - RevokeUserSecret
+ */
+class RevokeUserSecret extends MutationType {
+	/**
+	 * {@inheritDoc}
+	 */
+	protected static function type_name(): string {
+		return 'RevokeUserSecret';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected static function get_description(): string {
+		return __( 'Revokes the user secret and invalidates the JWT authentication token.', 'wp-graphql-headless-login' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected static function get_input_fields(): array {
+		return [
+			'userId' => [
+				'type'        => [ 'non_null' => 'ID' ],
+				'description' => static fn () => __( 'The WordPress user ID. Accepts either a database or global ID.', 'wp-graphql-headless-login' ),
+			],
+		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected static function get_output_fields(): array {
+		return [
+			'revokedUserSecret' => [
+				'type'        => 'String',
+				'description' => static fn () => __( 'The revoked user secret.', 'wp-graphql-headless-login' ),
+			],
+			'success'           => [
+				'type'        => 'Boolean',
+				'description' => static fn () => __( 'Whether the User secret was successfully revoked.', 'wp-graphql-headless-login' ),
+			],
+		];
+	}
+
+	/**
+	 * Gets the `mutateAndGetPayload` callable for the mutation.
+	 */
+	protected static function mutate_and_get_payload(): callable {
+		return static function ( array $input, AppContext $context, ResolveInfo $info ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+			$user_id = GraphQL_Utils::get_database_id_from_id( esc_attr( $input['userId'] ) );
+
+			$user = ! empty( $user_id ) ? get_user_by( 'id', $user_id ) : false;
+
+			if ( empty( $user_id ) || empty( $user ) ) {
+				throw new UserError( esc_html__( 'You are not allowed to revoke the user secret.', 'wp-graphql-headless-login' ) );
+			}
+
+			// Revoke the user secret.
+			$revoked_secret = TokenManager::get_user_secret( $user_id, true );
+			$is_revoked     = TokenManager::revoke_user_secret( $user_id, false );
+
+			// The user doesn't have permission to revoke the secret.
+			if ( is_wp_error( $is_revoked ) ) {
+				throw new UserError( esc_html__( 'You are not allowed to revoke the user secret.', 'wp-graphql-headless-login' ) );
+			}
+
+			return [
+				'success'           => $is_revoked,
+				'revokedUserSecret' => $revoked_secret,
+			];
+		};
+	}
+}

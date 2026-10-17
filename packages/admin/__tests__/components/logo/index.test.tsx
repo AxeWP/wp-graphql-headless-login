@@ -7,12 +7,15 @@ vi.mock( '@/admin/components/ui/svg-icon', () => ( {
 		className,
 		onClick,
 		icon: _icon,
+		// Consumed by the real SVGIcon, so it must not reach the DOM.
+		iconName: _iconName,
 		...rest
 	}: {
 		size: number;
 		className: string;
 		onClick?: () => void;
 		icon?: unknown;
+		iconName?: string;
 		[ key: string ]: unknown;
 	} ) => (
 		<svg
@@ -127,10 +130,11 @@ describe( 'Logo Component', () => {
 			);
 
 			const svg = container.querySelector( 'svg' );
-			if ( svg ) {
-				fireEvent.click( svg );
-				expect( handleClick ).toHaveBeenCalledTimes( 1 );
+			if ( ! svg ) {
+				throw new Error( 'SVG element not found' );
 			}
+			fireEvent.click( svg );
+			expect( handleClick ).toHaveBeenCalledTimes( 1 );
 			expect( container.querySelector( 'svg' ) ).toHaveAttribute(
 				'height',
 				'50'

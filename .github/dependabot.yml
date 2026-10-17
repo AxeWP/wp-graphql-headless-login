@@ -1,38 +1,58 @@
 version: 2
-
 updates:
-  # Composer: 1x weekly for minor/patch, 1x monthly for major.
-  - package-ecosystem: 'composer'
+  # Update all GitHub Actions together. If CI passes, you know it's working.
+  - package-ecosystem: github-actions
     directory: '/'
     schedule:
-      interval: 'weekly'
+      interval: weekly
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: 'chore(ci)'
+    labels:
+      - Dependencies
+    groups:
+      github-actions-updates:
+        patterns: ['*']
+
+  - package-ecosystem: composer
+    directory: '/'
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
     cooldown:
       semver-major-days: 30
       semver-minor-days: 7
       semver-patch-days: 7
+    versioning-strategy: increase
+    commit-message:
+      prefix: 'fix'
+      include: 'scope'
+    labels:
+      - Dependencies
     groups:
       composer-dev-minor-patch:
         dependency-type: 'development'
-        update-types: [minor, patch]
-      composer-minor-patch:
-        dependency-type: 'production'
         update-types: [minor, patch]
       # We don't bundle minor or major production assets, so they're tested individually.
       composer-patch:
         dependency-type: 'production'
         update-types: [patch]
 
-  # NPM: 1x weekly for minor/patch, 1x monthly for major.
-  - package-ecosystem: 'npm'
-    directories:
-      - '/'
-      # @todo add other plugin directories when their dependency trees are stabilized.
+  - package-ecosystem: npm
+    directory: '/'
     schedule:
-      interval: 'weekly'
+      interval: weekly
+    open-pull-requests-limit: 10
     cooldown:
       semver-major-days: 30
       semver-minor-days: 7
       semver-patch-days: 7
+    versioning-strategy: increase
+    commit-message:
+      prefix: 'fix'
+      include: 'scope'
+    labels:
+      - Dependencies
     groups:
       npm-dev-minor-patch:
         dependency-type: 'development'
@@ -40,12 +60,3 @@ updates:
       npm-prod-minor-patch:
         dependency-type: 'production'
         update-types: [minor, patch]
-
-  # GitHub Actions: 1x weekly.
-  - package-ecosystem: 'github-actions'
-    directory: '/'
-    schedule:
-      interval: 'weekly'
-    groups:
-      github-actions-updates:
-        patterns: ['*']

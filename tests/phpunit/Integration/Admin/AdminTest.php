@@ -1,0 +1,194 @@
+<?php
+/**
+ * Tests the plugin settings.
+ *
+ * @package WPGraphQL\Login\Tests\Integration\Admin
+ */
+
+declare( strict_types = 1 );
+
+namespace WPGraphQL\Login\Tests\Integration\Admin;
+
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use ReflectionClass;
+use ReflectionMethod;
+use WPGraphQL\Admin\Settings\SettingsRegistry as WPGraphQLSettingsRegistry;
+use WPGraphQL\Login\Admin\Admin;
+use WPGraphQL\Login\Admin\Settings\ProviderSettings;
+use WPGraphQL\Login\Auth\ProviderRegistry;
+use WPGraphQL\Login\Settings\AccessControlSettings;
+use WPGraphQL\Login\Settings\PluginSettings;
+use WPGraphQL\Login\Tests\TestCase;
+
+/**
+ * Tests the Admin\Admin class.
+ */
+#[CoversClass( Admin::class )]
+class AdminTest extends TestCase {
+	/**
+	 * Tests that the settings section is registered to the WPGraphQL settings registry.
+	 */
+	public function test_settings_section_is_registered_with_wpgraphql(): void {
+		do_action( 'graphql_register_settings' );
+
+		$registry = new WPGraphQLSettingsRegistry();
+		do_action( 'graphql_init_settings', $registry );
+
+		$this->assertArrayHasKey( Admin::$option_group, $registry->get_settings_sections() );
+
+		// The section renders the mount point for the settings app.
+		$fields = array_column( $registry->get_settings_fields()[ Admin::$option_group ] ?? [], null, 'name' );
+
+		$this->assertArrayHasKey( 'app', $fields );
+
+		ob_start();
+		$fields['app']['callback']( [] );
+		$this->assertSame( '<div id="wp-graphql-headless-login-settings"></div>', ob_get_clean() );
+	}
+
+	/**
+	 * Tests that the settings app is enqueued on the WPGraphQL settings screen.
+	 */
+	public function test_settings_app_is_enqueued_on_settings_page(): void {
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'administrator' ] ) );
+		set_current_screen( 'graphql_page_graphql-settings' );
+
+		do_action( 'admin_enqueue_scripts', 'graphql_page_graphql-settings' );
+
+		$this->assertTrue( wp_script_is( 'wp-graphql-headless-login/admin-editor', 'enqueued' ) );
+
+		// The IDE enqueues the app too, but the config should only be added once.
+		do_action( 'wpgraphql_ide_enqueue_script' );
+
+		$inline_scripts = array_filter( (array) wp_scripts()->get_data( 'wp-graphql-headless-login/admin-editor', 'before' ) );
+
+		$this->assertCount( 1, $inline_scripts );
+		$this->assertStringStartsWith( 'const wpGraphQLLogin = ', reset( $inline_scripts ) );
+	}
+
+	/**
+	 * Tests that the settings app is told when the secret is defined with a constant.
+	 */
+	#[RunInSeparateProcess]
+	#[PreserveGlobalState( false )]
+	public function test_settings_app_reports_secret_constant(): void {
+		define( 'WPGRAPHQL_LOGIN_JWT_SECRET_KEY', str_repeat( 'constant-secret-', 4 ) );
+
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'administrator' ] ) );
+		set_current_screen( 'graphql_page_graphql-settings' );
+		do_action( 'admin_enqueue_scripts', 'graphql_page_graphql-settings' );
+
+		$inline_scripts = array_filter( (array) wp_scripts()->get_data( 'wp-graphql-headless-login/admin-editor', 'before' ) );
+		$config         = json_decode( substr( (string) reset( $inline_scripts ), strlen( 'const wpGraphQLLogin = ' ) ), true );
+
+		$this->assertSame(
+			[
+				'hasKey'     => true,
+				'isConstant' => true,
+			],
+			$config['secret']
+		);
+	}
+
+	/**
+	 * Tests that the settings app, which holds the provider credentials, isn't enqueued on other screens or for users who can't manage options.
+	 */
+	public function test_settings_app_is_not_enqueued_for_other_screens_or_users(): void {
+		wp_dequeue_script( 'wp-graphql-headless-login/admin-editor' );
+
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'administrator' ] ) );
+		set_current_screen( 'dashboard' );
+		do_action( 'admin_enqueue_scripts', 'index.php' );
+
+		$this->assertFalse( wp_script_is( 'wp-graphql-headless-login/admin-editor', 'enqueued' ) );
+
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'editor' ] ) );
+		set_current_screen( 'graphql_page_graphql-settings' );
+		do_action( 'admin_enqueue_scripts', 'graphql_page_graphql-settings' );
+		do_action( 'wpgraphql_ide_enqueue_script' );
+
+		$this->assertFalse( wp_script_is( 'wp-graphql-headless-login/admin-editor', 'enqueued' ) );
+	}
+
+	/**
+	 * Tests that options.php can't overwrite the plugin settings with the section's empty form.
+	 */
+	public function test_options_page_cannot_save_settings(): void {
+		global $new_allowed_options;
+
+		// Core's `option_update_filter()` adds registered settings back at priority 10, but is only hooked in wp-admin.
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		add_filter( 'allowed_options', 'option_update_filter' );
+		$new_allowed_options = [ Admin::$option_group => [ Admin::$option_group ] ]; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
+		$allowed = apply_filters( 'allowed_options', [ 'general' => [ 'blogname' ] ] );
+
+		remove_filter( 'allowed_options', 'option_update_filter' );
+		$new_allowed_options = []; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
+		$this->assertSame( [ 'general' => [ 'blogname' ] ], $allowed );
+	}
+
+	/**
+	 * Tests that the data passed to the settings app includes the secret meta, a valid nonce, and every settings group.
+	 */
+	public function test_get_settings_data_includes_secret_nonce_and_settings(): void {
+		$method = new ReflectionMethod( Admin::class, 'get_settings_data' );
+
+		$actual = $method->invoke( new Admin() );
+
+		$this->assertNotEmpty( $actual );
+
+		$expected_secret = [
+			'hasKey'     => true,
+			'isConstant' => false,
+		];
+
+		$this->assertArrayHasKey( 'secret', $actual );
+		$this->assertEquals( $expected_secret, $actual['secret'] );
+
+		$this->assertArrayHasKey( 'nonce', $actual );
+		$nonce = $actual['nonce'];
+
+		$this->assertTrue( (bool) wp_verify_nonce( $nonce, 'wp_graphql_settings' ) );
+
+		$this->assertArrayHasKey( 'settings', $actual );
+
+		$expected_settings = [
+			AccessControlSettings::get_slug(),
+			PluginSettings::get_slug(),
+		];
+
+		foreach ( $expected_settings as $setting ) {
+			$this->assertArrayHasKey( $setting, $actual['settings'] );
+			$this->assertNotEmpty( $actual['settings'][ $setting ] );
+		}
+
+		$this->assertArrayHasKey( 'providers', $actual['settings'] );
+		$this->assertNotEmpty( $actual['settings']['providers'] );
+
+		$providers = $actual['settings']['providers'];
+
+		$provider_keys = array_map(
+			static fn ( string $key ) => ProviderSettings::$settings_prefix . $key,
+			array_keys( ProviderRegistry::get_instance()->get_registered_providers() )
+		);
+
+		$this->assertEqualSets(
+			$provider_keys,
+			array_keys( $providers ),
+			'Provider settings should have the same keys as the registered providers.'
+		);
+
+		// Ensure the keys are in a freshly-loaded ProviderSettings::get_config().
+		( new ReflectionClass( ProviderSettings::class ) )->setStaticPropertyValue( 'config', [] );
+
+		$provider_settings = ProviderSettings::get_config();
+
+		foreach ( $provider_keys as $key ) {
+			$this->assertArrayHasKey( $key, $provider_settings, 'The provider key ' . $key . ' should be in the provider settings.' );
+		}
+	}
+}

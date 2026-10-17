@@ -2,7 +2,7 @@
 /**
  * Activation Hook
  *
- * @package WPGraphql\Login
+ * @package WPGraphQL\Login
  * @since 0.0.1
  */
 

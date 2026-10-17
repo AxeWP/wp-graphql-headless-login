@@ -15,14 +15,7 @@ namespace WPGraphQL\Login;
  *
  * @internal
  */
-class Autoloader {
-	/**
-	 * Whether the autoloader has been loaded.
-	 *
-	 * @var bool
-	 */
-	protected static bool $is_loaded = false;
-
+final class Autoloader {
 	/**
 	 * Attempts to autoload the Composer dependencies.
 	 */
@@ -32,40 +25,44 @@ class Autoloader {
 			return true;
 		}
 
-		if ( self::$is_loaded ) {
-			return self::$is_loaded;
+		// Load prefixed dependencies first (Strauss-generated).
+		if ( ! self::require_autoloader( WPGRAPHQL_LOGIN_PLUGIN_DIR . 'vendor-prefixed/autoload.php' ) ) {
+			return false;
 		}
 
-		$autoloader      = dirname( __DIR__ ) . '/vendor/autoload.php';
-		self::$is_loaded = self::require_autoloader( $autoloader );
-
-		return self::$is_loaded;
+		return self::require_autoloader( WPGRAPHQL_LOGIN_PLUGIN_DIR . 'vendor/autoload.php' );
 	}
 
 	/**
 	 * Attempts to load the autoloader file, if it exists.
 	 *
 	 * @param string $autoloader_file The path to the autoloader file.
+	 *
+	 * @return bool Whether the autoloader was successfully loaded.
 	 */
-	protected static function require_autoloader( string $autoloader_file ): bool {
-		if ( ! is_readable( $autoloader_file ) ) {
-				self::missing_autoloader_notice();
-				return false;
+	private static function require_autoloader( string $autoloader_file ): bool {
+		// Use a local static variable to track if the autoloader has already been loaded.
+		static $loaded = [];
+
+		if ( isset( $loaded[ $autoloader_file ] ) ) {
+			return $loaded[ $autoloader_file ];
 		}
 
-		return (bool) require_once $autoloader_file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable -- Autoloader is a Composer file.
+		if ( ! is_readable( $autoloader_file ) ) {
+			self::missing_autoloader_notice();
+
+			return false;
+		}
+
+		$loaded[ $autoloader_file ] = (bool) require_once $autoloader_file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable -- Autoloader is a Composer file.
+
+		return $loaded[ $autoloader_file ];
 	}
 
 	/**
 	 * Displays a notice if the autoloader is missing.
 	 */
-	protected static function missing_autoloader_notice(): void {
-		$error_message = __( 'Headless Login for WPGraphQL: The Composer autoloader was not found. If you installed the plugin from the GitHub source, make sure to run `composer install`.', 'wp-graphql-headless-login' );
-
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			error_log( esc_html( $error_message ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- This is a development notice.
-		}
-
+	private static function missing_autoloader_notice(): void {
 		$hooks = [
 			'admin_notices',
 			'network_admin_notices',
@@ -74,16 +71,29 @@ class Autoloader {
 		foreach ( $hooks as $hook ) {
 			add_action(
 				$hook,
-				static function () use ( $error_message ) {
-					?>
-					<div class="error notice">
-						<p>
-							<?php echo esc_html( $error_message ); ?>
-						</p>
-					</div>
-					<?php
+				static function (): void {
+					$error_message = self::get_autoloader_error_message();
+					_doing_it_wrong( self::class, esc_html( $error_message ), '0.1.0' );
+
+					// Display the error notice in the admin.
+					wp_admin_notice(
+						esc_html( $error_message ),
+						[
+							'type'    => 'error',
+							'dismiss' => false,
+						]
+					);
 				}
 			);
 		}
+	}
+
+	/**
+	 * The error message to display when the autoloader errors.
+	 *
+	 * We stick it in a function, so it's available to `missing_autoloader_notice()` without prop drilling into the hook.
+	 */
+	private static function get_autoloader_error_message(): string {
+		return __( 'Headless Login for WPGraphQL: The Composer autoloader was not found. If you installed the plugin from the GitHub source, make sure to install and build the dependencies using `composer install`.', 'wp-graphql-headless-login' );
 	}
 }

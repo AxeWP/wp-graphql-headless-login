@@ -10,19 +10,12 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login\Auth;
 
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Interfaces\Registrable;
+use WPGraphQL\Login\Vendor\AxeWP\Common\Contracts\Interfaces\Registrable;
 
 /**
  * Class - ServerAuthentication
  */
 class ServerAuthentication implements Registrable {
-	/**
-	 * The singleton instance of this class.
-	 *
-	 * @var ?self
-	 */
-	private static $instance;
-
 	/**
 	 * Whether the determine_current_user filter is being run.
 	 *
@@ -33,26 +26,11 @@ class ServerAuthentication implements Registrable {
 	private bool $is_determine_current_user_filter = false;
 
 	/**
-	 * Gets the singleton instance of this class, or creates it if it doesn't exist.
-	 */
-	public static function instance(): self {
-		if ( ! isset( self::$instance ) || ! ( is_a( self::$instance, self::class ) ) ) {
-			self::$instance = new self();
-		}
-
-		return self::$instance;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
-	public static function init(): void {
-		if ( ! self::$instance ) {
-			self::$instance = self::instance();
-
-			// Filter how WordPress determines the current user.
-			add_filter( 'determine_current_user', [ self::$instance, 'determine_current_user' ], 99 );
-		}
+	public function register_hooks(): void {
+		// Filter how WordPress determines the current user.
+		add_filter( 'determine_current_user', [ $this, 'determine_current_user' ], 99 );
 	}
 
 	/**

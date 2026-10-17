@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { forwardRef, SVGProps, memo, FunctionComponent } from 'react';
+import { forwardRef, type SVGProps, memo, type FunctionComponent } from 'react';
 
 import styles from './styles.module.scss';
 

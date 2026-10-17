@@ -32,25 +32,27 @@ export function ClientPanel() {
 	const { saveEditedEntityRecord } = useDispatch( coreStore );
 	const { createNotice, createErrorNotice } = useDispatch( noticesStore );
 
-	// Strip the prefix from activeClient for looking up provider settings
-	const providerSlug = useMemo(
-		() => activeClient?.replace( PROVIDER_PREFIX, '' ) || '',
-		[ activeClient ]
-	);
+	// The schema is keyed by the prefixed option name, but tolerate the bare slug.
+	const providerSchema = useMemo( () => {
+		const providers = wpGraphQLLogin?.settings?.providers;
+
+		return (
+			providers?.[ activeClient ] ??
+			providers?.[ activeClient?.replace( PROVIDER_PREFIX, '' ) ?? '' ] ??
+			{}
+		);
+	}, [ activeClient ] );
 
 	const { lastError, isSaving, hasEdits } = useSelect(
 		( select ) => ( {
-			// @ts-expect-error this isnt typed.
 			lastError: select( coreStore )?.getLastEntitySaveError(
 				'root',
 				'site'
 			),
-			// @ts-expect-error this isnt typed.
 			isSaving: select( coreStore )?.isSavingEntityRecord(
 				'root',
 				'site'
 			),
-			// @ts-expect-error this isnt typed.
 			hasEdits: select( coreStore )?.hasEditsForEntityRecord(
 				'root',
 				'site'
@@ -155,9 +157,8 @@ export function ClientPanel() {
 						{ sprintf(
 							// translators: %s: Client slug.
 							__( '%s Settings', 'wp-graphql-headless-login' ),
-							( wpGraphQLLogin?.settings?.providers?.[
-								providerSlug
-							]?.[ 'name' ]?.default as string ) || 'Provider'
+							( providerSchema?.[ 'name' ]?.default as string ) ||
+								'Provider'
 						) }
 					</h2>
 				</PanelRow>
@@ -168,10 +169,7 @@ export function ClientPanel() {
 						'order',
 					] }
 					values={ clientConfig }
-					fields={
-						wpGraphQLLogin?.settings?.providers?.[ providerSlug ] ??
-						{}
-					}
+					fields={ providerSchema }
 					setValue={ ( value ) => {
 						setClientConfig( {
 							...clientConfig,

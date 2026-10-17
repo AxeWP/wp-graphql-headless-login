@@ -9,85 +9,109 @@ declare( strict_types = 1 );
 
 namespace WPGraphQL\Login;
 
-use WPGraphQL\Login\Admin\Settings;
-use WPGraphQL\Login\Admin\UserProfile;
-use WPGraphQL\Login\Auth\ProviderRegistry;
-use WPGraphQL\Login\Vendor\AxeWP\GraphQL\Helper\Helper;
+use WPGraphQL\Login\Admin;
+use WPGraphQL\Login\Vendor\AxeWP\Common\Contracts\Traits\Singleton;
+use WPGraphQL\Login\Vendor\AxeWP\Common\Core\Config;
 
-if ( ! class_exists( \WPGraphQL\Login\Main::class ) ) :
+/**
+ * Class - Main
+ */
+final class Main {
+	use Singleton {
+		get_instance as private trait_instance;
+	}
 
 	/**
-	 * Class - Main
+	 * Registrable classes are entrypoints that "hook" into WordPress.
+	 *
+	 * @var class-string<\WPGraphQL\Login\Vendor\AxeWP\Common\Contracts\Interfaces\Registrable>[]
 	 */
-	final class Main {
-		/**
-		 * Class instances.
-		 *
-		 * @var ?self $instance
-		 */
-		private static $instance;
+	private const REGISTRABLE_CLASSES = [
+		GraphQL\CoreSchemaFilters::class,
+		GraphQL\TypeRegistry::class,
+		GraphQL\Model\User::class,
+		Extensions\WooCommerce::class,
+		Auth\ServerAuthentication::class,
+		Settings\SettingsRegistry::class,
+		Admin\Admin::class,
+		Admin\Upgrade\UpgradeRegistry::class,
+		Admin\UserProfile::class,
+	];
 
-		/**
-		 * Constructor
-		 */
-		public static function instance(): self {
-			if ( ! isset( self::$instance ) ) {
-				// You cant test a singleton.
-				// @codeCoverageIgnoreStart .
-
-				self::$instance = new self();
-				self::$instance->setup();
-				// @codeCoverageIgnoreEnd
-			}
-
-			/**
-			 * Fire off init action.
-			 *
-			 * @param self $instance the instance of the plugin class.
-			 */
-			do_action( 'graphql_login_init', self::$instance );
-
-			return self::$instance;
-		}
-
-		/**
-		 * Sets up the schema.
-		 *
-		 * @codeCoverageIgnore
-		 */
-		private function setup(): void {
-			// Setup boilerplate hook prefix.
-			Helper::set_hook_prefix( 'graphql_login' );
-
-			// Setup plugin.
-			CoreSchemaFilters::init();
-			WoocommerceSchemaFilters::init();
-			Settings::init();
-			UserProfile::init();
-			ProviderRegistry::get_instance();
-
-			// Initialize plugin type registry.
-			add_action( get_graphql_register_action(), [ TypeRegistry::class, 'init' ] );
-		}
-
-		/**
-		 * Throw error on object clone.
-		 * The whole idea of the singleton design pattern is that there is a single object
-		 * therefore, we don't want the object to be cloned.
-		 *
-		 * @return void
-		 */
-		public function __clone() {
-			// Cloning instances of the class is forbidden.
-			_doing_it_wrong( __FUNCTION__, esc_html__( 'The plugin Main class should not be cloned.', 'wp-graphql-headless-login' ), '0.0.1' );
-		}
-
-		/**
-		 * Disable unserializing of the class.
-		 */
-		public function __wakeup(): void {
-			// De-serializing instances of the class is forbidden.
-			_doing_it_wrong( __FUNCTION__, esc_html__( 'De-serializing instances of the plugin Main class is not allowed.', 'wp-graphql-headless-login' ), '0.0.1' );
-		}
+	/**
+	 * Called when the singleton instance is created.
+	 */
+	protected function __construct() {
+		$this->setup();
 	}
-endif;
+
+	/**
+	 * Get the singleton instance of the plugin.
+	 */
+	public static function get_instance(): self {
+		$instance = self::trait_instance();
+
+		/**
+		 * Fire off init action.
+		 *
+		 * @param self $instance the instance of the plugin class.
+		 */
+		do_action( 'graphql_login_init', $instance );
+
+		return $instance;
+	}
+
+	/**
+	 * Sets up the schema.
+	 *
+	 * @codeCoverageIgnore
+	 */
+	private function setup(): void {
+		// Set up the axewp-common hook prefix.
+		Config::set_hook_prefix( 'graphql_login' );
+
+		// Setup plugin.
+		add_action( 'plugins_loaded', [ $this, 'load' ] );
+
+		// Register activation and deactivation hooks.
+		register_activation_hook( WPGRAPHQL_LOGIN_PLUGIN_FILE, [ $this, 'on_activation' ] );
+		register_deactivation_hook( WPGRAPHQL_LOGIN_PLUGIN_FILE, [ $this, 'on_deactivation' ] );
+	}
+
+	/**
+	 * Load the plugin classes.
+	 */
+	public function load(): void {
+		// Only load plugin classes if all dependencies are met.
+		if ( ! Dependencies::check() ) {
+			return;
+		}
+
+		// Loop through all the classes, instantiate them, and register any hooks.
+		foreach ( self::REGISTRABLE_CLASSES as $class_name ) {
+			$instance = new $class_name();
+
+			$instance->register_hooks();
+		}
+
+		// Do other generalizable stuff here.
+	}
+
+	/**
+	 * Call the activation callback.
+	 *
+	 * @internal
+	 */
+	public function on_activation(): void {
+		activation_callback();
+	}
+
+	/**
+	 * Call the deactivation callback.
+	 *
+	 * @internal
+	 */
+	public function on_deactivation(): void {
+		deactivation_callback();
+	}
+}

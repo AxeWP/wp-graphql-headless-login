@@ -78,30 +78,6 @@ describe( 'SettingsContext', () => {
 		} );
 	} );
 
-	describe( 'useSettings hook provides all context values correctly', () => {
-		it( 'provides all context values', async () => {
-			vi.mocked( apiFetch ).mockResolvedValue( mockSettings );
-
-			const { wrapper } = renderWithSettingsProvider();
-			const { result } = renderHook( () => useSettings(), {
-				wrapper,
-			} );
-
-			await waitFor( () => {
-				expect( result.current ).toBeDefined();
-				expect( result.current.settings ).toBeDefined();
-				expect( result.current.updateSettings ).toBeDefined();
-				expect( result.current.saveSettings ).toBeDefined();
-				expect( result.current.isConditionMet ).toBeDefined();
-				expect( result.current.isComplete ).toBeDefined();
-				expect( result.current.isDirty ).toBeDefined();
-				expect( result.current.isSaving ).toBeDefined();
-				expect( result.current.errorMessage ).toBeUndefined();
-				expect( result.current.showAdvancedSettings ).toBeDefined();
-			} );
-		} );
-	} );
-
 	describe( 'Settings loading from API', () => {
 		it( 'settings undefined initially, then loads from API', async () => {
 			vi.mocked( apiFetch ).mockResolvedValue( mockSettings );
@@ -133,6 +109,47 @@ describe( 'SettingsContext', () => {
 
 			expect( result.current.errorMessage ).toBe( 'API Error' );
 		} );
+
+		it( 'API fetch REST errors set errorMessage', async () => {
+			// apiFetch rejects REST errors with the response body, not an Error.
+			vi.mocked( apiFetch ).mockRejectedValue( {
+				code: 'rest_forbidden',
+				message: 'Sorry, you are not allowed to do that.',
+			} );
+
+			const { wrapper } = renderWithSettingsProvider();
+			const { result } = renderHook( () => useSettings(), {
+				wrapper,
+			} );
+
+			await waitFor( () => {
+				expect( result.current.isComplete ).toBe( true );
+			} );
+
+			expect( result.current.errorMessage ).toBe(
+				'Sorry, you are not allowed to do that.'
+			);
+		} );
+
+		it.each( [ 'just a string', { code: 'fetch_error' } ] )(
+			'API fetch rejections without a message fall back to a generic message (%o)',
+			async ( rejection ) => {
+				vi.mocked( apiFetch ).mockRejectedValue( rejection );
+
+				const { wrapper } = renderWithSettingsProvider();
+				const { result } = renderHook( () => useSettings(), {
+					wrapper,
+				} );
+
+				await waitFor( () => {
+					expect( result.current.isComplete ).toBe( true );
+				} );
+
+				expect( result.current.errorMessage ).toBe(
+					'Unable to fetch settings. An unknown error occurred'
+				);
+			}
+		);
 
 		it( 'Empty settings object handled correctly', async () => {
 			vi.mocked( apiFetch ).mockResolvedValue( {} );
@@ -281,6 +298,49 @@ describe( 'SettingsContext', () => {
 			expect( resultValue ).toBe( false );
 			expect( result.current.errorMessage ).toBe( 'Save failed' );
 		} );
+
+		it.each( [
+			[
+				{
+					code: 'rest_invalid_param',
+					message: 'Invalid parameter(s): values',
+				},
+				'Invalid parameter(s): values',
+			],
+			[
+				'just a string',
+				'Unable to save settings. An unknown error occurred',
+			],
+			[
+				{ code: 'fetch_error' },
+				'Unable to save settings. An unknown error occurred',
+			],
+		] )(
+			'save rejections that are not Errors set errorMessage (%o)',
+			async ( rejection, expectedMessage ) => {
+				vi.mocked( apiFetch ).mockResolvedValueOnce( mockSettings );
+				vi.mocked( apiFetch ).mockRejectedValueOnce( rejection );
+
+				const { wrapper } = renderWithSettingsProvider();
+				const { result } = renderHook( () => useSettings(), {
+					wrapper,
+				} );
+
+				await waitFor( () => {
+					expect( result.current.settings ).toEqual( mockSettings );
+				} );
+
+				const resultValue = await act( async () => {
+					return await result.current.saveSettings(
+						'wpgraphql_login_settings'
+					);
+				} );
+
+				expect( resultValue ).toBe( false );
+				expect( result.current.errorMessage ).toBe( expectedMessage );
+				expect( result.current.isComplete ).toBe( true );
+			}
+		);
 	} );
 
 	describe( 'isDirty', () => {
@@ -1134,5 +1194,98 @@ describe( 'SettingsContext', () => {
 
 			expect( isMet ).toBe( false );
 		} );
+	} );
+
+	describe( 'getUnmetCondition', () => {
+		const nestedSchema = {
+			settings: {
+				access_control: {
+					fields: {
+						shouldBlock: {},
+					},
+				},
+				cookies: {
+					fields: {
+						allowCredentials: {
+							conditionalLogic: {
+								slug: 'access_control.shouldBlock',
+								operator: '==',
+								value: true,
+							},
+						},
+						sameSite: {
+							conditionalLogic: {
+								slug: 'allowCredentials',
+								operator: '==',
+								value: true,
+							},
+						},
+					},
+				},
+			},
+			providers: {},
+		};
+
+		it( 'returns undefined when every condition is met', async () => {
+			vi.mocked( apiFetch ).mockResolvedValue( {
+				access_control: { shouldBlock: true },
+				cookies: { allowCredentials: true },
+			} );
+
+			(
+				global as unknown as { wpGraphQLLogin: WpGraphQLLoginGlobal }
+			 ).wpGraphQLLogin = nestedSchema;
+
+			const { wrapper } = renderWithSettingsProvider();
+			const { result } = renderHook( () => useSettings(), {
+				wrapper,
+			} );
+
+			await waitFor( () => {
+				expect( result.current.settings ).toBeDefined();
+			} );
+
+			expect(
+				result.current.getUnmetCondition( {
+					settingKey: 'cookies',
+					field: 'sameSite',
+				} )
+			).toBeUndefined();
+		} );
+
+		it.each( [ true, false ] )(
+			'returns the root blocker when the parent field is itself hidden (parent value: %s)',
+			async ( allowCredentials ) => {
+				vi.mocked( apiFetch ).mockResolvedValue( {
+					access_control: { shouldBlock: false },
+					cookies: { allowCredentials },
+				} );
+
+				(
+					global as unknown as {
+						wpGraphQLLogin: WpGraphQLLoginGlobal;
+					}
+				 ).wpGraphQLLogin = nestedSchema;
+
+				const { wrapper } = renderWithSettingsProvider();
+				const { result } = renderHook( () => useSettings(), {
+					wrapper,
+				} );
+
+				await waitFor( () => {
+					expect( result.current.settings ).toBeDefined();
+				} );
+
+				expect(
+					result.current.getUnmetCondition( {
+						settingKey: 'cookies',
+						field: 'sameSite',
+					} )
+				).toEqual( {
+					settingKey: 'access_control',
+					field: 'shouldBlock',
+				} );
+			}
+		);
 	} );
 } );

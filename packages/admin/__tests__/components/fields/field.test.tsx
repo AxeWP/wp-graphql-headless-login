@@ -103,7 +103,7 @@ const renderField = (
 			then( cb: ( v: unknown ) => void ) {
 				try {
 					cb( settings?.[ 'settings' ] );
-				} catch ( e ) {}
+				} catch {}
 				return thenable;
 			},
 			catch() {
@@ -114,7 +114,7 @@ const renderField = (
 					if ( cb ) {
 						cb();
 					}
-				} catch ( e ) {}
+				} catch {}
 				return thenable;
 			},
 		};
